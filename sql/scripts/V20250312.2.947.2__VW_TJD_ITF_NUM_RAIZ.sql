@@ -1,0 +1,20 @@
+﻿EXECUTE('
+IF OBJECT_ID (''dbo.VW_TJD_ITF_NUM_RAIZ'') IS NOT NULL
+	DROP VIEW dbo.VW_TJD_ITF_NUM_RAIZ
+')
+EXECUTE('
+CREATE VIEW VW_TJD_ITF_NUM_RAIZ
+AS
+
+SELECT 
+    LEN(prefijo) AS LARGO_PREFIJO,
+    PREFIJO,
+    MAX(RIGHT(RTRIM(numraiz), LEN(numraiz) - LEN(prefijo))) AS NUMERO,
+	CAST(CAST(RTRIM(prefijo) + MAX(RIGHT(RTRIM(numraiz), LEN(numraiz) - LEN(prefijo))) AS BIGINT) + 1 AS VARCHAR) AS NUMRAIZ
+FROM 
+    TJD_ITF_TARJETA_RAIZ AS R WITH (NOLOCK)
+WHERE producto !=''0004''
+GROUP BY 
+    prefijo, LEN(prefijo)
+')
+

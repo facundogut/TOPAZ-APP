@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.charges.objectsdomain.SolicitudCargosImpl</class-name>
+        <entity-name>core.vo_SolicitudCargos</entity-name>
+        <table-name>ci_solicitud</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>tz_lock</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>idCliente</attribute-name>
+            <column-name>id_cliente</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaACobrar</attribute-name>
+            <column-name>fecha_a_cobrar</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importe</attribute-name>
+            <column-name>importe</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>moneda</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>estado</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDeCobro</attribute-name>
+            <column-name>fecha_de_cobro</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>reintentos</attribute-name>
+            <column-name>reintentos</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaCaducidadCobro</attribute-name>
+            <column-name>fecha_caducidad_cobro</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>jts_oid</column-name>
+            <key>primary</key>
+            <attribute-id-generator>selfNumerator</attribute-id-generator>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>saldo_jts_oid</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>idEvento</attribute-name>
+            <column-name>id_evento</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>idCargo</attribute-name>
+            <column-name>id_cargo</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>concepto</attribute-name>
+            <column-name>concepto</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>causal</attribute-name>
+            <column-name>causal</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>contabilizo</attribute-name>
+            <column-name>contabilizo</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaAlta</attribute-name>
+            <column-name>fecha_alta</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>referencia</attribute-name>
+            <column-name>referencia</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>nroAsiento</attribute-name>
+            <column-name>nro_Asiento</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>sucursal</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>fecha_proceso</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>asientoDif</attribute-name>
+            <column-name>asientoDif</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalDif</attribute-name>
+            <column-name>sucursalDif</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsSolParcial</attribute-name>
+            <column-name>jtsSolParcial</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importeParcial</attribute-name>
+            <column-name>importeParcial</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>causalDiferimiento</attribute-name>
+            <column-name>CAUSAL_DIFERIMIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidOriginal</attribute-name>
+            <column-name>JTS_OID_ORIGINAL</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.charges.objectsdomain.SolicitudCargosImpl</class-name>
+        <query-name>query.vo_SolicitudCargos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT jts_oid, saldo_jts_oid, asientos.estado estadoAsiento
+					FROM   ci_solicitud left join asientos on  (ci_solicitud.asientodif = asientos.asiento and
+					ci_solicitud.sucursaldif = asientos.sucursal and
+					ci_solicitud.fecha_proceso = asientos.fechaproceso)
+					WHERE  (ci_solicitud.estado = 0 OR ci_solicitud.estado = 3) AND
+					ci_solicitud.fecha_a_cobrar &lt;=  (SELECT fechaproceso FROM parametros) and ci_solicitud.tz_lock = 0 AND
+					ci_solicitud.saldo_jts_oid not in (select jts_oid from saldos where c1785=2 and tipo_saldo_fondo &lt;&gt; 0)
+					ORDER  BY  ci_solicitud.saldo_jts_oid, ci_solicitud.fecha_a_cobrar, ci_solicitud.prioridad DESC 
+					</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>saldo_jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estadoAsiento</attribute-name>
+            <column-name>estadoAsiento</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.charges.objectsdomain.SolicitudCargosImpl</class-name>
+        <query-name>query.vo_SolicitudCargosFUCO</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT jts_oid, saldo_jts_oid, asientos.estado estadoAsiento
+					FROM   ci_solicitud left join asientos on  (ci_solicitud.asientodif = asientos.asiento and
+					ci_solicitud.sucursaldif = asientos.sucursal and
+					ci_solicitud.fecha_proceso = asientos.fechaproceso)
+					WHERE  (ci_solicitud.estado = 0 OR ci_solicitud.estado = 3) AND
+					ci_solicitud.fecha_a_cobrar &lt;=  (SELECT fechaproceso FROM parametros) and ci_solicitud.tz_lock = 0 AND
+					ci_solicitud.saldo_jts_oid in (select jts_oid from saldos where c1785=2 and tipo_saldo_fondo &lt;&gt; 0)
+					ORDER  BY  ci_solicitud.saldo_jts_oid, ci_solicitud.fecha_a_cobrar, ci_solicitud.prioridad DESC
+					</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>saldo_jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estadoAsiento</attribute-name>
+            <column-name>estadoAsiento</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+</map>

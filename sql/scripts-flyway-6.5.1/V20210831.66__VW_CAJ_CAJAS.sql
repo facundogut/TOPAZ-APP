@@ -1,0 +1,35 @@
+EXECUTE('
+CREATE OR ALTER VIEW VW_CAJ_CAJAS 
+AS
+
+SELECT 
+	c.NRO_CAJA ''NRO_CAJA'', 
+	u.CLAVE ''USUARIO'',
+	u.INICIALES ''INICIALES'',
+	u.NOMBRE ''NOMBRE'', 
+	(CASE 
+		WHEN c.ESTADO = ''A'' THEN ''Abierta''
+		ELSE ''Cerrada''
+	END) AS ESTADO,
+	c.SUCURSAL,
+	(CASE WHEN cc.Mini_Filial IS NULL THEN ''0''
+	ELSE CONVERT(varchar(3),cc.Mini_Filial)
+	END) AS ''MINIFILIAL'',
+	cc.Descripcion AS ''DESCRIPCION''
+FROM TABLA_CAJAS c 
+INNER JOIN USUARIOS u ON c.NRO_CAJA = u.NRODECAJA 
+						AND c.SUCURSAL=u.NROSUCURSAL 
+						AND
+							(	(c.TZ_LOCK < 300000000000000 OR c.TZ_LOCK >= 400000000000000) 	
+							AND (c.TZ_LOCK < 100000000000000 OR c.TZ_LOCK >= 200000000000000)) 
+						AND(	(u.TZ_LOCK < 300000000000000 OR u.TZ_LOCK >= 400000000000000) 	
+						AND		(u.TZ_LOCK < 100000000000000 OR u.TZ_LOCK >= 200000000000000))
+LEFT JOIN CAJ_MiniFiliales cc ON cc.SUCURSAL = c.SUCURSAL 
+								AND cc.Mini_Filial IN(	SELECT cm.Mini_Filial 
+														from CAJ_Cajas_MiniFiliales cm
+														WHERE cm.Mini_Filial = cc.Mini_Filial 
+															AND cm.NRO_CAJA = c.NRO_CAJA 
+															AND (	(cm.TZ_LOCK < 300000000000000 OR cm.TZ_LOCK >= 400000000000000) 
+																AND (cm.TZ_LOCK < 100000000000000 OR cm.TZ_LOCK >= 200000000000000))
+														)
+')

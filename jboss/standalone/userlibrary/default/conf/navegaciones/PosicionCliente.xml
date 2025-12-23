@@ -1,0 +1,306 @@
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by Home (Home) -->
+<Navigation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="D:\TOP.UY.DES.001\Desarrollo\DiseÃ±o\esquemas\Navigation.xsd" name="PosicionCliente" initialNode="Clientes">
+	<Nodes>
+		<QueryNode name="Clientes" datasource="Top/Clientes" query="select c.NOMBRECLIENTE,c.CODIGOCLIENTE from CLI_CLIENTES c where c.codigocliente = parameters.ClientePos" title="Cliente">
+			<Parameters>
+				<Parameter name="ClientePos" type="N"/>		
+				<Parameter name="FechaPos" type="F"/>	
+			</Parameters>
+			<Attributes>			
+				<Attribute name="ClientePos" type="N" value="parameters.ClientePos" visible="true" contextInfo="false" format="############"/>
+				<Attribute name="Nombre" type="A" value="query.nombrecliente" visible="true"/>
+				<Attribute name="FechaPos" type="F" value="parameters.FechaPos" visible="false" format="dd/MM/yyyy"/>
+			</Attributes>
+			<Filter>
+				<FilterAttribute attributeName="ClientePos"/>
+				<FilterAttribute attributeName="FechaPos"/>
+			</Filter>
+			<Transitions>
+				<Transition name="Posición por Moneda Vencidos" to="MonedaVencidos">
+					<TransitionAttributes>
+						<TransitionAttribute name="ClientePos" type="N" value="attributes.ClientePos"/>
+						<TransitionAttribute name="FechaPos" type="F" value="attributes.FechaPos"/>
+					</TransitionAttributes>
+				</Transition>
+				<Transition name="Posición por Moneda No Vencidos" to="MonedaNoVencidos">
+					<TransitionAttributes>
+						<TransitionAttribute name="ClientePos" type="N" value="attributes.ClientePos"/>
+						<TransitionAttribute name="FechaPos" type="F" value="attributes.FechaPos"/>
+					</TransitionAttributes>
+				</Transition>
+			</Transitions>	
+		</QueryNode>
+		<QueryNode name="MonedaVencidos" datasource="Top/Clientes" query="SELECT c.NOMBRECLIENTE, po.MONEDA as CodMoneda, m.C6400, ((sum(po.SALDO))*-1) AS SALDO, sum(po.INTERES)- sum(po.INTERESCANCELADO) AS SALDO_INTERES, sum(po.MORA) AS MORA, ((sum(po.SALDO_MN))*-1) AS SALDO_MONEDA_NACIONAL, sum(po.INTERES_MN)- sum(po.INTERESCANCELADO_MN) AS SALDO_INTERES_MONEDA_NACIONAL, sum(po.MORA_MN) AS MORA_MONEDA_NACIONAL, ((sum(po.SALDO_DOL))*-1) AS SALDO_MONEDA_DOLAR, sum(po.INTERES_DOL)- sum(po.INTERESCANCELADO_DOL) AS SALDO_INTERES_MONEDA_DOLAR, sum(po.MORA_DOL) AS MORA_MONEDA_DOLAR FROM CLI_POSICION_CLIENTE po, PLANCTAS pc, CLI_CLIENTES c, MONEDAS m, SALDOS s WHERE po.SALDO_JTS_OID = s.JTS_OID AND po.CLIENTE = parameters.ClientePos AND po.CLIENTE =c.CODIGOCLIENTE AND po.RUBRO = C6326 AND po.MONEDA = m.C6399 AND s.C1628 &lt; parameters.FechaPos GROUP BY c.NOMBRECLIENTE, po.MONEDA, m.C6400 ORDER BY po.MONEDA" title="MonedaVencidos">
+			<Parameters>
+				<Parameter name="ClientePos" type="N"/>
+				<Parameter name="FechaPos" type="F"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="NombreCliente" type="A" value="query.NOMBRECLIENTE" visible="true" contextInfo="true"/>
+				<Attribute name="CodMoneda" type="N" value="query.CodMoneda" visible="false" contextInfo="false" format="####"/>
+				<Attribute name="Moneda" type="A" value="query.C6400" visible="true" contextInfo="true"/>				
+				<Attribute name="Saldo" type="I" value="query.SALDO" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteres" type="I" value="query.SALDO_INTERES" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="Mora" type="I" value="query.MORA" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoMonedaNacional" type="I" value="query.SALDO_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaNacional" type="I" value="query.SALDO_INTERES_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaNacional" type="I" value="query.MORA_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoMonedaDolar" type="I" value="query.SALDO_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaDolar" type="I" value="query.SALDO_INTERES_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaDolar" type="I" value="query.MORA_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="ClientePos" type="N" value="parameters.ClientePos" visible="false"/>
+				<Attribute name="FechaPos" type="F" value="parameters.FechaPos" visible="false" format="dd/MM/yyyy"/>
+			</Attributes>
+			<Transitions>
+				<Transition name="Posición por Moneda/Grupo Balance Vencidos" to="GrupoBalanceVencidos">											
+					<TransitionAttributes>												
+						<TransitionAttribute name="ClientePos" type="N" value="attributes.ClientePos"/>
+						<TransitionAttribute name="FechaPos" type="F" value="attributes.FechaPos"/>
+						<TransitionAttribute name="CodMoneda" type="N" value="attributes.CodMoneda"/>
+					</TransitionAttributes>				
+				</Transition>
+			</Transitions>
+		</QueryNode>				
+		<QueryNode name="MonedaNoVencidos" datasource="Top/Clientes" query="SELECT c.NOMBRECLIENTE, po.MONEDA as CodMoneda, m.C6400, ((sum(po.SALDO))*-1) AS SALDO, sum(po.INTERES)- sum(po.INTERESCANCELADO) AS SALDO_INTERES, sum(po.MORA) AS MORA, ((sum(po.SALDO_MN))*-1) AS SALDO_MONEDA_NACIONAL, sum(po.INTERES_MN)- sum(po.INTERESCANCELADO_MN) AS SALDO_INTERES_MONEDA_NACIONAL, sum(po.MORA_MN) AS MORA_MONEDA_NACIONAL, ((sum(po.SALDO_DOL))*-1) AS SALDO_MONEDA_DOLAR, sum(po.INTERES_DOL)- sum(po.INTERESCANCELADO_DOL) AS SALDO_INTERES_MONEDA_DOLAR, sum(po.MORA_DOL) AS MORA_MONEDA_DOLAR FROM CLI_POSICION_CLIENTE po, PLANCTAS pc, CLI_CLIENTES c, MONEDAS m, SALDOS s WHERE po.SALDO_JTS_OID = s.JTS_OID AND po.CLIENTE = parameters.ClientePos AND po.CLIENTE =c.CODIGOCLIENTE AND po.RUBRO = C6326 AND po.MONEDA = m.C6399 AND (s.C1628 &gt; parameters.FechaPos OR s.C1628 IS NULL) GROUP BY c.NOMBRECLIENTE, po.MONEDA, m.C6400 ORDER BY po.MONEDA" title="MonedaNoVencidos">
+			<Parameters>
+				<Parameter name="ClientePos" type="N"/>
+				<Parameter name="FechaPos" type="F"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="NombreCliente" type="A" value="query.NOMBRECLIENTE" visible="true" contextInfo="true"/>
+				<Attribute name="CodMoneda" type="N" value="query.CodMoneda" visible="false" contextInfo="false" format="####"/>
+				<Attribute name="Moneda" type="A" value="query.C6400" visible="true" contextInfo="true"/>				
+				<Attribute name="Saldo" type="I" value="query.SALDO" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteres" type="I" value="query.SALDO_INTERES" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="Mora" type="I" value="query.MORA" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoMonedaNacional" type="I" value="query.SALDO_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaNacional" type="I" value="query.SALDO_INTERES_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaNacional" type="I" value="query.MORA_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoMonedaDolar" type="I" value="query.SALDO_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaDolar" type="I" value="query.SALDO_INTERES_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaDolar" type="I" value="query.MORA_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="ClientePos" type="N" value="parameters.ClientePos" visible="false"/>
+				<Attribute name="FechaPos" type="F" value="parameters.FechaPos" visible="false" format="dd/MM/yyyy"/>
+			</Attributes>	
+			<Transitions>
+				<Transition name="Posición por Moneda/Grupo Balance No Vencidos" to="GrupoBalanceNoVencidos">
+					<TransitionAttributes>												
+						<TransitionAttribute name="ClientePos" type="N" value="attributes.ClientePos"/>
+						<TransitionAttribute name="FechaPos" type="F" value="attributes.FechaPos"/>
+						<TransitionAttribute name="CodMoneda" type="N" value="attributes.CodMoneda"/>
+					</TransitionAttributes>				
+				</Transition>
+			</Transitions>
+		</QueryNode>	
+		<QueryNode name="GrupoBalanceVencidos" datasource="Top/Clientes" query="SELECT c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304 as CODGRUPOBALANCE, o.DESCRIPCION as GRUPO_BALANCE, ((sum(po.SALDO))*-1) AS SALDO, sum(po.INTERES)- sum(po.INTERESCANCELADO) AS SALDO_INTERES, sum(po.MORA) AS MORA, ((sum(po.SALDO_MN))*-1) AS SALDO_MONEDA_NACIONAL, sum(po.INTERES_MN)- sum(po.INTERESCANCELADO_MN) AS SALDO_INTERES_MONEDA_NACIONAL, sum(po.MORA_MN) AS MORA_MONEDA_NACIONAL, ((sum(po.SALDO_DOL))*-1) AS SALDO_MONEDA_DOLAR, sum(po.INTERES_DOL)- sum(po.INTERESCANCELADO_DOL) AS SALDO_INTERES_MONEDA_DOLAR, sum(po.MORA_DOL) AS MORA_MONEDA_DOLAR FROM CLI_POSICION_CLIENTE po, PLANCTAS pc, CLI_CLIENTES c, MONEDAS m, OPCIONES o, SALDOS s WHERE po.CLIENTE = parameters.ClientePos AND po.MONEDA = parameters.CodMoneda AND po.SALDO_JTS_OID = s.JTS_OID AND s.C1628 &lt; parameters.FechaPos AND po.CLIENTE =c.CODIGOCLIENTE AND po.RUBRO = C6326 AND po.MONEDA = m.C6399 AND o.NUMERODECAMPO =6304 AND pc.C6304= o.OPCIONDEPANTALLA AND o.IDIOMA = 'E' GROUP BY c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304, o.DESCRIPCION ORDER BY pc.C6304" title="GrupoBalanceVencidos">
+			<Parameters>			
+				<Parameter name="ClientePos" type="N"/>
+				<Parameter name="FechaPos" type="F"/>
+				<Parameter name="CodMoneda" type="N"/>
+			</Parameters>
+			<Attributes>	
+				<Attribute name="NombreCliente" type="A" value="query.NOMBRECLIENTE" visible="true" contextInfo="true"/>
+				<Attribute name="CodMoneda" type="N" value="query.MONEDA" visible="false" contextInfo="false" format="####"/>
+				<Attribute name="Moneda" type="A" value="query.C6400" visible="true" contextInfo="true"/>				
+				<Attribute name="CodGrupoBalance" type="A" value="query.CODGRUPOBALANCE" visible="false" contextInfo="true"/>
+				<Attribute name="GrupoBalance" type="A" value="query.GRUPO_BALANCE" visible="true" contextInfo="true"/>								
+				<Attribute name="Saldo" type="I" value="query.SALDO" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteres" type="I" value="query.SALDO_INTERES" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="Mora" type="I" value="query.MORA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SaldoMonedaNacional" type="I" value="query.SALDO_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaNacional" type="I" value="query.SALDO_INTERES_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaNacional" type="I" value="query.MORA_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoMonedaDolar" type="I" value="query.SALDO_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaDolar" type="I" value="query.SALDO_INTERES_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaDolar" type="I" value="query.MORA_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="ClientePos" type="N" value="parameters.ClientePos" visible="false"/>
+				<Attribute name="FechaPos" type="F" value="parameters.FechaPos" visible="false" format="dd/MM/yyyy"/>
+			</Attributes>
+			<Transitions>
+				<Transition name="Posición por Moneda/Grupo Balance/Rubro Contable Vencidos" to="RubroContableVencidos">											
+					<TransitionAttributes>					
+						<TransitionAttribute name="ClientePos" type="N" value="attributes.ClientePos"/>
+						<TransitionAttribute name="FechaPos" type="N" value="attributes.FechaPos"/>
+						<TransitionAttribute name="CodMoneda" type="N" value="attributes.CodMoneda"/>
+						<TransitionAttribute name="CodGrupoBalance" type="A" value="attributes.CodGrupoBalance"/>
+					</TransitionAttributes>				
+				</Transition>
+			</Transitions>
+		</QueryNode>	
+		<QueryNode name="GrupoBalanceNoVencidos" datasource="Top/Clientes" query="SELECT c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304 as CODGRUPOBALANCE, o.DESCRIPCION as GRUPO_BALANCE, ((sum(po.SALDO))*-1) AS SALDO, sum(po.INTERES)- sum(po.INTERESCANCELADO) AS SALDO_INTERES, sum(po.MORA) AS MORA, ((sum(po.SALDO_MN))*-1) AS SALDO_MONEDA_NACIONAL, sum(po.INTERES_MN)- sum(po.INTERESCANCELADO_MN) AS SALDO_INTERES_MONEDA_NACIONAL, sum(po.MORA_MN) AS MORA_MONEDA_NACIONAL, ((sum(po.SALDO_DOL))*-1) AS SALDO_MONEDA_DOLAR, sum(po.INTERES_DOL)- sum(po.INTERESCANCELADO_DOL) AS SALDO_INTERES_MONEDA_DOLAR, sum(po.MORA_DOL) AS MORA_MONEDA_DOLAR FROM CLI_POSICION_CLIENTE po, PLANCTAS pc, CLI_CLIENTES c, MONEDAS m, OPCIONES o, SALDOS s WHERE po.CLIENTE = parameters.ClientePos AND po.MONEDA = parameters.CodMoneda AND po.SALDO_JTS_OID = s.JTS_OID AND (s.C1628 &gt; parameters.FechaPos OR s.C1628 IS NULL) AND po.CLIENTE =c.CODIGOCLIENTE AND po.RUBRO = C6326 AND po.MONEDA = m.C6399 AND o.NUMERODECAMPO =6304 AND pc.C6304= o.OPCIONDEPANTALLA AND o.IDIOMA = 'E' GROUP BY c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304, o.DESCRIPCION ORDER BY pc.C6304" title="GrupoBalanceNoVencidos">
+			<Parameters>			
+				<Parameter name="ClientePos" type="N"/>
+				<Parameter name="FechaPos" type="F"/>
+				<Parameter name="CodMoneda" type="N"/>
+			</Parameters>
+			<Attributes>	
+				<Attribute name="NombreCliente" type="A" value="query.NOMBRECLIENTE" visible="true" contextInfo="true"/>
+				<Attribute name="CodMoneda" type="N" value="query.MONEDA" visible="false" contextInfo="false" format="####"/>
+				<Attribute name="Moneda" type="A" value="query.C6400" visible="true" contextInfo="true"/>				
+				<Attribute name="CodGrupoBalance" type="A" value="query.CODGRUPOBALANCE" visible="false" contextInfo="true"/>
+				<Attribute name="GrupoBalance" type="A" value="query.GRUPO_BALANCE" visible="true" contextInfo="true"/>								
+				<Attribute name="Saldo" type="I" value="query.SALDO" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteres" type="I" value="query.SALDO_INTERES" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="Mora" type="I" value="query.MORA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SaldoMonedaNacional" type="I" value="query.SALDO_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaNacional" type="I" value="query.SALDO_INTERES_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaNacional" type="I" value="query.MORA_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoMonedaDolar" type="I" value="query.SALDO_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaDolar" type="I" value="query.SALDO_INTERES_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaDolar" type="I" value="query.MORA_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="ClientePos" type="N" value="parameters.ClientePos" visible="false"/>
+				<Attribute name="FechaPos" type="F" value="parameters.FechaPos" visible="false" format="dd/MM/yyyy"/>
+			</Attributes>
+			<Transitions>
+				<Transition name="Posición por Moneda/Grupo Balance/Rubro Contable No Vencidos" to="RubroContableNoVencidos">											
+					<TransitionAttributes>					
+						<TransitionAttribute name="ClientePos" type="N" value="attributes.ClientePos"/>
+						<TransitionAttribute name="FechaPos" type="N" value="attributes.FechaPos"/>
+						<TransitionAttribute name="CodMoneda" type="N" value="attributes.CodMoneda"/>
+						<TransitionAttribute name="CodGrupoBalance" type="A" value="attributes.CodGrupoBalance"/>
+					</TransitionAttributes>				
+				</Transition>
+			</Transitions>
+		</QueryNode>
+		<QueryNode name="RubroContableVencidos" datasource="Top/Clientes" query="SELECT c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304 as CODGRUPOBALANCE, o.DESCRIPCION as GRUPO_BALANCE, po.RUBRO, pc.C6300, ((sum(po.SALDO))*-1) AS SALDO, sum(po.INTERES)- sum(po.INTERESCANCELADO) AS SALDO_INTERES, sum(po.MORA) AS MORA, ((sum(po.SALDO_MN))*-1) AS SALDO_MONEDA_NACIONAL, sum(po.INTERES_MN)- sum(po.INTERESCANCELADO_MN) AS SALDO_INTERES_MONEDA_NACIONAL, sum(po.MORA_MN) AS MORA_MONEDA_NACIONAL, ((sum(po.SALDO_DOL))*-1) AS SALDO_MONEDA_DOLAR, sum(po.INTERES_DOL)- sum(po.INTERESCANCELADO_DOL) AS SALDO_INTERES_MONEDA_DOLAR, sum(po.MORA_DOL) AS MORA_MONEDA_DOLAR FROM CLI_POSICION_CLIENTE po, PLANCTAS pc, CLI_CLIENTES c, MONEDAS m, OPCIONES o, SALDOS s WHERE po.CLIENTE = parameters.ClientePos AND po.MONEDA = parameters.CodMoneda AND pc.C6304 = parameters.CodGrupoBalance AND po.SALDO_JTS_OID = s.JTS_OID AND s.C1628 &lt; parameters.FechaPos AND po.CLIENTE =c.CODIGOCLIENTE AND po.RUBRO = C6326 AND po.MONEDA = m.C6399 AND o.NUMERODECAMPO =6304 AND pc.C6304= o.OPCIONDEPANTALLA AND o.IDIOMA = 'E' GROUP BY c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304, o.DESCRIPCION, po.RUBRO, pc.C6300 ORDER BY po.RUBRO" title="RubroContableVencidos">
+			<Parameters>			
+				<Parameter name="ClientePos" type="N"/>
+				<Parameter name="FechaPos" type="F"/>
+				<Parameter name="CodMoneda" type="N"/>
+				<Parameter name="CodGrupoBalance" type="A"/>				
+			</Parameters>
+			<Attributes>	
+				<Attribute name="NombreCliente" type="A" value="query.NOMBRECLIENTE" visible="true" contextInfo="true"/>
+				<Attribute name="CodMoneda" type="N" value="query.MONEDA" visible="false" contextInfo="false" format="####"/>
+				<Attribute name="Moneda" type="A" value="query.C6400" visible="true" contextInfo="true"/>				
+				<Attribute name="CodGrupoBalance" type="A" value="query.CODGRUPOBALANCE" visible="false" contextInfo="true"/>
+				<Attribute name="GrupoBalance" type="A" value="query.GRUPO_BALANCE" visible="true" contextInfo="true"/>					
+				<Attribute name="Rubro" type="N" value="query.RUBRO" visible="true" contextInfo="false"/>
+				<Attribute name="DescRubro" type="A" value="query.C6300" visible="true" contextInfo="true"/>				
+				<Attribute name="Saldo" type="I" value="query.SALDO" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteres" type="I" value="query.SALDO_INTERES" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="Mora" type="I" value="query.MORA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SaldoMonedaNacional" type="I" value="query.SALDO_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaNacional" type="I" value="query.SALDO_INTERES_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaNacional" type="I" value="query.MORA_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoMonedaDolar" type="I" value="query.SALDO_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaDolar" type="I" value="query.SALDO_INTERES_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaDolar" type="I" value="query.MORA_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>							
+				<Attribute name="ClientePos" type="N" value="parameters.ClientePos" visible="false"/>
+				<Attribute name="FechaPos" type="F" value="parameters.FechaPos" visible="false" format="dd/MM/yyyy"/>
+			</Attributes>	
+			<Transitions>
+				<Transition name="Posición por Moneda/Grupo Balance/Rubro Contable/Operaciones Vencidas" to="OperacionesVencidas">											
+					<TransitionAttributes>					
+						<TransitionAttribute name="ClientePos" type="N" value="attributes.ClientePos"/>
+						<TransitionAttribute name="FechaPos" type="N" value="attributes.FechaPos"/>
+						<TransitionAttribute name="CodMoneda" type="N" value="attributes.CodMoneda"/>
+						<TransitionAttribute name="CodGrupoBalance" type="A" value="attributes.CodGrupoBalance"/>
+						<TransitionAttribute name="Rubro" type="N" value="attributes.Rubro"/>
+					</TransitionAttributes>				
+				</Transition>
+			</Transitions>
+		</QueryNode>
+		<QueryNode name="RubroContableNoVencidos" datasource="Top/Clientes" query="SELECT c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304 as CODGRUPOBALANCE, o.DESCRIPCION as GRUPO_BALANCE, po.RUBRO, pc.C6300, ((sum(po.SALDO))*-1) AS SALDO, sum(po.INTERES)- sum(po.INTERESCANCELADO) AS SALDO_INTERES, sum(po.MORA) AS MORA, ((sum(po.SALDO_MN))*-1) AS SALDO_MONEDA_NACIONAL, sum(po.INTERES_MN)- sum(po.INTERESCANCELADO_MN) AS SALDO_INTERES_MONEDA_NACIONAL, sum(po.MORA_MN) AS MORA_MONEDA_NACIONAL, ((sum(po.SALDO_DOL))*-1) AS SALDO_MONEDA_DOLAR, sum(po.INTERES_DOL)- sum(po.INTERESCANCELADO_DOL) AS SALDO_INTERES_MONEDA_DOLAR, sum(po.MORA_DOL) AS MORA_MONEDA_DOLAR FROM CLI_POSICION_CLIENTE po, PLANCTAS pc, CLI_CLIENTES c, MONEDAS m, OPCIONES o, SALDOS s WHERE po.CLIENTE = parameters.ClientePos AND po.MONEDA = parameters.CodMoneda AND pc.C6304 = parameters.CodGrupoBalance AND po.SALDO_JTS_OID = s.JTS_OID AND (s.C1628 &gt; parameters.FechaPos OR s.C1628 IS NULL) AND po.CLIENTE =c.CODIGOCLIENTE AND po.RUBRO = C6326 AND po.MONEDA = m.C6399 AND o.NUMERODECAMPO =6304 AND pc.C6304= o.OPCIONDEPANTALLA AND o.IDIOMA = 'E' GROUP BY c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304, o.DESCRIPCION, po.RUBRO, pc.C6300 ORDER BY po.RUBRO" title="RubroContableNoVencidos">
+			<Parameters>			
+				<Parameter name="ClientePos" type="N"/>
+				<Parameter name="FechaPos" type="F"/>
+				<Parameter name="CodMoneda" type="N"/>
+				<Parameter name="CodGrupoBalance" type="A"/>				
+			</Parameters>
+			<Attributes>	
+				<Attribute name="NombreCliente" type="A" value="query.NOMBRECLIENTE" visible="true" contextInfo="true"/>
+				<Attribute name="CodMoneda" type="N" value="query.MONEDA" visible="false" contextInfo="false" format="####"/>
+				<Attribute name="Moneda" type="A" value="query.C6400" visible="true" contextInfo="true"/>				
+				<Attribute name="CodGrupoBalance" type="A" value="query.CODGRUPOBALANCE" visible="false" contextInfo="true"/>
+				<Attribute name="GrupoBalance" type="A" value="query.GRUPO_BALANCE" visible="true" contextInfo="true"/>					
+				<Attribute name="Rubro" type="N" value="query.RUBRO" visible="true" contextInfo="false"/>
+				<Attribute name="DescRubro" type="A" value="query.C6300" visible="true" contextInfo="true"/>				
+				<Attribute name="Saldo" type="I" value="query.SALDO" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteres" type="I" value="query.SALDO_INTERES" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="Mora" type="I" value="query.MORA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SaldoMonedaNacional" type="I" value="query.SALDO_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaNacional" type="I" value="query.SALDO_INTERES_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaNacional" type="I" value="query.MORA_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoMonedaDolar" type="I" value="query.SALDO_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaDolar" type="I" value="query.SALDO_INTERES_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaDolar" type="I" value="query.MORA_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>								
+				<Attribute name="ClientePos" type="N" value="parameters.ClientePos" visible="false"/>
+				<Attribute name="FechaPos" type="F" value="parameters.FechaPos" visible="false" format="dd/MM/yyyy"/>
+			</Attributes>	
+			<Transitions>
+				<Transition name="Posición por Moneda/Grupo Balance/Rubro Contable/Operaciones No Vencidas" to="OperacionesNoVencidas">											
+					<TransitionAttributes>					
+						<TransitionAttribute name="ClientePos" type="N" value="attributes.ClientePos"/>
+						<TransitionAttribute name="FechaPos" type="N" value="attributes.FechaPos"/>
+						<TransitionAttribute name="CodMoneda" type="N" value="attributes.CodMoneda"/>
+						<TransitionAttribute name="CodGrupoBalance" type="A" value="attributes.CodGrupoBalance"/>
+						<TransitionAttribute name="Rubro" type="N" value="attributes.Rubro"/>
+					</TransitionAttributes>				
+				</Transition>
+			</Transitions>			
+		</QueryNode>
+		<QueryNode name="OperacionesVencidas" datasource="Top/Clientes" query="SELECT c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304 as CODGRUPOBALANCE, o.DESCRIPCION as GRUPO_BALANCE, po.RUBRO, pc.C6300, s.PRODUCTO, p.C6251 AS DESC_PRODUCTO, (po.SALDO)*-1 AS SALDO, po.INTERES- po.INTERESCANCELADO AS SALDO_INTERES, po.MORA AS MORA, (po.SALDO_MN)*-1 AS SALDO_MONEDA_NACIONAL, po.INTERES_MN- po.INTERESCANCELADO_MN AS SALDO_INTERES_MONEDA_NACIONAL, po.MORA_MN AS MORA_MONEDA_NACIONAL, (po.SALDO_DOL)*-1 AS SALDO_MONEDA_DOLAR, po.INTERES_DOL- po.INTERESCANCELADO_DOL AS SALDO_INTERES_MONEDA_DOLAR, po.MORA_DOL AS MORA_MONEDA_DOLAR FROM CLI_POSICION_CLIENTE po, PLANCTAS pc, CLI_CLIENTES c, MONEDAS m, OPCIONES o, SALDOS s, PRODUCTOS  p WHERE po.CLIENTE = parameters.ClientePos AND po.MONEDA = parameters.CodMoneda AND pc.C6304 = parameters.CodGrupoBalance AND po.RUBRO = parameters.Rubro AND po.SALDO_JTS_OID = s.JTS_OID AND s.C1628 &lt; parameters.FechaPos AND s.PRODUCTO = p.C6250 AND po.CLIENTE =c.CODIGOCLIENTE AND po.RUBRO = C6326 AND po.MONEDA = m.C6399 AND o.NUMERODECAMPO =6304 AND pc.C6304= o.OPCIONDEPANTALLA AND o.IDIOMA = 'E'" title="OperacionesVencidas">
+			<Parameters>			
+				<Parameter name="ClientePos" type="N"/>
+				<Parameter name="FechaPos" type="F"/>
+				<Parameter name="CodMoneda" type="N"/>
+				<Parameter name="CodGrupoBalance" type="A"/>
+				<Parameter name="Rubro" type="N"/>
+			</Parameters>
+			<Attributes>	
+				<Attribute name="NombreCliente" type="A" value="query.NOMBRECLIENTE" visible="true" contextInfo="true"/>
+				<Attribute name="CodMoneda" type="N" value="query.MONEDA" visible="false" contextInfo="false" format="####"/>
+				<Attribute name="Moneda" type="A" value="query.C6400" visible="true" contextInfo="true"/>				
+				<Attribute name="CodGrupoBalance" type="A" value="query.CODGRUPOBALANCE" visible="false" contextInfo="true"/>
+				<Attribute name="GrupoBalance" type="A" value="query.GRUPO_BALANCE" visible="true" contextInfo="true"/>					
+				<Attribute name="Rubro" type="N" value="query.RUBRO" visible="true" contextInfo="false"/>
+				<Attribute name="DescRubro" type="A" value="query.C6300" visible="true" contextInfo="true"/>				
+				<Attribute name="Producto" type="N" value="query.PRODUCTO" visible="true" contextInfo="false"/>
+				<Attribute name="DescProducto" type="A" value="query.DESC_PRODUCTO" visible="true" contextInfo="true"/>								
+				<Attribute name="Saldo" type="I" value="query.SALDO" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteres" type="I" value="query.SALDO_INTERES" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="Mora" type="I" value="query.MORA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SaldoMonedaNacional" type="I" value="query.SALDO_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaNacional" type="I" value="query.SALDO_INTERES_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaNacional" type="I" value="query.MORA_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoMonedaDolar" type="I" value="query.SALDO_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaDolar" type="I" value="query.SALDO_INTERES_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaDolar" type="I" value="query.MORA_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>								
+				<Attribute name="ClientePos" type="N" value="parameters.ClientePos" visible="false"/>
+				<Attribute name="FechaPos" type="F" value="parameters.FechaPos" visible="false" format="dd/MM/yyyy"/>				
+			</Attributes>					
+		</QueryNode>
+		<QueryNode name="OperacionesNoVencidas" datasource="Top/Clientes" query="SELECT c.NOMBRECLIENTE, po.MONEDA, m.C6400, pc.C6304 as CODGRUPOBALANCE, o.DESCRIPCION as GRUPO_BALANCE, po.RUBRO, pc.C6300, s.PRODUCTO, p.C6251 AS DESC_PRODUCTO, (po.SALDO)*-1 AS SALDO, po.INTERES- po.INTERESCANCELADO AS SALDO_INTERES, po.MORA AS MORA, (po.SALDO_MN)*-1 AS SALDO_MONEDA_NACIONAL, po.INTERES_MN- po.INTERESCANCELADO_MN AS SALDO_INTERES_MONEDA_NACIONAL, po.MORA_MN AS MORA_MONEDA_NACIONAL, (po.SALDO_DOL)*-1 AS SALDO_MONEDA_DOLAR, po.INTERES_DOL- po.INTERESCANCELADO_DOL AS SALDO_INTERES_MONEDA_DOLAR, po.MORA_DOL AS MORA_MONEDA_DOLAR FROM CLI_POSICION_CLIENTE po, PLANCTAS pc, CLI_CLIENTES c, MONEDAS m, OPCIONES o, SALDOS s, PRODUCTOS  p WHERE po.CLIENTE = parameters.ClientePos AND po.MONEDA = parameters.CodMoneda AND pc.C6304 = parameters.CodGrupoBalance AND po.RUBRO = parameters.Rubro AND po.SALDO_JTS_OID = s.JTS_OID AND (s.C1628 &gt; parameters.FechaPos OR s.C1628 IS NULL) AND s.PRODUCTO = p.C6250 AND po.CLIENTE =c.CODIGOCLIENTE AND po.RUBRO = C6326 AND po.MONEDA = m.C6399 AND o.NUMERODECAMPO =6304 AND pc.C6304= o.OPCIONDEPANTALLA AND o.IDIOMA = 'E'" title="OperacionesNoVencidas">
+			<Parameters>			
+				<Parameter name="ClientePos" type="N"/>
+				<Parameter name="FechaPos" type="F"/>
+				<Parameter name="CodMoneda" type="N"/>
+				<Parameter name="CodGrupoBalance" type="A"/>
+				<Parameter name="Rubro" type="N"/>
+			</Parameters>
+			<Attributes>	
+				<Attribute name="NombreCliente" type="A" value="query.NOMBRECLIENTE" visible="true" contextInfo="true"/>
+				<Attribute name="CodMoneda" type="N" value="query.MONEDA" visible="false" contextInfo="false" format="####"/>
+				<Attribute name="Moneda" type="A" value="query.C6400" visible="true" contextInfo="true"/>				
+				<Attribute name="CodGrupoBalance" type="A" value="query.CODGRUPOBALANCE" visible="false" contextInfo="true"/>
+				<Attribute name="GrupoBalance" type="A" value="query.GRUPO_BALANCE" visible="true" contextInfo="true"/>					
+				<Attribute name="Rubro" type="N" value="query.RUBRO" visible="true" contextInfo="false"/>
+				<Attribute name="DescRubro" type="A" value="query.C6300" visible="true" contextInfo="true"/>				
+				<Attribute name="Producto" type="N" value="query.PRODUCTO" visible="true" contextInfo="false"/>
+				<Attribute name="DescProducto" type="A" value="query.DESC_PRODUCTO" visible="true" contextInfo="true"/>								
+				<Attribute name="Saldo" type="I" value="query.SALDO" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteres" type="I" value="query.SALDO_INTERES" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="Mora" type="I" value="query.MORA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SaldoMonedaNacional" type="I" value="query.SALDO_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaNacional" type="I" value="query.SALDO_INTERES_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="MoraMonedaNacional" type="I" value="query.MORA_MONEDA_NACIONAL" visible="true" contextInfo="false" format="###,###,##0.00"/>						
+				<Attribute name="SaldoMonedaDolar" type="I" value="query.SALDO_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>				
+				<Attribute name="SaldoInteresMonedaDolar" type="I" value="query.SALDO_INTERES_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>						
+				<Attribute name="MoraMonedaDolar" type="I" value="query.MORA_MONEDA_DOLAR" visible="true" contextInfo="false" format="###,###,##0.00"/>								
+				<Attribute name="ClientePos" type="N" value="parameters.ClientePos" visible="false"/>
+				<Attribute name="FechaPos" type="F" value="parameters.FechaPos" visible="false" format="dd/MM/yyyy"/>				
+			</Attributes>					
+		</QueryNode>
+	</Nodes>
+</Navigation>

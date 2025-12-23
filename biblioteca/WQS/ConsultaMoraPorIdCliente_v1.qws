@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/moraCliente/{IdCliente}</uri>
+    <serviceDescription>CLIT012 - Consulta Mora por IDCliente (para CRM)</serviceDescription>
+    <querys>
+        <query id="1" name="Query1" type="MULTIPLE">
+            <sql>declare @IdCliente int=?
+SELECT TOP 1
+(SELECT TOP 1 CALIFICACION_OBJETIVA FROM HISTORICO_CALIF_X_CLIENTE WHERE CLIENTE = @IdCliente ORDER BY FECHA desc) AS Situacion,
+DATEDIFF(day, C1628, (SELECT fechaproceso FROM PARAMETROS)) AS DiasMora,
+SUM(PP.C2312 + PP.C2311 + PP.IVAMORA + PP.IVAPERCEPCIONMORA + PP.IVAPERCEPCIONINTCOMPMORA + PP.IVAINTCOMPMORA) AS MontoMora
+FROM SALDOS S
+JOIN PLANPAGOS PP ON S.JTS_OID = PP.SALDO_JTS_OID
+WHERE C1803 = @IdCliente
+  AND C1785 = 5
+  AND C1604 &lt;&gt; 0
+  AND C1628 &lt; (SELECT fechaproceso FROM PARAMETROS)
+  GROUP BY C1628
+ORDER BY ABS(DATEDIFF(day, C1628, (SELECT fechaproceso FROM PARAMETROS))) desc;</sql>
+            <input>
+                <inParameter description="Documento de la persona jurídica" type="INTEGER">IdCliente</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Resultado1">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Situacion</queryname>
+                        <servicename>situacionProductoBanco</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>MontoMora</queryname>
+                        <servicename>montoMora</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>DiasMora</queryname>
+                        <servicename>diasMora</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

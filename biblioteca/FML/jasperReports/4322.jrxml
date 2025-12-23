@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="4321" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="63"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Detail" fontName="Arial" fontSize="12">
+		<pen lineWidth="1.0" lineColor="#000000"/>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Transparent" forecolor="#FFFFFF" backcolor="#FFFFFF" fontName="Arial" fontSize="12" isBold="true" isItalic="false">
+		<pen lineWidth="0.25" lineColor="#000000"/>
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF" fill="Solid">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_design" mode="Opaque"/>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1"/>
+	<subDataset name="Table Dataset 2"/>
+	<queryString>
+		<![CDATA[SELECT
+ASIENTO, FECHAPROCESO,SUCURSAL,
+GLOSA,ASIENTO || '' || to_char(to_date(FECHAPROCESO),'ddMMyyyy') AS DOCUMENTO,
+CUENTACONTABLE,DESCRIPCTA, CARGOFUNC, ABONOFUNC
+FROM CO_REG_LIBRO_MAYOR
+ORDER BY ASIENTO]]>
+	</queryString>
+	<field name="ASIENTO" class="java.math.BigDecimal"/>
+	<field name="FECHAPROCESO" class="java.lang.String"/>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="GLOSA" class="java.lang.String"/>
+	<field name="DOCUMENTO" class="java.lang.String"/>
+	<field name="CUENTACONTABLE" class="java.lang.String"/>
+	<field name="DESCRIPCTA" class="java.lang.String"/>
+	<field name="CARGOFUNC" class="java.math.BigDecimal"/>
+	<field name="ABONOFUNC" class="java.math.BigDecimal"/>
+	<variable name="sum" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CARGOFUNC}]]></variableExpression>
+	</variable>
+	<variable name="sum2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ABONOFUNC}]]></variableExpression>
+	</variable>
+	<title>
+		<band height="86" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="8" y="5" width="285" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true" pdfFontName="Helvetica"/>
+				</textElement>
+				<text><![CDATA[LIBRO DIARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Title" x="8" y="42" width="185" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica"/>
+				</textElement>
+				<text><![CDATA[RUC: 20140344801]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Title" x="8" y="59" width="185" height="17"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica"/>
+				</textElement>
+				<text><![CDATA[RAZÓN SOCIAL: CRAC DEL CENTRO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="57" y="22" width="136" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FECHAPROCESO}.substring( 3, 10 )]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Title" x="8" y="22" width="65" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica"/>
+				</textElement>
+				<text><![CDATA[PERIODO:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="678" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="758" y="0" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="72" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="7" y="9" width="790" height="63" backcolor="#666666"/>
+				<staticText>
+					<reportElement style="table_CH" mode="Transparent" x="1" y="0" width="49" height="63" forecolor="#FFFFFF"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[N° DE ASIENTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="50" y="0" width="61" height="63"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[FECHA DE OPERACION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="111" y="0" width="50" height="63"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[AGENCIA/OFICINA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="161" y="0" width="132" height="63"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[DESCRIPCIÓN DE LA OPERACION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="628" y="24" width="79" height="39"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[DEBE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="707" y="24" width="83" height="39"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[HABER]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" mode="Transparent" x="628" y="0" width="162" height="24" forecolor="#FFFFFF" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[MOVIMIENTOS S/.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="293" y="24" width="89" height="39"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10" isBold="true" isUnderline="false"/>
+					</textElement>
+					<text><![CDATA[DOCUMENTO SUSTENTATORIO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="293" y="0" width="89" height="24"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[REF. OPERACION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="382" y="24" width="110" height="39"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[CODIGO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="492" y="24" width="136" height="39"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[DENOMINACION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement style="table_CH" x="382" y="0" width="246" height="24"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<text><![CDATA[CUENTA CONTABLE ASOCIADA A LA OPERACION]]></text>
+				</staticText>
+			</frame>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<frame>
+				<reportElement mode="Transparent" x="7" y="0" width="791" height="15"/>
+				<textField pattern="">
+					<reportElement style="table 1_TD" mode="Transparent" x="50" y="0" width="61" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{FECHAPROCESO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="table 1_TD" mode="Transparent" x="111" y="0" width="50" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="table 1_TD" x="161" y="0" width="132" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{GLOSA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="table 1_TD" x="707" y="0" width="83" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ABONOFUNC}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="table 1_TD" x="628" y="0" width="79" height="15"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CARGOFUNC}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="table 1_TD" mode="Transparent" x="1" y="0" width="49" height="15" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ASIENTO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="table 1_TD" x="293" y="0" width="89" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DOCUMENTO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="table 1_TD" x="382" y="0" width="110" height="15"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{CUENTACONTABLE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement style="table 1_TD" x="492" y="0" width="136" height="15"/>
+					<textElement verticalAlignment="Middle">
+						<font fontName="SansSerif" size="8"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{DESCRIPCTA}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="21" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="27" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="499" y="0" width="136" height="20" backcolor="#999999"/>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="635" y="0" width="79" height="20" backcolor="#999999"/>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="714" y="0" width="83" height="20" backcolor="#999999"/>
+				<textElement textAlignment="Center" markup="none">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="635" y="0" width="79" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sum}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="714" y="0" width="83" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{sum2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

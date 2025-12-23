@@ -1,0 +1,55 @@
+service ACTUALIZASUSCRIPCIONAVISOS; 
+description "Servicio que de Alta/Baja de suscripcion de avisos"; 
+
+
+    	                
+         action: SQLCall ALTABAJA_SUSCR(
+                 Cliente: numeric,     
+   	         Alerta: string,
+   	         Accion: string
+	      
+   	 
+	  ): [ 
+	   
+	    SCODERROR : numeric
+	 	
+	]
+	{ 
+	
+	  	properties { 
+	  	("statement", "{call SP_ITF_ALTA_BAJA_SUSCRP_CLI (?, ?, ?, ?)}"),
+	  	("0", "Cliente"), 
+		("1", "Alerta"), 
+		("2", "Accion"), 
+		("3", "out SCODERROR : numeric")
+		 
+		 
+
+	       };
+	 
+	   action:SQLQuery SUSCRP_CLIENTE() : [
+	 	
+	 	XML_TAG: string as XML_TAG,
+	 	AVISO:	string as TipoAviso,
+	 	FECHA:  date as Fecha
+	 				
+	 				       		] 
+	 			   {
+	 			
+	 
+	 properties 	{
+	 	("statement", "select 'Aviso' as XML_TAG, aviso, fecha from ITF_SUSCRIPCIONES_ONLINE where  Estado=0 and  CLIENTE=?"),
+	 	("0", "Cliente") 
+	 	 
+	 
+	 				
+	 	   	 }
+	 	  	 
+	 	    }
+		 				
+                        
+         }
+    
+    
+    
+

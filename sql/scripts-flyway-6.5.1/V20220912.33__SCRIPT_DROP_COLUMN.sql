@@ -1,0 +1,3 @@
+execute('
+	ALTER TABLE CONV_CONVENIOS_REC DROP COLUMN EquemaComision
+')

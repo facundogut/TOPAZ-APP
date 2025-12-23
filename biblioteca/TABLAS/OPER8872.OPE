@@ -1,0 +1,217 @@
+VERSION:055_5
+TN  NN 1006TConsulta Generica                       C00000 00
+*$2020-02-06 17:17:47NICOLAS
+*N  NN ***************** https://es.wikipedia.org/wiki/Clave_Bancaria_Uniforme ***************
+*$2020-02-19 12:06:25NICOLAS
+*N  NN *** El primer bloque tiene un número de entidad de 3 dígitos, un número de sucursal de 4 dígitos
+*$2020-02-07 10:04:56NICOLAS
+ NNNNN 00537   entidad                                           INNNNI000007013300270243000011000000007000700270126000
+/V=BANCO
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-10-29 09:42:39LURRUTTY
+ NNNNN 00804   sucursal                                          INNNNI000007013300270243000011000000007000700270126000
+/V=SUCURSAL
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-10-29 09:42:46LURRUTTY
+*N  NN *** El segundo bloque tiene un número de 13 dígitos identifica la cuenta y la sucursal
+*$2020-02-07 10:06:20NICOLAS
+ NNNNN 03079   cuentaSuc                                         INNNNI000007013300270243000011000000007000700270126000
+/V=CUENTA
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-10-29 09:42:54LURRUTTY
+*N  NN ******* Validación del 1er bloque
+*$2020-02-07 15:02:38NICOLAS
+*N  NN Banco (Descomponer en sus dígitos)
+*$2020-02-07 10:11:55NICOLAS
+ NNNNN 00343   B1                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C537,1,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 10:22:32NICOLAS
+ NNNNN 00607   B2                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C537,2,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 10:23:27NICOLAS
+ NNNNN 01239   B3                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C537,3,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 10:23:56NICOLAS
+*N  NN Sucursal (Descomponer en sus dígitos)
+*$2020-02-07 10:25:57NICOLAS
+ NNNNN 02496   S1                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C804,1,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 10:29:44NICOLAS
+ NNNNN 03078   S2                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C804,2,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 10:31:47NICOLAS
+ NNNNN 05022   S3                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C804,3,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 10:36:31NICOLAS
+ NNNNN 05023   S4                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C804,4,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 10:38:35NICOLAS
+*N  NN El algoritmo de validación incluye el patrón 7139713 para el primer bloque
+*$2020-02-07 10:42:56NICOLAS
+ NNNNN 00063   Suma1                                             INNNNF000007015200300202021011000000007000700300137000
+/V=C343*7+C607*1+C1239*3+C2496*9+C3078*7+C5022*1+C5023*3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-02-07 12:14:51NICOLAS
+*N  NN Diferencia1 = 10 - último dígito del resultado de Suma1
+*$2020-02-07 12:05:12NICOLAS
+ NNNNN 00950   ultimo digito                                     INNSNF000007015200300202021011000000007000700300137000
+/V=C63
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-02-07 16:51:41NICOLAS
+ NNNNN 00510   ultimo digito                                     INNSNF000007015200300202021011000000007000700300137000
+/V=F(RIGHT,C950,1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-02-07 16:51:30NICOLAS
+*N  NN *****   DígitoVerificadorBloque1, si la diferencia es 10 el dígito verificador es 0
+*$2020-04-28 14:23:31LURRUTTY
+ NNNNN 00511   Diferencia1                                       INNSNF000007015200300202021011000000007000700300137000
+/V=10-C510
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-07 12:56:54LURRUTTY
+ NNNNN 06803   Dig. Verificador 1                                INNSNA000007015200300302021011000000007000700300137000
+/?=C511>0YC511<10
+/V=C511
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-04-28 14:47:15LURRUTTY
+ NNNNN 06803   Dig. Verificador 1                                INNSNK000007015200300302021011000000007000700300137000
+/?=C511=10
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-04-28 14:47:36LURRUTTY
+*N  NN ******* Validación del 2do bloque
+*$2020-02-07 15:02:50NICOLAS
+*N  NN Cuenta (Descomponer en sus dígitos)
+*$2020-02-07 15:21:50NICOLAS
+ NNNNN 05024   C1                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,1,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:36:54NICOLAS
+ NNNNN 05025   C2                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,2,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:38:29NICOLAS
+ NNNNN 05026   C3                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,3,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:38:56NICOLAS
+ NNNNN 05027   C4                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,4,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:47:21NICOLAS
+ NNNNN 05028   C5                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,5,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:49:45NICOLAS
+ NNNNN 05029   C6                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,6,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:52:22NICOLAS
+ NNNNN 05030   C7                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,7,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:54:12NICOLAS
+ NNNNN 05031   C8                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,8,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:55:16NICOLAS
+ NNNNN 05032   C9                                                INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,9,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:55:38NICOLAS
+ NNNNN 05033   C10                                               INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,10,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:56:15NICOLAS
+ NNNNN 05034   C11                                               INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,11,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:59:18NICOLAS
+ NNNNN 05035   C12                                               INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,12,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:59:24NICOLAS
+ NNNNN 05036   C13                                               INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C3079,13,1)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-02-07 15:59:44NICOLAS
+*N  NN El algoritmo de validación incluye el patrón 3971397139713 para el segundo bloque
+*$2020-02-07 16:05:00NICOLAS
+ NNNNN 00109   Suma2                                             INNNNF000007015200300202021011000000007000700300137000
+/V=C5024*3+C5025*9+C5026*7+C5027*1+C5028*3+C5029*9+C5030*7+C5031*1+C5032*3+C5033*9+C5034*7+C5035*1+C5036*3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-02-07 16:28:10NICOLAS
+*N  NN Diferencia2 = 10 - último dígito del resultado de Suma2
+*$2020-02-07 16:33:22NICOLAS
+ NNNNN 00867   ultimo digito                                     INNSNF000007015200300202021011000000007000700300137000
+/V= C109
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-02-19 12:19:17NICOLAS
+ NNNNN 00487   ultimo digito                                     INNSNF000007015200300202021011000000007000700300137000
+/V=F(RIGHT, C867,1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-02-19 12:19:51NICOLAS
+*N  NN *****   DígitoVerificadorBloque1
+*$2020-02-07 16:31:21NICOLAS
+ NNNNN 00546   Diferencia2                                       INNSNF000007015200300202021011000000007000700300137000
+/V=10-C487
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-07 12:57:08LURRUTTY
+ NNNNN 07067   Dig. Verificador 2                                INNNNA000007015200300302021011000000007000700300137000
+/?=C546>0YC546<10
+/V=C546
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-04-28 14:54:26LURRUTTY
+ NNNNN 07067   Dig. Verificador 2                                INNNNK000007015200300302021011000000007000700300137000
+/?=C546=10
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-04-28 14:54:34LURRUTTY
+*N  NN **************** CBU *******************
+*$2020-02-07 17:22:14NICOLAS
+ NNNNN 05504   CBU                                               INNNNF000007015200300452001011000000007000700300137000
+/V=C537+C804+C6803+C3079+C7067
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-29 09:42:30LURRUTTY

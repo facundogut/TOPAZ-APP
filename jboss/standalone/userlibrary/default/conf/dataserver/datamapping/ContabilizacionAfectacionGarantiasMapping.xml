@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.afectaciongarantia.objectsdomain.GarantiaContabilizacion</class-name>
+        <query-name>query.contablizacionAfectacionGarantias</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT GR.MONEDA_GARANTIA MONGAR, SUM(H.MONTO_GARANTIZADO_MG) AS MONTO_GARANTIZADO_MG, GR.SUCURSAL_GARANTIA SUCGAR, C.PAIS_GARANTIA PAISGAR, C.TIPOGARANTIA TIPOGAR, 
+				C.SUBTIPOGTIA SUBTGAR, C.COD_SUBCLA_GARANTIA SUBCGAR, C.RUBRO_651 RUBDBMN, C.RUBRO_653 RUBCRMN,	RUBRO_DEBITO_DOL, RUBRO_CREDITO_DOL
+				FROM CRE_HISTORICO_DEUDA_GARANTIAS H
+				INNER JOIN CRE_GARANTIASRECIBIDAS GR ON GR.NUM_GARANTIA=H.NRO_GARANTIA
+				INNER JOIN CRE_CLASGARANTIAS C ON C.PAIS_GARANTIA=GR.PAIS_GARANTIA AND C.TIPOGARANTIA=GR.TIPOGARANTIA AND 
+				C.SUBTIPOGTIA=GR.SUBTIPOGARANTIA
+				AND C.COD_SUBCLA_GARANTIA=GR.COD_SUBCLAGARANTIA
+				WHERE FECHA_PROCESO=(SELECT FECHAPROCESO FROM PARAMETROS)
+				GROUP BY GR.MONEDA_GARANTIA,GR.SUCURSAL_GARANTIA,C.PAIS_GARANTIA, C.TIPOGARANTIA, C.SUBTIPOGTIA, C.COD_SUBCLA_GARANTIA,
+				C.RUBRO_651, C.RUBRO_653,C.RUBRO_DEBITO_DOL, C.RUBRO_CREDITO_DOL
+			</sentence>
+        <attribute>
+            <attribute-name>monedaGarantia</attribute-name>
+            <column-name>MONGAR</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoGarantizado</attribute-name>
+            <column-name>MONTO_GARANTIZADO_MG</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalGarantia</attribute-name>
+            <column-name>SUCGAR</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>paisGarantia</attribute-name>
+            <column-name>PAISGAR</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoGarantia</attribute-name>
+            <column-name>TIPOGAR</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>subTipoGarantia</attribute-name>
+            <column-name>SUBTGAR</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>subClaseGarantia</attribute-name>
+            <column-name>SUBCGAR</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroCreditoMN</attribute-name>
+            <column-name>RUBCRMN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroDebitoMN</attribute-name>
+            <column-name>RUBDBMN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroCreditoME</attribute-name>
+            <column-name>RUBRO_CREDITO_DOL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroDebitoME</attribute-name>
+            <column-name>RUBRO_DEBITO_DOL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

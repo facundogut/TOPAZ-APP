@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/tarjetaDebito/novedadesSolicitudes/{nroTarjeta}/{cantNovedades}</uri>
+    <serviceDescription>PAST017 - Consulta Novedades de Solicitudes TD</serviceDescription>
+    <title>1.9.11 CRM - NOVTD</title>
+    <querys>
+        <query id="1" name="novedades" type="MULTIPLE">
+            <sql>--ORIGEN 1
+
+
+DECLARE @nroTarjeta bigint  
+SET @nroTarjeta =?
+
+DECLARE @cantNovedades INTEGER
+DECLARE @pagina INTEGER
+SET @cantNovedades =?
+SET @pagina =1
+
+SELECT 	ROW_NUMBER() OVER(ORDER BY FECHANOVEDAD DESC) AS ORDEN, 
+tipoNovedad_id, tipoNovedad_descripcion, fechaNovedad, fechaRespuesta, codigoDenuncia
+FROM
+(
+
+SELECT
+1 AS tipoNovedad_id,
+'Bloqueo / Desbloqueo desde Red Link' AS tipoNovedad_descripcion,
+(CASE WHEN TC.Fec_Emi_Plast IS NOT NULL
+    THEN concat(
+		substring(TC.Fec_Emi_Plast,1,4),
+		'-',
+		substring(TC.Fec_Emi_Plast,5,2),
+		'-',
+		substring(TC.Fec_Emi_Plast,7,2),
+		'T',
+		'00:00:000',
+		'Z'
+		) END) AS fechaNovedad,
+(CASE WHEN TC.Fec_Emi_Plast IS NOT NULL
+    THEN concat(
+		substring(TC.Fec_Emi_Plast,1,4),
+		'-',
+		substring(TC.Fec_Emi_Plast,5,2),
+		'-',
+		substring(TC.Fec_Emi_Plast,7,2),
+		'T',
+		'00:00:000',
+		'Z'
+		) END) AS fechaRespuesta,
+(CASE WHEN TC.Cod_Denuncia IS NOT NULL
+    THEN concat(
+		substring(TC.Cod_Denuncia,1,8),
+		--'-',
+		substring(TC.Cod_Denuncia,10,4),
+		--'-',
+		substring(TC.Cod_Denuncia,15,2),
+		'00'
+		) END) AS codigoDenuncia
+
+FROM TJD_ITF_TARJETAS_COMPLETAS TC
+WHERE TC.Cod_Denuncia LIKE '20%'
+	AND TC.Nro_Tarjeta=@nroTarjeta
+--ORDER BY TC.Fec_Emi_Plast ASC
+
+UNION
+
+--ORIGEN 2
+
+--DECLARE @nroTarjeta VARCHAR(19)
+--SET @nroTarjeta ='501056010000866015 '
+
+SELECT
+2 AS tipoNovedad_id, 
+'Marca de entrega TD' AS tipoNovedad_descripcion,
+(CASE WHEN TD.FechaEntrega IS NOT NULL
+    THEN concat(
+		substring(CONVERT( VARCHAR, TD.FechaEntrega,112),1,4),
+		'-',
+		substring(CONVERT( VARCHAR, TD.FechaEntrega,112),5,2),
+		'-',
+		substring(CONVERT( VARCHAR, TD.FechaEntrega,112),7,2),
+		'T',
+		'00:00:000',
+		'Z'
+		) END) AS fechaNovedad,
+		
+'' AS fechaRespuesta,
+'' AS codigoDenuncia
+
+FROM TJD_ITF_ENTREGA_TDD TD
+WHERE TD.NroTarjeta=@nroTarjeta
+--ORDER BY FechaEntrega ASC
+
+UNION
+
+--ORIGEN 3
+
+--DECLARE @nroTarjeta VARCHAR(19)
+--SET @nroTarjeta ='501056010000866015 '
+
+SELECT
+    (SELECT N.CODIGO FROM TJD_TIPOS_NOVEDADES_LINK N WHERE N.CODIGO_LINK=T.TIPO_SOLICITUD AND N.TZ_LOCK=0) AS tipoNovedad_id,
+    (SELECT N.DESCRIPCION FROM TJD_TIPOS_NOVEDADES_LINK N WHERE N.CODIGO_LINK=T.TIPO_SOLICITUD AND N.TZ_LOCK=0) AS tipoNovedad_descripcion,
+    CONVERT(varchar(19), t.FECHA_SOLICITUD, 127) + 'Z' AS fechaNovedad,
+       (CASE WHEN FECHA_PROCESO_RESP IS NOT NULL
+    THEN concat(
+		substring(t.FECHA_PROCESO_RESP,1,4),
+		'-',
+		substring(t.FECHA_PROCESO_RESP,5,2),
+		'-',
+		substring(t.FECHA_PROCESO_RESP,7,2),
+		'T',
+		substring(t.FECHA_PROCESO_RESP,9,2),
+		':',
+		substring(t.FECHA_PROCESO_RESP,11,2),
+		':',
+		substring(t.FECHA_PROCESO_RESP,13,2),
+		'Z'
+		) END) AS fechaRespuesta,
+    '' AS codigoDenuncia
+FROM TJD_SOLICITUD_LINK t
+WHERE t.ESTADO='P'
+AND t.NRO_TARJETA_COMPLETA =@nroTarjeta
+AND t.TZ_LOCK=0
+--ORDER BY FECHANOVEDAD DESC
+
+) DATOS 
+ORDER BY ORDEN
+OFFSET ((@pagina - 1) * @cantNovedades) ROWS 
+FETCH NEXT @cantNovedades ROWS ONLY
+</sql>
+            <input>
+                <inParameter description="" type="LONG">nroTarjeta</inParameter>
+                <inParameter description="" type="INTEGER">cantNovedades</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="novedades">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>tipoNovedad_id</queryname>
+                        <servicename>tipoNovedad.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tipoNovedad_descripcion</queryname>
+                        <servicename>tipoNovedad.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaNovedad</queryname>
+                        <servicename>fechaNovedad</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaRespuesta</queryname>
+                        <servicename>fechaRespuesta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>codigoDenuncia</queryname>
+                        <servicename>codigoDenuncia</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="aux" type="SIMPLE">
+            <sql>select  null as aux</sql>
+            <input/>
+            <output>
+                <level groupby="" name="aux">
+                    <outParameter description="" type="STRING">
+                        <queryname>aux</queryname>
+                        <servicename>aux</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

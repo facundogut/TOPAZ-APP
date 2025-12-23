@@ -1,0 +1,524 @@
+VERSION:055_5
+TN  NN 1006TIngreso de extornos contables           C00001 00
+*$2023-09-20 15:47:53JBENTANCOU
+VNNNNN 010002000603990807SSSD000000000000000000000000000000000000000
+/T=Extornos Contables
+/C=192192192
+*$2023-09-20 17:24:11JBENTANCOU
+KNNNNN 010017021500370575010100
+/T=Extornos Contables
+/F=0013700NNN000000000Arial                                   
+*$2022-09-08 15:56:11EPINATO
+ NNNNN 00075   Fecha Asiento                                     INNSNA000085015201070230000011000000085004001050137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:24:11JBENTANCOU
+ NNNNN 03819   fecha string                                      INNNNF000007015200270452001011000100007000700270137000
+/V=F(MID,C75,7,4)+F(MID,C75,4,2)+F(MID,C75,1,2)
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2022-09-08 15:56:11EPINATO
+KNNNNN 010045001002590780000101
+/T=Datos
+/F=0012700NNN000000000Arial                                   
+*$2022-09-08 15:56:11EPINATO
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="TIPO_SOLICITUD IN ('RA') AND ESTADO = 'I' AND FECHAPROCESO <= (SELECT FECHAPROCESO FROM PARAMETROS)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-13 13:40:21LUISO
+ NNNNN 49641   Asiento                                           I SSN 010073003202410756001011600000410000704300163010
+/L=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 15:47:34JBENTANCOU
+ NNNNN 00427   Sucursal                                          INSSNA000074001402420759001011000000410000704300163010
+/V=C49636.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:08:22JBENTANCOU
+ NNNNN 02499   Texto                                             INNSNK000067014900890227000011000100067003700870134000
+/V=1
+/c=128128128
+/f=0013700NNN255255255Arial                                   
+*$2023-09-20 17:24:11JBENTANCOU
+ NNNNN 00231   WHERE                                             INNSNF000007015000270210001011000000007000700270126000
+/V="Sucursal ="+C427+ " and Asiento =" + C669 +" and FechaProceso='"+C3819+"'"
+*$2023-09-20 17:24:11JBENTANCOU
+ NNNNN 00327   Es Ajuste?                                        INNSNK000126015303250250020011110000126004101460138000
+/V=S
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:24:11JBENTANCOU
+ NNNNN 03144   esAjusteParam                                     INNSNF000067014900890227000011000100067003700870134000
+/?=A(C327="S")
+/V="true"
+/c=128128128
+/f=0013700NNN255255255Arial                                   
+*$2023-09-20 17:24:11JBENTANCOU
+KNNNNN 010263046002770780020100
+/T=I= Ingresada C= Confirmada R= Rechazada
+/F=0012700NNN000000000Arial                                   
+*$2022-09-08 15:56:11EPINATO
+KNNNNN 010275001003250780000101
+/T=Opción
+/F=0012700NNN000000000Arial                                   
+*$2022-09-08 15:56:11EPINATO
+ NNNNN 49505   Opciones                                          I NSNK010294015903140654000011300000007000700270126000
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-09-08 15:56:11EPINATO
+CNNNNN   00000000000000000000100
+/F=A(C49505.1="C")
+/P=I20
+/M=Confirmar ingreso de extorno Contable
+*$2023-09-20 17:24:11JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C49505.1="R")
+/P=I21
+/M=Rechazar ingreso de extorno Contable
+*$2023-09-20 17:24:11JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=(I21OI20)YC49641=0
+/M=OPCIÓN INVALIDA - REGISTRO INEXISTENTE
+*$2023-09-20 17:24:11JBENTANCOU
+TN  NN 1009TModificación Solicitud de Extorno       M50041 00
+/?=I20
+*$2023-09-20 16:07:40JBENTANCOU
+VNNNNN 020109000502910801SSSD000000000000000000000000000000000000000
+/T=Confirmación Extorno
+/C=192192192
+*$2023-09-20 17:24:59JBENTANCOU
+KNNNNN 020018003201930736000101
+/F=0012400NNN000000000Arial                                   
+*$2023-09-20 17:25:02JBENTANCOU
+CNNNNN  w00000000000000000000100
+/R=F
+*$2022-10-25 17:00:48EPINATO
+ NSSNS 49635   Asiento                                           IDNNNA020045020400680354021011500000045006000680190000
+/V=C49641.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:25:27JBENTANCOU
+ NSSNS 49636   Sucursal                                          IDNSNA020080020401030254021011500000080006001030190000
+/V=C427.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:25:27JBENTANCOU
+ NSSNS 49637   Fecha de Proceso                                  IDNSNA020045055800680710011011500000045044000680547000
+/V=C49637.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-09-03 14:10:25GASTON
+ NSSNS 49639   Usuario                                           IDNNNF020080055801030710001011500000080044001030532000
+/V=C49639
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:25:27JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=C49639=C9505
+/M=El usuario no esta habilitado a realizar el extorno
+*$2023-03-22 16:04:02LUISO
+CNNNNN ME00000000000000000000100
+/?=C49638='R'
+/M=El asiento ya fue rechazado.
+*$2022-09-08 15:56:11EPINATO
+CNNNNN ME00000000000000000000100
+/?=C49638='C'
+/M=El asiento ya fue confirmado.
+*$2022-09-08 15:56:11EPINATO
+ NSSNS 49638   Estado                                            IINNNK020115020401380367001011500000115006001380190000
+/V=C
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:25:27JBENTANCOU
+ NSSNS 49640   Tipo de Solicitud                                 IINSN 020115055801380710001011500000115044001380548000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:25:27JBENTANCOU
+ NSSNS 00077   Fecha                                             IDNSNA020150020401730354011011500000150006001730190000
+/V=C49673.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:25:27JBENTANCOU
+*N  NN Control para ver si el mes de la fecha valor ( C77 ) esta cerrado.
+*$2022-10-26 17:36:22EPINATO
+ NNNNN 00091   Texto                                             INNSNF000007015200270202000011000100007000700270137000
+/V=C77[7,4]+ C77[4,2]
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2022-10-26 17:36:22EPINATO
+ NNNNN 02997   Año y Mes                                         INNNNA000007015200300302021011000000007000700300137000
+/V=C91
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-10-26 17:36:22EPINATO
+ NNNNN 02994   Abierto/Cerrado                                   INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-10-26 17:36:22EPINATO
+CNNNNN ME00000000000000000000110
+/?=C2994='C'
+/M="El balance "+C2997+" se encuentra en estado cerrado"
+*$2022-10-26 17:36:22EPINATO
+*N  NN termina control
+*$2022-10-26 17:36:22EPINATO
+*N  NN Control para ver si el mes de la fecha valor es menor a la fecha proceso
+*$2024-08-14 16:14:25GASTON
+ NNNNN 00324   Alfa de 35                                        INNSNF000007015200300302021011000000007000700300137000
+/V=C49637.2[7,4] + C49637.2[4,2] +C49637.2[1,2] 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-09-03 14:11:05GASTON
+ NNNNN 50019   FechaValorControl                                 INNSNA000007015200300302021011000000007000700300137000
+/V=C324.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-14 16:38:44GASTON
+ NNNNN 00329   Alfa 35                                           INNSNF000007015200300302021011000000007000700300137000
+/V=C9500[7,4]+ C9500[4,2] + C9500[1,2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-15 16:14:51GASTON
+ NNNNN 50020   FechaProcesoControl                               INNSNA000007015200300302021011000000007000700300137000
+/V=C329.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-14 16:40:24GASTON
+ NNNNN 50033   Numérico                                          INNSNF000007015200300302021011000000007000700300137000
+/V=C50020.0 - C50019.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-14 16:45:53GASTON
+CNNNNN   00000000000000000000100
+/F=C50033.0 > 2
+/P=I100
+*$2024-08-14 16:48:20GASTON
+ NNNNN 09920   Iniciales                                         INNSNA000007015200300302001011000000007000700300137000
+/?=I100
+/V=C9505
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-15 16:18:14GASTON
+ NNNNN 09925   Nombre Usuario                                    INNSN 000007015200300302001011000000007000700300137000
+/?=I100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-15 16:18:14GASTON
+ NNNNN 09926   Clave                                             INNSN 000007015200300302001011000000007000700300137000
+/?=I100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-15 16:18:14GASTON
+ NNNNN 04411   Clave Usuario                                     INNSNA000007015200300302001011000000007000700300137000
+/?=I100
+/V=C9926.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-15 16:18:14GASTON
+ NNNNN 04522   Grupo                                             INNSN 000007015200300302001011000000007000700300137000
+/?=I100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-15 16:18:14GASTON
+ NNNNN 33800   Código                                            INNSNK000007015200300302001011000000007000700300137000
+/?=I100
+/V=773
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-15 16:18:14GASTON
+ NNNNN 33801   Descripción                                       INNSN 000007015200300302001011000000007000700300137000
+/?=I100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-15 16:18:14GASTON
+ NNNNN 33802   Alfa                                              INNSN 000007015200300302001011000000007000700300137000
+/?=I100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-15 16:18:14GASTON
+CNNNNN ME00000000000000000000100
+/?=I100
+/F=C33802.0 # C4522.0
+/M=Fecha valor menor a fecha proceso, usted no puede autorizar.
+*$2024-08-15 16:18:14GASTON
+*N  NN termina control
+*$2024-08-14 16:14:15GASTON
+ NNNNN 49673   Fecha Valor                                       INNSNA000150020401730354011011000000150006001730190000
+/V=C77.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:09:33JBENTANCOU
+ NNNNN 00075   Fecha Asiento                                     INNSNA000085015201070230000011000000085004001050137000
+/V=C49637
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:24:11JBENTANCOU
+ NNNNN 03819   fecha string                                      INNNNF000007015200270452001011000100007000700270137000
+/V=F(MID,C75,7,4)+F(MID,C75,4,2)+F(MID,C75,1,2)
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2022-09-08 15:56:11EPINATO
+ NNNNN 00231   WHERE                                             INNSNF000007015000270210001011000000007000700270126000
+/V="Sucursal ="+C49636+ " and Asiento =" + C49635 +" and FechaProceso='"+C3819.2+"'"
+*$2023-09-20 17:24:11JBENTANCOU
+TN  NN 1001TAlta Asientos Extornados                A05041 00
+/?=I20
+*$2023-03-20 09:32:01LUISO
+ NNNNN 08691   Sucursal                                          INNSNA000007015200270202000011000100007000700270137000
+/V=C49636.2
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-03-20 09:31:51LUISO
+ NNNNN 08692   Fecha Proceso                                     INNSNF000007015200270202000011000100007000700270137000
+/V=C49637.2
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-03-20 09:31:51LUISO
+ NNNNN 08693   Asiento                                           INNSNF000007015200270202000011000100007000700270137000
+/V=C49635.2
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-03-20 09:31:51LUISO
+ NNNNN 08694   Fecha Extorno                                     INNSNF000007015200270202000011000100007000700270137000
+/V=C9500
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-03-20 09:31:51LUISO
+TN  NN 1009TModificación Solicitud de Extorno       M50041 00
+/?=I21
+*$2023-09-20 16:10:00JBENTANCOU
+VNNNNN 030109000502910801SSSD000000000000000000000000000000000000000
+/T=Rechazar Extorno
+/C=192192192
+*$2023-09-20 17:24:32JBENTANCOU
+KNNNNN 030018003201990736000101
+/F=0012400NNN000000000Arial                                   
+*$2023-09-20 17:24:34JBENTANCOU
+ NSSNS 49635   Asiento                                           IDNNNA030063020400860354021011500000063006000860190000
+/V=C49641.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:24:56JBENTANCOU
+ NSSNS 49636   Sucursal                                          IDNSNA030096020401190254021011500000096006001190190000
+/V=C427.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:24:56JBENTANCOU
+ NSSNS 49637   Fecha de Proceso                                  IDNSNA030063055800860710011011500000063044000860547000
+/V=C49637.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:24:56JBENTANCOU
+ NSSNS 49639   Usuario                                           IDNNNF030096055801190710001011500000096044001190532000
+/V=C49639
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:24:56JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=C49638='R'
+/M=No puede Rechazar una solicitud ya confirmada.
+*$2022-09-08 15:56:11EPINATO
+CNNNNN ME00000000000000000000100
+/?=C49638='C'
+/M=El asiento ya fue confirmado.
+*$2022-09-08 15:56:11EPINATO
+ NSSNS 49638   Estado                                            IDNNNK030129020401520254001011500000129006001520190000
+/V=R
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:24:56JBENTANCOU
+ NSSNS 49640   Tipo de Solicitud                                 IINSN 030129055801520710001011500000129044001520548000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 17:24:56JBENTANCOU
+TN  NN 1006TExtorno                                 C00001 00
+/?=I20
+*$2022-10-25 15:00:27EPINATO
+*N  NN *** Parámetro para llamar al proceso
+*$2022-09-08 15:56:11EPINATO
+*N  NN PROCESO: EXTORNO CONTABLE,C460,C2499.1 AS CANTIDAD_REGISTROS,C75.1 AS FECHA_VALOR,C231.1 AS WHERE_SENTENCIA
+*$2022-09-08 15:56:11EPINATO
+ NNNNN 00091   Texto                                             INNSNF000007015200270202000011000100007000700270137000
+/V=C49673.2[1,2]+ C49673.2[4,2] +C49673.2[7,4] 
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2022-10-25 16:42:00EPINATO
+ NNNNN 00556   sincronico                                        INNNNK000007015200300202000011000000007000700300137000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-09-12 15:47:37EPINATO
+ NNNNN 00866   returnCode                                        INNSNK000007015200270202020011000100007000700270137000
+/V=0
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-09-20 17:24:11JBENTANCOU
+CNNNNN  n00000000000000000000100
+/R=CON - EXTORNO CONTABLE,C460,C2499.1 AS CANTIDAD_REGISTROS,C91.5 AS FECHA_VALOR,C231.2 AS WHERE_SENTENCIA,C3144.1 AS esAjusteParam;C556.5 AS wait,C866.5 AS return_code,C33965.0 AS descripcion,C58665.0 AS excepcion, C73.0 AS errorType, C114.0 AS errorSubType
+*$2023-02-13 13:35:31LUISO
+ NNNNN 00866   returnCode                                        INNSN 000007015200270202020011000100007000700270137000
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-09-20 17:24:11JBENTANCOU
+ NNNNN 00460   Id Ejec                                           INNSN 000007015200270202000011000100007000700270137000
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2022-09-08 15:56:11EPINATO
+ NNNNN 00028   Concepto                                          INNSNF000007015000270510000011000000007000700270126000
+/V="Extorno Asiento:" + C49635.2
+*$2023-09-20 17:24:11JBENTANCOU
+*N  NN =============================
+*$2022-09-12 15:31:07EPINATO
+*N  NN *** Resultado ejecucion
+*$2022-09-12 15:31:07EPINATO
+*N  NN =============================
+*$2022-09-12 15:31:07EPINATO
+VNNNNN 040153022802020369SSSD000010000000000000000000000000000000000
+/T=¡Mensaje!
+/C=192192192
+*$2023-09-20 17:24:24JBENTANCOU
+KNNNNN 040036000700560346010000
+/?=C0866.5='1'
+/T=El proceso finalizó correctamente
+/F=0013700NNN000000000Arial                                   
+*$2023-09-20 17:24:25JBENTANCOU
+ NNNNN 33965                                                     ICSSNA040036001601270340001010000100061000300810077000
+/?=C0866.5#'1'YC0866.5#'3'
+/V=C33965.5
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*$2023-09-20 17:24:26JBENTANCOU
+KNNNNN 040036000700560346010000
+/?=C0866.5='3'
+/T=Hay un warning en el proceso de extorno
+/F=0013700NNN000000000Arial                                   
+*$2023-09-20 17:24:28JBENTANCOU
+TN  NN 1005TBaja de Asientos extornados             B05041 00
+/?=I20YC0866.5#'1'
+*$2023-09-20 16:10:57JBENTANCOU
+ NNNNN 08691   Sucursal                                          INNSNA000007015200270202000011000100007000700270137000
+/V=C49636.2
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-03-16 16:21:38LUISO
+ NNNNN 08692   Fecha Proceso                                     INNSNF000007015200270202000011000100007000700270137000
+/V=C49637.2
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-03-16 16:21:38LUISO
+ NNNNN 08693   Asiento                                           INNSNF000007015200270202000011000100007000700270137000
+/V=C49635.2
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-03-16 16:21:38LUISO
+ NNNNN 08694   Fecha Extorno                                     INNSNF000007015200270202000011000100007000700270137000
+/V=C9500
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-03-16 16:21:38LUISO
+TN  NN 1009TModificación Solicitud de Extorno       M50041 00
+/?=I20YC0866.5='1'
+*$2023-09-20 16:11:10JBENTANCOU
+ NNNNN 49635   Asiento                                           INNNNA000063020400860354021011000000063006000860190000
+/V=C49641.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:11:29JBENTANCOU
+ NNNNN 49636   Sucursal                                          INNSNA000096020401190254021011000000096006001190190000
+/V=C427.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:11:29JBENTANCOU
+ NNNNN 49637   Fecha de Proceso                                  INNSNA000063055800860710011011000000063044000860547000
+/V=C49637.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:11:29JBENTANCOU
+ NNNNN 49639   Usuario                                           INNNNF000096055801190710001011000000096044001190532000
+/V=C49639
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:11:29JBENTANCOU
+ NNNNN 49638   Estado                                            INNNNK000129020401520254001011000000129006001520190000
+/V=C
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:11:29JBENTANCOU
+TN  NN 1009TModificación Solicitud de Extorno       M50041 00
+/?=I20Y((C0866.5#'1'YC0866.5#'3')O(C0866.5='3'))
+*$2023-09-20 16:12:12JBENTANCOU
+ NNNNN 49635   Asiento                                           INNNNA000063020400860354021011000000063006000860190000
+/V=C49641.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:12:29JBENTANCOU
+ NNNNN 49636   Sucursal                                          INNSNA000096020401190254021011000000096006001190190000
+/V=C427.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:12:29JBENTANCOU
+ NNNNN 49637   Fecha de Proceso                                  INNSNA000063055800860710011011000000063044000860547000
+/V=C49637.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:12:29JBENTANCOU
+ NNNNN 49639   Usuario                                           INNNNF000096055801190710001011000000096044001190532000
+/V=C49639
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:12:29JBENTANCOU
+ NNNNN 49638   Estado                                            INNNNK000129020401520254001011000000129006001520190000
+/V=I
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-09-20 16:12:29JBENTANCOU
+TN  NN 1006TFinaliza Operación                      C00001 00
+/?=I20
+*$2023-09-20 15:47:11JBENTANCOU
+DN  NN 5067Ov00
+*$2023-02-13 13:53:22LUISO
+*#I20#Confirmación solicitud de extorno renovación DPF
+*#I100#Fecha Valor mas de 3 dias a fecha proceso
+*#I21#Rechazo solicitud de extorno renovación DPF

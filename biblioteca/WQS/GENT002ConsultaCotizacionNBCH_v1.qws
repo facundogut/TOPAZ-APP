@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/comext/getCotizacion/fecha/{fecha}/moneda/{idMoneda}</uri>
+    <serviceDescription>Obtiene la cotización de NBCH de compra y venta de mondas extranjeras según parametría de NBCH</serviceDescription>
+    <querys>
+        <query id="1" name="query" type="SIMPLE">
+            <sql>
+
+
+DECLARE @FECHA VARCHAR(8); 
+DECLARE @MONEDA INT;
+DECLARE @fechaSist VARCHAR(8);
+SELECT @fechaSist = CONVERT(VARCHAR(8), FECHAPROCESO, 112) FROM PARAMETROS;
+
+
+SET @FECHA = ?
+SET @MONEDA = ?
+IF NOT EXISTS (SELECT 1 FROM MONEDAS WHERE C6399=@MONEDA AND C6401 &lt;&gt; '$' AND TZ_LOCK=0)
+BEGIN
+    THROW 50000, 'Error: moneda incorrecta', 1;
+END 
+IF (LEN(@FECHA) = 8)
+BEGIN
+    IF @fechaSist = @FECHA OR @fechaSist &lt; @FECHA 
+    BEGIN
+        SELECT TOP 1
+            CAST(@FECHA AS DATETIME) AS fecha,
+            @MONEDA AS id,
+            m.TCCOMPRACOMUN AS cotizacionCompra,
+            m.TCVENTACOMUN AS cotizacionVenta,
+            m.C6400 AS des,
+            m.C6440 AS cotizacionBCRA
+        FROM dbo.MONEDAS m (NOLOCK)
+        WHERE M.C6399=@MONEDA AND m.C6401 &lt;&gt; '$' AND TZ_LOCK = 0
+    END
+    ELSE
+    BEGIN
+        SELECT TOP 1
+            cast(h.FECHA_COTIZACION as DATETIME) AS fecha,
+            MONEDA AS id,
+            h.TIPO_CAMBIO_COMPRA AS cotizacionCompra,
+            h.TIPO_CAMBIO_VENTA AS cotizacionVenta,
+            m.C6400 AS des,
+            h.TIPO_CAMBIO_OFICIAL AS cotizacionBCRA
+        FROM dbo.MONEDAS m (NOLOCK) 
+        JOIN dbo.HISTORICOTIPOSCAMBIO h ON m.C6399 = h.MONEDA 
+        WHERE (h.FECHA_COTIZACION &lt;= @FECHA) 
+        AND m.C6399=@MONEDA AND m.C6401 &lt;&gt; '$' AND h.TZ_LOCK = 0 
+        AND (h.TZ_LOCK = 0 OR h.TZ_LOCK IS NULL) AND m.TZ_LOCK = 0
+        ORDER BY h.FECHA_COTIZACION DESC
+    END
+END
+ELSE
+BEGIN
+    THROW 50000, 'Error: No cumple validacion', 1;
+END;</sql>
+            <input>
+                <inParameter description="" type="STRING">fecha</inParameter>
+                <inParameter description="" type="INTEGER">idMoneda</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="cotizacion">
+                    <outParameter description="fecha" type="STRING">
+                        <queryname>fecha</queryname>
+                        <servicename>fecha</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>id</queryname>
+                        <servicename>moneda.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>des</queryname>
+                        <servicename>moneda.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>cotizacionCompra</queryname>
+                        <servicename>cotizacionCompra</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>cotizacionVenta</queryname>
+                        <servicename>cotizacionVenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>cotizacionBCRA</queryname>
+                        <servicename>cotizacionBCRA</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

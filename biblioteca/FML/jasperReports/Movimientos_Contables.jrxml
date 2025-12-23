@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Clientes_Curso" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHA_PROCESO" class="java.util.Date" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT
+a.FECHAPROCESO,a.SUCURSAL,a.ASIENTO,a.MONEDA,
+a.RUBROCONTABLE,a.DEBITOCREDITO,a.CAPITALREALIZADO,
+a.INICIALESUSUARIO,a.FECHA_CONTABLE,b.ESTADO
+FROM MOVIMIENTOS_CONTABLES a,ASIENTOS b
+WHERE  a.ASIENTO=b.ASIENTO AND a.FECHAPROCESO=$P{FECHA_PROCESO} AND b.FECHAPROCESO=$P{FECHA_PROCESO} ORDER BY a.SUCURSAL, b.ESTADO]]>
+	</queryString>
+	<field name="FECHAPROCESO" class="java.sql.Timestamp"/>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="ASIENTO" class="java.math.BigDecimal"/>
+	<field name="MONEDA" class="java.math.BigDecimal"/>
+	<field name="RUBROCONTABLE" class="java.math.BigDecimal"/>
+	<field name="DEBITOCREDITO" class="java.lang.String"/>
+	<field name="CAPITALREALIZADO" class="java.math.BigDecimal"/>
+	<field name="INICIALESUSUARIO" class="java.lang.String"/>
+	<field name="FECHA_CONTABLE" class="java.sql.Timestamp"/>
+	<field name="ESTADO" class="java.math.BigDecimal"/>
+	<variable name="TOTALDEBITO" class="java.lang.Double" resetType="Group" resetGroup="ESTADO" calculation="Sum">
+		<variableExpression><![CDATA[$V{Debito}]]></variableExpression>
+	</variable>
+	<variable name="Credito" class="java.lang.Double" resetType="None">
+		<variableExpression><![CDATA[( $F{DEBITOCREDITO}.equals("C") ? $F{CAPITALREALIZADO} : 0 )]]></variableExpression>
+	</variable>
+	<variable name="Debito" class="java.lang.Double" resetType="None">
+		<variableExpression><![CDATA[( $F{DEBITOCREDITO}.equals("D") ? $F{CAPITALREALIZADO} : 0 )]]></variableExpression>
+	</variable>
+	<variable name="TOTALCREDITO" class="java.lang.Double" resetType="Group" resetGroup="ESTADO" calculation="Sum">
+		<variableExpression><![CDATA[$V{Credito}]]></variableExpression>
+	</variable>
+	<variable name="TOTALDEBITOSUC" class="java.lang.Double" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
+		<variableExpression><![CDATA[$V{TOTALDEBITO}]]></variableExpression>
+	</variable>
+	<variable name="TOTALCREDITOSUC" class="java.lang.Double" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
+		<variableExpression><![CDATA[$V{TOTALCREDITO}]]></variableExpression>
+	</variable>
+	<group name="SUCURSAL" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{SUCURSAL}]]></groupExpression>
+		<groupHeader>
+			<band height="23">
+				<staticText>
+					<reportElement x="30" y="0" width="100" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sucursal]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="152" y="0" width="100" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="12"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="3"/>
+		</groupFooter>
+	</group>
+	<group name="ESTADO">
+		<groupExpression><![CDATA[$F{ESTADO}]]></groupExpression>
+		<groupHeader>
+			<band height="55">
+				<staticText>
+					<reportElement x="30" y="0" width="100" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Estado]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="152" y="0" width="66" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{ESTADO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="34" width="53" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Asiento]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="53" y="34" width="53" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Usuario]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="202" y="34" width="53" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Moneda]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="255" y="34" width="110" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Capital Realizado]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="365" y="34" width="35" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[D / C]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="401" y="34" width="78" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Fecha Valor]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="106" y="34" width="96" height="20"/>
+					<textElement>
+						<font fontName="Arial" size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Rubro Contable]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="56">
+				<rectangle>
+					<reportElement x="252" y="13" width="234" height="40"/>
+				</rectangle>
+				<staticText>
+					<reportElement x="252" y="33" width="89" height="20"/>
+					<textElement>
+						<font fontName="Arial Black" size="10"/>
+					</textElement>
+					<text><![CDATA[Total Creditos:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="341" y="13" width="24" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{MONEDA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="341" y="33" width="24" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{MONEDA}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;(#,##0.00)">
+					<reportElement x="386" y="13" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{TOTALDEBITO}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="252" y="13" width="89" height="20"/>
+					<textElement>
+						<font fontName="Arial Black" size="10"/>
+					</textElement>
+					<text><![CDATA[Total Debitos:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;(#,##0.00)">
+					<reportElement x="386" y="33" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{TOTALCREDITO}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="2" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="83" splitType="Stretch">
+			<staticText>
+				<reportElement x="152" y="47" width="47" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="202" y="47" width="124" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{FECHA_PROCESO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="13" width="572" height="34"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="16" isBold="true" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[MOVIMIENTOS CONTABLES]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="106" y="0" width="96" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{RUBROCONTABLE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="401" y="0" width="78" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHA_CONTABLE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)">
+				<reportElement x="255" y="0" width="100" height="20" isPrintWhenDetailOverflows="true">
+					<printWhenExpression><![CDATA[$F{DEBITOCREDITO}.equals( "C" )]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{CAPITALREALIZADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="366" y="0" width="35" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DEBITOCREDITO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;(#,##0.00)">
+				<reportElement x="255" y="0" width="100" height="20">
+					<printWhenExpression><![CDATA[$F{DEBITOCREDITO}.equals( "D" )]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{CAPITALREALIZADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="202" y="0" width="16" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="53" y="0" width="53" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{INICIALESUSUARIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="53" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{ASIENTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="15" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="0" y="15" width="572" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial Black" size="10"/>
+				</textElement>
+				<text><![CDATA[NO HAY DATOS PARA PROCESAR]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

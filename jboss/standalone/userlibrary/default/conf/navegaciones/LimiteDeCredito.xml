@@ -1,0 +1,460 @@
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by Home (Home) -->
+<Navigation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="D:\TOP.UY.DES.001\Desarrollo\Diseño\esquemas\Navigation.xsd" name="LimiteDeCredito" initialNode="Clientes">
+	<Nodes>
+		<QueryNode name="Clientes" datasource="Top/Clientes" query="select c.NOMBRECLIENTE,c.CODIGOCLIENTE from CRE_LIMITECLIENTE_HIST l, CLI_CLIENTES c 
+where solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente and c.CODIGOCLIENTE =  l.CLIENTE" title="Cliente">
+			<Parameters>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+			</Parameters>
+			<Attributes>			
+				<Attribute name="Cliente" type="N" value="query.codigocliente" visible="true" contextInfo="false" format="############"/>
+				<Attribute name="Nombre" type="A" value="query.nombrecliente" visible="true"/>
+				<Attribute name="Solicitud" type="N" value="parameters.Solicitud" visible="false"/>
+				<Attribute name="SolCliente" type="A" value="parameters.SolCliente" visible="false"/>
+			</Attributes>
+			<Filter>
+				<FilterAttribute attributeName="Solicitud"/>
+				<FilterAttribute attributeName="SolCliente"/>
+			</Filter>
+			<Transitions>
+				<Transition name="Grupo Economico" to="Grupo Economico">
+					<TransitionAttributes>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="A" value="attributes.SolCliente"/>
+					</TransitionAttributes>
+				</Transition>
+				<Transition name="Cliente" to="Cliente">
+					<TransitionAttributes>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="A" value="attributes.SolCliente"/>
+						<TransitionAttribute name="Cliente" type="N" value="attributes.Cliente"/>
+					</TransitionAttributes>
+				</Transition>
+			</Transitions>			
+		</QueryNode>
+		<QueryNode name="Grupo Economico" datasource="Top/Clientes" query=" select  a.GRUPO, c.NOMBRE, d.C6400 as MONEDA,  a.SALDOS, a.SOLICITUDES, b.LIMITEIMPORTE,  
+		b.LIMITEIMPORTE - (SALDOS+SOLICITUDES) AS DISPONIBLE
+	from (  
+	select grupo as grupo,  sum(saldos) as saldos, sum (solicitudes) as solicitudes
+	   from(  
+		   SELECT grupo_economico as grupo, sum(a.CAPITAL_MONEDA_LIMITE) as saldos, 0 as solicitudes  
+		   FROM CRE_RESULTADO_LIMITE_GE a 
+		   where SALDO_SOLICITUD = 'A'  
+				 and a.solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente
+		   group by a.grupo_economico
+		                union all
+		   SELECT grupo_economico as grupo,   0 as saldos, sum(a.CAPITAL_MONEDA_LIMITE) as solicitudes  
+		   FROM CRE_RESULTADO_LIMITE_GE a 
+		   where a.SALDO_SOLICITUD = 'O'  
+				 and a.solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente
+		   group by a.grupo_economico
+	   ) group by grupo )  a, CRE_HISTORICO_LIMITE_GE b, CLI_GRUPOSECONOMICOS c
+,MONEDAS d	   where a.grupo = b.GRUPOECONOMICO and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente and c.codigogrupoeconomico=a.grupo  and d.c6399 = b.moneda" title="Grupo Economico">
+			<Parameters>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="Grupo" type="N" value="query.GRUPO" visible="true" contextInfo="true" format="############"/>
+				<Attribute name="NombreGrupo" type="A" value="query.NOMBRE" visible="true" contextInfo="true"/>
+				<Attribute name="Moneda" type="A" value="query.MONEDA" visible="true" contextInfo="true"/>
+				<Attribute name="LimiteImporte" type="I" value="query.LIMITEIMPORTE" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Disponible" type="I" value="query.DISPONIBLE" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Deuda" type="I" value="query.SALDOS" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Solicitudes" type="I" value="query.SOLICITUDES" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Solicitud" type="N" value="parameters.Solicitud" visible="false"/>
+				<Attribute name="SolCliente" type="A" value="parameters.SolCliente" visible="false"/>
+			</Attributes>
+			<Transitions>
+				<Transition name="Datos del Cliente del GE" to="Cliente Del GE">
+					<TransitionAttributes>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="A" value="attributes.SolCliente"/>
+						<TransitionAttribute name="Grupo" type="N" value="attributes.Grupo"/>
+					</TransitionAttributes>
+				</Transition>
+			</Transitions>
+			<Conditions>
+				<Condition>Disponible&lt;0</Condition><color>16711680</color>
+			</Conditions>
+		</QueryNode>
+		<QueryNode name="Cliente Del GE" datasource="Top/Clientes" query="
+		   	    select  CLIENTE, c.NOMBRECLIENTE,D.C6400,SALDOS, SOLICITUDES
+	   from (select cliente as cliente, sum(saldos) as saldos, sum (solicitudes) as solicitudes
+	   from(  
+		   SELECT a.CLIENTE as cliente,  sum(a.CAPITAL_MONEDA_LIMITE) as saldos, 0 as solicitudes  
+		   FROM CRE_RESULTADO_LIMITE_GE a 
+		   where a.SALDO_SOLICITUD = 'A'  and grupo_economico = parameters.Grupo
+		         and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente
+		   group by a.cliente
+		                union all
+		   SELECT a.CLIENTE as cliente, 0 as saldos, sum(a.CAPITAL_MONEDA_LIMITE) as solicitudes  
+		   FROM CRE_RESULTADO_LIMITE_GE a 
+		   where a.SALDO_SOLICITUD = 'O'  and grupo_economico = parameters.Grupo
+		         and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente
+		   group by a.cliente
+	   ) group by cliente )  a, CRE_HISTORICO_LIMITE_GE b,CLI_CLIENTES c,MONEDAS d
+	   where b.grupoeconomico= parameters.Grupo
+	   and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente and a.CLIENTE = c.codigocliente and d.c6399 = b.moneda" title="Cliente del GE">
+			<Parameters>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+				<Parameter name="Grupo" type="N"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="Cliente" type="N" value="query.CLIENTE" visible="true" contextInfo="true" format="############"/>
+				<Attribute name="Nombre" type="A" value="query.NOMBRECLIENTE" visible="true" contextInfo="false"/>
+				<Attribute name="Moneda" type="A" value="query.C6400" visible="true" contextInfo="false"/>
+				<Attribute name="Deuda" type="I" value="query.SALDOS" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Solicitudes" type="I" value="query.SOLICITUDES" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Solicitud" type="N" value="parameters.Solicitud" visible="false" contextInfo="false"/>
+				<Attribute name="SolCliente" type="N" value="parameters.SolCliente" visible="false" contextInfo="false"/>
+				<Attribute name="Grupo" type="N" value="parameters.Grupo" visible="false" contextInfo="false"/>
+			</Attributes>
+			<Transitions>
+				<Transition name="Deuda" to="Deuda Cliente GE" condition="attributes.Saldos != 0">
+					<TransitionAttributes>
+						<TransitionAttribute name="Cliente" type="N" value="attributes.Cliente"/>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="A" value="attributes.SolCliente"/>
+						<TransitionAttribute name="Grupo" type="N" value="attributes.Grupo"/>
+					</TransitionAttributes>
+				</Transition>
+				<Transition name="Solicitudes" to="Solicitudes Cliente GE" condition="attributes.Solicitudes != 0">
+					<TransitionAttributes>
+						<TransitionAttribute name="Cliente" type="N" value="attributes.Cliente"/>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="A" value="attributes.SolCliente"/>
+						<TransitionAttribute name="Grupo" type="N" value="attributes.Grupo"/>
+					</TransitionAttributes>
+				</Transition>
+			</Transitions>
+		</QueryNode>
+		<QueryNode name="Cliente" datasource="Top/Clientes" query="select SALDOS, d.c6400 as MONEDA_LIMITE, SOLICITUDES, LIMITE, 
+		LIMITE - (SALDOS + SOLICITUDES) AS DISPONIBLE,
+		(LIMITE - (SALDOS + SOLICITUDES)) + (LIMITE * (TOLERANCIA / 100)) AS DISPONIBLE_TOLERANCIA  	
+	from (		   
+	    select sum(saldos) as saldos, sum(solicitudes) as solicitudes
+	    from (
+			SELECT 0 as saldos, sum(a.CAPITAL_MONEDA_LIMITE) as solicitudes 
+			FROM CRE_RESULTADO_LIMITE_CLIENTE a
+			where a.SALDO_SOLICITUD = 'O'
+			and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente
+			union all
+			SELECT sum(a.CAPITAL_MONEDA_LIMITE) as saldos,  0 as solicitudes 
+			FROM CRE_RESULTADO_LIMITE_CLIENTE a
+			where a.SALDO_SOLICITUD = 'A'
+			and solicitud =parameters.Solicitud and solicitud_cliente =parameters.SolCliente
+		) ) a, CRE_LIMITECLIENTE_HIST b, MONEDAS d 
+	where solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente and d.c6399 = b.MONEDA_LIMITE	 " title="Cliente">
+			<Parameters>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+				<Parameter name="Cliente" type="N"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="MonedaLimite" type="A" value="query.MONEDA_LIMITE" visible="true" contextInfo="true"/>
+				<Attribute name="Limite" type="I" value="query.LIMITE" visible="true" contextInfo="true" format="###,###,##0.00"/>
+				<Attribute name="Deuda" type="I" value="query.SALDOS" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SolicitudesCredito" type="I" value="query.SOLICITUDES" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Disponible" type="I" value="query.DISPONIBLE" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Disp_Tolerancia" type="I" value="query.DISPONIBLE_TOLERANCIA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Solicitud" type="N" value="parameters.Solicitud" visible="false" contextInfo="false"/>
+				<Attribute name="SolCliente" type="A" value="parameters.SolCliente" visible="false" contextInfo="false"/>
+				<Attribute name="Cliente" type="N" value="parameters.Cliente" visible="false" contextInfo="false"/>
+			</Attributes>
+			<Transitions>
+				<Transition name="Riesgo" to="Riesgo">
+					<TransitionAttributes>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="A" value="attributes.SolCliente"/>
+						<TransitionAttribute name="Cliente" type="N" value="attributes.Cliente"/>
+					</TransitionAttributes>
+				</Transition>
+			</Transitions>
+			<Conditions>
+				<Condition>Disponible&lt;0</Condition><color>16711680</color>
+				<Condition>Disp_Tolerancia&lt;0</Condition><color>16711680</color>
+			</Conditions>
+		</QueryNode>
+		<QueryNode name="Riesgo" datasource="Top/Clientes" query="select a.RIESGO, SALDOS, SOLICITUDES, c.LIMITE, 
+		c.LIMITE - (SALDOS + SOLICITUDES) AS DISPONIBLE, 
+		(c.LIMITE - (SALDOS + SOLICITUDES)) + (c.LIMITE * (c.TOLERANCIA / 100)) AS DISPONIBLE_TOLERANCIA,  	
+		c.APERTURA, d.c6400 as MONEDA_LIMITE, e.descripcion
+		from (		   
+		    select riesgo, sum(saldos) as saldos, sum(solicitudes) as solicitudes
+		    from (
+				SELECT a.riesgo as riesgo, 0 as saldos, sum(a.CAPITAL_MONEDA_LIMITE) as solicitudes 
+				FROM CRE_RESULTADO_LIMITE_CLIENTE a
+				where a.SALDO_SOLICITUD = 'O'
+				and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente
+				group by riesgo  
+				union all
+				SELECT a.riesgo as riesgo, sum(a.CAPITAL_MONEDA_LIMITE) as saldos,  0 as solicitudes 
+				FROM CRE_RESULTADO_LIMITE_CLIENTE a
+				where a.SALDO_SOLICITUD = 'A'
+				and solicitud =parameters.Solicitud and solicitud_cliente =parameters.SolCliente
+				group by riesgo  
+			) 
+			group by riesgo) a, CRE_LIMITECLIENTE_HIST b, CRE_LIMITERIESGO_HIST  c, MONEDAS d, CRE_TIPOS_RIESGOS e
+		where b.SOLICITUD = c.SOLICITUD and b.SOLICITUD_CLIENTE = c.SOLICITUD_CLIENTE and a.riesgo = c.riesgo and
+		b.solicitud = parameters.Solicitud and b.solicitud_cliente =parameters.SolCliente and d.c6399 = b.MONEDA_LIMITE	and c.riesgo = e.codigo_riesgo 
+	" title="Riesgo">
+			<Parameters>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+				<Parameter name="Cliente" type="N"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="MonedaLimite" type="A" value="query.MONEDA_LIMITE" visible="true" contextInfo="true"/>
+				<Attribute name="DescripcionRiesgo" type="A" value="query.DESCRIPCION" visible="true" contextInfo="true" format=""/>
+				<Attribute name="Limite" type="I" value="query.LIMITE" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Disponible" type="I" value="query.DISPONIBLE" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Disp_Tolerancia" type="I" value="query.DISPONIBLE_TOLERANCIA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Deuda" type="I" value="query.SALDOS" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SolicitudesCredito" type="I" value="query.SOLICITUDES" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Apertura" type="A" value="query.APERTURA" visible="false" contextInfo="false"/>
+				<Attribute name="Cliente" type="N" value="parameters.Cliente" visible="false" contextInfo="false"/>
+				<Attribute name="Solicitud" type="N" value="parameters.Solicitud" visible="false" contextInfo="false"/>
+				<Attribute name="SolCliente" type="A" value="parameters.SolCliente" visible="false" contextInfo="false"/>
+				<Attribute name="Riesgo" type="N" value="query.RIESGO" visible="false" contextInfo="true" format=""/>
+			</Attributes>
+			<Transitions>
+				<Transition name="Riesgo Familia" to="Riesgo Familia">
+					<TransitionAttributes>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="A" value="attributes.SolCliente"/>
+						<TransitionAttribute name="Riesgo" type="N" value="attributes.Riesgo"/>
+						<TransitionAttribute name="Cliente" type="N" value="attributes.Cliente"/>
+					</TransitionAttributes>
+				</Transition>
+			</Transitions>
+			<Conditions>
+				<Condition>Disponible&lt;0</Condition><color>16711680</color>
+				<Condition>Disp_Tolerancia&lt;0</Condition><color>16711680</color>
+			</Conditions>
+		</QueryNode>
+		<QueryNode name="Riesgo Familia" datasource="Top/Clientes" query="
+select a.RIESGO, a.FAMILIA,SALDOS, SOLICITUDES, MONEDA_LIMITE, c.LIMITE, c.LIMITE - (saldos + solicitudes) AS DISPONIBLE, 
+(c.LIMITE - (SALDOS + SOLICITUDES)) + (c.LIMITE * (c.TOLERANCIA / 100)) AS DISPONIBLE_TOLERANCIA,  	
+c.APERTURA, d.c6400 as MONEDA, e.descripcion as descripcion_riesgo,f.descripcion as descripcion_familia
+			from (		   
+			    select riesgo, familia, sum(saldos) as saldos, sum(solicitudes) as solicitudes
+			    from (
+					SELECT a.riesgo as riesgo, a.familia as familia, 0 as saldos, sum(a.CAPITAL_MONEDA_LIMITE) as solicitudes 
+					FROM CRE_RESULTADO_LIMITE_CLIENTE a
+					where a.SALDO_SOLICITUD = 'O'
+					and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente and riesgo = parameters.Riesgo
+					group by riesgo , familia 
+					union all
+					SELECT a.riesgo as riesgo, a.familia, sum(a.CAPITAL_MONEDA_LIMITE) as saldos,  0 as solicitudes 
+					FROM CRE_RESULTADO_LIMITE_CLIENTE a
+					where a.SALDO_SOLICITUD = 'A'
+					and solicitud =parameters.Solicitud and solicitud_cliente =parameters.SolCliente and riesgo = parameters.Riesgo
+					group by riesgo, familia
+				) 
+				group by riesgo, familia) a, CRE_LIMITECLIENTE_HIST b, CRE_LIMITEFAMILIA_HIST  c, MONEDAS d, CRE_TIPOS_RIESGOS e,
+				CRE_FAMILIAS f
+			where b.SOLICITUD = c.SOLICITUD and b.SOLICITUD_CLIENTE = c.SOLICITUD_CLIENTE and a.riesgo = c.riesgo and a.familia = c.familia and	b.solicitud = parameters.Solicitud and b.solicitud_cliente =parameters.SolCliente and d.c6399 = b.MONEDA_LIMITE	and c.riesgo = e.codigo_riesgo
+			and f.FAMILIAPROD = a.familia
+" title="Riesgo">
+			<Parameters>
+				<Parameter name="Cliente" type="N"/>
+				<Parameter name="Riesgo" type="N"/>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="MonedaLimite" type="A" value="query.MONEDA" visible="true" contextInfo="false"/>
+				<Attribute name="DescripcionRiesgo" type="N" value="query.DESCRIPCION_RIESGO" visible="true" contextInfo="false"/>
+				<Attribute name="DescripcionFamilia" type="N" value="query.DESCRIPCION_FAMILIA" visible="true" contextInfo="true"/>
+				<Attribute name="ImporteLimiteFlia" type="I" value="query.LIMITE" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Disponible" type="I" value="query.DISPONIBLE" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Disp_Tolerancia" type="I" value="query.DISPONIBLE_TOLERANCIA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Deuda" type="I" value="query.SALDOS" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SolicitudesCredito" type="I" value="query.SOLICITUDES" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Apertura" type="A" value="query.APERTURA" visible="false" contextInfo="false"/>
+				<Attribute name="Cliente" type="N" value="parameters.Cliente" visible="false" contextInfo="false"/>
+				<Attribute name="Solicitud" type="N" value="parameters.Solicitud" visible="false" contextInfo="false"/>
+				<Attribute name="SolCliente" type="A" value="parameters.SolCliente" visible="false" contextInfo="false"/>
+				<Attribute name="Moneda" type="N" value="query.MONEDA_LIMITE" visible="false" contextInfo="false"/>
+				<Attribute name="Riesgo" type="N" value="query.RIESGO" visible="false" contextInfo="false"/>
+				<Attribute name="Familia" type="N" value="query.FAMILIA" visible="false" contextInfo="true"/>
+			</Attributes>
+			<Transitions>
+				<Transition name="Riesgo Familia Moneda" to="Riesgo Familia Moneda">
+					<TransitionAttributes>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="N" value="attributes.SolCliente"/>
+						<TransitionAttribute name="Riesgo" type="N" value="attributes.Riesgo"/>
+						<TransitionAttribute name="Familia" type="N" value="attributes.Familia"/>
+						<TransitionAttribute name="Moneda" type="N" value="attributes.Moneda"/>
+					</TransitionAttributes>
+				</Transition>
+			</Transitions>
+			<Conditions>
+				<Condition>Disponible&lt;0</Condition><color>16711680</color>
+				<Condition>Disp_Tolerancia&lt;0</Condition><color>16711680</color>
+			</Conditions>
+		</QueryNode>
+		<QueryNode name="Riesgo Familia Moneda" datasource="Top/Clientes" query="	
+		select a.RIESGO, a.FAMILIA, a.MONEDA, desc_moneda, SALDOS, SOLICITUDES, c.LIMITE, C.LIMITE - (SALDOS + SOLICITUDES) AS DISPONIBLE, 
+		(c.LIMITE - (SALDOS + SOLICITUDES)) + (c.LIMITE * (c.TOLERANCIA / 100)) AS DISPONIBLE_TOLERANCIA,  	
+		d.c6400 as MONEDALIMITE, e.descripcion as DESCRIPCION_RIESGO,f.descripcion as DESCRIPCION_FAMILIA
+		from (		   
+		select riesgo, familia, moneda, desc_moneda, sum(saldos) as saldos, sum(solicitudes) as solicitudes
+		from (
+		SELECT a.riesgo as riesgo, a.familia as familia, a.moneda as moneda, m.C6400 AS desc_Moneda, 
+		0 as saldos, sum(a.CAPITAL_MONEDA_LIMITE) as solicitudes FROM CRE_RESULTADO_LIMITE_CLIENTE a, MONEDAS m
+		where a.SALDO_SOLICITUD = 'O' and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente 
+		AND m.C6399=a.moneda and riesgo = parameters.Riesgo and familia = parameters.Familia
+		group by riesgo , familia , moneda, C6400
+		union all
+		SELECT a.riesgo as riesgo, a.familia, a.moneda as moneda, m.C6400 AS desc_Moneda, 
+		sum(a.CAPITAL_MONEDA_LIMITE) as saldos,  0 as solicitudes 
+		FROM CRE_RESULTADO_LIMITE_CLIENTE a, MONEDAS m
+		where a.SALDO_SOLICITUD = 'A'
+		and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente 
+		and riesgo = parameters.Riesgo and familia = parameters.Familia AND a.MONEDA= m.C6399
+		group by riesgo, familia, moneda, C6400
+		) 
+		group by riesgo, familia, moneda, desc_moneda) a, CRE_LIMITECLIENTE_HIST b, CRE_LIMITEMONEDA_HIST   c, CRE_TIPOS_RIESGOS e,
+		CRE_FAMILIAS f,MONEDAS d
+		where b.SOLICITUD = c.SOLICITUD and b.SOLICITUD_CLIENTE = c.SOLICITUD_CLIENTE and a.riesgo = c.riesgo 
+		and a.familia = c.familia and a.moneda = c.moneda and b.solicitud = parameters.Solicitud 
+		and b.solicitud_cliente =parameters.SolCliente  and d.c6399 = MONEDA_LIMITE and c.riesgo = e.codigo_riesgo 
+		and f.FAMILIAPROD = a.familia" title="Riesgo Familia Moneda">
+		<Parameters>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+				<Parameter name="Riesgo" type="N"/>
+				<Parameter name="Familia" type="N"/>
+				<Parameter name="Moneda" type="N"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="MonedaLimite" type="A" value="query.MONEDALIMITE" visible="true" contextInfo="true"/>
+				<Attribute name="DescripcionRiesgo" type="A" value="query.DESCRIPCION_RIESGO" visible="true" contextInfo="false"/>
+				<Attribute name="DescripcionFamilia" type="N" value="query.DESCRIPCION_FAMILIA" visible="true" contextInfo="false"/>
+				<Attribute name="Moneda" type="N" value="query.Moneda" visible="false" contextInfo="false"/>
+				<Attribute name="DescripcionMoneda" type="A" value="query.desc_moneda" visible="true" contextInfo="false"/>				
+				<Attribute name="LimiteFamiliaMoneda" type="I" value="query.LIMITE" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Disponible" type="I" value="query.DISPONIBLE" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Disp_Tolerancia" type="I" value="query.DISPONIBLE_TOLERANCIA" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Deuda" type="I" value="query.SALDOS" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="SolicitudesCredito" type="I" value="query.SOLICITUDES" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Solicitud" type="N" value="parameters.Solicitud" visible="false" contextInfo="false"/>
+				<Attribute name="SolCliente" type="A" value="parameters.SolCliente" visible="false" contextInfo="false"/>
+				<Attribute name="Riesgo" type="N" value="query.RIESGO" visible="false" contextInfo="false"/>
+				<Attribute name="Familia" type="N" value="query.Familia" visible="false" contextInfo="false"/>
+			</Attributes>
+			<Transitions>
+				<Transition name="Deuda" to="Deuda Cliente">
+					<TransitionAttributes>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="A" value="attributes.SolCliente"/>
+						<TransitionAttribute name="Riesgo" type="N" value="attributes.Riesgo"/>
+						<TransitionAttribute name="Moneda" type="N" value="attributes.Moneda"/>
+						<TransitionAttribute name="Familia" type="N" value="attributes.Familia"/>
+					</TransitionAttributes>
+				</Transition>
+				<Transition name="Solicitudes" to="Solicitudes Cliente">
+					<TransitionAttributes>
+						<TransitionAttribute name="Solicitud" type="N" value="attributes.Solicitud"/>
+						<TransitionAttribute name="SolCliente" type="A" value="attributes.SolCliente"/>
+						<TransitionAttribute name="Riesgo" type="N" value="attributes.Riesgo"/>
+						<TransitionAttribute name="Moneda" type="N" value="attributes.Moneda"/>
+						<TransitionAttribute name="Familia" type="N" value="attributes.Familia"/>
+					</TransitionAttributes>
+				</Transition>
+			</Transitions>
+			<Conditions>
+				<Condition>Disponible&lt;0</Condition><color>16711680</color>
+				<Condition>Disp_Tolerancia&lt;0</Condition><color>16711680</color>
+			</Conditions>
+		</QueryNode>
+		<QueryNode name="Deuda Cliente" datasource="Top/Clientes" query="
+	SELECT a.riesgo as RIESGO, a.familia as FAMILIA, a.moneda as MONEDA, a.CAPITAL_MONEDA_LIMITE as SOLICITUDES,e.c6251 as DESCRIPCION_PRODUCTO, c.OPERACION, c.CUENTA,
+	d.c6400 as MONEDALIMITE, e.descripcion as descripcion_riesgo,f.descripcion as descripcion_familia
+						FROM CRE_RESULTADO_LIMITE_CLIENTE a, MONEDAS d, Saldos c,CRE_TIPOS_RIESGOS e,CRE_FAMILIAS f,PRODUCTOS e 
+						where a.SALDO_SOLICITUD = 'A'
+						and solicitud =parameters.Solicitud and solicitud_cliente =parameters.SolCliente and a.riesgo = parameters.Riesgo and a.moneda = parameters.Moneda  and d.c6399 = a.MONEDA and a.riesgo = e.codigo_riesgo and f.FAMILIAPROD = a.familia and a.familia=parameters.Familia and c.jts_oid = a.identificacion and e.c6250 = c.producto  " title="Saldos del Cliente">
+			<Parameters>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+				<Parameter name="Riesgo" type="N"/>
+				<Parameter name="Moneda" type="N"/>
+				<Parameter name="Familia" type="N"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="DescripcionMoneda" type="A" value="query.MonedaLimite" visible="true" contextInfo="false"/>
+				<Attribute name="DescripcionProducto" type="A" value="query.DESCRIPCION_PRODUCTO" visible="true" contextInfo="false"/>
+				<Attribute name="Operacion" type="N" value="query.OPERACION" visible="true" contextInfo="false"/>
+				<Attribute name="Cuenta" type="N" value="query.CUENTA" visible="true" contextInfo="false"/>
+				<Attribute name="DescripcionRiesgo" type="N" value="query.descripcion_Riesgo" visible="true" contextInfo="false"/>
+				<Attribute name="DescripcionFamilia" type="N" value="query.descripcion_Familia" visible="true" contextInfo="false"/>
+				<Attribute name="Deuda" type="I" value="query.Solicitudes" visible="true" format="###,###,##0.00" contextInfo="false"/>
+				<Attribute name="Riesgo" type="N" value="query.Riesgo" visible="false" contextInfo="false"/>
+				<Attribute name="Familia" type="N" value="query.Familia" visible="false" contextInfo="false"/>
+				<Attribute name="Moneda" type="N" value="query.Moneda" visible="false" contextInfo="false"/>
+			</Attributes>
+		</QueryNode>
+		<QueryNode name="Solicitudes Cliente GE" datasource="Top/Clientes" query="   SELECT a.identificacion as SALDO,  d.c6400 as MONEDA,  a.CAPITAL_MONEDA_LIMITE as SALDOS
+   FROM CRE_RESULTADO_LIMITE_GE a, CRE_HISTORICO_LIMITE_GE b , MONEDAS d 
+   where a.SOLICITUD = b.SOLICITUD and a.SOLICITUD_CLIENTE = b.SOLICITUD_CLIENTE 
+         and a.GRUPO_ECONOMICO = b.GRUPOECONOMICO and a.SALDO_SOLICITUD = 'O'  and
+         a.solicitud = parameters.Solicitud and a.solicitud_cliente =parameters.SolCliente  and grupo_economico = parameters.Grupo and cliente = parameters.Cliente and d.c6399 = b.moneda" title="Solicitudes del Grupo Economico">
+			<Parameters>
+				<Parameter name="Cliente" type="N"/>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+				<Parameter name="Grupo" type="N"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="IDSolicitud" type="N" value="query.SALDO" visible="true" contextInfo="false"/>
+				<Attribute name="Moneda" type="A" value="query.MONEDA" visible="true" contextInfo="false"/>
+				<Attribute name="Importe" type="I" value="query.SALDOS" visible="true" contextInfo="false" format="###,###,##0.00"/>
+			</Attributes>
+		</QueryNode>
+		<QueryNode name="Deuda Cliente GE" datasource="Top/Clientes" query="SELECT a.identificacion as SALDO,  b.MONEDA as CODIGOMONEDA,  d.c6400, a.CAPITAL_MONEDA_LIMITE as SALDOS,e.c6251 as DESCRIPCION_PRODUCTO, c.OPERACION, c.CUENTA
+			   FROM CRE_RESULTADO_LIMITE_GE a, CRE_HISTORICO_LIMITE_GE b,Saldos c, MONEDAS d,PRODUCTOS e 
+			   where a.SOLICITUD = b.SOLICITUD and a.SOLICITUD_CLIENTE = b.SOLICITUD_CLIENTE 
+			         and a.GRUPO_ECONOMICO = b.GRUPOECONOMICO and a.SALDO_SOLICITUD = 'A'  and
+			         a.solicitud = parameters.Solicitud and a.solicitud_cliente =parameters.SolCliente  and grupo_economico = parameters.Grupo and cliente = parameters.Cliente and c.jts_oid = a.identificacion and e.c6250 = c.producto and d.c6399 = b.moneda" title="Deuda del Grupo Economico">
+			<Parameters>
+				<Parameter name="Cliente" type="N"/>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+				<Parameter name="Grupo" type="N"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="Moneda" type="A" value="query.c6400" visible="true" contextInfo="false"/>
+				<Attribute name="DescripcionProducto" type="A" value="query.DESCRIPCION_PRODUCTO" visible="true" contextInfo="false"/>
+				<Attribute name="Operacion" type="N" value="query.OPERACION" visible="true" contextInfo="false"/>
+				<Attribute name="Cuenta" type="N" value="query.CUENTA" visible="true" contextInfo="false"/>
+				<Attribute name="Deuda" type="I" value="query.SALDOS" visible="true" contextInfo="false" format="###,###,##0.00"/>
+				<Attribute name="Saldo" type="N" value="query.SALDO" visible="false" contextInfo="false"/>
+				<Attribute name="CodigoMoneda" type="N" value="query.CODIGOMONEDA" visible="false" contextInfo="false"/>
+			</Attributes>
+		</QueryNode>
+		<QueryNode name="Solicitudes Cliente" datasource="Top/Clientes" query="
+SELECT a.riesgo as RIESGO, a.familia as FAMILIA, d.c6400 as MONEDA, a.CAPITAL_MONEDA_LIMITE as SOLICITUDES, e.descripcion as descripcion_riesgo,f.descripcion as descripcion_familia 
+						FROM CRE_RESULTADO_LIMITE_CLIENTE a,MONEDAS d, CRE_TIPOS_RIESGOS e,CRE_FAMILIAS f
+						where a.SALDO_SOLICITUD = 'O'
+						and solicitud = parameters.Solicitud and solicitud_cliente =parameters.SolCliente and a.riesgo = parameters.Riesgo and a.moneda =parameters.Moneda and familia=parameters.Familia and d.c6399 = a.moneda  and a.riesgo = e.codigo_riesgo and f.FAMILIAPROD = a.familia and a.familia=parameters.Familia" title="Solicitudes del Cliente">
+			<Parameters>
+				<Parameter name="Solicitud" type="N"/>
+				<Parameter name="SolCliente" type="A"/>
+				<Parameter name="Riesgo" type="N"/>
+				<Parameter name="Moneda" type="N"/>
+				<Parameter name="Familia" type="N"/>
+			</Parameters>
+			<Attributes>
+				<Attribute name="Riesgo" type="N" value="query.DESCRIPCION_RIESGO" visible="true" contextInfo="false"/>
+				<Attribute name="Familia" type="N" value="query.DESCRIPCION_FAMILIA" visible="true" contextInfo="false"/>
+				<Attribute name="Moneda" type="A" value="query.MONEDA" visible="true" contextInfo="false"/>
+				<Attribute name="Solicitudes" type="I" value="query.Solicitudes" visible="true" contextInfo="false" format="###,###,##0.00"/>
+			</Attributes>
+		</QueryNode>
+	</Nodes>
+</Navigation>

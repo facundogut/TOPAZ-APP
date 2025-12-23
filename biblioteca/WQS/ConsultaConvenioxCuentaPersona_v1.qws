@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/CuentaConvenio/{jtsOid}</uri>
+    <serviceDescription>Consulta Convenio x Cuenta, IdPersona</serviceDescription>
+    <title>Consulta Convenio x Cuenta, IdPersona</title>
+    <querys>
+        <query id="1" name="GrupoConvenioxCuentaPersona" type="MULTIPLE">
+            <sql>
+			DECLARE @jtsOid NUMERIC(15,0)
+
+			SET @jtsOid = ?
+			
+			
+			SELECT 
+			CR.ID_CONVENIO AS NroConvenio,
+			--CR.ID_PERSONA,
+			CP.NomConvPago AS NombreConvenio,
+			CP.Id_TpoConv AS TipoConvenio,
+			(SELECT TC.DscTpoConv FROM CONV_TIPOS TC WHERE TC.Id_TpoConv = CP.Id_TpoConv) AS DescTipoConvenio,
+			ISNULL((SELECT S.CUENTA FROM SALDOS S WHERE S.JTS_OID = CP.CuentaDeb),0) AS NroCuenta,
+			SA.PRODUCTO AS Producto,
+			(CASE WHEN SA.C1785=2 THEN 'CC' WHEN SA.C1785=3 THEN 'CA' END) AS TipoProducto,
+			SA.MONEDA AS Moneda,
+			(SELECT MO.C6400 FROM MONEDAS MO WHERE MO.C6399=SA.MONEDA) AS Denominacion,--POR REVISAR
+			SA.SUCURSAL AS Sucursal,
+			CP.Cuit AS CuitEmpresa,
+			CONVERT(varchar,CP.FecAlta,120) AS fechaAlta,
+			CONVERT(varchar,CP.FecVto,120) AS fechaVencimiento,
+			CONVERT(varchar,CP.FecUltAct,120) AS fechaUltActualizacion,
+			(CASE CP.SegmentoMov WHEN ' ' THEN 0 ELSE CP.SegmentoMov END) AS SegComisionMovimiento,&#13;
+			(CASE CP.SegmentoMen WHEN ' ' THEN 0 ELSE CP.SegmentoMen END) AS SegComisionMensual,
+			CP.MomentoCom AS MomentoComision,
+			(CASE CP.CobComDest WHEN ' ' THEN 'N' ELSE CP.CobComDest END) AS cobComisionDestino,
+			(CASE CP.RenAuto WHEN ' ' THEN 'N' ELSE CP.RenAuto END) AS RenovacionAutomatica,
+			(CASE CP.BajaAuto WHEN 1 THEN 'S' WHEN 0 THEN 'N' ELSE '' END) AS BajaAutomatica,
+			(CASE CP.InactAuto WHEN 1 THEN 'S' WHEN 0 THEN 'N' ELSE '' END) AS InactivacionAutomatica
+
+			FROM CRE_VINCULACIONES_CONVENIOS CR 
+				 INNER JOIN SALDOS SA ON CR.JTS_CV = SA.JTS_OID AND SA.C1785 IN (2,3) 
+				 INNER JOIN CONV_CONVENIOS_PAG CP ON CP.ID_ConvPago = CR.ID_CONVENIO AND CP.TZ_LOCK=0
+				 AND CR.JTS_CV = @jtsOid 
+
+			GROUP BY CR.ID_CONVENIO, CR.ID_PERSONA,
+					 CP.NomConvPago, CP.Id_TpoConv,
+					 SA.CUENTA,SA.PRODUCTO,
+					 SA.C1785,SA.MONEDA,
+					 SA.SUCURSAL,CP.Cuit,
+					 CP.FecAlta, CP.FecVto, 
+					 CP.FecUltAct, CP.SegmentoMov, 
+					 CP.SegmentoMen, CP.MomentoCom,
+					 CP.CobComDest, CP.RenAuto, 
+					 CP.BajaAuto, CP.InactAuto,&#13;
+					 CP.CuentaDeb
+			</sql>
+            <input>
+                <inParameter description="jtsOid" type="LONG">jtsOid</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="idCuenta">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NroConvenio</queryname>
+                        <servicename>NroConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NombreConvenio</queryname>
+                        <servicename>NombreConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>TipoConvenio</queryname>
+                        <servicename>TipoConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DescTipoConvenio</queryname>
+                        <servicename>DescTipoConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NroCuenta</queryname>
+                        <servicename>NroCuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Producto</queryname>
+                        <servicename>Producto</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TipoProducto</queryname>
+                        <servicename>TipoProducto</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Moneda</queryname>
+                        <servicename>Moneda</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Denominacion</queryname>
+                        <servicename>Denominacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Sucursal</queryname>
+                        <servicename>Sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>CuitEmpresa</queryname>
+                        <servicename>CuitEmpresa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaAlta</queryname>
+                        <servicename>fechaAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaUltActualizacion</queryname>
+                        <servicename>fechaUltActualizacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>SegComisionMovimiento</queryname>
+                        <servicename>SegComisionMovimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>SegComisionMensual</queryname>
+                        <servicename>SegComisionMensual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>MomentoComision</queryname>
+                        <servicename>MomentoComision</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>cobComisionDestino</queryname>
+                        <servicename>cobComisionDestino</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>RenovacionAutomatica</queryname>
+                        <servicename>RenovacionAutomatica</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>BajaAutomatica</queryname>
+                        <servicename>BajaAutomatica</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>InactivacionAutomatica</queryname>
+                        <servicename>InactivacionAutomatica</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

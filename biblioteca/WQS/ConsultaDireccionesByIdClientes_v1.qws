@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/direccionesById/{ID}/{Formato}/{TipoDireccion}</uri>
+    <serviceDescription>Consulta Direcciones por Id</serviceDescription>
+    <title>ConsultaDireccionesByIdClientes</title>
+    <querys>
+        <query id="1" name="direcciones" type="MULTIPLE">
+            <sql>DECLARE @ID AS numeric(12,0) = ?&#13;
+DECLARE @Formato AS varchar(2) = ?&#13;
+DECLARE @TipoDireccion AS varchar(2) = ?&#13;
+&#13;
+&#13;
+IF (ISNUMERIC(@ID) &lt;&gt; 1 OR (RTRIM(LTRIM(ISNULL(@Formato, ''))) &lt;&gt; '' AND PATINDEX('%[^A-Za-z]%', @Formato) &gt; 0) OR (RTRIM(LTRIM(ISNULL(@TipoDireccion, ''))) &lt;&gt; '' AND PATINDEX('%[^A-Za-z]%', @TipoDireccion) &gt; 0))&#13;
+BEGIN&#13;
+    THROW 50000, 'Error: El parámetro ID debe ser numérico, el parámetro Formato debe contener solo letras o espacios en blanco, y el parámetro TipoDireccion debe contener solo letras o espacios en blanco', 1;&#13;
+END&#13;
+&#13;
+SELECT&#13;
+    dir.ID AS id,&#13;
+    dir.FORMATO AS formato,&#13;
+    dir.TIPODIRECCION AS tipodireccion,&#13;
+    dir.PAIS AS pais,&#13;
+    dir.PROVINCIA AS provincia,&#13;
+    dir.DEPARTAMENTO AS departamento,&#13;
+    dir.LOCALIDAD AS localidad,&#13;
+    dir.CPA_VIEJO AS cpa_viejo,&#13;
+    dir.CPA_NUEVO AS cpa_nuevo,&#13;
+    dir.CALLE AS calle,&#13;
+    dir.NUMERO AS numero,&#13;
+    dir.PISO AS piso,&#13;
+    dir.APARTAMENTO AS apartamento,&#13;
+    dir.BARRIO AS barrio,&#13;
+    dir.MANZANA AS manzana,&#13;
+    dir.PARCELA AS parcela,&#13;
+    dir.CASA AS casa,&#13;
+    dir.MONOBLOCK AS monoblock,&#13;
+    dir.TIRA AS tira,&#13;
+    dir.CHACRA AS chacra,&#13;
+    dir.OBSERVACIONES AS observaciones,&#13;
+    CONVERT(varchar(10),dir.FECHA_MODIFICACION, 120) AS fecha_modificacion,&#13;
+    dir.ESTADO AS estado,&#13;
+    dir.NORMALIZADO AS normalizado,&#13;
+    dir.ORDINAL_DIR AS ordinal_dir,&#13;
+    dir.PROVINCIA_EXTERIOR AS provincia_exterior,&#13;
+    dir.departamento_exterior AS departamento_exterior,&#13;
+    dir.LOCALIDAD_EXTERIOR AS localidad_exterior		&#13;
+FROM CLI_DIRECCIONES dir&#13;
+WHERE dir.TZ_LOCK=0 AND&#13;
+    dir.ID = @ID AND&#13;
+    ((@Formato IS NULL OR RTRIM(LTRIM(@Formato)) = '') OR dir.FORMATO = @Formato) AND&#13;
+    ((@TipoDireccion IS NULL OR RTRIM(LTRIM(@TipoDireccion)) = '') OR dir.TIPODIRECCION = @TipoDireccion)</sql>
+            <input>
+                <inParameter description="ID" type="INTEGER">ID</inParameter>
+                <inParameter description="Formato" type="STRING">Formato</inParameter>
+                <inParameter description="TipoDireccion" type="STRING">TipoDireccion</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="direcciones">
+                    <outParameter description="" type="STRING">
+                        <queryname>id</queryname>
+                        <servicename>id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>formato</queryname>
+                        <servicename>formato</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tipodireccion</queryname>
+                        <servicename>tipodireccion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>pais</queryname>
+                        <servicename>pais</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>provincia</queryname>
+                        <servicename>provincia</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>departamento</queryname>
+                        <servicename>departamento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>localidad</queryname>
+                        <servicename>localidad</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>cpa_viejo</queryname>
+                        <servicename>cpa_viejo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>cpa_nuevo</queryname>
+                        <servicename>cpa_nuevo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>calle</queryname>
+                        <servicename>calle</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>numero</queryname>
+                        <servicename>numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>piso</queryname>
+                        <servicename>piso</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>apartamento</queryname>
+                        <servicename>apartamento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>barrio</queryname>
+                        <servicename>barrio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>manzana</queryname>
+                        <servicename>manzana</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>parcela</queryname>
+                        <servicename>parcela</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>casa</queryname>
+                        <servicename>casa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>monoblock</queryname>
+                        <servicename>monoblock</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tira</queryname>
+                        <servicename>tira</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>chacra</queryname>
+                        <servicename>chacra</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>observaciones</queryname>
+                        <servicename>observaciones</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fecha_modificacion</queryname>
+                        <servicename>fecha_modificacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>estado</queryname>
+                        <servicename>estado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>normalizado</queryname>
+                        <servicename>normalizado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ordinal_dir</queryname>
+                        <servicename>ordinal_dir</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>provincia_exterior</queryname>
+                        <servicename>provincia_exterior</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>departamento_exterior</queryname>
+                        <servicename>departamento_exterior</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>localidad_exterior</queryname>
+                        <servicename>localidad_exterior</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

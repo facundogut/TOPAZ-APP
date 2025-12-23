@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-10-28T19:17:54 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Sub Reporte 1 - TD" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2caaf443-1508-4503-b2f6-831ec0e8969c">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<parameter name="TARJETA_TITULAR" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+concat(T.NOMBRE,' ',T.APELLIDO) AS NOMBRE_TARJETA,
+DO.NUMERODOCUMENTO,
+PF.FECHANACIMIENTO,
+D.CALLE,
+D.NUMERO AS NUMERO_DIR,
+L.DESCRIPCION_DIM3 AS LOCALIDAD,
+D.CPA_NUEVO,
+TEL.NUMERO AS TEL_FIJO,
+CEL.NUMERO AS CELULAR,
+T.NRO_TARJETA_BASE,
+R.NRO_TARJETA
+--FROM TJD_TARJETAS AS T
+FROM TJD_SOLICITUD_LINK AS T
+INNER JOIN TJD_SOLICITUD_CUENTAS_LINK AS R ON T.ID_SOLICITUD = R.ID_SOLICITUD AND R.TZ_LOCK = 0
+LEFT JOIN CLI_DOCUMENTOSPFPJ AS DO ON T.NRO_PERSONA = DO.NUMEROPERSONAFJ AND DO.TZ_LOCK = 0
+LEFT JOIN CLI_PERSONASFISICAS AS PF ON T.NRO_PERSONA = PF.NUMEROPERSONAFISICA AND PF.TZ_LOCK = 0
+LEFT JOIN CLI_DIRECCIONES AS D ON T.NRO_PERSONA = D.ID AND D.TZ_LOCK = 0
+LEFT JOIN CLI_TELEFONOS AS TEL ON T.NRO_PERSONA = TEL.ID AND TEL.TIPO IN ('PE', 'LE') AND TEL.TIPO_CEL_TEL = 'F' AND TEL.TZ_LOCK = 0
+AND TEL.ORDINAL = (SELECT MIN(ORDINAL) FROM CLI_TELEFONOS WHERE ID = TEL.ID AND TIPO = TEL.TIPO AND TIPO_CEL_TEL = TEL.TIPO_CEL_TEL AND TZ_LOCK = 0)
+LEFT JOIN CLI_TELEFONOS AS CEL ON T.NRO_PERSONA = CEL.ID AND CEL.TIPO IN ('PE', 'LE') AND CEL.TIPO_CEL_TEL = 'C' AND CEL.TZ_LOCK = 0
+AND CEL.ORDINAL = (SELECT MIN(ORDINAL) FROM CLI_TELEFONOS WHERE ID = CEL.ID AND TIPO = CEL.TIPO AND TIPO_CEL_TEL = CEL.TIPO_CEL_TEL AND TZ_LOCK = 0)
+LEFT JOIN CLI_LOCALIDADES AS L ON D.PAIS = L.CODIGOPAIS AND D.PROVINCIA = L.DIM1 
+AND D.DEPARTAMENTO = L.DIM2 AND D.LOCALIDAD = L.DIM3 AND L.TZ_LOCK = 0
+WHERE T.TZ_LOCK = 0 AND T.NRO_TARJETA_BASE <> R.NRO_TARJETA
+AND T.NRO_TARJETA_BASE = $P{TARJETA_TITULAR}]]>
+	</queryString>
+	<field name="NOMBRE_TARJETA" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="FECHANACIMIENTO" class="java.sql.Timestamp"/>
+	<field name="CALLE" class="java.lang.String"/>
+	<field name="NUMERO_DIR" class="java.math.BigDecimal"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<field name="CPA_NUEVO" class="java.lang.String"/>
+	<field name="TEL_FIJO" class="java.lang.String"/>
+	<field name="CELULAR" class="java.lang.String"/>
+	<field name="NRO_TARJETA_BASE" class="java.math.BigDecimal"/>
+	<field name="NRO_TARJETA" class="java.lang.String"/>
+	<detail>
+		<band height="80" splitType="Stretch">
+			<staticText>
+				<reportElement x="350" y="65" width="45" height="15" uuid="4e259fc5-1a46-42f1-9bf3-cc000f3d557f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Teléfono:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="460" y="50" width="25" height="15" uuid="60f1be69-5617-4203-8999-ede45bdec379">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[C.P.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="50" width="50" height="15" uuid="e937c8f1-ebd3-4e50-9b31-6517297b18c3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Localidad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="50" width="15" height="15" uuid="81d55362-ed2a-4990-a3a7-3e7b017d681f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nº:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="75" height="15" uuid="5e653ba0-6253-4a9f-bb55-db750859aec4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Domicilio Real:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="277" y="35" width="100" height="15" uuid="ca84bbe8-f94c-4560-a19a-9d0459c99f76">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha de Nacimiento:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="35" width="48" height="15" uuid="5e304b56-9d39-4c30-9fa8-ba83aaf9d80f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[CUIL Nº:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="100" height="15" uuid="8f92c95e-6247-4f90-b9a2-643e070ce804">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Apellido y Nombres:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="210" height="15" uuid="56a0e2c1-b529-49a8-b90f-e86d9b88779b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL USUARIO ADICIONAL:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="100" y="20" width="455" height="15" uuid="0fa1cc3b-5d0a-487e-8428-aace2df48c9f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_TARJETA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="48" y="35" width="229" height="15" uuid="b6367068-7be7-4ca8-9d49-023b37a36c40"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="377" y="35" width="178" height="15" uuid="8c4bcbf4-8839-4c63-8bed-42e5b872b4be"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHANACIMIENTO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="75" y="50" width="155" height="15" uuid="bb18ffb4-4ee2-41dd-b505-dd8228fbbf29"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CALLE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="245" y="50" width="55" height="15" uuid="2adbe2b0-87bd-4cd9-b860-76083944bbe1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERO_DIR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="350" y="50" width="110" height="15" uuid="b4ba49ed-c853-43db-8f20-4e66e323683a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="485" y="50" width="70" height="15" uuid="963e37d8-67a8-44fa-945c-619a4fbf2cef"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPA_NUEVO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="395" y="65" width="160" height="15" uuid="6a6807d6-faca-4c44-8943-db3eb3b29195"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[($F{TEL_FIJO} != null && $F{TEL_FIJO} != "") ? $F{TEL_FIJO}:
+($F{CELULAR} != null && $F{CELULAR} != "") ? $F{CELULAR}: ""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/apoderamientoPersonaFisica/{saldo}/{idPersona}/</uri>
+    <serviceDescription>Devuelve los apoderamientos de una persona física</serviceDescription>
+    <title>ConsultaApoderadosCliente</title>
+    <querys>
+        <query id="1" name="personaFisica" type="SIMPLE">
+            <sql>
+-- Declaración de PARÁMETROS &#13;
+DECLARE @paramSaldo VARCHAR(70) = ?; &#13; 
+DECLARE @paramPersona VARCHAR(70) = ?; &#13;
+-- Variables generales &#13;
+DECLARE @ERROR VARCHAR(70) = NULL; &#13;
+DECLARE @idPersona NUMERIC(12,0) = NULL; &#13;
+DECLARE @nombrePersona VARCHAR(70) = NULL; &#13;
+DECLARE @existeSaldo BIGINT = NULL; &#13;
+DECLARE @existePersona BIGINT = NULL; &#13;
+DECLARE @existeApoderamiento BIGINT = NULL; &#13;
+&#13;
+-- Validar Parámetros &#13;
+DECLARE @saldoAux NUMERIC(12,0) = TRY_CAST(@paramSaldo AS NUMERIC(12,0)); &#13;
+DECLARE @personaAux NUMERIC(10,0) = TRY_CAST(@paramPersona AS NUMERIC(10,0)); &#13;
+IF @saldoAux IS NULL &#13;
+BEGIN &#13;
+    SET @ERROR = 'PARÁMETRO SALDO INVÁLIDO'; &#13;
+END &#13;
+ELSE IF @personaAux IS NULL &#13;
+BEGIN &#13;
+    SET @ERROR = 'PARÁMETRO PERSONA INVÁLIDO'; &#13;
+END &#13;
+&#13;
+IF @ERROR IS NULL &#13;
+BEGIN &#13;
+-- Consulta persona &#13;
+    SELECT &#13;
+        @idPersona = cp.NUMEROPERSONAFISICA, &#13;
+        @nombrePersona = CONCAT(cp.APELLIDOPATERNO, cp.APELLIDOMATERNO, cp.PRIMERNOMBRE, cp.SEGUNDONOMBRE) &#13;
+    FROM CLI_PERSONASFISICAS cp &#13;
+    WHERE cp.NUMEROPERSONAFISICA = @personaAux AND cp.TZ_LOCK = 0; &#13;
+    IF @idPersona IS NULL OR @idPersona = 0 &#13;
+    BEGIN &#13;
+        SET @ERROR = 'PERSONA INEXISTENTE.'; &#13;
+    END &#13;
+    ELSE  &#13;
+    BEGIN &#13;
+        SET @existeSaldo = (SELECT COUNT(*) FROM SALDOS s WITH (NOLOCK) WHERE s.JTS_OID = @saldoAux AND s.TZ_LOCK = 0); &#13;
+        IF @existeSaldo = 0 &#13;
+        BEGIN &#13;
+            SET @ERROR = 'SALDO INEXISTENTE.'; &#13;
+        END &#13;
+    END &#13;
+--VALIDAR APODERAMIENTO &#13;
+    IF @ERROR IS NULL &#13;
+    BEGIN &#13;
+        SET @existeApoderamiento = (SELECT DISTINCT COUNT(*) FROM PYF_APODERADOS pa  &#13;
+                                JOIN PYF_TIPOAPODERAMIENTO pt ON pt.CODAPODERAMIENTO = pa.APODERAMIENTO &#13;
+                                WHERE pa.ID_ENTIDAD = @saldoAux and pa.ID_PERSONA = @personaAux); &#13;
+        IF @existeApoderamiento = 0 &#13;
+        BEGIN &#13;
+            SET @ERROR = 'LA PERSONA FISICA NO TIENE PODERES SOBRE EL SALDO.' &#13;
+        END &#13;
+    END &#13;
+END &#13;
+ &#13;
+--¿HAY ERROR? &#13;
+IF @ERROR IS NOT NULL &#13;
+BEGIN &#13;
+    SET @idPersona = NULL &#13;
+    SET @nombrePersona = NULL &#13;
+END &#13;
+&#13;
+SELECT &#13;
+    @idPersona AS 'numPersona', &#13;
+    @nombrePersona AS 'nombrePersona', &#13;
+    @ERROR AS 'error' &#13;
+            </sql>
+            <input>
+                <inParameter description="Saldo de la entidad" type="STRING">saldo</inParameter>
+                <inParameter description="id Persona Fisica" type="STRING">idPersona</inParameter>
+            </input>
+            <output>
+                <level groupby="nombrePersona" name="persona">
+                    <outParameter description="nombrePersona" type="STRING">
+                        <queryname>nombrePersona</queryname>
+                        <servicename>persona.nombre</servicename>
+                    </outParameter>
+                    <outParameter description="numPersona" type="LONG">
+                        <queryname>numPersona</queryname>
+                        <servicename>persona.id</servicename>
+                    </outParameter>
+                    <outParameter description="error" type="STRING">
+                        <queryname>ERROR</queryname>
+                        <servicename>error</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="apoderamiento" type="MULTIPLE">
+            <sql>
+DECLARE @saldoAux NUMERIC(12,0) = COALESCE(TRY_CAST(? AS NUMERIC(12,0)), 0); &#13;
+DECLARE @personaAux NUMERIC(10,0) = COALESCE(TRY_CAST(? AS NUMERIC(10,0)), 0);  &#13;
+DECLARE @fechaProceso DATE = (SELECT FORMAT(FECHAPROCESO, 'yyyy-MM-dd') FROM PARAMETROS); &#13;
+SELECT 	 &#13;
+	CAST (pas.ID_ENTIDAD AS NUMERIC (15,0)) as 'idEntidad',   &#13;
+	pt.CODAPODERAMIENTO as 'codApoderamiento',  &#13;
+    pt.DESCRIPCION as 'descApoderamiento', &#13;
+	pas.TIPO_PODER as 'codigoPoder', &#13;
+    tp.DESCRIPCION AS 'descripcionPoder', &#13;
+	pas.FECHA_INI_VIGENCIA as 'fechaVigencia', &#13;
+	pas.FECHA_VENCIMIENTO as 'fechaVencimiento', &#13;
+	pas.CATEGORIA as 'categoria' &#13;
+FROM PYF_APODERADOS pas  &#13;
+JOIN PYF_TIPOAPODERAMIENTO pt ON pt.CODAPODERAMIENTO = pas.APODERAMIENTO AND pt.TZ_LOCK = 0  &#13;
+JOIN PYF_TIPOPODERES tp ON tp.TIPO_PODER = pas.TIPO_PODER AND tp.TZ_LOCK = 0  &#13;
+WHERE pas.TIPO_ENTIDAD = 2 &#13;
+AND pas.ID_ENTIDAD = @saldoAux &#13;
+AND pas.ID_PERSONA = @personaAux &#13;
+AND pas.FECHA_VENCIMIENTO &gt; @fechaProceso &#13;
+AND pas.TZ_LOCK = 0 &#13;
+ORDER BY pas.TIPO_PODER ASC &#13;
+            </sql>
+            <input>
+                <inParameter description="Saldo de la entidad" type="STRING">saldo</inParameter>
+                <inParameter description="id Persona Fisica" type="STRING">idPersona</inParameter>
+            </input>
+            <output>
+                <level groupby="CODAPODERAMIENTO" name="apoderamiento">
+                    <outParameter description="jtsOid" type="LONG">
+                        <queryname>idEntidad</queryname>
+                        <servicename>idEntidad</servicename>
+                    </outParameter>
+                    <outParameter description="codigo" type="LONG">
+                        <queryname>codApoderamiento</queryname>
+                        <servicename>codigo</servicename>
+                    </outParameter>
+                    <outParameter description="descripcion" type="STRING">
+                        <queryname>descApoderamiento</queryname>
+                        <servicename>descripcion</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="poder">			
+                    <outParameter description="codigoPoder" type="LONG">
+                        <queryname>codigoPoder</queryname>
+                        <servicename>codigo</servicename>
+                    </outParameter>
+                    <outParameter description="descripcionPoder" type="STRING">
+                        <queryname>descripcionPoder</queryname>
+                        <servicename>descripcion</servicename>
+                    </outParameter>
+					<outParameter description="CATEGORIA" type="STRING">
+                        <queryname>CATEGORIA</queryname>
+                        <servicename>categoria</servicename>
+                    </outParameter>
+                    <outParameter description="fechaVigencia" type="STRING">
+                        <queryname>fechaVigencia</queryname>
+                        <servicename>fechaVigencia</servicename>
+                    </outParameter>
+                    <outParameter description="fechaVencimiento" type="STRING">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

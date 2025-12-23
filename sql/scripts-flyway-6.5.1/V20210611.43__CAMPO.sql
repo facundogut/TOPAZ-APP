@@ -1,0 +1,8 @@
+﻿
+EXECUTE('
+
+UPDATE DICCIONARIO
+SET PROMPT=''Producto de Tarjeta''
+WHERE NUMERODECAMPO=3026;
+
+')

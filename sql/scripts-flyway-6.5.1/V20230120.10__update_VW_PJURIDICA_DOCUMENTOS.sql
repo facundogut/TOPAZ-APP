@@ -1,0 +1,46 @@
+EXECUTE('
+CREATE OR ALTER VIEW [dbo].[VW_PJURIDICA_DOCUMENTOS] (
+													   [Tipo Documento Identificativo], 
+													   [Número Documento Identificativo], 
+													   [Número Persona], 
+													   [Nivel Apertura], 
+													   [Tipo de Persona], 
+													   [Razón Social], 
+													   [Nombre Fantasia], 
+													   [Nivel de Apertura],
+													   [Estado])
+AS 
+SELECT --TOP 9223372036854775807 WITH TIES 
+    V.TIPODOCUMENTO AS TIPODOC, 
+    V.NUMERODOCUMENTO AS NUMERODOC,
+    V.NUMEROPERSONAFJ AS NUMEROPERSONA, 
+    CASE T.NIVEL_APERTURA
+        WHEN 0 THEN ''REGISTRO''
+        WHEN 1 THEN ''BÁSICO''
+        WHEN 3 THEN ''ACTIVOS''
+        WHEN 4 THEN ''INST.FINANCIERA''
+    END AS NIVELAPERTURA, 
+    V.TIPOPERSONA, 
+    T.RAZONSOCIAL, 
+    T.NOMBREFANTASIA, 
+    T.NIVEL_APERTURA,
+    (	SELECT DESCRIPCION 
+		FROM OPCIONES O WITH (NOLOCK) 
+		WHERE O.IDIOMA=''E''
+			AND O.OPCIONINTERNA=T.ESTADO 
+			AND O.NUMERODECAMPO = 33367) AS ESTADO
+FROM dbo.CLI_PERSONASJURIDICAS  AS T WITH (NOLOCK)
+INNER JOIN dbo.CLI_DOCUMENTOSPFPJ  AS V WITH (NOLOCK)ON T.NUMEROPERSONAJURIDICA = V.NUMEROPERSONAFJ 
+													AND	V.TIPOPERSONA = ''J'' 
+													AND (	(T.TZ_LOCK < 300000000000000 OR T.TZ_LOCK >= 400000000000000) 
+														AND (T.TZ_LOCK < 100000000000000 OR T.TZ_LOCK >= 200000000000000)) 
+													AND(	(V.TZ_LOCK < 300000000000000 OR V.TZ_LOCK >= 400000000000000) 
+														AND (V.TZ_LOCK < 100000000000000 OR V.TZ_LOCK >= 200000000000000))
+ORDER BY	NUMEROPERSONA 
+     		OFFSET 0 ROWS
+
+')
+
+
+
+

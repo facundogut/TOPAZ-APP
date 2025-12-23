@@ -1,0 +1,24 @@
+service CuentaVistaComisionPendiente; 
+description "Servicio ComPendiente"; 
+
+action:	SQLQuery Entity (  
+ IDSALDO: string
+): [ 
+    DESCRIPCION: string,
+	MONEDA: string,
+   	IMPORTE: string,
+	REINTENTOS: string,
+   	ESTADO: string,
+	FECHA_ALTA: string,
+   	FECHA_CADUCIDAD_COBRO: string 
+]
+{ 
+  	properties { 
+  	("statement", "SELECT car.DESCRIPCION,mon.C6400 as MONEDA,TO_CHAR(Sol.IMPORTE,'9999G999G999G999G999D99') AS IMPORTE, o.DESCRIPCION AS REINTENTOS,'Pendiente' AS ESTADO, TO_CHAR(Sol.FECHA_ALTA,'DD/MM/YYYY') AS FECHA_ALTA, TO_CHAR(Sol.FECHA_CADUCIDAD_COBRO,'DD/MM/YYYY') AS FECHA_CADUCIDAD_COBRO FROM CI_SOLICITUD Sol JOIN CI_CARGOS car ON Sol.ID_CARGO = car.ID_CARGO AND car.TZ_LOCK=0 JOIN MONEDAS mon ON mon.C6399=Sol.MONEDA AND mon.TZ_LOCK=0 JOIN OPCIONES o ON o.NUMERODECAMPO=560 AND o.OPCIONINTERNA=Sol.REINTENTOS AND o.IDIOMA='E' WHERE sol.ESTADO = 0 AND sol.SALDO_JTS_OID = ? AND Sol.TZ_LOCK=0 "), 
+	("0", "IDSALDO")	
+	}
+}
+
+
+
+

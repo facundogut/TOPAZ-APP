@@ -1,0 +1,9 @@
+﻿EXECUTE('
+--------------------------
+--NUMERADOR REUTILIZABLE--
+--------------------------
+UPDATE NUMERATORDEFINITION
+SET REUTILIZABLE = 1
+WHERE NUMERO = 6029
+----
+')

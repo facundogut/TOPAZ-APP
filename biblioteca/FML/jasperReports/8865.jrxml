@@ -1,0 +1,2160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2021-04-30T11:46:29 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Solicitud Apertura C.C. Persona Humana" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="c55079ab-cf22-4e49-82f2-dd5f523f2185">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="JTS_OID" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[JTS OID:]]></parameterDescription>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_FECHA_SISTEMA" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="TOPAZ_SUCURSAL_SISTEMA" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT 
+S.JTS_OID,
+S.SUCURSAL,
+U.NOMBRESUCURSAL,
+S.C1803 AS CLIENTE,
+S.PRODUCTO,
+S.MONEDA, 
+S.CUENTA,
+S.OPERACION,
+S.ORDINAL,
+CASE
+	WHEN EXISTS (SELECT * FROM PYF_APODERADOS WHERE ID_ENTIDAD = S.JTS_OID AND MONTO_MAX_INDIV <> 0) THEN 'INDISTINTA'
+	ELSE 'CONJUNTA'
+END AS MODALIDAD_CUENTA,
+CP.NUMEROPERSONA,
+E.EMAIL,
+L.DESCRIPCION_DIM3 AS LOCALIDAD_SUC
+FROM SALDOS AS S
+INNER JOIN PRODUCTOS AS P ON P.C6250 = S.PRODUCTO AND P.TZ_LOCK = 0
+LEFT JOIN CLI_CLIENTEPERSONA AS CP ON S.C1803 = CP.CODIGOCLIENTE AND CP.TITULARIDAD = 'T' AND CP.TZ_LOCK = 0
+LEFT JOIN CLI_DIRECCIONES AS D ON CP.NUMEROPERSONA = D.ID AND D.TZ_LOCK = 0
+LEFT JOIN CLI_EMAILS AS E ON D.ID = E.ID AND E.TIPO IN ('PE', 'LE') AND E.TZ_LOCK = 0
+AND E.ORDINAL = (SELECT MIN(ORDINAL) FROM CLI_EMAILS WHERE ID = E.ID AND TIPO = E.TIPO AND TZ_LOCK = 0)
+LEFT JOIN SUCURSALES AS U ON S.SUCURSAL = U.SUCURSAL AND U.TZ_LOCK = 0
+LEFT JOIN CLI_DIRECCIONES AS DI ON $P{TOPAZ_SUCURSAL_SISTEMA} = DI.ID  AND DI.FORMATO = 'S' AND DI.TIPODIRECCION = 'R' AND DI.TZ_LOCK = 0
+LEFT JOIN CLI_LOCALIDADES AS L ON DI.PAIS = L.CODIGOPAIS AND DI.PROVINCIA = L.DIM1 AND DI.DEPARTAMENTO = L.DIM2
+AND DI.LOCALIDAD = L.DIM3 AND L.TZ_LOCK = 0
+WHERE S.TZ_LOCK = 0 AND S.JTS_OID = $P{JTS_OID}
+GROUP BY S.JTS_OID, S.SUCURSAL, U.NOMBRESUCURSAL, S.C1803, S.PRODUCTO, S.MONEDA, S.CUENTA,
+S.OPERACION, S.ORDINAL, CP.NUMEROPERSONA, E.EMAIL, L.DESCRIPCION_DIM3, E.TIPO
+ORDER BY E.TIPO]]>
+	</queryString>
+	<field name="JTS_OID" class="java.math.BigDecimal"/>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="NOMBRESUCURSAL" class="java.lang.String"/>
+	<field name="CLIENTE" class="java.math.BigDecimal"/>
+	<field name="PRODUCTO" class="java.math.BigDecimal"/>
+	<field name="MONEDA" class="java.math.BigDecimal"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="OPERACION" class="java.math.BigDecimal"/>
+	<field name="ORDINAL" class="java.math.BigDecimal"/>
+	<field name="MODALIDAD_CUENTA" class="java.lang.String"/>
+	<field name="NUMEROPERSONA" class="java.math.BigDecimal"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="LOCALIDAD_SUC" class="java.lang.String"/>
+	<pageHeader>
+		<band height="64">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image>
+				<reportElement x="-20" y="-20" width="595" height="84" uuid="7339d4d3-e459-429c-9db6-9f25eaeb5098"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logolargo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="0" width="345" height="30" uuid="11f5680a-3a53-47e4-b2db-6690dcd3ab52">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph rightIndent="40"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD DE APERTURA DE CUENTA CORRIENTE
+PERSONA HUMANA]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="80" splitType="Immediate">
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="60" uuid="d85e3752-c86a-4293-b0ec-2a8599e58497">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="JTS_OID">
+					<subreportParameterExpression><![CDATA[$F{JTS_OID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8858_Subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="73" width="565" height="1" uuid="1dd35a9d-864e-4f56-b6a9-c4f5384084f3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+		</band>
+		<band height="615">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement positionType="Float" x="0" y="600" width="570" height="1" uuid="48f06b90-ac88-4a90-b352-674644c15dc2"/>
+			</break>
+			<staticText>
+				<reportElement x="0" y="25" width="555" height="15" uuid="4bddc6de-9251-4f16-add2-20047bad7094">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OTRAS CONSIDERACIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="555" height="30" uuid="00300579-278e-4cbf-9ee7-eb3ce690938d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<text><![CDATA[Podrán solicitarse referencias personales, morales y comerciales a las siguientes personas:
+(En lo posible las mismas deberán ser clientes del Banco)]]></text>
+			</staticText>
+			<frame>
+				<reportElement x="0" y="80" width="555" height="60" uuid="935f90fe-f41c-45c1-8f94-689d2f14196a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="160" height="15" backcolor="#D1EFFF" uuid="09eb80f5-5380-4032-beda-80b0a289181b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Nombre y apellido/razón social]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="160" y="0" width="150" height="15" backcolor="#D1EFFF" uuid="df3d3b86-626d-48d3-8eae-828ccbed37e7">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Domicilio]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="310" y="0" width="110" height="15" backcolor="#D1EFFF" uuid="a90dfcba-cdac-4100-8d99-0a8d0cb769f9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Vinculado al Banco]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="420" y="0" width="135" height="15" backcolor="#D1EFFF" uuid="d59d4179-4955-462b-bd5e-7cbbae400d6d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Teléfono]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="15" width="160" height="15" uuid="137cbe20-e588-44f9-bfac-8aac75680250">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="30" width="160" height="15" uuid="77e58405-f8c8-44a5-bc01-20090708132e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="45" width="160" height="15" uuid="b162bf80-013f-46b1-b316-bc8776be6ccf">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="160" y="15" width="150" height="15" uuid="8c2522a0-db5e-4d6d-a470-7639cf2bda89">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="160" y="30" width="150" height="15" uuid="322d9c2c-68c8-4ec7-9c9d-e9e1120c7306">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="160" y="45" width="150" height="15" uuid="febf457d-952b-4157-a3c6-9248ff147303">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="310" y="15" width="110" height="15" uuid="54dc292b-810e-4c88-8dc6-5e79c00d51a4">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="310" y="30" width="110" height="15" uuid="9175a57b-828b-4270-b1ca-94e450a77d97">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="310" y="45" width="110" height="15" uuid="609f1958-c75b-4853-9a2e-76bb3949a939">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="420" y="15" width="135" height="15" uuid="b59d2e70-e0c0-4aeb-a362-e15cba630248">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="420" y="30" width="135" height="15" uuid="59f49391-275c-4bd4-8722-a99ad771e088">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="420" y="45" width="135" height="15" uuid="acd4f50f-79f9-43e9-9db0-f7cd7ac68642">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement x="0" y="150" width="115" height="15" uuid="75443886-e96d-4cba-884b-92c93c4a9982">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<text><![CDATA[Esta solicitud se funda en]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="166" width="210" height="15" uuid="e4622dd4-a2c7-435b-8d7b-88458216e518">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<text><![CDATA[Banco/s en los que tengo/tenemos vinculación:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="115" y="166" width="440" height="1" uuid="1c5b1116-eaa9-4c59-81de-f2670ca39884">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="210" y="181" width="345" height="1" uuid="550b4453-24d9-41cf-8414-e0aa60fabe46">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="181" width="245" height="15" uuid="7d048b2d-cedd-4c7c-9538-663e7d385168">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<text><![CDATA[Opero/Operamos en crédito con los siguientes Bancos:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="245" y="196" width="310" height="1" uuid="9f175ca8-5b64-4e19-8b72-cbaf350d23be">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="205" width="555" height="15" uuid="68883c6e-9a77-4bc9-bbe2-4429af22d29c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[VOLUMEN ESTIMADO DE OPERATORIA (*)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="220" width="444" height="15" uuid="f085b740-5901-4ec8-9bc8-ffafbe1db1d4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<text><![CDATA[(*) En caso de existir la posibilidad de efectuar movimientos superiores, indicar la fuente de fondos:]]></text>
+			</staticText>
+			<frame>
+				<reportElement x="0" y="235" width="555" height="45" uuid="8bfe0c7d-bf27-4964-81a2-a61af0cce38b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="20" width="92" height="30" backcolor="#D1EFFF" uuid="a4b7a0f6-ca80-4b7f-9f23-9565235cb363">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Hasta
+$1.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="92" y="20" width="92" height="30" backcolor="#D1EFFF" uuid="15c681ab-4c7a-48c3-bbaf-c1e5db16b8db">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[de $1.000
+a $5.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="184" y="20" width="92" height="30" backcolor="#D1EFFF" uuid="2d79e6fe-3715-436a-955e-78b82e27b1a6">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[de $5.000
+a $25.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="276" y="20" width="92" height="30" backcolor="#D1EFFF" uuid="f37d183c-3bd7-4e46-bf69-8cf256894159">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[de $25.000
+a $250.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="368" y="20" width="92" height="30" backcolor="#D1EFFF" uuid="c5158ccc-7b05-42e9-83af-b35865edd674">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[de $250.000
+a $1.500.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement mode="Opaque" x="460" y="20" width="95" height="30" backcolor="#D1EFFF" uuid="f591caf1-6768-4e3c-b9e3-321d1d47e6d1">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[más de
+$1.500.000]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="50" width="92" height="15" uuid="3a56cf83-74c9-4ca7-b2d7-7fd0f4aca212">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="92" y="50" width="92" height="15" uuid="96bf213c-5abd-41d4-90ad-6de47a9798b4">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="184" y="50" width="92" height="15" uuid="72189ce8-1298-4a90-8ab5-e345dbea9456">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="276" y="50" width="92" height="15" uuid="dbd353f4-5d53-41ea-a05f-6e21e99bbf30">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="368" y="50" width="92" height="15" uuid="dae95f1d-4470-4aa5-82a1-b05ea5027064">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="460" y="50" width="95" height="15" uuid="edaa2377-eee6-4d68-8b47-51f7a1c65ac5">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					</box>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement x="0" y="310" width="555" height="15" uuid="5b7ceed5-2f94-42a4-a854-b8f33bf94977">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[¿ENVÍA TRANSFERENCIAS AL EXTERIOR? ____ SI / ____ NO]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="350" width="555" height="200" uuid="81455e5f-3c46-418e-88d9-f5fac2eb4dc3"/>
+				<subreportParameter name="CODIGO_CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8865_Subeport_Firmas.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="615">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="600" width="569" height="1" uuid="878c20b3-c311-4cbc-877c-bad94ba347bf"/>
+			</break>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="5" width="555" height="20" backcolor="#D1EFFF" uuid="22128156-1c1a-4001-adfe-9d69188a99ea">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD Y CONDICIONES GENERALES DE APERTURA DE CUENTA CORRIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="555" height="30" uuid="e6cb9e03-6cb3-4b8b-bcfe-ead04a7034f6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<text><![CDATA[El/los que suscribe/n (CLIENTE), solicita/n al NUEVO BANCO DEL CHACO S.A. (BANCO), CUIT 30-67015779-9, con domicilio legal en calle Güemes N° 102 de la ciudad de Resistencia, la apertura de una Cuenta Corriente Bancaria en pesos (CUENTA) en la Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="130" height="15" uuid="37f0d19f-47da-4412-870a-b3ec86c547c3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<text><![CDATA[(CUENTA) en la Sucursal:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="130" y="60" width="425" height="15" uuid="eacf752f-1bac-4e71-beea-becd77ec5bfe">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRESUCURSAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="75" width="555" height="55" uuid="48e36056-791b-43b6-aca3-b6ac07d5b011">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE toma en este acto conocimiento de las Condiciones Generales (CONDICIONES) que integran y rigen la presente Solicitud de Cuenta Corriente Bancaria (SOLICITUD) y presta su entera conformidad con las mismas. Las CONDICIONES integrarán el CONTRATO DE CUENTA CORRIENTE BANCARIA (CONTRATO) que se entenderá celebrando en caso de aceptación de la SOLICITUD por el BANCO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="130" width="555" height="15" uuid="6b160389-e135-47fe-a0f7-06c6ad6c61a4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="145" width="555" height="30" uuid="9e7b10d7-2854-46e2-ac69-cc98315d1eac">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Las personas intervinientes bajo la denominación común de CLIENTE asumen responsabilidad solidaria frente a todos los
+efectos de la SOLICITUD y el CONTRATO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="175" width="555" height="15" uuid="35628727-0ecd-427a-b11a-cb608926f0e5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONDICIONES GENERALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="190" width="555" height="140" uuid="0bad8858-bded-4b3a-8920-400e9dcf1305">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Integran las CONDICIONES: esta SOLICITUD, los Anexos firmados por el CLIENTE que se agreguen al tiempo de la firma o posteriormente, y otras comunicaciones o presentaciones que el CLIENTE realice por escrito, en las que informe datos, especifique servicios bancarios o solicite nuevos servicios vinculados a su CUENTA, como así también las comunicaciones remitidas por el BANCO al domicilio constituido por el CLIENTE.
+Los datos informados en la SOLICITUD serán considerados por el BANCO para la apertura de la CUENTA, por lo que el CLIENTE se obliga a comunicar cualquier alteración relativa a los mismos. Asimismo, se compromete a permitir que el BANCO por intermedio de los funcionarios que designe verifique la realidad y vigencia de la información suministrada, mediante solicitud de informes y consultas a las bases de datos pertinentes.
+Las CONDICIONES regirán la relación entre el BANCO y el CLIENTE derivada de la CUENTA, supletoriamente se aplicarán las leyes nacionales y resoluciones del Banco Central de la República Argentina - B.C.R.A. - y/u otra autoridad competente, presentes o futuras, que regulen los servicios bancarios y la actividad financiera o monetaria.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="330" width="555" height="15" uuid="f035f993-65bc-4df4-b518-b8276a378d73">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IDENTIFICACIÓN DEL CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="345" width="555" height="30" uuid="28d672e9-5a9b-44ff-ae61-0df9851267e4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El BANCO podrá exigir para la realización de cada una de las operaciones la identificación del CLIENTE por los medios que al efecto establezca. Los controles podrán intensificarse conforme monto y tipo de las transacciones, a criterio del BANCO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="375" width="555" height="15" uuid="15f4e2d4-d84f-4fef-b813-2d22800711e4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTRATOS Y PODERES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="390" width="555" height="115" uuid="de536e68-f9ac-49e1-a85b-69477a43ca6d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[EL CLIENTE se compromete a presentar al BANCO testimonio de los contratos sociales, estatutos, actas de designación y renovación de autoridades y demás documentación que acredite, a satisfacción del BANCO, la representación legal de las personas jurídicas, como así también los poderes que se otorguen para operar con el BANCO, las modificaciones de los mismos y su revocación.
+Asimismo, deberá comunicar por escrito al BANCO la cesación de mandato de representantes legales y la extinción o modificación de los poderes otorgados.
+La notificación de las modificaciones a los instrumentos antes mencionados producirá efecto desde el acuse de recibo por escrito por parte del BANCO, que se considera desligado de toda responsabilidad que resulte directa o indirectamente por documentación incompleta o deficiente.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="505" width="555" height="15" uuid="777c9a9c-3d8c-4d02-b5fe-52b538611553">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TITULARIDAD DE LA CUENTA. DISPOSICIÓN DE LOS FONDOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="520" width="555" height="15" uuid="50688c78-c2bc-49fe-a643-48e5f3f9e3ca">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El funcionamiento de la CUENTA queda sometido a las siguientes cláusulas:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="535" width="555" height="15" uuid="a6ba1797-25e4-47ea-912a-c4f5ca26a162">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[a) CUENTA a nombre de dos o más personas y orden recíproca o indistinta de ellas. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="550" width="555" height="30" uuid="e8ce052b-9c24-4642-92cd-0159a9407b0f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Cualquiera de los titulares puede retirar la totalidad de los fondos existentes en la CUENTA, aun en caso de fallecimiento o incapacidad de alguno de los titulares, salvo orden judicial en contrario.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="580" width="340" height="15" uuid="ee1a5cfe-a3eb-4c2e-92da-6747cd86e9bd">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[b) CUENTA a nombre y a la orden conjunta de dos o más personas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="580" width="215" height="15" uuid="dbed7be3-4cfe-4781-8da2-c4ce45b2a81a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Los depósitos sólo pueden ser retirados con la]]></text>
+			</staticText>
+		</band>
+		<band height="615">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="600" width="568" height="1" uuid="f14ede2d-35b3-410d-88a2-7ff98448c465">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="40" uuid="f37a3459-5454-45b3-b3b0-88e1b80aef18">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[firma de todos los titulares. En el supuesto de fallecimiento o incapacidad de cualquiera de los titulares el BANCO procederá al cierre de la CUENTA, quedando los fondos a disposición de quienes se encuentren suficientemente legitimados al efecto por resolución emanada del Juez que intervenga en el proceso sucesorio y /o de interdicción.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="45" width="555" height="15" uuid="2d33a6d8-6241-4737-8972-76520641acfb">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[c) CUENTA a nombre de una o más personas y a la orden de otra o de otras, recíproca o conjunta. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="555" height="55" uuid="ffaba087-2b49-45a2-8bf5-f65483d3b554">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Los depósitos sólo pueden ser retirados por las personas a cuya orden esté la CUENTA, aplicándose lo establecido en los apartados a) y b) anteriores, según el caso. En caso de fallecimiento o incapacidad de alguna de ellas, tratándose de una CUENTA a orden conjunta, el/los titulares deberán nombrar a una persona en su reemplazo; caso contrario se hará entrega de los depósitos al titular.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="115" width="555" height="15" uuid="48d0e0ff-08a1-42b3-a348-66320ab8a4d4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEPÓSITOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="130" width="555" height="15" uuid="13e132bb-271c-4951-87d8-bca0301f1458">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El BANCO podrá establecer montos mínimos de depósitos en la CUENTA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="145" width="555" height="15" uuid="9b362bb5-2664-4c2f-957a-8df4c78cafc1">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.- Boletas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="160" width="555" height="180" uuid="c1ac8a20-0120-44b3-ab39-8d701674ddf8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El uso de las boletas de depósito está sujeto a las siguientes condiciones:
+• El sello del cajero certifica únicamente la recepción de los valores en la fecha que exprese el sello por él colocado. Los demás rubros de la boleta quedan sujetos a verificación que el BANCO realizará con posterioridad a la entrega de la misma pudiendo rectificar esas especificaciones por comprobar diferencias en los cheques que en ellas se mencionan.
+• Los cheques depositados se acreditarán al ser cobrados por intermedio de la Cámara Federal Unificada y/o Clearing Intersucursales; el BANCO queda autorizado para debitar el importe de aquellos cheques que por cualquier motivo pudieran haber sido acreditados con anterioridad. La expresión Nota de Crédito en el caso de depósitos de cheques u otros valores queda condicionada al efectivo cobro de los mismos.
+• Si se tratara de un depósito o cobro por ventanilla de cheques “en procuración”, el CLIENTE deberá endosar el valor con la cláusula “en procuración”, “valor al cobro” o “en gestión” con indicación del nombre y tipo y número de documento -en el caso de personas humanas- o CUIT o CDI -en los casos de personas jurídicas- del mandante, exista o no instrumento o poder que otorgue tal mandato, si el mandante u ordenante no lo hubiera hecho.
+• En su caso, los cheques librados contra entidades de otras plazas, deberán depositarse con constancia de pago de los impuestos correspondientes de acuerdo con las leyes nacionales y provinciales en vigencia.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="350" width="555" height="15" uuid="c141b1b6-241e-4a21-8dae-b12de6b81f3c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PAGOS DE DINERO EN EFECTIVO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="365" width="555" height="40" uuid="9c2deb2a-19a8-4a03-82ac-d44a709c8fc3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Las extracciones de dinero en efectivo se encuentran sujetas a las restricciones que al efecto establezca el B.C.R.A. y/o el BANCO y/u otras autoridades por motivos de seguridad y/o en el marco de las medidas tendientes a evitar el lavado de dinero y otras actividades ilícitas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="405" width="555" height="15" uuid="a37c1118-1abd-476f-8fd6-210b95921b04">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AUTORIZACIÓN DE DÉBITOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="420" width="555" height="15" uuid="89e791cf-2817-4823-95a3-7ceba288d831">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.- Servicios del BANCO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="435" width="555" height="80" uuid="1ee14c60-7283-44e0-bbb3-fd9244d80257">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE autoriza al BANCO a debitar de la CUENTA, previa conversión de la moneda pactada si correspondiere, las sumas necesarias para cancelar gastos, comisiones y cargos respecto de los servicios que genera el funcionamiento de la CUENTA los que, con sus respectivos valores, se encuentran detallados en la planilla anexa "Autorización de comisiones, gastos y cargos" a la presente SOLICITUD, que integra la misma. Asimismo, autoriza se debiten conceptos que correspondan a operaciones celebradas por el CLIENTE con el BANCO – a modo enunciativo: cuotas de préstamos, comisiones por servicios, gastos, tasas e impuestos – por el valor que se convenga o legalmente corresponda en cada caso.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="515" width="420" height="15" uuid="cd2edcc8-c507-4219-b01a-525cbc98a71c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MANDATO IRREVOCABLE PARA DÉBITO EN OTRAS CUENTAS DEL TITULAR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="515" width="135" height="15" uuid="831e85d5-c5ca-4088-b14c-b55bcad42adb">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El TITULAR otorga mandato]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="530" width="555" height="65" uuid="a6d4d876-3c63-4d9f-83a2-170605c916ef">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El TITULAR otorga mandato irrevocable al BANCO para cancelar los saldos deudores que genere la CUENTA por cualquier causa, mediante el débito de las sumas adeudadas de cualquier otra cuenta a la vista que el TITULAR posea en el BANCO, aún de aquellas en las que figure como cotitular con terceros, imputándose las sumas debitadas conforme prioridades legales. El presente mandato es irrevocable por el término de diez (10) años, en los términos del artículo 380 inciso b) del Código Civil y Comercial de la Nación, y se entiende conferido en interés del SOLICITANTE y del BANCO, y se mantendrá vigente]]></text>
+			</staticText>
+		</band>
+		<band height="615">
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="600" width="567" height="1" uuid="06a5e421-e407-42a3-8bd5-5f7efe40007c"/>
+			</break>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="15" uuid="6836621c-2f97-4ab7-9b23-ece166a8cc64">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[aún luego de extinguido el contrato de apertura de CUENTA y cerrada la misma.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="555" height="15" uuid="b3ac72af-1229-4d1e-b621-27a8fea12102">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2.- Servicios de cobranza por cuenta de terceros.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="35" width="555" height="65" uuid="a7c6987a-f090-4e6c-99e8-006a62817064">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE autoriza expresamente al BANCO, a debitar de la CUENTA y transferir a tercer os las sumas concertadas directamente con el BANCO o a través de dichos terceros (débitos automáticos o directos). En este último caso el BANCO podrá realizar los débitos una vez notificado por la empresa o ente acreedor, quedando en poder de éstos la respectiva autorización. Asimismo, autoriza al BANCO a debitar las comisiones correspondientes a los servicios de débito automático y directo, cuyo valor surge de la planilla anexa a la presente.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="555" height="15" uuid="8be68e7d-d877-4313-95ae-3e9b08590d9f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[2.1.- Suspensión y reversión de débitos.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="115" width="555" height="80" uuid="047cb9e8-1d34-4dad-a0a7-273ef16646da">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE podrá ordenar la suspensión de un débito automático o directo hasta el día hábil anterior - inclusive- a la fecha de vencimiento. Asimismo, podrá revertir débitos por el total de cada operación, mediante requerimiento expreso al BANCO dentro de los treinta (30) días corridos contados desde la fecha del débito. La devolución será efectuada dentro de las 72 horas hábiles siguientes a la fecha en que el BANCO reciba la instrucción del cliente, siempre que la empresa originante del débito y solo en los casos en que el importe de la reversión solicitada supere los $ 750, no se oponga a la reversión por haberse hecho efectiva la diferencia de facturación en forma directa.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="195" width="555" height="15" uuid="33de488d-950e-4345-acff-59e3b0359815">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[3.- Otros conceptos.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="210" width="555" height="55" uuid="1e015fea-4fd9-4ddf-bace-df2b72c41de3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Asimismo, el CLIENTE autoriza a debitar de la CUENTA los costos de servicios anexos y/o vinculados a la operatoria de la misma cuyos valores se notifican en planilla anexa, como así también los impuestos que pudieran gravar los movimientos de la CUENTA. Las comisiones y gastos serán debitados de la CUENTA el último día hábil de cada mes y/o a la fecha de prestación de cada servicio anexo.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="265" width="555" height="15" uuid="9686ca77-ec34-44f5-8fb3-5790a28dbc7c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBLIGACIONES DEL CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="280" width="555" height="220" uuid="96b0d150-90da-41f6-8bd4-33d3aed5c67b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE se obliga en especial a:
+• Mantener suficiente provisión de fondos o contar con la correspondiente autorización escrita para girar en descubierto a fin de que el BANCO atienda los cheques comunes librados contra la CUENTA y, en caso contrario, no emitirlos apartándose de las condiciones convenidas por escrito.
+En los casos de cheques de pago diferido, su libramiento quedará condicionado a la existencia de una adecuada provisión de fondos o de acuerdo para girar en descubierto al momento del vencimiento, también formalizado por escrito.
+• Comunicar al BANCO su conformidad con el saldo o bien las observaciones al resumen enviado por el BANCO a que hubiera lugar, dentro del plazo de sesenta (60) días corridos de vencido el respectivo período. Vencido el plazo sin comunicación alguna, el resumen se tendrá por aprobado.
+• Actualizar la firma registrada, cada vez que el BANCO lo estime necesario.
+• Comunicar por escrito el extravío, sustracción o adulteración de las fórmulas de cheques en blanco o de cheques librados -emitidos o no- o de la fórmula especial para pedirlos, así como de los certificados nominativos transferibles de cheques de pago diferido.
+• Comunicar por escrito cualquier cambio de domicilio, reintegrando los formularios de cheques donde figure el domicilio anterior.
+•Integrar los cheques en pesos, redactarlos en idioma nacional y firmarlos de puño y letra o por los medios alternativos que el BANCO expresamente autorice, insertando como máximo tres firmas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="500" width="555" height="15" uuid="f7389419-bdc4-4192-bfdc-5ec04868c957">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OBLIGACIONES DEL BANCO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="515" width="555" height="75" uuid="980d961e-2d48-43a1-8714-0bae41b2ab92">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[BANCO se obliga a:
+• Tener la CUENTA al día.
+• Acreditar en el día los importes que se le entreguen para el crédito de la CUENTA y los depósitos de cheques en los plazos de compensación vigentes.
+• Enviar al CLIENTE un extracto de la CUENTA con el detalle de los débitos y créditos y los saldos registrados en el período]]></text>
+			</staticText>
+		</band>
+		<band height="615">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="600" width="566" height="1" uuid="622422b6-d4f3-451f-aaba-2627d1757abe"/>
+			</break>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="560" uuid="8068c448-1f32-4551-b31a-6519bfb653ea">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[que comprende, con un detalle de los cheques de pago diferido registrado, vencimiento e importe.
+• Pagar a la vista los cheques librados en las fórmulas entregadas al CLIENTE de acuerdo con las disposiciones legales y reglamentarias vigentes a la fecha de emisión del cheque, en los plazos establecidos en el artículo 25 de la Ley de Cheques, que en el caso de cheques de pago diferido se computarán a partir de la fecha de pago consignada en el cartular.
+El BANCO sólo abonará cheques firmados por el CLIENTE y/o sus representantes legales y/o convencionales, cuyas firmas se encuentren debidamente registradas en el BANCO. El BANCO no abonará cheques firmados por otras personas por cuenta del titular.
+• No abonar en efectivo cheques -comunes o de pago diferido- extendidos al portador o a favor de persona determinada, por importes superiores a $ 50.000. Esta restricción no se aplicará en los siguientes casos: i) Cheques librados a favor de los titulares de las cuentas sobre las que se giren, exclusivamente cuando sean presentados a la entidad girada por ellos mismos; ii) Valores a favor de terceros destinados al pago de sueldos y otras retribuciones de carácter habitual por importes que comprendan la nómina salarial en forma global, para lo cual el librador deberá extender, en cada oportunidad, una certificación en la que conste expresamente la finalidad de la libranza, que quedará archivada en la entidad; iii) Los cheques cancelatorios, de acuerdo con lo establecido en la Sección 8. de las normas sobre “Circulación monetaria” del BCRA; iv) Los valores a favor de beneficiarios de las prestaciones dinerarias reglamentadas por la Ley 24.557, para lo cual el librador deberá extender, en cada oportunidad, una certificación en la que conste la finalidad de la libranza, que quedará archivada en la entidad.
+• Adoptar los procedimientos necesarios para efectuar el pago de cheques, asumiendo las responsabilidades legales pertinentes en el caso de documentos incorrectamente abonados. Para el caso de cheques comprendidos en la operatoria de truncamiento observar - en ese aspecto - las pautas contenidas en los convenios formalizados entre las entidades.
+• Constatar la regularidad de la serie de endosos pero no la autenticidad de la firma de los endosantes y verificar la firma del representante, que deberá insertarse con carácter de recibo. Esta última obligación estará a cargo de la entidad en que se deposita el cheque - cuando sea distinta de la girada -, salvo que resulte aplicable el procedimiento de truncamiento, en cuyo caso se estará a lo previsto en los respectivos convenios.
+• Cuando la presentación se efectúe a través de mandatario o beneficiario de una cesión ordinaria, verificar e1 instrumento de mandato o cesión, excepto que la gestión de cobro sea realizada por una entidad financiera no autorizada a captar depósitos en cuenta corriente.
+• Revertir, en las condiciones fijadas, las operaciones debitadas, según instrucciones expresas del titular, vinculadas al sistema de débito automático.
+• Reintegrar al CLIENTE los fondos debitados por tasas de interés, comisiones, cargos y/o gastos sin el cumplimiento de lo establecido en la Cláusula de “Modificación en las Condiciones Pactadas” dentro de los cinco (5) días hábiles siguientes al momento de presentación del reclamo ante el BANCO. Adicionalmente se reconocerán los gastos realizados para la obtención del reintegro y los intereses compensatorios pertinentes, aplicando a ese efecto dos veces la tasa promedio del último mes disponible que surja de la encuesta de tasas de interés de depósitos a plazo fijo de 30 a 59 días-de pesos o dólares, según la moneda de la operación, informada por el Banco Central de la República Argentina a la fecha de celebración del contrato, o en caso de que no estuviera disponible, la última informada, sobre la base de la información provista por la totalidad de banco públicos y privados.
+• Informar al B.C.RA. los rechazos de cheques por defectos formales, los rechazos a la registración de los de pago diferido, así como los producidos por insuficiente provisión de fondos en cuenta o por no contar con autorización para girar en descubierto y las multas satisfechas por los responsables.
+Para los casos en que las multas hubieren sido abonadas y se efectúe una notificación errónea al B.C.R.A., que determine la inhabilitación automática del CLIENTE, el BANCO compensará al CLIENTE los gastos que le origine la solución de tal situación mediante su crédito en la CUENTA, estimándose que ello no debe ser inferior a una vez el importe de las multas de que se trate.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="565" width="555" height="15" uuid="42918cd8-16ab-42aa-99af-509434fcb37e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LIBRETAS DE CHEQUES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="580" width="555" height="15" uuid="634ab988-76d1-4f61-8274-6434a6e2caf5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Los pedidos de libretas de cheques deberán ser efectuados por el titular de la CUENTA o por apoderados especialmente]]></text>
+			</staticText>
+		</band>
+		<band height="615">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="600" width="565" height="1" uuid="0102d26a-b61d-4ac8-9ea7-fac27e57a4d4">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="65" uuid="adffc849-1fba-4d17-86c3-76a8f54e85d0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[facultados al efecto. La falta de constancia de la recepción de las chequeras es causal de rechazo del pago y/o registración de los cheques correspondientes a la misma.
+La solicitud de cheques de pago diferido conlleva la liberación del banco depositario de las responsabilidades emergentes de las normas sobre confidencialidad a que se refieren las leyes de Entidades Financieras (arts. 39 y 40) y de Protección de Datos Personales (Ley 25.326).]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="555" height="15" uuid="f900cc65-3d8b-4cef-b3e7-462cfdd2ea37">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ORDEN DE NO PAGAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="85" width="555" height="130" uuid="4bac1763-0a3d-49cf-b438-81c863c63c7d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[En caso de extravío, sustracción o adulteración de cheques, fórmulas de cheques y/o fórmula especial para solicitar aquéllas y, en su caso, de certificados nominativos de registración, el CLIENTE deberá comunicar al BANCO el hecho por escrito, con los requisitos exigidos por la normativa vigente. Asimismo, deberá acreditar ante el BANCO haber formulado la exposición o denuncia en sede policial o penal. Cumplidos estos requisitos el BANCO rechazará el pago de los cheques incluidos en la orden de no pago, bajo responsabilidad del CLIENTE.
+El CLIENTE toma conocimiento de que la falta de realización de denuncia judicial cuando así sea requerido por normativa del B.C.R.A. y/o a requerimiento del BANCO, será motivo de su inclusión en la "Central de Cheques Rechazados".
+El CLIENTE se notifica de que la orden de no pago podrá ser dada por el tenedor desposeído, prestando desde ya su consentimiento irrevocable para que en tal caso el BANCO debite de la CUENTA los gastos administrativos que dicha gestión implique.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="215" width="555" height="15" uuid="bbcb4589-f989-43b8-912c-19dfb0d5aa9a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDOS. EXTRACTOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="230" width="555" height="90" uuid="578185c8-5dae-425d-8615-083bdeb2afb5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA["El estado de cuenta será remitido al domicilio denunciado por el CLIENTE y/o a la dirección de correo electrónico que se indican en esta solicitud, salvo que éste manifieste por escrito que procederá a su retiro directamente de las oficinas del BANCO, a cuyo efecto podrá autorizar a un tercero.
+Los movimientos registrados se presumirán aceptados por el CLIENTE en caso de falta de oposición a los mismos formulado dentro de los sesenta (60) días corridos de vencido el respectivo período."
+Los pedidos especiales de entrega de resúmenes de cuenta tendrán un costo adicional, según surge de planilla anexa a la presente.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="320" width="555" height="15" uuid="e6f6ecfb-9fcd-4632-b201-3d235ba43e53">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SOBREGIROS EN DESCUBIERTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="335" width="555" height="40" uuid="9321ea19-ed10-41ac-a000-9b9d0adf90fe">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Los pagos de cheques que con carácter excepcional pudiera autorizar el BANCO generando saldo deudor en la CUENTA, en modo alguno implicarán la celebración de contrato de apertura de crédito ni confieren derecho alguno al CLIENTE a asistencias futuras. Los saldos deudores así generados deben ser inmediatamente cancelados por el CLIENTE.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="375" width="555" height="15" uuid="50e4c863-cba1-441e-a096-4a4a1f4e012a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INTERESES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="390" width="555" height="165" uuid="d8debcf8-afc0-440b-9af6-a32847bd7160">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA["El BANCO no reconocerá intereses sobre saldos acreedores de la CUENTA. Los saldos deudores originados en contratos de apertura de crédito devengarán intereses a las tasas fijadas en los respectivos acuerdos. En caso de giros en descubierto sin acuerdo, transitoria y excepcionalmente autorizados por el BANCO, los saldos deudores devengarán intereses a la tasa nominal anual vencida variable BADLAR Bancos Privados en Pesos + 3.300 Puntos Básicos, atento a ello se establece que la tasa de interés, conforme los criterios precedentes, es la Tasa “BADLAR*” BANCOS PRIVADOS EN PESOS publicada por el BCRA correspondiente a la vigente cuatro (4) días hábiles antes de la fecha de aplicación, la que con carácter general establece el BANCO para dicha operatoria, cuya revisión será diaria y que se publicará en pizarras colocadas en locales de atención al público y en página web del BANCO.
+Producido el cierre de la cuenta, el saldo deudor devengará intereses a la tasa antes indicada para giros en descubierto sin acuerdo, los que se capitalizarán mensualmente.
+(*Buenos Aires Deposits of Large Amount Rate: Tasa de interés promedio ponderado por monto de depósitos a plazo fijo de 30 a 35 días de plazo de más de un millón, de pesos o dólares estadounidenses, pagadas por la totalidad de las entidades bancarias)."]]></text>
+			</staticText>
+		</band>
+		<band height="615">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="600" width="565" height="1" uuid="dd2af8be-84eb-4994-bcc8-d3885777a30a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="15" uuid="b04b52fe-5727-4e37-8837-bf5f8bed67e5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[OPERACIONES POR VENTANILLA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="555" height="40" uuid="b650144d-d7a3-42c4-aca3-59122da5ba7f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El Cliente podrá realizar cualquier tipo de operaciones bancarias en cualquiera de las cajas habilitadas en las Sucursales del BANCO, sin perjuicio de las restricciones operativas que pudieran existir, y sin costo alguno, salvo en los casos en que rijan comisiones establecidas específicamente por el BCRA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="555" height="15" uuid="513f43c0-918f-4f9d-93c2-70aa8dc82edb">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MORA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="75" width="555" height="65" uuid="0dcc2b34-c7b5-407d-a0f1-c56681b92389">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[La mora en el pago de los saldos deudores que registre la CUENTA se producirá en forma automática, sin que se requiera comunicación o interpelación previa al CLIENTE, en la fecha prevista en los respectivos contratos de apertura de crédito y/o al registrarse el saldo deudor por giro en descubierto. La mora faculta al BANCO a dar por caídos los plazos pactados, procediendo al cierre de la CUENTA y emisión del certificado de saldo deudor. El saldo deudor resultante del cierre devengará los intereses previstos en la cláusula precedente desde la fecha de cierre.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="140" width="555" height="15" uuid="903c87cd-7cc6-44a0-b61c-4f8e23d355f3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REVOCACION POR EL CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="155" width="555" height="80" uuid="85ac156d-724c-4496-a3d5-e540602e5f88">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE podrá revocar la aceptación del producto o servicio dentro del plazo de diez (10) días hábiles contados a partir de haber recibido el contrato suscripto por el BANCO y/o de la disponibilidad efectiva del servicio, lo que suceda último, mediante notificación fehaciente al BANCO, sin que ello genere costo ni responsabilidad alguna para el CLIENTE en la medida que NO haya hecho uso de los servicios contratados. En caso de prestación de servicios, el Banco cobrará los cargos, gastos y comisiones previstas en la planilla anexa a la presente SOLICITUD, proporcionados al tiempo de utilización del servicio.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="235" width="555" height="15" uuid="865126ec-197a-4c60-9de9-62a8382d8b07">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[COMISIONES, CARGOS y GASTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="250" width="555" height="90" uuid="c9dadbe9-d260-46b3-adc1-b376a0ae5c57">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1) El CLIENTE abonará las comisiones, cargos y gastos por los conceptos e importes que se detallan en la planilla anexa a la presente SOLICITUD y que forma parte de la misma. El cliente por la presente se notifica y acepta las comisiones, gastos y cargos vigentes aplicables a la presente SOLICITUD.	
+2) Modificación de los valores: Los valores de las comisiones y/o cargos y/o gastos determinados en la planilla anexa de la presente SOLICITUD podrán sufrir modificaciones, previa comunicación al CLIENTE mediante el procedimiento previsto en la cláusula “Modificaciones en las condiciones pactadas”. La falta de objeciones implicará la tácita aceptación de las modificaciones.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="340" width="555" height="15" uuid="35a2f8ea-e2bf-4f5e-97d9-c5865bd7ed27">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MODIFICACIONES EN LAS CONDICIONES PACTADAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="355" width="555" height="40" uuid="b0456f4c-c0fc-46a8-a9fa-eabdb1e6ea72">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El BANCO podrá modificar las condiciones pactadas, incorporar nuevos conceptos en calidad de comisiones y/o cargos y/o gastos, como así también reducir sus prestaciones, de acuerdo al procedimiento que resulte aplicable conforme normativa vigente del Banco Central de la República Argentina sobre Protección a los Usuarios de Servicios Financieros.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="395" width="555" height="15" uuid="b2f20f86-e0cf-4d98-8154-e23e16b3e329">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MEDIDAS CAUTELARES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="410" width="555" height="80" uuid="4c7f1766-196b-47ad-97dc-6df9abf4d71f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[En el supuesto de CUENTA abierta a nombre de dos o más titulares, autorizamos irrevocablemente al BANCO en caso de traba de cualquier medida cautelar que afecte el normal funcionamiento de la CUENTA y/o la disponibilidad de los créditos registrados en la misma, afecte - salvo instrucción judicial en contrario - el 100% de dichos créditos, asumiendo la carga de dirimir toda cuestión ligada al alcance de la medida judicial por ante los tribunales emitentes de la orden.
+En especial la traba de medidas cautelares implicará la automática resolución de los contratos de apertura de crédito, sin necesidad de comunicación o aviso previo.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="490" width="555" height="15" uuid="fc372063-47fb-4450-8212-c8897b56bba0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CIERRE DE CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="505" width="555" height="15" uuid="d0ed9847-4dfa-40e9-8805-f4bba314de97">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.- Serán causales de cierre de la CUENTA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="520" width="270" height="15" uuid="bf94d23f-d46e-499b-8679-bcf29f79b143">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.1. Solicitud del CLIENTE o decisión del BANCO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="270" y="520" width="285" height="15" uuid="c90df29f-fe81-4492-9112-37fb6d7e27ed">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE puede solicitar, previo aviso con diez (10) días de]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="535" width="555" height="40" uuid="9af48cda-25fc-484d-9218-6b5fe7d09332">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[anticipación, el cierre de la CUENTA, suscribiendo los formularios provistos por el BANCO a tal fin y dando cumplimiento a las obligaciones previstas en el ítem 2 de este apartado. Cuando el cierre se produzca por decisión del BANCO se notificará por medio fehaciente al CLIENTE, con similar periodo de anticipación.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="575" width="150" height="15" uuid="561fd46a-17c6-48ce-bed3-97c95cca734e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.2. Falta de movimientos.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="575" width="405" height="15" uuid="343b14aa-a33b-48d4-98b3-03f2d710eab9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Si la CUENTA no registra movimientos durante un (1) año en forma ininterrumpida, el ]]></text>
+			</staticText>
+		</band>
+		<band height="615">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="600" width="565" height="1" uuid="8d79bec2-ed5e-4b28-aa2b-75e00924f2ff">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="40" uuid="bdb0ab11-dc68-460a-9f26-e888aa29e655">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[BANCO procederá a su cierre definitivo. El eventual saldo acreedor que registre se transferirá a la cuenta Saldos Inmovilizados donde permanecerá pendiente hasta su retiro por el CLIENTE, devengándose las comisiones por saldos inmovilizados se notifican en la planilla anexa.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="45" width="555" height="30" uuid="2b6dc2b4-468f-46c4-aaba-2c0f26cd4177">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.3. Registrarse cinco (5) rechazos de pago de cheques por insuficiencia de fondos disponibles y/o de registración de cheques de pago diferido.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="75" width="555" height="165" uuid="5a03e269-3f4f-4369-b982-a3a579c7227d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1.3.1. Se computarán los rechazos que registre cada persona por cheques librados contra una o varias CUENTAS habilitadas en el ámbito del BANCO en el término de un (1) año, contado a partir de la fecha del primero de ellos, sea que los hubiese librado como firmante a título personal y/o como representante o apoderado de terceros.
+En los casos de cheques firmados por la persona a cuya orden esté una CUENTA, en su carácter de mandatario, administrador, o figuras similares, corresponderá también hacer efectivo el cómputo en relación con los respectivos titulares de la CUENTA, en tanto se trate de documentos librados contra la misma.			
+1.3.2. Producido el quinto rechazo:
+• Se procederá automáticamente al cierre y/o suspensión del servicio de pago de cheques de la/s CUENTAS de la/s que resulte titular, aún cuando figure como co-titular junto a otras personas.
+• Se procederá a su eliminación de cualquier CUENTA en la que figure como firmante.
+1.3.3. La persona -titular y/o firmante y/o representante legal- que registre cinco (5) cheques computables en los términos expuestos, no podrá operar en cuentas corrientes en el BANCO por el plazo de dos (2) años, contado desde la fecha en que resulta aplicable el cierre."]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="240" width="380" height="15" uuid="8603fd60-d9d4-45fb-b670-abfaefdb3272">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.4. Registrarse ocho (8) rechazos de pago de cheques por vicios formales.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="240" width="175" height="15" uuid="a0c7f818-bfad-4cbc-b601-8330a7777735">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Al registrar la CUENTA ocho (8)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="255" width="555" height="40" uuid="ef820a5f-63ea-4099-9b4f-134be3fabb54">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[rechazos por motivos formales en el término de un (1) año, contado a partir de la fecha del primero de ellos.
+1.4.1. En este supuesto el CLIENTE no podrá operar con cuentas corrientes en el BANCO por el plazo de un (1) año, contado desde la fecha en que resulta aplicable el cierre."
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="295" width="310" height="15" uuid="a8019d2d-6662-4786-b588-6f8b0964c614">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.5. Por denuncias de extravío, sustracción o adulteración.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="310" y="295" width="245" height="15" uuid="1efd8eb0-3ef0-40a1-b78e-91e8a2bd1a80">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Al registrarse por CUENTA tres (3) o más denuncias]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="310" width="555" height="80" uuid="ac0c489c-636a-454a-b3ac-c22147187984">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[efectuadas por su titular, con motivo del extravío, sustracción o adulteración de cheques - incluidos los no utilizados y los creados pero no emitidos -, de fórmulas de cheques y/o de la fórmula especial para solicitar aquéllas, así como de los certificados nominativos transferibles de cheques de pago diferido, en el término de un (1) año, contado a partir de la fecha de la primera de las denuncias.
+1.5.1. En este supuesto el CLIENTE no podrá operar en cuentas corrientes en el BANCO por el plazo de un (1) año, contado desde la fecha en que resulta aplicable el cierre.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="390" width="555" height="15" uuid="719906be-18ab-41c5-9be9-179d47c1bd50">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.6. Inclusión del CLIENTE en la "Central de cuentacorrentistas inhabilitados" del B.C.RA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="405" width="555" height="40" uuid="bf85d7f1-66d5-4374-9fbe-4a10ff207ba2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Ante la inclusión de una persona en dicha base el BANCO procederá al cierre de la/s CUENTAS de su titularidad inclusive aquella/s en las que figure con otros titulares, como así también a su eliminación como firmante de CUENTAS abiertas a nombre de terceros."]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="445" width="555" height="15" uuid="21a8b01c-25c3-48a8-8e96-3b41458ca1a9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.7. Causas legales o disposición de Autoridad Competente.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="460" width="555" height="15" uuid="e8ffec87-6c28-4270-9e48-515262601857">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[1.8. Falta de pago de multas establecidas por la Ley 25.730.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="475" width="555" height="115" uuid="2cacb62e-82e5-4c10-ac6e-e77b15558f54">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[2- Al momento de solicitar el cierre de la CUENTA o dentro de los cinco (5) días hábiles de la fecha de haber recibido la comunicación de cierre o de suspensión del servicio de pago de cheques como medida previa al cierre de la cuenta: 
+2.1. Devolver las fórmulas de cheques (comunes o de pago diferidos) no utilizadas.
+2.2. Acompañar la nómina de cheques comunes y de pago diferidos librados a la fecha de notificación de cierre, aun no presentados al cobro, consignando su tipo, fecha de libramiento y, en su caso, de pago, con indicación de los importes.
+2.3. Informar los cheques anulados.
+2.4. Acreditar los fondos para abonar los cheques comunes y de pago diferido con fecha de vencimiento cumplida, y que conserven validez legal.
+2.5. Depositar en una cuenta especial, en tiempo oportuno para hacer frente a los mismos, los importes correspondientes a los]]></text>
+			</staticText>
+		</band>
+		<band height="615">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="600" width="565" height="1" uuid="f842e28f-f874-46e0-8f3a-b65823584a69">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="15" uuid="e0956209-ec1b-4120-86df-a35c7db2b0a9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[cheques de pago diferido pendientes de vencimiento a la fecha de cierre.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="20" width="555" height="15" uuid="6b403107-3c5e-454e-8d99-015994307621">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUSPENSION DEL SERVICIO DE PAGO DE CHEQUES PREVIO AL CIERRE DE LA CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="35" width="555" height="30" uuid="33f4c74d-6b4a-46c0-9e37-13dba9cfc50b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Existiendo causal de cierre de la CUENTA, el BANCO podrá mantener la misma abierta con suspensión del servicio de pago de cheques, al único efecto de liquidar operaciones pendientes, a cuyo término se dispondrá el cierre.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="65" width="555" height="15" uuid="959065d6-1d20-47ac-a54b-18ab957d8719">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MULTAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="555" height="80" uuid="addec0ac-8cf2-45ae-8fd4-29b2d1dcb0c9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El BANCO se encuentra facultado a debitar de la CUENTA el importe de las multas impuestas al CLIENTE por el B.C.R.A. en virtud de la operatoria de la misma y/o el uso de cheques. En caso de resultar insuficientes los fondos existentes en la CUENTA el BANCO no se encuentra obligado a generar saldo deudor por estos conceptos.
+Si, habiendo sido abonadas las multas, se hubiere efectuado una notificación errónea al B.C.R.A. que determine la inhabilitación automática del CLIENTE, el BANCO compensará a éste los gastos que origine la solución de tal situación, acreditando en la CUENTA un importe no inferior a una vez el importe de las multas de que se trate.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="160" width="555" height="15" uuid="1b932aad-645c-477a-b1a4-fbd70802ab4c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[IMPUESTOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="175" width="555" height="30" uuid="466f6a9a-86aa-4a31-8a70-a0c4c9408531">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Todos los impuestos presentes o futuros que graven la celebración del contrato de cuenta corriente bancaria estarán a cargo del CLIENTE, los que podrán ser debitados de la CUENTA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="205" width="555" height="15" uuid="bd19784f-d928-461c-a2cf-e9e954778c09">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GARANTIA DE LOS DEPÓSITOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="220" width="555" height="80" uuid="983ea9fe-62fd-4566-84ae-9a3e0dc3b49f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Los depósitos en pesos y en moneda extranjera cuentan con la garantía de hasta $ 1.500.000. En las operaciones a nombre de dos o más personas, la garantía se prorrateará entre sus titulares. En ningún caso, el total de la garantía por persona y por depósito podrá exceder de $ 1.500.000, cualquiera sea el número de cuentas y/o depósitos. Ley 24.485, Decreto N° 540/95 y modificatorios y Com. “A” 2337 y sus modificatorias y complementarias. Se encuentran excluidos los captados a tasas superiores a la de referencia conforme a los límites establecidos por el Banco Central, los adquiridos por endoso y los efectuados por personas vinculadas a la entidad financiera.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="300" width="555" height="15" uuid="04a79377-fed5-4e43-a8a3-814a8e14a54d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOMICILIO. COMUNICACIONES DEL BANCO AL CLIENTE. NOTIFICACIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="315" width="555" height="65" uuid="c3ac8711-4f41-4db6-ac6f-a2bc38d725ae">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE constituye domicilio especial en el consignado precedentemente, el que será válido a todos los efectos salvo que se notifique por medio fehaciente su modificación. 
+El CLIENTE acepta como medio de comunicación fehaciente a los fines de la presente SOLICITUD, el envío por el Banco de un correo electrónico a la dirección que a continuación y en forma manuscrita el mismo inserta, obligándose a consultar diariamente la misma. Las comunicaciones así remitidas se considerarán realizadas en la fecha de su emisión.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="380" width="220" height="15" uuid="cea474f3-588c-40bc-810f-c17d55c71656">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Dirección de correo electrónico del Cliente:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="230" y="380" width="314" height="15" uuid="4ae6689b-fa74-4bf0-ab54-92f6fb1f1845"/>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMAIL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="230" y="395" width="315" height="1" uuid="3f4b8d93-4e81-4926-8a78-e2c84e44d9dc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="410" width="555" height="15" uuid="99178b9a-b400-4e8c-8299-9ac6d9c3f6f0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[JURISDICCIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="425" width="555" height="35" uuid="d9118003-c3b1-481b-a337-9c5aeb51f1ee">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Las partes acuerdan que ante cualquier conflicto vinculado a la presente SOLICITUD y a la CUENTA, someterán el mismo a la jurisdicción de los tribunales ordinarios con competencia en el lugar del domicilio real/legal antes declarado.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="460" width="555" height="15" uuid="2e437fec-f96b-4e42-88b6-b01292dcae53">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TITULARIDAD DE LA CUENTA. ORDEN DE DISPOSICIÓN DE LOS FONDOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="475" width="555" height="15" uuid="17847678-293f-42f6-9faf-d5b60c57e234">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[El funcionamiento de la CUENTA queda sometido a las siguientes cláusulas:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="490" width="555" height="15" uuid="a8333404-fa1a-460e-aabe-b2c9a13bf12f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[a) CUENTA a nombre de dos o más personas y orden recíproca o indistinta de ellas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="505" width="555" height="40" uuid="8e9d703d-6936-4092-9cf0-671a4f251d4a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Cualquiera de los titulares puede retirar la totalidad de los fondos existentes en la CUENTA, aun en caso de fallecimiento o incapacidad de alguno de los titulares, salvo orden judicial en contrario.
+Doy/damos Conformidad a esta Opción:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="545" width="340" height="15" uuid="c2b067f3-6cf3-48fd-be31-6b8f99aa7f39">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[b) CUENTA a nombre y a la orden conjunta de dos o más personas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="545" width="205" height="15" uuid="8e29bc2f-93ee-497d-9d35-a12273ff57f0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Los depósitos sólo pueden ser retirados con la]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="560" width="555" height="30" uuid="0e770a2f-d568-456f-b398-e4a99526d328">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[firma de todos los titulares. En el supuesto de fallecimiento o incapacidad de cualquiera de los titulares el BANCO procederá al cierre de la CUENTA, quedando los fondos a disposición de quienes se encuentren suficientemente legitimados al efecto]]></text>
+			</staticText>
+		</band>
+		<band height="615">
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<break>
+				<reportElement x="0" y="600" width="565" height="1" uuid="ebb147bf-62bd-46fb-815e-5beb3e9fa0a2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+			<staticText>
+				<reportElement x="0" y="5" width="555" height="30" uuid="ecd0ece2-fd9c-4703-ac08-c92f1540c4cf">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[por resolución emanada del Juez que intervenga en el proceso sucesorio y/o de interdicción. 
+Doy/damos Conformidad a esta Opción:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="35" width="555" height="15" uuid="148c3a82-b3d4-4356-8ca2-dedd36527120">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[c) CUENTA a nombre de una o más personas y a la orden de otra o de otras, recíproca o conjunta.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="555" height="65" uuid="531c440e-071c-4594-af70-65533af8ee55">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Los depósitos sólo pueden ser retirados por las personas a cuya orden esté la CUENTA, aplicándose lo establecido en los apartados a) y b) anteriores, según el caso. En caso de fallecimiento o incapacidad de alguna de ellas, tratándose de una CUENTA a la orden conjunta, el/los titulares deberán nombrar a una persona en su reemplazo; caso contrario se hará entrega de los depósitos al titular.
+Doy/damos Conformidad a esta Opción:
+
+En caso de fallecimiento o incapacidad del titular el BANCO procederá al cierre de la CUENTA, quedando los fondos a disposición de quienes se encuentren suficientemente legitimados al efecto por resolución emanada del Juez que intervenga en el proceso sucesorio y/o de interdicción.]]></text>
+			</staticText>
+			<subreport>
+				<reportElement x="0" y="160" width="555" height="200" uuid="a434bbc3-b87a-4aa0-91b5-4037cc86569d"/>
+				<subreportParameter name="CODIGO_CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8865_Subeport_Firmas.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="364" width="555" height="15" uuid="b609290a-a331-4b85-9ad2-850244713641">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECIBO. NOTIFICACIONES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="380" width="555" height="215" uuid="ed30de50-0d1c-449a-b712-3c784e645b4c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[1. Por el presente dejo/dejamos constancia de la recepción de una copia de la presente y de la planilla anexa en la que se determinan las comisiones, gastos y cargos aplicables por los servicios vinculados a la apertura y funcionamiento de la CUENTA, ambos bajo acuse de recibo del BANCO. Asimismo, dejo/dejamos constancia por la presente, acusando recibo, de la recepción de una copia de:
+i) la Normativa aplicable a la Cuenta de Caja de Ahorros, según Texto Ordenado de las Normas sobre Depósitos de Ahorros, Cuenta Sueldo y Especiales del Banco Central de la República Argentina,
+ii) Declaración jurada - Impuesto a las ganancias,
+iii) Declaración Jurada sobre la condición de personas expuestas políticamente.
+2. Me/nos NOTIFICO/NOTIFICAMOS de que se encuentra a mi/nuestra disposición en el Banco las normas relativas al Seguro de Garantía de Depósitos, Ley 24.485, del Decreto 540/95 (texto actualizado) y de la Comunicación “A” 2337, sus modificatorias y complementarias, las que también podrán ser consultadas a través de “Internet” en la dirección www.bcra.gov.ar.-
+3. Me/nos NOTIFICO/NOTIFICAMOS en este acto que en caso de ser aprobada por el BANCO la solicitud de apertura de Cuenta de Caja de Ahorros se encontrará puesta a mi/nuestra disposición en la Sucursal donde se presentó dicha Solicitud, dentro de los diez (10) días hábiles de la aprobación o de la disponibilidad efectiva del producto o servicio, lo que suceda último, el contrato con la firma de los funcionarios autorizados por el Banco.
+4. Me notifico que puedo consultar el “Régimen de Transparencia”, a fin de comparar los costos, características y requisitos de los productos y servicios financieros, ingresando a http://www.bcra.gob.ar/BCRAyVos/Regimen_de_transparencia.asp.
+5. Me/nos NOTIFICO/NOTIFICAMOS en este acto, que estos documentos electrónicos han sido firmados con “firma/s ológrafa/s” de acuerdo a Comunicación “A” 6068 del BCRA, referida a: “Gestión crediticia”, “Clasificación de deudores”, “Conservación y reproducción de documentos” y “Protección de los usuarios de servicios financieros”. Instrumentación de documentos en soporte electrónico o de características similares; la cual puede ser consultada ingresando a http.//www.bcra.gob.ar/BCRA.
+Los archivos que incluyen la totalidad de la documentación suscripta se remitirán a la dirección de correo electrónico informada por el cliente; o en su defecto se dejarán disponibles en AUTOCONSULTAS ingresando a través de http.//www.nbch.com.ar.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="115" width="555" height="45" uuid="ff9f5c81-7bb3-4aec-903a-4e32a06a0397">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[En caso de fallecimiento o incapacidad del titular el BANCO procederá al cierre de la CUENTA, quedando los fondos a disposición de quienes se encuentren suficientemente legitimados al efecto por resolución emanada del Juez que intervenga en el proceso sucesorio y/o de interdicción.]]></text>
+			</staticText>
+		</band>
+		<band height="615">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="5" width="555" height="200" uuid="79c61dd2-dabc-402d-a279-e0a4f3b4cc14">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="CODIGO_CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8865_Subeport_Firmas.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="210" width="555" height="15" uuid="3c0f8519-85ab-4adc-bd8e-dd6468688da2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEGUROS. CONTRATACIÓN OPCIONAL DE SEGURO DE SALDO DEUDOR:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="230" width="555" height="15" uuid="99dbe2c8-731e-4897-8167-18c012e9e31d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[____ SI / ____ NO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="250" width="555" height="70" uuid="1a677a92-52d3-4979-8df2-cfa7bbaf16d3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Solicito la contratación de un seguro que cubra y cancele los saldos deudores resultantes en la CUENTA en caso de fallecimiento, en una entidad aseguradora debidamente autorizada por la Superintendencia de Seguros de la Nación, cuyo beneficiario será el BANCO. 
+En caso de opción afirmativa suscribo por separado el formulario de solicitud y declaración jurada de salud, sin falsear, omitir o modificar datos.]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="320" width="555" height="200" uuid="182588b1-afa3-41cd-b82b-812ad0da0415">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="CODIGO_CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8865_Subeport_Firmas.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="525" width="555" height="15" uuid="72942529-7719-443c-b3fd-15e31ada32db">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Suscriben la presente, en prueba de conformidad y aceptación y en representación del BANCO: Firma y Sello Funcionario/s.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="550" width="70" height="15" uuid="c2020a2c-57e7-43d4-b80a-29dac4c6aac3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Lugar y Fecha:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="70" y="550" width="485" height="15" uuid="b3da02cc-4315-46d5-8534-c0d304036c0d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD_SUC} == null ? "" : $F{LOCALIDAD_SUC} + ", " + (new SimpleDateFormat("dd/MM/yyyy").format($P{TOPAZ_FECHA_SISTEMA}))]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="70" y="565" width="485" height="1" uuid="6b0b655c-e8ff-41f4-9fac-4d9cf2d65ff4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50">
+			<staticText>
+				<reportElement x="362" y="10" width="80" height="20" uuid="dfb3919c-20b4-491b-9ff1-0d47f64b3843"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DEP 001]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="450" y="10" width="60" height="20" uuid="f4ef3ddd-48dc-474a-b812-09100556111d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PAG. " + $V{PAGE_NUMBER} + "  /"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="510" y="10" width="20" height="20" uuid="d74ad3a3-6493-4e54-a7af-97c352985af0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="120">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image>
+				<reportElement x="-20" y="0" width="595" height="84" uuid="90705115-6564-495b-9dae-e5c3780cdbd0"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logolargo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="20" width="345" height="30" uuid="2f62ea9a-c113-4911-8e75-001d10a4816b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph rightIndent="40"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD DE APERTURA DE CUENTA CORRIENTE
+PERSONA HUMANA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="555" height="20" uuid="b23791fa-7461-4877-86cd-b923a2dda38c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No hay datos para procesar]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

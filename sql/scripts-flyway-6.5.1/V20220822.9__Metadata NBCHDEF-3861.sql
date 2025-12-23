@@ -1,0 +1,11 @@
+﻿EXECUTE('
+------------
+--OPCIONES--
+------------
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (35341, ''E'', ''Agregar controles'', ''1'', ''1'')
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (35341, ''E'', ''Ver productos relacionados a la cta'', ''2'', ''2'')
+----
+')

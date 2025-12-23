@@ -1,0 +1,334 @@
+VERSION:055_5
+TN  NN 1006TReportes Clientes - Personas            C00000 00
+*$2020-09-15 12:45:59TOP
+VNNNNN 010001000203810646SSSD000000000000000000000000000000000000000
+/T=Generar Reportes
+/C=192192192
+*$2020-09-17 12:02:46TOP
+KNNNNN 010009000100290622010100
+/T=Generar Reportes
+/F=0013700NNN000000000Arial                                   
+*$2020-09-15 12:48:38TOP
+KNNNNN 010041001601370612000101
+/T=Seleccionar Reporte a Generar
+/F=0012700NNN000000000Arial                                   
+*$2020-09-16 17:25:42TOP
+ NNNNN 34429   Reportes                                          IENSNK010077019803270558001011110000077004701000177000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-15 14:08:44TOP
+KNNNNN 010158001602780612000101
+/T=Filtros
+/F=0012700NNN000000000Arial                                   
+*$2020-09-16 09:02:11TOP
+CNNNNN ME00000000000000000000100
+/F=C34429<1
+/M=Por favor seleccione un reporte de la lista.
+*$2020-09-15 14:10:40TOP
+*N  NN * INDICADORES
+*$2020-09-15 12:45:59TOP
+CNNNNN   00000000000000000000100
+/F=C34429=1
+/P=I200
+*$2020-09-15 12:45:59TOP
+CNNNNN   00000000000000000000100
+/F=C34429=2
+/P=I201
+*$2020-09-15 12:45:59TOP
+CNNNNN   00000000000000000000100
+/F=C34429=3
+/P=I202
+*$2020-09-15 12:45:59TOP
+CNNNNN ME00000000000000000000100
+/F=!I200Y!I201Y!I202
+/M=Por favor seleccione un filtro.
+*$2020-09-15 12:45:59TOP
+*N  NN * REPORTE 1 FILTRO
+*$2020-09-15 12:45:59TOP
+ NNNNN 34093   Nro.Documento                                     I NSN 010198024402210405001010000000198009302210189000
+/?=I200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-16 09:02:21TOP
+ NNNNN 35126   Tarjeta Base:                                     I NSN 010199024602220407001010000000199009502220191000
+/?=I202
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-17 11:37:41TOP
+CNNNNN ME00000000000000000000100
+/?=I202
+/F=A(F(LTRIM,C35126)="")
+/M=El campo Tarjeta base no puede quedar en blanco
+*$2023-10-24 18:46:03ANDRES
+CNNNNN ME00000000000000000000100
+/?=I202YF(VALIDCHARS,1,C35126.0,"1234567890")=0
+/M=Error - Los caracteres ingresados son inválidos.
+*$2023-11-07 18:39:33ANDRES
+ NNNNN 00109   Descriptor Tarjetas                               INNSNK000007015200300202021011000000007000700300137000
+/?=I202
+/V=223
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-24 18:18:07ANDRES
+ NNNNN 00910   Condicion                                         INNNNF000007015200300452001011000000007000700300137000
+/?=I202
+/V="ID_TARJETA_BASE ="+C35126.1+"AND TZ_LOCK=0"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-24 18:20:02ANDRES
+ NNNNN 00536   Existe tarjeta base                               INNSNF000007015200300202021011000000007000700300137000
+/?=I202
+/V=F(CANTIDAD,C109.0,C910.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-24 18:20:29ANDRES
+CNNNNN ME00000000000000000000100
+/?=I202YC0536=0
+/M=Valor de tarjeta base no válida!
+*$2023-10-24 18:22:05ANDRES
+ NNNNN 32365   Tipo Busquda                                      I SSNK010200012802300538021010300000007000700300137000
+/?=I201
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-16 09:02:42TOP
+CNNNNN   00000000000000000000100
+/F=C32365=1
+/P=I52
+*$2020-09-15 15:02:55TOP
+CNNNNN   00000000000000000000100
+/F=C32365=2
+/P=I51
+*$2020-09-15 15:03:41TOP
+*N  NN * CONTROLES
+*$2020-09-15 14:27:12TOP
+*N  NN * Diálogos para filtros
+*$2020-09-15 14:27:12TOP
+VNNNNN 020067003002340584SSSD000000000000000000000000000000000000000
+/T=Filtro por Usuario
+/?=I51
+/C=192192192
+*$2020-09-17 12:02:30TOP
+KNNNNN 020007000701710528000101
+/?=I51
+/T=Datos del Usuario
+/F=0012700NNN000000000Arial                                   
+*$2020-09-16 14:33:26TOP
+ NSSNN 06254   Dias Calc.Ints                                    INNSNK000007015200300202001011000000007000700300137000
+/?=I51
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-24 18:01:13ANDRES
+ NNNNN 00056   Fecha desde:                                      I NNN 020032015600550428001011000000034003100570119000
+/?=I51
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-16 17:22:40TOP
+ NNNNN 00075   Fecha hasta:                                      I NNN 020063015600860428001011000000063003100860110000
+/?=I51
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-16 17:22:45TOP
+CNNNNN ME00000000000000000000100
+/?=I51
+/F=C0056>C0075
+/M=Error - Fecha desde no puede ser mayor a fecha hasta!
+*$2023-11-07 18:54:00ANDRES
+ NNNNN 04990   F.Desde                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I51Y1=0
+/V=C56[7, 4] + "-" + C56[4, 2] + "-"  + C56[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:30:35ANDRES
+ NNNNN 04968   F.Hasta                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I51Y1=0
+/V=C75[7, 4] + "-" + C75[4, 2] + "-"  + C75[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:30:35ANDRES
+ NNNNN 04990   F.Desde                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I51
+/V=C56[7, 4]  + C56[4, 2]  + C56[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:32:23ANDRES
+ NNNNN 04968   F.Hasta                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I51
+/V=C75[7, 4] +  C75[4, 2] + C75[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:32:36ANDRES
+ NNNNN 04990   F.Desde                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I52
+/V=C56[7, 4] + "-" + C56[4, 2] + "-"  + C56[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:44:22ANDRES
+ NNNNN 04968   F.Hasta                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I52
+/V=C75[7, 4] + "-" + C75[4, 2] + "-"  + C75[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:44:22ANDRES
+ NNNNN 20915   Usuario:                                          I NSN 020100015601230306021011000000100003101230121000
+/?=I51
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 19:16:51ANDRES
+ NNNNN 09920   Iniciales                                         INNSNA000007015200300302021010000000007000700300137000
+/?=I51
+/V=C20915.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 19:18:44ANDRES
+ NNNNN 09925   Nombre Usuario                                    IDNSN 020134015601570419001011500000134003001570118000
+/?=I51
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 19:19:11ANDRES
+ NNNNN 03578   InicialesUsu                                      INNNN 000007015200300202001011000000007000700300137000
+/?=I51
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:56:30ANDRES
+VNNNNN 030077003102170585SSSD000000000000000000000000000000000000000
+/T=Filtro por Documento
+/?=I52
+/C=192192192
+*$2020-09-17 12:02:35TOP
+KNNNNN 03-001001001410554000101
+/?=I52
+/T=Datos de la persona
+/F=0012700NNN000000000Arial                                   
+*$2020-09-16 14:33:02TOP
+ NSSNN 06254   Dias Calc.Ints                                    INNSNK000007015200300202001011000000007000700300137000
+/?=I52
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-24 18:35:41ANDRES
+ NNNNN 00056   Fecha desde:                                      I NNN 030033015700560429001011000000034003100570119000
+/?=I52
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-16 14:34:47TOP
+ NNNNN 00075   Fecha hasta:                                      I NNN 030063015700860429001011000000063003100860110000
+/?=I52
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-16 14:32:18TOP
+CNNNNN ME00000000000000000000100
+/?=I52
+/F=C0056>C0075
+/M=Error - Fecha desde no puede ser mayor a fecha hasta!
+*$2023-11-07 18:54:10ANDRES
+ NNNNN 04990   F.Desde                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I52Y1=0
+/V=C56[7, 4] + "-" + C56[4, 2] + "-"  + C56[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:31:20ANDRES
+ NNNNN 04968   F.Hasta                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I52Y1=0
+/V=C75[7, 4] + "-" + C75[4, 2] + "-"  + C75[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:31:20ANDRES
+ NNNNN 04990   F.Desde                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I52
+/V=C56[7, 4] + C56[4, 2]  + C56[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:31:50ANDRES
+ NNNNN 04968   F.Hasta                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I52
+/V=C75[7, 4] + C75[4, 2] +  C75[1, 2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 12:32:06ANDRES
+ NNNNN 34093   Nro.Documento:                                    I NSN 030098015701210318001010000000099003101220127000
+/?=I52
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-16 14:31:44TOP
+TN  NN 1006TConsulta Finaliza ope                   C00001 00
+*$2023-10-24 18:50:16ANDRES
+VNNNNN 040190014901160399NNND000000000000000000000000000000000000000
+/T=Finaliza Operación?
+/C=192192192
+*$2023-10-24 18:50:24ANDRES
+KNNNNN 040018000700380377010100
+/T=Finaliza Operación e imprime reporte?
+/F=0013700NNN000000000Arial                                   
+*$2023-10-24 18:50:24ANDRES
+TN  NN 1006TConsulta de Tarjetas por Persona        C00001 00
+/?=I200
+*$2020-09-15 16:06:40TOP
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/V="TZPQUERY.EXE /Q2803 /CNroDoc|" + C34093.1 + "| /DS /A"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-15 16:07:45TOP
+ NNNNN 09528   Linea Comando                                     INNSNF000007015200300452001011000000007000700300137000
+/V=C910
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-15 16:05:46TOP
+CNNNNN  M00000000000000000000100
+*$2020-09-15 16:05:46TOP
+TN  NN 1006TConsulta Intervinientes de Cliente      C00001 00
+/?=I201
+*$2020-09-15 16:26:36TOP
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/?=I51
+/V="TZPQUERY.EXE /Q2809 /CFechaDesde|" + C4990.1 + "| /CFechaHasta|" + C4968.1 + "| /CUsuario|" + C20915.1 + "| /DS /A"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-25 19:22:58ANDRES
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/?=I52
+/V="TZPQUERY.EXE /Q2809 /CFechaDesde|" + C4990.1 + "| /CFechaHasta|" + C4968.1 + "| /CNroDoc|" + C34093.1 + "| /DS /A"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-16 14:17:35TOP
+ NNNNN 09528   Linea Comando                                     INNSNF000007015200300452001011000000007000700300137000
+/V=C910
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-15 16:26:36TOP
+CNNNNN  M00000000000000000000100
+*$2020-09-15 16:26:36TOP
+TN  NN 1006TConsulta de Tarjetas por Persona        C00001 00
+/?=I202
+*$2020-09-16 09:26:05TOP
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/V="TZPQUERY.EXE /Q2808 /CTARJETA_BASE|" + C35126.1 + "| /DS /A"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-17 11:38:27TOP
+ NNNNN 09528   Linea Comando                                     INNSNF000007015200300452001011000000007000700300137000
+/V=C910
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-16 09:25:07TOP
+CNNNNN  M00000000000000000000100
+*$2020-09-16 09:25:07TOP
+TN  NN 1006TFinaliza Operación                      C00001 00
+*$2023-10-24 18:28:10ANDRES
+ NNNNN 00028   Concepto                                          INNSNK000007015200300452001011000000007000700300137000
+/V=Impresión de reporte TJD
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-10-24 18:29:11ANDRES
+DN  NN 0000Ov00
+*$2023-10-24 18:28:15ANDRES
+*#I51#Filtro
+*#I200#Firma PF
+*#I201#Firma Cliente
+*#I202#Dec. Imp. Ganancias
+*#I52#Filtro por documento
+*#I204#Consulta Estado PF
+*#I205#Consulta Estado PJ

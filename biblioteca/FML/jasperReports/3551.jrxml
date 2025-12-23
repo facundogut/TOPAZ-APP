@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2022-08-31T22:01:16 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DEP 055" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9053564d-1130-467c-8954-e9ac6489fa1d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH Data Adapter "/>
+	<parameter name="JTSOID" class="java.lang.Integer"/>
+	<parameter name="TOPAZ_FECHA_SISTEMA" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_HORA_ACTUAL" class="java.sql.Time" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.sql.Time(new java.util.Date().getTime())]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  dbo."SALDOS".CUENTA ,  
+dbo."SALDOS".C1604, 
+dbo."PARAMETROS".FECHAPROCESO,
+DATENAME(year, dbo."PARAMETROS".FECHAPROCESO) AS "ANIO",
+DATENAME(m, dbo."PARAMETROS".FECHAPROCESO) AS "MES",
+DATENAME(MONTH, dbo."PARAMETROS".FECHAPROCESO) AS "MES_NOMBRE",
+DATENAME(d, dbo."PARAMETROS".FECHAPROCESO) AS "DIA"
+FROM  dbo."SALDOS", dbo."PARAMETROS" 
+--SELECT  dbo."SALDOS"."CUENTA" ,  dbo."SALDOS"."C1604" FROM  dbo."SALDOS" 
+WHERE  
+dbo."SALDOS"."JTS_OID" = $P{JTSOID}]]>
+	</queryString>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="C1604" class="java.math.BigDecimal"/>
+	<field name="FECHAPROCESO" class="java.sql.Timestamp"/>
+	<field name="ANIO" class="java.lang.String"/>
+	<field name="MES" class="java.lang.String"/>
+	<field name="MES_NOMBRE" class="java.lang.String"/>
+	<field name="DIA" class="java.lang.String"/>
+	<variable name="Variable_1" class="java.util.Date"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="187" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="-2" y="140" width="562" height="40" uuid="62eaaadc-5fff-4deb-9ee8-d94eb8bf8f9c"/>
+				<textElement textAlignment="Center">
+					<font size="13" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AVISO DE CIERRE DE CUENTA CORRIENTE / SUSPENSIÓN DEL SERVICIO DE PAGO DE
+CHEQUES COMO MEDIDA PREVIA AL CIERRE DE LA CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="11" width="174" height="16" uuid="c5938913-32ad-45d7-af23-62cbce2b479e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[NUEVO BANCO DEL CHACO S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="33" width="100" height="16" uuid="c321ce52-e7fb-4ed3-9085-6ddaa8db3454">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Guemes 102]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="55" width="31" height="16" uuid="6f38867c-60cc-46b5-bcf1-e96887686b07">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[3500]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="86" y="55" width="72" height="16" uuid="faa4f784-d498-436a-992d-00867a001875">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[RESISTENCIA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="170" y="55" width="44" height="16" uuid="74c96908-207b-4d68-9693-fc013e187483">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[CHACO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="509" splitType="Stretch">
+			<staticText>
+				<reportElement x="41" y="10" width="100" height="16" uuid="1f0209c1-c156-4e0f-bb3a-5ceb1f55afcf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Cuenta Corriente N°:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="30" width="191" height="16" uuid="5cdeda40-a759-4955-8314-ff53d69b3bd1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Saldo en Cta. Cte. Deudor/Acreedor(*): $]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="66" width="470" height="15" uuid="6c71b8af-e49a-425a-beb0-7474a3a09738">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Llevamos a su conocimiento que por haber constatado ................................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="81" width="410" height="15" uuid="5d7ad6d5-53ca-4502-94b3-8e6d3e585a03">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[................................................................................................................. hemos procedido al ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="451" y="81" width="60" height="15" uuid="01fde6b9-ca17-453f-b875-9e7e17e063fc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CIERRE DE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="96" width="100" height="15" uuid="26276496-99a4-4865-89ec-95a059dd20c1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[VUESTRA  CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="96" width="50" height="15" uuid="277043a4-f5ac-4ab0-9480-1ed0d3b4adf2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[/ a la]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="191" y="96" width="320" height="15" uuid="2b3ff563-89b8-4474-82a2-ad82ae57b3e9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUSPENSIÓN  DEL  SERVICIO  DE  PAGO  DE  CHEQUES  COMO ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="116" width="230" height="15" uuid="912eeac9-6341-4128-8815-466ef1d2d4a1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[MEDIDA PREVIA  AL CIERRE DE LA CUENTA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="149" width="470" height="15" uuid="4ccd0e8a-b167-4aef-9f98-ffee87dba782">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Conforme lo dispuesto por la normativa vigente deberá/n dar cumplimiento dentro de los cinco (05) días]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="41" y="164" width="470" height="15" uuid="0d0c7fea-1d0d-4659-966b-6e1156a0014f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[hábiles bancarios siguientes a la recepción de esta notificación, a las siguientes obligaciones:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="196" width="462" height="30" uuid="21654874-a038-4433-9af3-47a4a24c4853">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Devolver las fórmulas de cheques (comunes y de pago diferido) no utilizadas a la fecha de recepción de     la presente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="35" y="196" width="13" height="15" uuid="554f22fb-90c9-4329-b5d9-1f15e76ca273">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[a)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="226" width="462" height="45" uuid="48e64cd0-50ea-4562-a4bf-ff77a3f50aa5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Acompañar la nómina de cheques comunes y de pago diferido librados a la fecha de notificación del presente aviso, aún no presentados al cobro, consignado su tipo, fechas de liberamiento y, en su caso, de pago, con indicación de los importes.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="35" y="226" width="13" height="15" uuid="95860419-538c-4da8-8f87-ff493e2ae41b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[b)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="271" width="462" height="15" uuid="cb9382b8-bf19-428b-8bfc-075ddd9fe643">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Informar los cheques anulados.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="35" y="271" width="13" height="15" uuid="7551bf00-3e4f-4260-b2f8-03192544c9d4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[c)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="286" width="462" height="30" uuid="ddcd0e50-2a30-47b8-bf47-54ab94c33fc8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Acreditar los fondos necesarios para abonar la totalidad de los cheques comunes y de pago diferido con fecha de vencimiento cumplida, y que conserven validez legal, declarados en los términos el inciso b).]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="35" y="286" width="13" height="15" uuid="08efa45b-cdbd-4d67-9e15-a27849bcf551">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[d)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="316" width="462" height="45" uuid="5ef6c8a4-2d5d-4082-9fa9-e2380b584f06">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Depositar en una cuenta especial, en tiempo oportuno para hacer frente a los mismos, los importes correspondientes a los cheques de pago diferido pendientes de vencimiento a la fecha de cierre, declarados en los términos del inciso b).]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="35" y="316" width="13" height="15" uuid="da34c3f2-56b7-4e51-a8f0-8e70fa82753f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[e)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="386" width="462" height="60" uuid="9c5fa839-768f-4e72-ba2c-723f22fb0325">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[	Recordamos a Ud./Uds. que los importes no retirados con posterioridad al cierre y/o
+remanentes por falta de presentación al cobro de los cheques declarados, serán transferidos a
+"Saldos Inmovilizados",    debiendo     abonarse    una    comisión    mensual    de    Pesos
+..................................... ($........), más IVA, a partir de los 30 días de ingresar al rubro.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="48" y="446" width="204" height="15" uuid="0d137f95-ce66-44eb-9bd4-5acd46ab7d51">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Sin otro particular, saludamos atentamente.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="311" y="476" width="200" height="15" uuid="43133edd-811f-4484-a0c7-dc4222340d95">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[..........................................................................]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="141" y="10" width="100" height="16" uuid="20bd664d-42e2-4432-8a14-c61a42b4e393">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###">
+				<reportElement x="232" y="30" width="100" height="16" uuid="6b71a155-0479-4dc7-8a0b-9f5dc7d1b42e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{C1604}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd">
+				<reportElement x="350" y="46" width="35" height="15" uuid="b1391732-b314-410e-8016-771bfadb6281">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DIA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="385" y="46" width="21" height="15" uuid="bceb2786-477d-4c4c-b6ce-91d537899dfd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField pattern="MMMMM">
+				<reportElement x="406" y="46" width="64" height="15" uuid="de1d0340-8147-48f9-bd63-24120349d3e2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{MES_NOMBRE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="470" y="46" width="21" height="15" uuid="557fb035-f979-4b7d-a075-46977213b33a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[de]]></text>
+			</staticText>
+			<textField pattern="yyyy">
+				<reportElement x="491" y="46" width="54" height="15" uuid="473c94bb-8533-43fd-a2cd-8ff719c84b65">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{ANIO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="34" splitType="Stretch">
+			<staticText>
+				<reportElement x="3" y="13" width="375" height="15" uuid="3d762c12-bcb4-4a29-9dcd-0c3736de4603">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[(*) El saldo indicado corresponde al día de la fecha de emisión del presente aviso.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="8" width="165" height="1" uuid="13d8e614-94d5-4057-a8bc-60a8bf82af06">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</line>
+		</band>
+	</pageFooter>
+</jasperReport>

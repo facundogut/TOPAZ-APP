@@ -1,0 +1,48 @@
+VERSION:055_5
+*N  NN Rutina para obtener el numero de usuario a partir del campo cuenta y operacion
+*$2023-04-24 20:42:50ENZOA
+*N  NN *** Parametros de entrada***
+*$2023-04-24 20:38:57ENZOA
+ NSSNN 44871   OPERACION                                         INNSNL000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-24 12:53:09LAUTAROS
+ NNNNN 44872   CUENTA                                            INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-24 12:53:23LAUTAROS
+*N  NN ***Largo del campo operacion***
+*$2023-04-24 20:39:12ENZOA
+ NNNNN 00080   Numerico                                          INNSNF000007015200300302021011000000007000700300137000
+/V=F(LEN,(C44871))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-24 20:28:20ENZOA
+*N  NN ***Cargar campo numerico para funcion PAD***
+*$2023-04-24 20:38:39ENZOA
+ NNNNN 00565   Numeric de 10                                     INNSNA000007015200300202021011000000007000700300137000
+/V=C44871.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-24 16:21:01LAUTAROS
+*N  NN ***Completamos campo operacion hasta 8 digitos***
+*$2023-04-24 20:38:13ENZOA
+ NNNNN 05012   Texto 50                                          INNNNF000007015200300202021011000000007000700300137000
+/V=F(PAD,C565, 8)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-24 20:36:53ENZOA
+*N  NN ***Concatenamos cuenta+operacion***
+*$2023-04-24 20:38:24ENZOA
+ NNNNN 00092   Concatenacion Cuenta+Operacion                    INNSNF000007015200300452001011000000007000700300137000
+/V=C44872+C5012
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-24 20:36:09ENZOA
+ NNNNN 05504   Concatenacion CUENTA+OPERACION                    INNNNA000007015200300452001011000000007000700300137000
+/V=C92
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-24 20:36:15ENZOA
+*N  NN -----------------------------------
+*$2023-04-24 13:14:53LAUTAROS

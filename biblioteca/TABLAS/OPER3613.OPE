@@ -1,0 +1,148 @@
+VERSION:051
+TN  NN 1006TConsulta Generica                       C0001 00
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /* Operacion 3584                                                                                      
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /*     SE RECEPCIONAN LOS CHEQUES DE UNA SUCURSAL_CORRESPONSAL
+*N  NN /*          RECIBO TODOS LOS CHEQUES Y CAMBIA EL ESTADO DE 5 a 6.
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+VNSSNS 030003000304410805SSSD000000000000000000000000000000000000000
+/T=Tesoto a Clearing
+/C=192192192
+KNSSNS 030017016200400640010100
+/T=Recepción Cheques en Central Clearing
+/F=0015700NNN000000000Arial                                   
+KNSSNS 030050002603460773000011
+/T="Cheques a Recibir"
+/F=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V="SUCURSAL_CORRESPONSAL="+C9502+ " AND "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" ESTADO=20"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" AND DESTINO_CHEQUE IN (2,3) AND FECHA_ALTA<=TO_DATE('"+C9500+"','DD/MM/YYYY')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3295   Ayuda cheq sal ICSSN 03008500410342075900101060000000700070027012600
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C3295=0
+/M=Registro No válido
+ NNNNN 2699   Suc.CorresponsaINNNNA00002602490049061800101100010000700070027012600
+/V=C9502
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7021   Estado         INNNNK00002602490049061800101100010000700070027012600
+/V=20
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1200   Fecha          INNNNF02002602490049061800101100010000700070027012600
+/V=C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Se agregan los campos 3050 y 615 para pasar la fecha al comando de ejecución del reporte
+ NNNNN 3050   Fecha          INNNNF02002602490049061800101100010000700070027012600
+/V=C1200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0615                  INNNNF02002602490049061800101100010000700070027012600
+/V=C3050
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9528   Linea Comando  INNSNF00000701520030020200101100000000700070030013700
+/V="tzpquery.exe /Q7115/C2699 |"+C2699+"| /C7021 |"+C7021+"| /C1200 |"+C615+"| /A"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  M00000000000000000000100
+ NNNNN 9501   Nro ComprobanteINNSN 00000701520030030202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0613   Numerico de 7  INNSNA00000701520030030202101100000000700070030013700
+/V=C9501.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TCargo bancos especiales                 S1810 00
+/O=C3237 ASC
+ SNNNN 3236   Funcionalidad  INNNNK00000701330027024300001100000000700070027012600
+/V=FUNCIONALIDAD_GENERICA_ATM_Y_BUZONES
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ SNNNN 3238   Valor          INNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CSNNNN  000000000000000000000100
+/F=C9509=0
+*N  NN BHU
+ SNNNN 0846   Bco.Especial 2 INNSNA00000701520030030202101100000000700070030013700
+/?=C424#0YC846=0YA(F(LEFT,C3237,16)="CODIGO_BANCO_ESP")
+/V=C3238
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN BROU
+ SNNNN 0424   Bco.Especial 1 INNSNA00000701520030030202101100000000700070030013700
+/?=C424=0YA(F(LEFT,C3237,16)="CODIGO_BANCO_ESP")
+/V=C3238
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TCargo conceptos                         C1810 00
+ SNNNN 3236   Funcionalidad  INNSNK00000701520030045200101100000000700070030013700
+/V=FUNCIONALIDAD_GENERICA_ATM_Y_BUZONES
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ SNNNN 3237   Parametro      INNSNF00000701520030045200101100000000700070030013700
+/?=C617=0
+/V="CODIGO_BANCO_"+C424
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ SNNNN 3237   Parametro      INNSNF00000701520030045200101100000000700070030013700
+/?=C617#0YC618=0
+/V="CODIGO_BANCO_"+C846
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ SNNNN 3238   Valor          INNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CSNNNN  000000000000000000000100
+/F=C617#0YC618#0
+ SNNNN 0618   Concepto B.2   INNSNA00000701520030030202101100000000700070030013700
+/?=C617#0YC618=0
+/V=C3238
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ SNNNN 0617   Concepto B.1   INNSNA00000701520030030202101100000000700070030013700
+/?=C617=0
+/V=C3238
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TImp. form via Cli                       C0001 00
+CNNNNN M 00000000000000000000100
+/?=1=0
+/M=¿Confirma el envío?
+ NNNNN 0704   Importe        INNSNK00000701520030030202101000000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0705   Importe        INNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0288   Total Che DólarINNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2389   Total Che PesosINNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+DN  NN 3614OV00

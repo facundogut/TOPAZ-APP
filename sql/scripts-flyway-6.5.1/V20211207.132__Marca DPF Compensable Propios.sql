@@ -1,0 +1,8 @@
+﻿EXECUTE('
+
+UPDATE DICCIONARIO
+SET DESCRIPCION = ''Marca DFP Comp''
+	, PROMPT = ''Marca DPF Compensable''
+WHERE NUMERODECAMPO = 1368
+')
+

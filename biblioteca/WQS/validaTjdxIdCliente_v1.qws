@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/productos/validaTarjeta/{IdCliente}/{NroTarjetaDebito}</uri>
+    <serviceDescription>Servicio que dado un cliente, y los últimos 4 digitos de la tarjeta, retorna valor booleano si la tarjeta ingresada pertenece al cliente ingresado</serviceDescription>
+    <title>Devuelve si una tarjeta es válida para un cliente que se recibe como parámetro.</title>
+    <querys>
+        <query id="1" name="validez" type="SIMPLE">
+            <sql>DECLARE @numCliente NUMERIC(12) = ?;&#13;
+DECLARE @tarjeta NUMERIC(16)= ?; &#13;
+&#13;
+IF (LEN(@tarjeta) = 16 OR LEN(@tarjeta) = 4) AND ISNUMERIC(@tarjeta) = 1 AND ISNUMERIC(@numCliente) = 1&#13;
+BEGIN&#13;
+    SELECT CASE WHEN COUNT(*) &gt; 0 THEN 'True' ELSE 'False' END AS Validez&#13;
+    FROM TJD_TARJETAS&#13;
+    WHERE NRO_CLIENTE = @numCliente AND (RIGHT(TRIM(ID_TARJETA), 4) = @tarjeta OR ID_TARJETA = @tarjeta) AND TZ_LOCK = 0;&#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+    THROW 50001, 'Parametros ingresados incorrectos', 1;&#13;
+END&#13;
+&#13;
+</sql>
+            <input>
+                <inParameter description="" type="LONG">IdCliente</inParameter>
+                <inParameter description="" type="LONG">NroTarjetaDebito</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="salida">
+                    <outParameter description="" type="STRING">
+                        <queryname>Validez</queryname>
+                        <servicename>Validez</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

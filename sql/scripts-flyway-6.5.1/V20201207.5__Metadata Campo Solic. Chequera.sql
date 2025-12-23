@@ -1,0 +1,40 @@
+﻿EXECUTE('
+---------------------------------------
+--CAMBIO LARGO CAMPO SOLIC. CHEQUERAS--
+---------------------------------------
+UPDATE DICCIONARIO
+SET LARGO = 5
+WHERE NUMERODECAMPO = 1080
+---------------------------------------
+--CAMBIO LARGO CAMPO CHEQUES IMPRENTA--
+---------------------------------------
+UPDATE DICCIONARIO
+SET LARGO = 5
+WHERE NUMERODECAMPO = 2829
+----------------------------------------
+--CAMBIO LARGO CAMPO SOLIC APERT VISTA--
+----------------------------------------
+UPDATE DICCIONARIO
+SET LARGO = 5
+WHERE NUMERODECAMPO = 2104
+-------------------------------------------
+--CAMBIO TIPO DE CHEQUE SOLIC APERT VISTA--
+-------------------------------------------
+UPDATE DICCIONARIO
+SET TIPODECAMPO = ''A''
+WHERE NUMERODECAMPO = 1957
+----
+UPDATE SOLICAPERTCTAVISTA
+SET TIPOCHEQUE = ''C''
+-------------------
+--NUEVAS OPCIONES--
+-------------------
+DELETE FROM OPCIONES WHERE NUMERODECAMPO = 1957
+--
+INSERT INTO OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1957, ''E'', ''COMUN'', ''C'', ''C'')
+--
+INSERT INTO OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1957, ''E'', ''DIFERIDO'', ''D'', ''D'')
+----
+')

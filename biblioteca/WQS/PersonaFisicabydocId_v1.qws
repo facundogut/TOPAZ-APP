@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/personaFisicabydocId/{docId}</uri>
+    <serviceDescription>Devuelve el id de la persona humana en base a su número de documento</serviceDescription>
+    <querys>
+        <query id="1" name="Query1" type="MULTIPLE">
+            <sql>SELECT pf.NUMEROPERSONAFISICA
+
+FROM CLI_PERSONASFISICAS pf
+
+JOIN CLI_DocumentosPFPJ dpf ON pf.NUMEROPERSONAFISICA=dpf.NUMEROPERSONAFJ AND ((dpf.TZ_LOCK &lt; 300000000000000 OR dpf.TZ_LOCK &gt;= 400000000000000) AND (dpf.TZ_LOCK = 0 OR dpf.TZ_LOCK &gt;= 200000000000000))
+
+ WHERE dpf.NUMERODOCUMENTO=? 
+ 
+ AND ((pf.TZ_LOCK &lt; 300000000000000 OR pf.TZ_LOCK &gt;= 400000000000000) AND (pf.TZ_LOCK = 0 OR pf.TZ_LOCK &gt;= 200000000000000)) 
+-- 27200920231</sql>
+            <input>
+                <inParameter description="Número de documento identidad de la persona" type="STRING">docId</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Resultados1">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NUMEROPERSONAFISICA</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

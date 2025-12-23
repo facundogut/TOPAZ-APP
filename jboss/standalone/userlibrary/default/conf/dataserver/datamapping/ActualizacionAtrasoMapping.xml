@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.calificacion.diasatrasocuotas.PrestamosAActualizar</class-name>
+        <query-name>query.PrestamosAtrasados</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT s.jts_oid, s.c1644, s. c1645
+			  FROM SALDOS s, PARAMETROS param
+			 WHERE s.c1785 = '5'
+			   AND (s.c1604 &lt; 0 OR s.C1608 &gt; 0)
+			   AND s.tz_lock = 0
+			   AND param.fechaproceso &gt;= s.c1628 
+		
+		</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>totalCuotas</attribute-name>
+            <column-name>c1644</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cuotasPagadas</attribute-name>
+            <column-name>c1645</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.calificacion.diasatrasocuotas.CuotasAtrasadas</class-name>
+        <query-name>query.CuotasVencidas</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT SALDO_JTS_OID, C2300, C2302
+				FROM PlanPagos
+				WHERE saldo_jts_oid = ?
+					AND TZ_LOCK = 0
+					AND c2300 &gt; ?
+					AND c2300 &lt;= ?
+					AND c2302 &lt;= ?
+			</sentence>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroCuota</attribute-name>
+            <column-name>C2300</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimientoCuota</attribute-name>
+            <column-name>C2302</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.calificacion.diasatrasocuotas.CuotasAtrasadas</class-name>
+        <entity-name>CrBsPlanPagos</entity-name>
+        <table-name>PLANPAGOS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroCuota</attribute-name>
+            <column-name>C2300</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>diasAtraso</attribute-name>
+            <column-name>DIAS_ATRASO_CANCELACION</column-name>
+        </attribute>
+    </class>
+</map>

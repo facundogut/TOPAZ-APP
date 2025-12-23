@@ -1,0 +1,18 @@
+EXECUTE('
+IF OBJECT_ID (''dbo.ITF_MTO_X_MONOTRIBUTISTA'') IS NOT NULL
+	DROP TABLE dbo.ITF_MTO_X_MONOTRIBUTISTA
+')
+
+EXECUTE('
+CREATE TABLE dbo.ITF_MTO_X_MONOTRIBUTISTA
+	(
+	Categoria          VARCHAR (2) DEFAULT ('' '') NOT NULL,
+	FechaAlta          DATETIME,
+	FechaVigenciaDesde NUMERIC (8) DEFAULT ((0)) NOT NULL,
+	HoraAlta           VARCHAR (12) DEFAULT ('' ''),
+	IngresoProyectado  NUMERIC (15, 2) DEFAULT ((0)),
+	UsuarioAlta        VARCHAR (10) DEFAULT ('' ''),
+	TZ_LOCK            NUMERIC (15) DEFAULT ((0)) NOT NULL,
+	CONSTRAINT PK_ITF_MTO_X_MONOTRIBUTISTA_01 PRIMARY KEY (Categoria, FechaVigenciaDesde)
+	)
+')

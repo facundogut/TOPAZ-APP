@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/sibe/chequesRechazados/{cuit}</uri>
+    <serviceDescription>Cheques rechazados / denunciados de una persona de los últimos dos años</serviceDescription>
+    <title></title>
+    <querys>
+        <query id="1" name="Cheques Rechazados/Denunciados por Persona 24m " type="SIMPLE">
+            <sql>DECLARE @FecProceso DATETIME = (SELECT FECHAPROCESO FROM PARAMETROS WITH(NOLOCK))&#13;
+DECLARE @Doc VARCHAR(100) = ?&#13;
+&#13;
+IF ISNUMERIC(@Doc) = 0 OR&#13;
+   @Doc LIKE '%.%' OR &#13;
+   @Doc LIKE '%,%' OR &#13;
+   TRY_CAST(@Doc AS BIGINT) &lt;= 0 OR &#13;
+   LEN(@Doc) &lt;&gt; 11&#13;
+BEGIN&#13;
+    THROW 50000, 'CUIT no válido.', 1;&#13;
+END&#13;
+&#13;
+ &#13;
+SELECT&#13;
+    (SELECT count(*)&#13;
+     FROM CLE_CHEQUES_CLEARING_RECIBIDO CCCR&#13;
+     JOIN CLE_TIPO_CAUSAL CTC ON&#13;
+        CTC.CODIGO_DE_CAUSAL = CCCR.CODIGO_CAUSAL_DEVOLUCION&#13;
+     JOIN VW_CLIENTES_PERSONAS VCP ON&#13;
+        VCP.NUMERODOC = try_convert(bigint,@Doc)&#13;
+        AND CCCR.CLIENTE = VCP.CODIGOCLIENTE&#13;
+     WHERE CTC.TIPO_RECHAZO = 2&#13;
+        AND CCCR.FECHA BETWEEN DATEADD(YEAR, -2, @FecProceso) AND @FecProceso&#13;
+    ) AS cantidadChequesEfectosFormales24m,&#13;
+ &#13;
+    (SELECT count(*)&#13;
+     FROM CLE_CHEQUES_CLEARING_RECIBIDO CCCR&#13;
+     JOIN CLE_TIPO_CAUSAL CTC ON&#13;
+        CTC.CODIGO_DE_CAUSAL = CCCR.CODIGO_CAUSAL_DEVOLUCION&#13;
+     JOIN CHE_CHEQUES CC ON&#13;
+        CC.NUMEROCHEQUE = CCCR.NUMERO_CHEQUE&#13;
+        AND CCCR.NUMERO_SERIE = CC.SERIE&#13;
+        AND CCCR.SUCURSAL = CC.SUCURSAL&#13;
+        AND CCCR.MONEDA = CC.MONEDA&#13;
+        AND CCCR.CUENTA = CC.CUENTA&#13;
+        AND CCCR.PRODUCTO = CC.PRODUCTO&#13;
+        AND CCCR.OPERACION = CC.OPERACION&#13;
+     JOIN VW_CLIENTES_PERSONAS VCP ON&#13;
+         VCP.NUMERODOC = try_convert(bigint,@Doc)&#13;
+         AND CCCR.CLIENTE = VCP.CODIGOCLIENTE&#13;
+     WHERE&#13;
+        CTC.CODIGO_DE_CAUSAL = (SELECT numerico FROM PARAMETROSGENERALES WHERE CODIGO = 727)&#13;
+        AND CCCR.FECHA BETWEEN DATEADD(YEAR, -2, @FecProceso) AND @FecProceso&#13;
+        AND CC.ESTADO &lt;&gt; 'P'&#13;
+    ) AS cantidadChequesSinFondosImpagos24m ,&#13;
+   (SELECT count(*)&#13;
+     FROM CLE_CHEQUES_CLEARING_RECIBIDO CCCR&#13;
+     JOIN CLE_TIPO_CAUSAL CTC ON &#13;
+       CTC.CODIGO_DE_CAUSAL = CCCR.CODIGO_CAUSAL_DEVOLUCION&#13;
+     JOIN CHE_CHEQUES CC ON &#13;
+       CC.NUMEROCHEQUE = CCCR.NUMERO_CHEQUE &#13;
+        AND CCCR.NUMERO_SERIE = CC.SERIE &#13;
+        AND CCCR.SUCURSAL = CC.SUCURSAL &#13;
+        AND CCCR.MONEDA = CC.MONEDA &#13;
+        AND CCCR.CUENTA = CC.CUENTA&#13;
+        AND CCCR.PRODUCTO = CC.PRODUCTO &#13;
+        AND CCCR.OPERACION = CC.OPERACION&#13;
+     JOIN VW_CLIENTES_PERSONAS VCP ON&#13;
+        VCP.NUMERODOC = try_convert(bigint,@Doc)&#13;
+         AND CCCR.CLIENTE = VCP.CODIGOCLIENTE&#13;
+     WHERE &#13;
+       CTC.CODIGO_DE_CAUSAL = (SELECT numerico FROM PARAMETROSGENERALES WHERE CODIGO = 727) &#13;
+       AND CCCR.FECHA BETWEEN DATEADD(YEAR, -2, @FecProceso) AND @FecProceso&#13;
+       AND CC.ESTADO = 'P'&#13;
+    ) AS cantidadChequesSinFondosRecuperados24m,&#13;
+    (SELECT count(*)&#13;
+    FROM VW_CHEQUES_MULTA VWC&#13;
+    JOIN VW_CLIENTES_PERSONAS VCP ON&#13;
+        VCP.NUMERODOC = try_convert(bigint,@Doc)&#13;
+        AND VWC.Cliente = VCP.CODIGOCLIENTE&#13;
+    JOIN SALDOS S ON&#13;
+        S.C1803 = VWC.Cliente&#13;
+        AND VWC.Sucursal = S.SUCURSAL&#13;
+        AND VWC.Cuenta = S.CUENTA&#13;
+        AND VWC.Producto = S.PRODUCTO&#13;
+        AND VWC.Moneda = S.MONEDA&#13;
+    WHERE&#13;
+        MULTA = 'S'&#13;
+        AND [Fecha pago de multa] IS NULL&#13;
+        AND [Fecha notificación BCRA] IS NOT NULL&#13;
+        AND [Fecha notificación BCRA] &lt;= @FecProceso&#13;
+        AND VWC.[Fecha de rechazo] BETWEEN DATEADD(YEAR,-2,@FecProceso) AND @FecProceso&#13;
+    ) AS cantidadMultasImpagas24m,&#13;
+    (SELECT count(*) FROM CRE_BCRA_CENDEU&#13;
+     WHERE SITUACION_BCRA &gt; 2&#13;
+        AND FECHA BETWEEN CONCAT(YEAR(DATEADD(YEAR,-2,@FecProceso)), RIGHT('00' + CAST(MONTH(@FecProceso) AS VARCHAR(2)), 2))&#13;
+        AND CONCAT(YEAR(@FecProceso), RIGHT('00' + CAST(MONTH(@FecProceso) AS VARCHAR(2)), 2))&#13;
+        AND NRO_IDENTIFICACION = try_convert(bigint,@Doc)&#13;
+    )AS mesesConMora24m;</sql>
+            <input>
+                <inParameter description="Nro Documento Persona" type="STRING">cuit</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="consulta Cheques">
+                    <outParameter description="cantidad Cheques Efectos Formales ultimos 24m  " type="INTEGER">
+                        <queryname>cantidadChequesEfectosFormales24m</queryname>
+                        <servicename>cantidadChequesEfectosFormales24m</servicename>
+                    </outParameter>
+                    <outParameter description="Cantidad Multas Impagas ultimos 24m" type="INTEGER">
+                        <queryname>cantidadMultasImpagas24m</queryname>
+                        <servicename>cantidadMultasImpagas24m</servicename>
+                    </outParameter>
+                    <outParameter description="Cantidad Cheques Sin Fondos Impagos ultimos 24m" type="INTEGER">
+                        <queryname>cantidadChequesSinFondosImpagos24m</queryname>
+                        <servicename>cantidadChequesSinFondosImpagos24m</servicename>
+                    </outParameter>
+                    <outParameter description="Meses Con Mora ultimos 24m" type="INTEGER">
+                        <queryname>mesesConMora24m</queryname>
+                        <servicename>mesesConMora24m</servicename>
+                    </outParameter>
+                    <outParameter description="Cantidad Cheques Sin Fondos Recuperados24m" type="INTEGER">
+                        <queryname>cantidadChequesSinFondosRecuperados24m</queryname>
+                        <servicename>cantidadChequesSinFondosRecuperados24m</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_alta_solicitud de credito Hoja 3" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="JTS_OID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[JTS_OID]]></parameterDescription>
+		<defaultValueExpression><![CDATA[43617]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT concat(pp.C2300,' - ',convert(varchar,pp.C2302,103)) AS COLUMNA1,
+       FORMAT(pp.C2304,'#,0.00') AS COLUMNA2,
+       FORMAT(pp.C2305,'#,0.00') AS COLUMNA3,
+       (SELECT FORMAT(isnull(sum(Importe_gasto),0),'#,0.00')
+        FROM GASTOS_POR_CUOTA h WITH(NOLOCK)
+        WHERE h.SALDOS_JTS_OID = pp.SALDO_JTS_OID
+          AND NUMERO_CUOTA=C2300 AND h.TZ_LOCK = 0)  AS COLUMNA4,
+         FORMAT(pp.C2304+pp.C2305+(SELECT isnull(sum(Importe_gasto),0)
+        FROM GASTOS_POR_CUOTA h WITH(NOLOCK)
+        WHERE h.SALDOS_JTS_OID = pp.SALDO_JTS_OID
+          AND NUMERO_CUOTA=C2300 AND h.TZ_LOCK = 0),'#,0.00') AS COLUMNA5,
+        sc.C1704 AS N_SOLICITUD
+ FROM PLANPAGOS pp WITH(NOLOCK)
+ INNER JOIN SALDOS sc WITH(NOLOCK) ON pp.SALDO_JTS_OID = sc.JTS_OID
+ WHERE pp.SALDO_JTS_OID= $P{JTS_OID}]]>
+	</queryString>
+	<field name="COLUMNA1" class="java.lang.String"/>
+	<field name="COLUMNA2" class="java.lang.String"/>
+	<field name="COLUMNA3" class="java.lang.String"/>
+	<field name="COLUMNA4" class="java.lang.String"/>
+	<field name="COLUMNA5" class="java.lang.String"/>
+	<field name="N_SOLICITUD" class="java.math.BigDecimal"/>
+	<variable name="TOTAL_1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_2" class="java.lang.Number" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="48" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="507" y="0" width="48" height="19"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="159" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nuevo Banco del Chaco SA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="442" y="-1" width="65" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resistencia,]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="165" y="19" width="170" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Principales datos de la Solicitud número:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="335" y="19" width="66" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{N_SOLICITUD}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="6" y="0" width="159" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desarrollo de la operación]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="6" y="6" width="78" height="14"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuota-Vencimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="128" y="6" width="183" height="14"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Capital - Interés IVA- Percep. IVA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="323" y="6" width="131" height="14"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Seguro Saldo Deudor]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="465" y="6" width="78" height="14"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Cuota]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement x="6" y="3" width="88" height="14"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COLUMNA1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="128" y="3" width="112" height="14"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COLUMNA2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="217" y="3" width="94" height="14"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COLUMNA3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="323" y="3" width="90" height="14"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COLUMNA4}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="465" y="3" width="78" height="14"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{COLUMNA5}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="14"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="11"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

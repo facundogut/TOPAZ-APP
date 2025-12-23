@@ -1,0 +1,54 @@
+VERSION:044
+*N   N -
+*N   N Esta subrutina determina en que pais me encuentro
+*N   N segun el valor del parametro pais, siendo:
+*N   N UY: Uruguay
+*N   N CL: Chile
+*N   N PY: Paraguay
+*N   N RETORNA:
+*N   N - 1 Indicador del pais
+*N   N - codigo del pais actual en campo alfa
+*N   N  
+*N   N Se reserva el uso de los indicadores 10 al 19
+*N   N para esta funcionalidad
+ NSSSN01013   Parametro      INNSNK000020011500400430000011000000020003300410107
+/V=PAIS
+ NNNNN01014   Valor          INNSN 000050011600700666000011000000047003300670104
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CN   N ME00000000000000000000100
+/F=C9509=0
+/M=No existe parametro de País
+*N   N Seteo indicadores
+*N   N I10 - Uruguay
+*N   N I11 - Chile
+*N   N I12 - Paraguay
+CNNNNN0  00000000000000000000100
+/F=A(C1014="UY")
+/P=I10
+CNNNNN0  00000000000000000000100
+/F=A(C1014="CL")
+/P=I11
+CNNNNN0  00000000000000000000100
+/F=A(C1014="PY")
+/P=I12
+*N   N -
+CNNNNN0ME00000000000000000000100
+/?=!I10Y!I11Y!I12
+/M=Parámetro de País No Válido
+*N   N -
+ NNNNN01016   Código de País INNSNK000007015000270210000011000000007000700270126
+/?=I10
+/V=UY
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN01016   Código de País INNSNK000007015000270210000011000000007000700270126
+/?=I11
+/V=CL
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN01016   Código de País INNSNK000007015000270210000011000000007000700270126
+/?=I12
+/V=PY
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   

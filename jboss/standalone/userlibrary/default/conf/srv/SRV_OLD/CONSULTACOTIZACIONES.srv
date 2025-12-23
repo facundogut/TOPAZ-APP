@@ -1,0 +1,35 @@
+service CONSULTACOTIZACIONES; 
+description "Consulta las Cotizaciones de todas las Monedas"; 
+
+action:	SQLQuery CONSULTACOTIZACIONES ( 
+	TicketSesion: numeric,
+	NodoCliente: string,
+	TipoProceso: string,
+	ModoAutentica: string,
+	IdAutentica: string,
+	InfoOrigen: string,
+	CodCanal: string,
+	NroDepOrigen: numeric,
+	Origen: string,
+	NroTransaccion: numeric,
+	IdInvocaTopaz: numeric
+	
+): [ 
+ 	XML_TAG: string as XML_TAG, 
+ 	CODERROR: string as CodError, 
+	MONEDA: numeric as Moneda,
+	MONEDADESCRIPCION: string as MonedaDescripcion,
+	TIPOCAMBIOCOMPRA: numeric as TipoCambioCompra,
+	TIPOCAMBIOVENTA: numeric as TipoCambioVenta
+	
+	
+]
+{ 
+  	properties { 
+  	("statement", "SELECT 'Cotizacion' AS XML_TAG,0 AS CODERROR,C6399 AS MONEDA,C6400 AS MONEDADESCRIPCION,TCCOMPRACOMUN AS TIPOCAMBIOCOMPRA,TCVENTACOMUN AS TIPOCAMBIOVENTA FROM MONEDAS")
+	
+	
+	}
+}
+
+

@@ -1,0 +1,455 @@
+VERSION:055_5
+TN  NN 1006TSelecciono Asiento                      C00001 00
+VNNNNN 010002000202640701NNND000000000000000000000000000000000000000
+/T=Asiento a Extornar
+/C=192192192
+KNNNNN 010011001201940669000101
+/T=Datos del Extorno
+/F=0012700NNN000000000Arial                                   
+ NSSNN 06021   Suc. Asiento                                      I NSN 010055015200770230020011000000055004000750137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-14 09:50:47FMK
+ NSSNN 06020   Nombre                                            ICNSN 010055027500770569001011500000007000700270126000
+/C=255255255
+*$2022-02-14 09:50:47FMK
+CNNNNN ME00000000000000000000100
+/?=C9509=0
+/M=Debe ingresar una sucursal válida
+*$2020-12-15 14:54:27NAMBROA
+ NSSNN 00075   Fecha Asiento                                     I NSNA010085015201070230000011000000085004001050137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-14 09:50:47FMK
+CNNNNN ME00000000000000000000100
+/F=C75>C9500
+/M=Fecha del asiento no puede ser mayor a la fecha del Sistema
+ NSSNN 00669   No. Asiento                                       I NSN 010115015201370249020011000000115004001350137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-14 09:50:47FMK
+ NNNNN 03819   fecha string                                      INNNNF000007015200270452001011000100007000700270137000
+/V=F(MID,C75,7,4)+F(MID,C75,4,2)+F(MID,C75,1,2)
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-09-28 17:45:02JIMENA
+ NSSNN 00231   WHERE                                             INNSNF010007015000270210001011000000007000700270126000
+/V="Sucursal ="+C6021+ " and Asiento =" + C669 +" and FechaProceso='"+C3819+"'"
+*$2020-09-28 17:45:55JIMENA
+ NSSNN 02499   Texto                                             INNSNK010067014900890227000011000100067003700870134000
+/V=1
+/c=128128128
+/f=0013700NNN255255255Arial                                   
+ NSSNN 00327   Es Ajuste?                                        INNSNK010126015303250250020011110000126004101460138000
+/V=S
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-14 09:50:00FMK
+ NNNNN 00387   Año-Mes Alfa                                      INNSNF010050015600730306001011000000050001100730141000
+/?=A(C327="S")
+/V=C75[7,4]+C75[4,2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00437   Año-Mes Numeric                                   INNSNA010098016101210311021011000000098001601210146000
+/?=A(C327="S")
+/V=C387
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Leo Tabla de Control
+ NNNNN 02997   Año y Mes                                         INNSNA010098016101210311021011000000098001601210146000
+/?=A(C327="S")
+/V=C437
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02994   Abierto/Cerrado                                   INNSN 000007015200300302021011000000007000700300137000
+/?=A(C327="S")
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=A(C327="S")
+/F=C2994='C'
+/M=Error - Balance del Mes esta Cerrado
+ NSSNN 03144   esAjusteParam                                     INNSNF010067014900890227000011000100067003700870134000
+/?=A(C327="S")
+/V="true"
+/c=128128128
+/f=0013700NNN255255255Arial                                   
+*$2020-12-21 12:02:31NAMBROA
+ NSSNN 03144   esAjusteParam                                     INNSNF010067014900890227000011000100067003700870134000
+/?=A(C327="N")Y1=0
+/V="false"
+/c=128128128
+/f=0013700NNN255255255Arial                                   
+*$2022-02-14 09:49:46FMK
+*N  NN "Sucursal ="+C6021+ " and Asiento =" + C2412 +" and to_char(FechaProceso,'dd/mm/yyyy')='"+C075+"'"
+ NSSNN 00077   Fecha Valor                                       I NSNA010145015301670231000011000000145004101650138000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-14 09:51:02FMK
+CNNNNN ME00000000000000000000100
+/F=C77<C75
+/M=La fecha valor no puede ser menor a la fecha del asiento
+CNNNNN ME00000000000000000000100
+/F=C77>C9500
+/M=La fecha valor no puede ser mayor a la fecha del Sistema
+TN  NN 1006TChequeo de renovación automática        C00000 00
+*$2020-12-15 17:36:55NAMBROA
+ NNNNN 07675   Fecha Proceso                                     INNSNA000007015200300302001011000000007000700300137000
+/V=C75.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-15 17:40:36NAMBROA
+ NNNNN 07674   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C6021.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-15 17:40:49NAMBROA
+ NNNNN 07900   Asiento                                           INNNNA000007015200300302021011000000007000700300137000
+/V=C669.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-15 17:41:26NAMBROA
+ NNNNN 07904   Descripcion                                       INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-15 17:39:28NAMBROA
+CNNNNN ME00000000000000000000100
+/?=C7901.0=8620
+/M=Renovación automática. Extornar asiento por operación 5049
+*$2020-12-16 10:17:07NAMBROA
+TN  NN 1006TConsulta Generica                       C00001 00
+ NNNNN 08691   Sucursal                                          INNSNA000007015200270202000011000100007000700270137000
+/?=1=0
+/V=C9502
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 08691   Sucursal                                          INNSNA000007015200270202000011000100007000700270137000
+/V=C6021.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 08692   Fecha Proceso                                     INNSNF000007015200270202000011000100007000700270137000
+/V=C0075.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 08693   Asiento                                           INNSNF000007015200270202000011000100007000700270137000
+/V=C669.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 08694   Fecha Extorno                                     INNSN 000007015200270202000011000100007000700270137000
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C9509#0
+/P=I21
+/M=Asiento ya extornado
+TN  NN 1006TChequeo de asiento relacionado a DPF    C00000 00
+/?=!I21
+*$2020-12-17 14:36:47NAMBROA
+ NNNNN 00335   PRueba fecha                                      INNNNF000177037602000676001011000000177023102000361000
+/V=C75.1[7,4]+C75.1[4,2]+C75.1[1,2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-11-09 15:54:06ANDRES
+ NSSNN 00109   Descriptor                                        INNSNK000007015200300202021011000000007000700300137000
+/V=3409
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-17 14:36:00NAMBROA
+ NNNNN 00910   Condicion                                         INNNNF000007015200300452001011000000007000700300137000
+/V="ASIENTO ="+C669.1+" AND FECHAPROCESO='"+C335.0+"' AND SUCURSAL="+C6021.1+" AND TIPO_PRODUCTO=4"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-17 14:36:00NAMBROA
+ NNNNN 02488   Cantidad                                          INNSNF000007015200300302021011000000007000700300137000
+/V=F(CANTIDAD,C109,C910)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-17 14:36:00NAMBROA
+CNNNNN   00000000000000000000110
+/?=C2488>0
+/P=I30
+*$2020-12-17 14:46:55NAMBROA
+TN  NN 1008TConsulta de obtención cuenta de asiento S34091 00
+/?=!I21YI30
+/F=C36071=C7900.2 AND C36074=C7674.2 AND C36073=C7675.2 AND C36076=4
+*$2020-12-18 14:48:18NAMBROA
+ NNNNN 36076   Tipo de producto                                  INNNN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-17 15:21:32NAMBROA
+TN  NN 1006TConsulta de selección de asiento        C00000 00
+/?=!I21YI30
+*$2020-12-17 14:39:15NAMBROA
+VNNNNN 020005000506060911SSSD000000000000000000000000000000000000000
+/T=Selección de asiento
+/C=192192192
+*$2020-12-18 12:12:41NAMBROA
+KN  NN 020007000704170879000101
+*$2020-12-18 12:11:59NAMBROA
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="JTS_OID="+C36075.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-17 15:23:39NAMBROA
+ NNNNN 36077   Campo ayuda asientos                              IENSN 020046003003850844021011600000007000700300137000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 12:12:06NAMBROA
+ NNNNN 36071   Asiento                                           IDNNNA020437017104600321021010500000437002604600156000
+/V=C36077.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 14:53:40NAMBROA
+ NNNNN 36073   Fecha proceso                                     IDNSN 020475017104980321001010500000475002604980156000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 14:53:43NAMBROA
+ NNNNN 36074   Sucursal                                          IDNSN 020511017105340221021010500000511002605340156000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 14:53:47NAMBROA
+ NNNNN 36075   Jts oid                                           INNNNA020426052904490679021011000000426038404490514000
+/V=C36075.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 12:12:29NAMBROA
+ NNNNN 36079   Hora fin                                          INNSN 020490015605130242001011000000490001105130141000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 12:12:33NAMBROA
+ NNNNN 36080   Fecha fin                                         INNSN 020534052905570679001011000000534038405570514000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 11:42:44NAMBROA
+ NNNNN 36076   Tipo de producto                                  INNNN 020479054505020595021011000000479040005020530000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 11:42:47NAMBROA
+ NNNNN 00335   52D_1                                             INNNNF020494047705170777001011000000494033205170462000
+/V=C36079.0[1,2]+C36079.0[4,2]+C36079.0[7,2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 11:56:05NAMBROA
+ NNNNN 03325   Numérico                                          INNSNF020537054105600691021011000000537039605600526000
+/V=C335.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 11:56:08NAMBROA
+TN  NN 1008TChequeo de último asiento (por fecha)   S34091 00
+/?=!I21YI30
+/O=C36073 DESC
+/F=C36075=C36075.6 AND C36080>C36080.6
+*$2020-12-18 11:40:53NAMBROA
+ NNNNN 36076   Tipo de producto                                  INNNN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-17 15:41:13NAMBROA
+CNNNNN ME00000000000000000000100
+/?=C9509#0
+/M=Hay asientos con fecha posterior que deben ser extornados 
+*$2020-12-17 16:07:58NAMBROA
+TN  NN 1008TChequeo de último asiento (por hora)    S34091 00
+/?=!I21YI30
+/O=C36073 DESC
+/F=C36075=C36075.6 AND C36080=C36080.6
+*$2020-12-18 11:41:11NAMBROA
+ NNNNN 36076   Tipo de producto                                  INNNN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 11:40:56NAMBROA
+CNNNNN   00000000000000000000100
+/?=C9509=1
+/P=I31
+*$2020-12-18 12:38:15NAMBROA
+ NNNNN 00336   Alfa 35                                           INNNNF020494047705170777001011000000494033205170462000
+/V=C36079.0[1,2]+C36079.0[4,2]+C36079.0[7,2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 11:51:59NAMBROA
+ NNNNN 03314   hora                                              INNSNF020537054105600691021011000000537039605600526000
+/V=C336.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-18 11:52:38NAMBROA
+CNNNNN ME00000000000000000000100
+/?=C3314.0>C3325.6
+/M=Hay asientos con fecha posterior que deben ser extornados 
+*$2020-12-18 11:53:03NAMBROA
+TN  NN 1006TConsulta de iteración                   C00001 00
+/?=!I21YI30YI31
+*$2020-12-18 12:38:45NAMBROA
+ NNNNN 00025   Fecha Valor                                       INNNNA000000013300200243000011000000000000000200119000
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2020-12-18 12:38:44NAMBROA
+CNNNNN  I00000000000000000000100
+/A=I31
+/R=8
+*$2020-12-18 12:39:06NAMBROA
+TN  NN 1001TAlta Generica                           A05041 00
+/?=!I21Y!I30
+*$2020-12-17 17:10:33NAMBROA
+ NNNNN 08691   Sucursal                                          INNSNA000007015200270202000011000100007000700270137000
+/V=C6021.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 08692   Fecha Proceso                                     INNSNF000007015200270202000011000100007000700270137000
+/V=C0075.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 08693   Asiento                                           INNSNF000007015200270202000011000100007000700270137000
+/V=C669.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 08694   Fecha Extorno                                     INNSNF000007015200270202000011000100007000700270137000
+/V=C9500
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+TN  NN 1001TAlta Generica                           A05041 00
+/?=!I21YI30
+*$2020-12-17 17:21:54NAMBROA
+ NNNNN 08691   Sucursal                                          INNSNA000007015200270202000011000100007000700270137000
+/V=C36074.6
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-12-17 17:11:25NAMBROA
+ NNNNN 08692   Fecha Proceso                                     INNSNA000007015200270202000011000100007000700270137000
+/V=C36073.6
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-12-17 17:11:44NAMBROA
+ NNNNN 08693   Asiento                                           INNSNA000007015200270202000011000100007000700270137000
+/V=C36071.6
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-12-17 17:11:47NAMBROA
+ NNNNN 08694   Fecha Extorno                                     INNSNF000007015200270202000011000100007000700270137000
+/V=C9500
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-12-17 17:11:51NAMBROA
+TN  NN 1006TConsulta Generica                       C00001 00
+/?=!I21
+ NNNNN 07674   Sucursal                                          INNSNA000007015200270202000011000100007000700270137000
+/V=C6021.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 07675   Fecha Proceso                                     INNSNF000007015200270202000011000100007000700270137000
+/V=C0075.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 07900   Asiento                                           INNSNF000007015200270202000011000100007000700270137000
+/V=C669.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 07902   Estado                                            INNSN 000007015200270202000011000100007000700270137000
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=Asiento no encontrado. No se puede extornar.
+*$2021-11-09 15:56:24ANDRES
+CNNNNN ME00000000000000000000100
+/F=C7902#77
+/M=Asiento no autorizado. No se puede extornar
+TN  NN 1006TConsulta Generica                       C00001 00
+/?=!I21
+*N  NN *** Parámetro para llamar al proceso
+*N  NN PROCESO: EXTORNO CONTABLE,C460,C2499.1 AS CANTIDAD_REGISTROS,C75.1 AS FECHA_VALOR,C231.1 AS WHERE_SENTENCIA
+ NNNNN 00091   Texto                                             INNSNF000007015200270202000011000100007000700270137000
+/?=!I30
+/V=C75.1[1,2] + C75.1[4,2] + C75.1[7,4]
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-12-17 17:22:28NAMBROA
+ NNNNN 00091   Texto                                             INNSNF000007015200270202000011000100007000700270137000
+/?=I30
+/V=C36073.6[1,2] + C36073.6[4,2] + C36073.6[7,4]
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-12-17 17:23:15NAMBROA
+ NNNNN 03819   fecha string                                      INNNNF000007015200270452001011000100007000700270137000
+/?=I30
+/V=F(MID,C36073.6,7,4)+F(MID,C36073.6,4,2)+F(MID,C36073.6,1,2)
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-12-22 17:41:39NAMBROA
+ NSSNN 00231   WHERE                                             INNSNF010007015000270210001011000000007000700270126000
+/?=I30
+/V="Sucursal ="+C36074.6+ " and Asiento =" + C36071.6 +" and FechaProceso='"+C3819.0+"'"
+*$2020-12-22 17:41:51NAMBROA
+ NSSNN 00704   Wait                                              INNSNK000007015200270202020011000100007000700270137000
+/V=1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-09-28 16:57:40JIMENA
+ NSSNN 00705   ReturnCode                                        INNSNK000007015200270202020011000100007000700270137000
+/V=0
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-09-28 16:57:40JIMENA
+CNNNNN  n00000000000000000000100
+/?=!I30
+/R=CON - EXTORNO CONTABLE,C460,C2499.1 AS CANTIDAD_REGISTROS,C91.0 AS FECHA_VALOR,C231.1 AS WHERE_SENTENCIA,C3144.1 AS esAjusteParam;C704.0 AS wait,C705.0 AS return_code
+*$2020-12-18 16:22:01NAMBROA
+CNNNNN  n00000000000000000000100
+/?=I30
+/R=CON - EXTORNO CONTABLE,C460,C2499.1 AS CANTIDAD_REGISTROS,C91.0 AS FECHA_VALOR,C231.0 AS WHERE_SENTENCIA,C3144.1 AS ESAJUSTEPARAM;C704.0 AS wait,C705.0 AS return_code
+*$2020-12-18 16:16:52NAMBROA
+CNNNNN ME00000000000000000000100
+/?=1=0
+/F=C705#1
+/M=Se presento un inconveniente al extornar el asiento
+*$2020-12-22 16:47:29ANDRES
+ NNNNN 00460   Id Ejec                                           INNSN 000007015200270202000011000100007000700270137000
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2020-09-28 16:59:42JIMENA
+ NSSNN 00028   Concepto                                          INNSNF000007015000270510000011000000007000700270126000
+/?=!I30
+/V="Extorno Asiento:" + C0669.1
+*$2020-12-18 12:22:32NAMBROA
+ NSSNN 00028   Concepto                                          INNSNF000007015000270510000011000000007000700270126000
+/?=I30
+/V="Extorno Asiento:" + C36071.6
+*$2020-12-18 12:24:37NAMBROA
+*#I31#hay registros (hora)
+*#I30#asiento relacionado a dpf
+*#I21#Asiento ya extornado

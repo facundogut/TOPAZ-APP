@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/tarjetaDebito/getSolicitudes/{nroTarjeta}</uri>
+    <serviceDescription>Servicio que devuelve las solicitudes a partir del número base o completo de una tarjeta de debito</serviceDescription>
+    <title>Solicitudes de TJD</title>
+    <querys>
+        <query id="1" name="TarjetaDebito" type="MULTIPLE">
+            <sql>
+              DECLARE
+	          @nroTarjeta VARCHAR(19) = ?;
+
+              WITH personas AS (
+                SELECT 
+                  NUMERODOCUMENTO AS CUIL,
+                  CONCAT(APELLIDOPATERNO, ' ', PRIMERNOMBRE) AS ApellidoNombre 
+                FROM CLI_PERSONASFISICAS pf
+                INNER JOIN CLI_DocumentosPFPJ d ON NUMEROPERSONAFISICA = NUMEROPERSONAFJ
+                WHERE TIPODOCUMENTO = 'CUIL' AND pf.TZ_LOCK = 0 AND d.TZ_LOCK = 0
+              )
+              SELECT
+                s.ID_SOLICITUD AS 'nroSolicitud',
+                n.CODIGO_LINK AS 'codigoSolicitud',
+                n.DESCRIPCION AS 'tipoSolicitud', 
+                FORMAT(s.FECHA_SOLICITUD, 'yyyy-MM-dd') AS 'fechaSolicitud',
+                TRIM(@nroTarjeta) AS 'nroTarjeta', 
+                tit.ApellidoNombre AS 'ApellidoNombreTitular',
+                s.CUIL AS 'CuilTitular',
+                CASE WHEN s.CUIT_AD = 0 THEN NULL ELSE adi.ApellidoNombre END AS 'ApellidoNombreAdicional',
+                CASE WHEN s.CUIT_AD = 0 THEN NULL ELSE s.CUIT_AD END AS 'CuilAdicional',
+                CASE 
+                  WHEN c.TIPO_CUENTA IN (11, 14, 15) 
+                    THEN 'Caja de Ahorro' 
+                    ELSE 'Cuenta Corriente' 
+                END AS 'cuentaTipo',
+                c.NRO_CUENTA AS 'cuentaNumero',
+                c.SUCURSAL AS 'cuentaSucursal',
+                CASE WHEN C.ID_SOLICITUD IS NOT NULL THEN CONCAT(c.ESTADO_CUENTA, ' - ', e.DESCRIPCION) ELSE NULL END AS 'cuentaEstado',
+                '' as 'cuentaBaja'
+              FROM TJD_SOLICITUD_LINK s
+              INNER JOIN TJD_TIPOS_NOVEDADES_LINK n ON s.TIPO_SOLICITUD = n.CODIGO_LINK
+              INNER JOIN personas tit ON s.CUIL = tit.CUIL
+              LEFT JOIN personas adi ON s.CUIT_AD = adi.CUIL
+              LEFT JOIN TJD_SOLICITUD_CUENTAS_LINK c ON s.ID_SOLICITUD = c.ID_SOLICITUD
+              LEFT JOIN TJD_ESTADO_TARJETA_CUENTA e ON c.ESTADO_CUENTA = e.ESTADO
+              WHERE 
+                s.ESTADO IN ('I', 'E')
+                AND (
+                  (s.TIPO_SOLICITUD = '120005' AND s.NRO_TARJETA_BASE = @nroTarjeta)
+                  OR 
+                  (s.TIPO_SOLICITUD &lt;&gt; '120005' AND TRIM(s.NRO_TARJETA_COMPLETA) = TRIM(@nroTarjeta))
+                );
+            </sql>
+            <input>
+                <inParameter description="" type="STRING">nroTarjeta</inParameter>
+            </input>
+            <output>
+                <level groupby="nroSolicitud" name="paginado">
+                    <outParameter description="" type="LONG">
+                        <queryname>nroSolicitud</queryname>
+                        <servicename>NroSolicitud</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>codigoSolicitud</queryname>
+                        <servicename>Solicitud.Codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tipoSolicitud</queryname>
+                        <servicename>Solicitud.Descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaSolicitud</queryname>
+                        <servicename>FechaSolicitud</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nroTarjeta</queryname>
+                        <servicename>NroTarjeta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ApellidoNombreTitular</queryname>
+                        <servicename>Titular.ApellidoNombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>CuilTitular</queryname>
+                        <servicename>Titular.Cuil</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ApellidoNombreAdicional</queryname>
+                        <servicename>Adicional.ApellidoNombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>CuilAdicional</queryname>
+                        <servicename>Adicional.Cuil</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="RelacionCtaTarjeta">
+                    <outParameter description="" type="STRING">
+                        <queryname>cuentaTipo</queryname>
+                        <servicename>TipoCuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>cuentaNumero</queryname>
+                        <servicename>NroCuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>cuentaEstado</queryname>
+                        <servicename>Estado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>cuentaBaja</queryname>
+                        <servicename>Baja</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

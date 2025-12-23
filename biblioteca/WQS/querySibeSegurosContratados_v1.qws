@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>sibe/segurosContratados/{CUIT}</uri>
+    <serviceDescription>seguros contratados</serviceDescription>
+    <title>seguros contratados</title>
+    <querys>
+        <query id="1" name="Qrty_segurosContratados" type="MULTIPLE">
+            <sql>SELECT DISTINCT NUMERO_POLIZA AS IdPoliza FROM CRE_SEGURO_SALDO_DEUDOR
+WHERE NUMERO_DOCUMENTO = ?
+  AND TZ_LOCK = 0
+  AND NUMERO_POLIZA &lt;&gt; ''
+</sql>
+            <input>
+                <inParameter description="" type="LONG">CUIT</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="seguros">
+                    <outParameter description="" type="LONG">
+                        <queryname>IdPoliza</queryname>
+                        <servicename>IdPoliza</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="vacio" type="SIMPLE">
+            <sql>select '' as PlazosFijos from parametros with(nolock) where 1 = 0</sql>
+            <input/>
+            <output>
+                <level groupby="" name="vacio">
+                    <outParameter description="" type="STRING">
+                        <queryname>PlazosFijos</queryname>
+                        <servicename>PlazosFijos</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

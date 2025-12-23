@@ -1,0 +1,237 @@
+VERSION:051
+TN  NN 1006TConsulta Cliente                        C0001 00
+*N  NN Consulta un cliente a ingresar en forma provisoria
+*N  NN en la Lista de Vigilancia
+VNNNNN 010001000104800800NNND000000000000000000000000000000000000000
+/T=Desafectación de Ingreso Provisorio en Lista de Vigilancia
+/C=192192192
+ NSSNS 0745   Mes            INNNNF01042801510451027702101100000042800370451013600
+/V=C9500[4,2]
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0856   Año            INNNNF01042806390451076502101100000042805250451062400
+/V=C9500[7,4]
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNSNNS 010006000903020782000001
+/T=Seleccione Cliente Lista de Vigilancia Provisoria
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6560   Estado Cliente INNNNK01005800350173077102001100000005800480081014700
+/V=P
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3918   A. Lta. Vigil. I NNN 01003500240282076802001160000005800480081014700
+/L=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNSNNS 010313000904120782000001
+/F=0012700NNN000000000Arial                                   
+KNSNNS 010355003903780329000100
+/T=Baja de Ingreso Provisorio en Lista de Vigilancia?
+/F=0012700NNN000000000Arial                                   
+ NSSNS 0955   Opcion S/N     I NNNK01035503430458048802001112000035505020378060100
+/V=N
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Cliente                        C0001 00
+/?=C0955.1='S'
+*N  NN Controla que el mes de la fecha de alta sea igual al mes actual
+ NSSNS 6550   Cód. Cliente   INNNNA01008801620111028802101000000008800480111014700
+/V=C3918.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6551   F. Alta Prov.  INNNN 00025701620280028800101000000025700480280014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0631                  INNNNF00025701620280028800101000000025700480280014700
+/V=F(MID,C6551,4,2)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 9512   Meses          INNNNF00025701620280028800101000000025700480280014700
+/V=F(MID,C9500,4,2)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS ME00000000000000000000100
+/F=C0631.2#C9512.2
+/M=El mes de alta no coincide con el mes actual
+TN  NN 1006TConsulta Generica                       C2091 00
+/?=C0955.1='S'
+*N  NN oooooooooooooooooooooooooooooooooo
+*N  NN Suma todos los saldos actuales, agrupandolos por cliente y marca de la operación (vigentes/vencidos/morosos/en gestión)
+ NSSNS 7062   Cód. Cliente   INNNNA00005001570073045800101000000005000260070014500
+/V=C3918.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/A=I21
+ NSSNS 7063   Marca Ope.     INNNN 00007801570101045800101000000007800260098014500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 7064   Imp. Tot. DeudaINNNN 00010601570129045800101000000010600260126014500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 8430   Imp. tot. venc.INNNN 00007801570101045800101000000007800260098014500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 8431   Imp. tot. gest.INNNN 00007801570101045800101000000007800260098014500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+TN  NN 1006TDesafectación de Ingreso Lista Vigil.   C6511 00
+*N  NN Consulta un cliente a ingresar en forma provisoria
+*N  NN en la Lista de Vigilancia
+VNNNNN 020001000104800800NNND000000000000000000000000000000000000000
+/T=Desafectación de Ingreso en Lista de Vigilancia 
+/C=192192192
+KNSNNS 020007000904110782000101
+/T=Datos de Cliente
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6550   Cód. Cliente   IDNNNA02008101620104028802101050000008100480104014700
+/V=C3918.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0002   Cliente        INNNNA01005901620082028802001100000005900480082014700
+/V=C6550.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1052   Segmento       IDNNN 02010901620132028802101050000010900480132014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1000   Nombre Cliente ICNNN 02008103030104060700101050000008903180112041700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1003   Sucursal VinculIDNNN 02013801620161028802101050000013800480161014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6021   Sucursal       INNSNA00007201630095028902101100000007200290095014800
+/V=C1003.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6020   Nombre         ICNSN 02013803030161060700101050000008703940110051300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1008   Ejecut. ClienteIDNNN 02016601620189028802101050000016600480189014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1945   Oficial Cuenta:INNSNA00004702000067026000001100000004700580067017700
+/V=C1008
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1946   Nombre         ICNSN 02016603030189060700101050000004700580067017700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1013   Cat. Subjetiva IDNNN 02019401620217028802101050000019400480217014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2013   Cat.Subjetiva  INNSNA25004702000067026000001100000004700580067017700
+/V=C1013
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2015   Descripcion    ICNSN 02019403030217060700101050000000000000020000000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1016   Cat. Anterior  IDNNN 02022201620245028802101050000022200480245014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6549   F. Baja Prov.  IDNNNA02025004830273060900101050000025003690273046800
+/V=C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6551   F. Alta Prov.  IDNNN 02025001620273028800101050000025000480273014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6552   Imp. deuda vig.IDNNNA02027801620301028802101050000027800480301014700
+/V=C7063.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6553   Imp. deuda vencIDNNNA02027804830301060902101050000027803690301046800
+/V=C8430.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6554   Imp. deuda mor.IDNNNA02030601620329028802101050000030600480329014700
+/V=C7064.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6555   Imp. deu. gest.IDNNNA02030604830329060902101050000030603690329046800
+/V=C8431.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6543   Inf. Efectuado IINNN 02033401620357028800101050000033400480357014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6542   Fch. Informe   IDNNN 02033404830357060900101050000033403690357046800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificación de Cliente en Lista        M6511 00
+/?=C0955.1='S'
+*N  NN Actualiza el campo Estado del cliente en la Lista Vigilancia
+ NSSNS 6550   Cód. Cliente   INNNNA02008801620111028802101000000008800480111014700
+/V=C3918.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6560   Estado Cliente INNNNK02004801620071028802101100000004800480071014700
+/V=E
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TImpresión Reporte                       C0001 00
+/?=1=0
+ NSSNS 9500   Fecha Sistema  INNNN 02004801620071028802101100000004800480071014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/P=I32
+ NSSNN 0369   Alfa 35        INNSNF00000113348002328500001000000000701000707363200
+/V="MONTH_(CRE_LISTAVIGILANCIA.FCH_ALTALISTAVIGILPROV)='"+C745.1+"' AND YEAR_(CRE_LISTAVIGILANCIA.FCH_ALTALISTAVIGILPROV)='"+C856.1+"'"
+ NSSNN 0369   Alfa 35        INNSNF00000113348002328500001000000000701000707363200
+/V=C369+" AND CLI_CLIENTES.CODIGOCLIENTE=CRE_LISTAVIGILANCIA.COD_CLIENTE"
+ NSSNN 0369   Alfa 35        INNSNF00000113348002328500001000000000701000707363200
+/V=C369+" AND CRE_LISTAVIGILANCIA.ESTADO_CLIENTE='P'"
+ NSSNN 9528   Línea Comando  INNSNF00000113348002328500001000000000701000707363200
+/V="TZPQUERY.EXE /Q6501 /C369 |"+C369+"|/A"
+CNSSNS  M00000000000000000000100
+/T=Imprimir Reporte de Garantías Liberadas
+TN  NN 1006TImpresión Reporte                       C0001 00
+ NSSNS 0900   Opción S/N     INNNNK00008801620111028802101000000008800480111014700
+/V=N
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+DN  NN 6508OV00
+*#I32#*

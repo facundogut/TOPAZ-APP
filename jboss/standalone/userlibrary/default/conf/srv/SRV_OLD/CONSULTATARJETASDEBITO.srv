@@ -1,0 +1,39 @@
+service CONSULTATARJETASDEBITO; 
+description "Servicio de consulta de tarjeta de debito on-line "; 
+
+
+	action: SQLQuery DATOSTJD(
+				
+			PaisDocumento: numeric,
+			TipoDocumento: string,     
+			NroDocumento:   string
+			
+			
+			):[
+                        XML_TAG: string,
+  			ID_TARJETA: string as NroTarjeta,
+			TIPO_TARJETA: string as TipoTarjeta, 
+			NRO_CLIENTE: numeric as NroCliente,
+			TITULARIDAD: string as Titularidad,
+			ESTADO: string as Estado,
+			PINOFFSET: string as PINAsignado
+	        
+			
+			]{ 
+  			
+  	               
+	               properties {
+
+			("statement", "select 'Tarjetas' as XML_TAG, t.id_tarjeta, t.tipo_tarjeta, t.nro_cliente, t.titularidad, t.estado,t.pinoffset From cli_documentospfpj d , tjd_tarjetas t Where Paisdocumento=? And Tipodocumento=? And Numerodocumento=? And  d.tz_lock=0 And t.tz_lock=0 And d.numeropersonafj=t.nro_persona"),
+			("0", "PaisDocumento"), 
+			("1", "TipoDocumento"), 
+			("2", "NroDocumento") 
+					
+	
+
+	         
+                                 }          
+		
+}
+
+

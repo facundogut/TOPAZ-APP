@@ -1,0 +1,622 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.BandejaCambioSucursal</class-name>
+        <entity-name>topsystems.vo.BandejaCambioSucursal</entity-name>
+        <table-name>GRL_BANDEJA_CAMBIO_SUC_PARCIAL</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSolicitudCambio</attribute-name>
+            <column-name>FECHA_SOLICITUD_CAMBIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalDestino</attribute-name>
+            <column-name>SUCURSAL_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProcesado</attribute-name>
+            <column-name>FECHA_PROCESADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>procesado</attribute-name>
+            <column-name>PROCESADO</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.BitacoraCambioSucursal</class-name>
+        <entity-name>topsystems.vo.BitacoraCambioSucursal</entity-name>
+        <table-name>GRL_BITACORA_CAMBIO_SUCURSAL</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSolicitudCambio</attribute-name>
+            <column-name>FECHA_SOLICITUD_CAMBIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencialBandeja</attribute-name>
+            <column-name>SECUENCIAL_BANDEJA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalOrigen</attribute-name>
+            <column-name>SUCURSAL_ORIGEN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalDestino</attribute-name>
+            <column-name>SUCURSAL_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>procesado</attribute-name>
+            <column-name>PROCESADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA_PROCESO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalAsiento</attribute-name>
+            <column-name>SUCURSAL_ASIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>observaciones</attribute-name>
+            <column-name>OBSERVACIONES</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaOrigen</attribute-name>
+            <column-name>EMPRESA_ORIGEN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaOrigen</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_ORIGEN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaDestino</attribute-name>
+            <column-name>EMPRESA_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaDestino</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_DESTINO</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.BandejaCambioSucursal</class-name>
+        <query-name>query.BandejaCambioSucursal</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						select SUCURSAL_DESTINO, SALDO_JTS_OID, SECUENCIAL, FECHA_SOLICITUD_CAMBIO, OPERACION_SOLICITUD_CAMBIO
+						  from GRL_BANDEJA_CAMBIO_SUCURSAL
+						 WHERE  PROCESADO LIKE 'N' AND FECHA_SOLICITUD_CAMBIO &lt;= ?
+						 ORDER BY SALDO_JTS_OID, SECUENCIAL 
+					</sentence>
+        <attribute>
+            <attribute-name>sucursalDestino</attribute-name>
+            <column-name>SUCURSAL_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSolicitudCambio</attribute-name>
+            <column-name>FECHA_SOLICITUD_CAMBIO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacionSolicitudCambio</attribute-name>
+            <column-name>OPERACION_SOLICITUD_CAMBIO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.BitacoraCambioSucursalCliente</class-name>
+        <entity-name>core.vo_BitacoraCambioSucursalCliente</entity-name>
+        <table-name>grl_bit_cam_suc_cli</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>cliente</attribute-name>
+            <column-name>CLIENTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSolicitudCambio</attribute-name>
+            <column-name>FECHA_SOLICITUD_CAMBIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencialBandeja</attribute-name>
+            <column-name>SECUENCIAL_BANDEJA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalOrigen</attribute-name>
+            <column-name>SUCURSAL_ORIGEN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalDestino</attribute-name>
+            <column-name>SUCURSAL_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>procesado</attribute-name>
+            <column-name>PROCESADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>observaciones</attribute-name>
+            <column-name>OBSERVACIONES</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaOrigen</attribute-name>
+            <column-name>EMPRESA_ORIGEN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaOrigen</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_ORIGEN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaDestino</attribute-name>
+            <column-name>EMPRESA_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaDestino</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_DESTINO</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.BandejaCambioSucursal</class-name>
+        <query-name>query.BandejaCambioSucursalTotalSinMultiEmpresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+        	select          SUCURSAL_TOPAZ_DESTINO, SALDO_JTS_OID, codigocliente , empresa_apertura, SECUENCIAL, FECHA_SOLICITUD_CAMBIO,
+           EMPRESA_ORIGEN, SUCURSAL_EMPRESA_ORIGEN, EMPRESA_DESTINO, SUCURSAL_EMPRESA_DESTINO, TIPO from 
+      ( /* 1 - saldo */ select g.SUCURSAL_TOPAZ_DESTINO, s.JTS_OID SALDO_JTS_OID,0 codigocliente , 0 empresa_apertura, SECUENCIAL, g.FECHA_SOLICITUD_CAMBIO,
+           0 EMPRESA_ORIGEN, 0 SUCURSAL_EMPRESA_ORIGEN, 0 EMPRESA_DESTINO, 0 SUCURSAL_EMPRESA_DESTINO, 1 TIPO
+            from GRL_BANDEJA_CAMBIO_SUC_TOTAL g, SALDOS s
+                 WHERE  PROCESADO = 'N' AND FECHA_SOLICITUD_CAMBIO &lt;= (select fechaproceso from parametros) and
+                  s.sucursal = g.sucursal_topaz_origen and (s.producto !=  0 OR s.c1604 != 0) and
+                  s.tz_lock = 0 and 
+                  g.tz_lock = 0
+                 
+                 union
+        
+         /* 2 - clientes */select g.SUCURSAL_TOPAZ_DESTINO, 0 SALDO_JTS_OID, cl.codigocliente, 0 empresa_apertura, SECUENCIAL, g.FECHA_SOLICITUD_CAMBIO,
+           0 EMPRESA_ORIGEN, 0 SUCURSAL_EMPRESA_ORIGEN, 0 EMPRESA_DESTINO, 0  SUCURSAL_EMPRESA_DESTINO, 2 TIPO
+                   from GRL_BANDEJA_CAMBIO_SUC_TOTAL g, CLI_CLIENTES cl
+                   WHERE  PROCESADO = 'N' AND FECHA_SOLICITUD_CAMBIO &lt;= (select fechaproceso from parametros) and
+                   cl.sucursalvinculada = g.sucursal_topaz_origen and
+                   cl.tz_lock = 0 and 
+                   g.tz_lock = 0
+      ) t order by secuencial, tipo
+        	</sentence>
+        <attribute>
+            <attribute-name>sucursalDestino</attribute-name>
+            <column-name>SUCURSAL_TOPAZ_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoCliente</attribute-name>
+            <column-name>CODIGOCLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaApertura</attribute-name>
+            <column-name>EMPRESA_APERTURA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSolicitudCambio</attribute-name>
+            <column-name>FECHA_SOLICITUD_CAMBIO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaOrigen</attribute-name>
+            <column-name>EMPRESA_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaOrigen</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaDestino</attribute-name>
+            <column-name>EMPRESA_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaDestino</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.BandejaCambioSucursal</class-name>
+        <query-name>query.BandejaCambioSucursalTotalMultiEmpresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+select     	   SUCURSAL_TOPAZ_DESTINO, SALDO_JTS_OID, codigocliente , empresa_apertura, SECUENCIAL, FECHA_SOLICITUD_CAMBIO,
+	         EMPRESA_ORIGEN, SUCURSAL_EMPRESA_ORIGEN, EMPRESA_DESTINO, SUCURSAL_EMPRESA_DESTINO, TIPO from 
+		  ( /* 1 - saldo */ select g.SUCURSAL_TOPAZ_DESTINO, s.JTS_OID SALDO_JTS_OID,0 codigocliente , 0 empresa_apertura, SECUENCIAL, g.FECHA_SOLICITUD_CAMBIO,
+	         scOrigen.Empresa EMPRESA_ORIGEN, scOrigen.Sucursal_Empresa SUCURSAL_EMPRESA_ORIGEN, scDestino.Empresa EMPRESA_DESTINO, scDestino.Sucursal_Empresa SUCURSAL_EMPRESA_DESTINO, 1 TIPO
+	          from GRL_BANDEJA_CAMBIO_SUC_TOTAL g, SALDOS s, SUCURSALESSC scOrigen, SUCURSALESSC scDestino
+	      	       WHERE  PROCESADO = 'N' AND FECHA_SOLICITUD_CAMBIO &lt;= (select fechaproceso from parametros) and
+	      	        scOrigen.sucursal = g.sucursal_topaz_origen and 
+	                scDestino.sucursal = g.sucursal_topaz_destino and 
+	                s.sucursal = g.sucursal_topaz_origen and (s.producto !=  0 OR s.c1604 != 0) and
+	      	        scOrigen.tz_lock = 0 and  
+	      		      scDestino.tz_lock = 0 and 
+	      		      s.tz_lock = 0 and 
+	      		      g.tz_lock = 0
+	               
+	               union
+	      
+	       /* 2 - clientes */select g.SUCURSAL_TOPAZ_DESTINO, 0 SALDO_JTS_OID, cl.codigocliente, 0 empresa_apertura, SECUENCIAL, g.FECHA_SOLICITUD_CAMBIO,
+	         scOrigen.Empresa EMPRESA_ORIGEN, scOrigen.Sucursal_Empresa SUCURSAL_EMPRESA_ORIGEN, scDestino.Empresa EMPRESA_DESTINO, scDestino.Sucursal_Empresa SUCURSAL_EMPRESA_DESTINO, 2 TIPO
+	      		       from GRL_BANDEJA_CAMBIO_SUC_TOTAL g, CLI_CLIENTES cl, SUCURSALESSC scOrigen, SUCURSALESSC scDestino
+	      		       WHERE  PROCESADO = 'N' AND FECHA_SOLICITUD_CAMBIO &lt;= (select fechaproceso from parametros) and
+	      		       scOrigen.sucursal = g.sucursal_topaz_origen and 
+	                 scDestino.sucursal = g.sucursal_topaz_destino and 
+	                 cl.empresa = scOrigen.empresa and
+	                 cl.sucursal_empresa = scOrigen.sucursal_empresa and
+	                 scOrigen.tz_lock = 0 and  
+	      		       scDestino.tz_lock = 0 and 
+	      		       cl.tz_lock = 0 and 
+	      		       g.tz_lock = 0
+	      ) t order by secuencial, tipo
+    	</sentence>
+        <attribute>
+            <attribute-name>sucursalDestino</attribute-name>
+            <column-name>SUCURSAL_TOPAZ_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoCliente</attribute-name>
+            <column-name>CODIGOCLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaApertura</attribute-name>
+            <column-name>EMPRESA_APERTURA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSolicitudCambio</attribute-name>
+            <column-name>FECHA_SOLICITUD_CAMBIO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaOrigen</attribute-name>
+            <column-name>EMPRESA_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaOrigen</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaDestino</attribute-name>
+            <column-name>EMPRESA_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaDestino</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.BandejaCambioSucursal</class-name>
+        <query-name>query.BandejaCambioSucursalParcialSinMultiEmpresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+select SUCURSAL_DESTINO SUCURSAL_TOPAZ_DESTINO, SALDO_JTS_OID,0 codigocliente , 0 empresa_apertura, SECUENCIAL, FECHA_SOLICITUD_CAMBIO,
+	 0 EMPRESA_ORIGEN, 0 SUCURSAL_EMPRESA_ORIGEN, 0 EMPRESA_DESTINO, 0 SUCURSAL_EMPRESA_DESTINO, 1 TIPO
+ from GRL_BANDEJA_CAMBIO_SUC_PARCIAL
+ WHERE  PROCESADO = 'N' AND FECHA_SOLICITUD_CAMBIO &lt;=  (select fechaproceso from parametros)
+ ORDER BY SALDO_JTS_OID, SECUENCIAL
+</sentence>
+        <attribute>
+            <attribute-name>sucursalDestino</attribute-name>
+            <column-name>SUCURSAL_TOPAZ_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoCliente</attribute-name>
+            <column-name>CODIGOCLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaApertura</attribute-name>
+            <column-name>EMPRESA_APERTURA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSolicitudCambio</attribute-name>
+            <column-name>FECHA_SOLICITUD_CAMBIO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaOrigen</attribute-name>
+            <column-name>EMPRESA_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaOrigen</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaDestino</attribute-name>
+            <column-name>EMPRESA_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaDestino</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.BandejaCambioSucursal</class-name>
+        <query-name>query.BandejaCambioSucursalParcialConMultiEmpresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+select  g.sucursal_destino SUCURSAL_TOPAZ_DESTINO, s.JTS_OID SALDO_JTS_OID,0 codigocliente , 0 empresa_apertura, SECUENCIAL, g.FECHA_SOLICITUD_CAMBIO,
+	         s.Empresa EMPRESA_ORIGEN, s.sucursal_empresa SUCURSAL_EMPRESA_ORIGEN, scDestino.Empresa EMPRESA_DESTINO, scDestino.Sucursal_Empresa SUCURSAL_EMPRESA_DESTINO, 1 TIPO
+ from GRL_BANDEJA_CAMBIO_SUC_PARCIAL g, SALDOS s, SUCURSALESSC scDestino, SUCURSALESSC scOrigen
+ WHERE  PROCESADO = 'N' AND FECHA_SOLICITUD_CAMBIO &lt;= (select fechaproceso from parametros) and
+	      s.jts_oid = g.saldo_jts_oid and
+        scDestino.sucursal = g.sucursal_destino and 
+         s.sucursal =  scOrigen.Sucursal and
+          scDestino.tz_lock = 0 and 
+         scOrigen.tz_lock = 0 and 
+	      s.tz_lock = 0 and 
+	      g.tz_lock = 0
+ ORDER BY SALDO_JTS_OID, SECUENCIAL
+</sentence>
+        <attribute>
+            <attribute-name>sucursalDestino</attribute-name>
+            <column-name>SUCURSAL_TOPAZ_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoCliente</attribute-name>
+            <column-name>CODIGOCLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaApertura</attribute-name>
+            <column-name>EMPRESA_APERTURA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSolicitudCambio</attribute-name>
+            <column-name>FECHA_SOLICITUD_CAMBIO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaOrigen</attribute-name>
+            <column-name>EMPRESA_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaOrigen</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresaDestino</attribute-name>
+            <column-name>EMPRESA_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresaDestino</attribute-name>
+            <column-name>SUCURSAL_EMPRESA_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.BandejaCambioSucursal</class-name>
+        <entity-name>core.vo_BandejaCambioSucursalTotal</entity-name>
+        <table-name>GRL_BANDEJA_CAMBIO_SUC_TOTAL</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalOrigen</attribute-name>
+            <column-name>SUCURSAL_TOPAZ_ORIGEN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalDestino</attribute-name>
+            <column-name>SUCURSAL_TOPAZ_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSolicitudCambio</attribute-name>
+            <column-name>FECHA_SOLICITUD_CAMBIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProcesado</attribute-name>
+            <column-name>FECHA_PROCESADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>procesado</attribute-name>
+            <column-name>PROCESADO</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.excepcionesMigracionSucursal</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				  SELECT NUMERO_PRODUCTO FROM EXCEPCION_MIGRACION_SUCURSAL
+			</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>NUMERO_PRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.cambiosucursal.objectsdomain.ParametrosPrejuizo</class-name>
+        <entity-name>core.vo_ParametrosPrejuizo</entity-name>
+        <table-name>PARAMETROS_PREJUIZO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>ordinalInteres</attribute-name>
+            <column-name>ORDINALINTERES</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCobranzaInteres</attribute-name>
+            <column-name>PIVOTCOBRANZAINTERES</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCambioSucursalInteres</attribute-name>
+            <column-name>PIVOTCAMBIOSUCURSALINTERES</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinalMora</attribute-name>
+            <column-name>ORDINALMORA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCobranzaMora</attribute-name>
+            <column-name>PIVOTCOBRANZAMORA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCambioSucursalMora</attribute-name>
+            <column-name>PIVOTCAMBIOSUCURSALMORA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinalMulta</attribute-name>
+            <column-name>ORDINALMULTA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCobranzaMulta</attribute-name>
+            <column-name>PIVOTCOBRANZAMULTA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCambioSucursalMulta</attribute-name>
+            <column-name>PIVOTCAMBIOSUCURSALMULTA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinalIpf</attribute-name>
+            <column-name>ORDINALIPF</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCobranzaIpf</attribute-name>
+            <column-name>PIVOTCOBRANZAIPF</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCambioSucursalIpf</attribute-name>
+            <column-name>PIVOTCAMBIOSUCURSALIPF</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinalIpfMoratorio</attribute-name>
+            <column-name>ORDINALIPFMORATORIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCobranzaIpfMoratorio</attribute-name>
+            <column-name>PIVOTCOBRANZAIPFMORATORIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCambioSucursalIpfMoratorio</attribute-name>
+            <column-name>PIVOTCAMBIOSUCURSALIPFMORATORIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCobranzaTotal</attribute-name>
+            <column-name>PIVOTCOBRANZATOTAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>pivotCambioSucursalTotal</attribute-name>
+            <column-name>PIVOTCAMBIOSUCURSALTOTAL</column-name>
+        </attribute>
+    </class>
+</map>

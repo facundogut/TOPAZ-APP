@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="9951" language="groovy" pageWidth="576" pageHeight="792" columnWidth="576" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="23"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="Nombre">
+		<parameter name="NroGarantia" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT pf.C1404+' '+pf.C1405+' '+' ,'+pf.C1406+' '+pf.C1407 AS Nombre
+FROM GR_GARANTIAS g, CL_PERSONASFISICAS pf WHERE
+g.IDPERSONATITULAR=pf.IDPERSONA AND g.NROGARANTIA=$P{NroGarantia}]]>
+		</queryString>
+		<field name="Nombre" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="DataGrupo">
+		<parameter name="codigo" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT (C1000+',')nombre,
+	CASE C1409
+		WHEN 'A' THEN 'Unión de Hecho Estble, '
+		WHEN 'C' THEN 'Casado/a, '
+		WHEN 'D' THEN 'Divorciado/a, '
+		WHEN 'S' THEN 'Soltero/a, '
+		WHEN 'V' THEN 'Viudo/a, '
+	END AS estCivil, (C1222 +' ' ) profesion,(t.DESCRIPCION + '  número ')DESCRIPCION,d.nrodocumento
+	 FROM CL_CLIENTES cl,TC_PROFESIONES P,CL_PERSONASFISICAS C,CL_RELPERDOC d,CL_TIPOSDOCUMENTO t
+WHERE cl.C0902 IN (SELECT C3199 FROM CL_RELGSCLTE WHERE C3198=$P{codigo})
+AND cl.C0902=c.IDPERSONA
+AND C.C1499 = P.C1221
+AND d.IDPERSONA  =c.IDPERSONA
+AND d.principal = 'S' AND d.TIPODOC = t.TIPODOC]]>
+		</queryString>
+		<field name="nombre" class="java.lang.String"/>
+		<field name="estCivil" class="java.lang.String"/>
+		<field name="profesion" class="java.lang.String"/>
+		<field name="DESCRIPCION" class="java.lang.String"/>
+		<field name="nrodocumento" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="DataNombres">
+		<parameter name="codigo" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[DECLARE @valores VARCHAR(1000)
+SELECT @valores= COALESCE(@valores + ', ', '') + C1000 FROM CL_CLIENTES WHERE C0902 IN (
+SELECT C3199 FROM CL_RELGSCLTE WHERE C3198=$P{codigo})
+select @valores as nombres]]>
+		</queryString>
+		<field name="nombres" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="NRO_SOLICITUD" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[Select grupo from SL_SOLICITUDCREDITO where C5000 =$P{NRO_SOLICITUD}*100]]>
+	</queryString>
+	<field name="grupo" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="230" splitType="Stretch">
+			<staticText>
+				<reportElement x="3" y="1" width="573" height="229"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[3.	Autorización para cobro del Seguro: Que como consecuencia del endoso de la Póliza de Seguro arriba indicada, EL ACREEDOR deberá quedar facultado en dicha Póliza para que, en caso de siniestro o muerte de los deudores, pueda aquél reclamar –como primer beneficiario-, el pago total de la indemnización hecha por la Sociedad de Seguros, mismo que será aplicado a la cancelación de las obligaciones pendientes de pago, resultantes del presente contrato. En caso que quedare un remanente, la Compañía Aseguradora, previa autorización de parte de EL ACREEDOR, podrá entregar el saldo a  los segundos beneficiarios designados por los deudores en la Póliza.
+Que por lo anterior, EL ACREEDOR se constituye, en su carácter de primer beneficiario de la Póliza, en el único y exclusivo representante de LOS DEUDORES  para los efectos de reclamos y negociaciones con la Sociedad de Seguros, relativas al cumplimiento -por parte de la misma-, de los términos de la Póliza en mención; por lo que, desde este momento, los deudores  aceptan  cualquier resolución que se derive de las gestiones de reclamo llevadas a efectos por EL ACREEDOR con la Sociedad de Seguros.
+
+4.	Costo de la Póliza: Que el costo de la póliza de seguro y de sus sucesivas renovaciones se regirá por lo dispuesto en las cláusulas precedentes de este contrato.
+
+5.	Negativa de la Asegurador: Que la negativa de la Sociedad Aseguradora elegida por Los DEUDORES  a renovar la Póliza de Seguro, o su negativa a aceptar la cesión o endoso de la póliza dada en garantía a EL ACREEDOR, facultará a éste a dar por terminado anticipadamente el presente contrato y a exigir la cancelación inmediata de las obligaciones pendientes de pago.
+
+6.	Gastos Funerarios: Los deudores  aceptan  que el gasto funerario, contenido como beneficio adicional de la póliza, sea pagado al beneficiario nombrado por los deudores  y en caso de no existir ningún beneficiario EL ACREEDOR se reserva el derecho de elegir a quien demuestre haber asumido los gastos de sepelio.
+
+CLAUSULA DÉCIMA SEXTA: FIANZA SOLIDARIA: Es expresamente convenido que los Señores  ]]></text>
+			</staticText>
+		</band>
+		<band height="16">
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="3" y="2" width="573" height="12"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DataNombres">
+						<datasetParameter name="codigo">
+							<datasetParameterExpression><![CDATA[$F{grupo}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="317">
+						<jr:detailCell style="table 1_TD" height="13" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="317" height="13"/>
+								<textElement>
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{nombres}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+		<band height="470">
+			<staticText>
+				<reportElement x="0" y="0" width="573" height="470"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[cuyos generales de ley y cédula de identidad se indican al pie de este documento, actuando en su propio nombre y representación, se constituye, a favor de EL ACREEDOR, como FIADOR SOLIDARIO Y PRINCIPAL PAGADOR DE LOS DEUDORES  por cualquier obligación y/o saldo deudor, de capital, intereses, comisiones, costas procesales, gastos de cobranza y recuperación judicial,  honorarios y cualquier otro gasto que se deriven del presente Mutuo.
+
+EL FIADOR SOLIDARIO E INCONDICIONAL declara que conoce y acepta como propias las obligaciones, estipulaciones y renuncias hechas por EL DEUDOR y garantiza con la responsabilidad de su firma y con todos sus bienes, presentes y futuros, el estricto y fiel cumplimiento que dará LOS DEUDORES  a todas y cada una de las obligaciones contraídas en el presente contrato, cualquiera fuere su monto o causa.
+Para tales efectos, EL FIADOR SOLIDARIO renuncia expresamente al beneficio de excusión y de división de la deuda, reconociendo el derecho que asiste a EL ACREEDOR a perseguir indistintamente los bienes de EL FIADOR SOLIDARIO, sin tener que perseguir de primero los bienes de LOS DEUDORES; así como el derecho que asiste a EL ACREEDOR a reclamar a EL FIADOR SOLIDARIO la totalidad del saldo deudor.
+EL FIADOR SOLIDARIO expresamente conviene que esta fianza no se considerará extinguida, ni perjudicada en forma alguna, por el hecho que EL ACREEDOR conceda prórrogas o esperas a LOS DEUDORES, pues la presente fianza solidaria e incondicional subsistirá mientras las obligaciones garantizadas no hayan sido canceladas totalmente sea por principal, intereses, comisiones, costas y gastos de cobranza y cobro judicial.
+De igual forma, EL FIADOR SOLIDARIO renuncia a invocar la extinción del carácter solidario e incondicional de la presente fianza en caso que EL ACREEDOR aceptare la constitución, simultánea o posterior, de otras fianzas adicionales para responder parcial o totalmente por el cumplimiento de las obligaciones resultantes del presente contrato. Asimismo, EL FIADOR SOLIDARIO renuncia a invocar la extinción de la presente FIANZA SOLIDARIA E INCONDICIONAL en caso que EL ACREEDOR cediere sus derechos crediticios a un tercero en la forma establecida en el presente contrato.
+
+CLAUSULA DÉCIMA SEPTIMA: MISCELÁNEAS: Las partes contratantes convienen:
+1.	Anulación Parcial:   Los deudores  aceptan  que la eventual nulidad judicial de alguna cláusula del presente contrato no invalidará el resto del contrato ni será impedimento para exigir el cumplimiento de las obligaciones o la ejecución de las garantías contenidas en el mismo.
+
+2.	No Renuncia de Derechos: Los  deudores  aceptan  que el hecho de que EL ACREEDOR no exija el exacto cumplimiento de las obligaciones pactadas en este contrato, no implica, ni podrá reputarse, como una modificación, aceptación o renuncia a los términos, condiciones y derechos aquí acordados. De igual forma, en caso que, por error de EL ACREEDOR, éste extendiera a favor de Los deudores  un recibo de pago por un mes posterior que no correspondiere con el último mes abonado efectivamente por los deudores, dicha circunstancia no será tenida como una renuncia de EL ACREEDOR a cobrar los meses anteriores que se le adeudaren.
+
+3.	Enmiendas: El presente contrato no podrá ser modificado unilateralmente por ninguna de las partes contratantes. Asimismo, en ningún caso se producirá la enmienda tácita del presente contrato requiriéndose de un acuerdo expreso y escrito, el cual, deberá contener un nuevo y detallado calendario de pago, en caso que la enmienda contractual afectare el existente.
+
+4.	Información Precontractual: Los deudores  confiesan  haber sido debidamente informado por EL ACREEDOR, en forma clara, completa, oportuna y adecuada, sobre los alcances y consecuencias de los servicios financieros contratados bajo el presente documento. En particular, Los deudores  confiesan  haber recibido previamente el formulario contractual y la información relativa a tasas de interés, comisiones y gastos que resultarán de la celebración de este contrato.
+
+5.	Confesión de haber recibido otro tenor de este Contrato: Los  deudores  confiesan recibir en este acto, de EL ACREEDOR y de manera totalmente gratuita, un tanto del mismo tenor del presente contrato. Sin perjuicio de lo anterior, en caso de pérdida o destrucción del tanto facilitado a Los DEUDORES, éste tendrá derecho a reclamar y obtener prueba documental que le permita acreditar la suscripción del presente contrato.
+]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

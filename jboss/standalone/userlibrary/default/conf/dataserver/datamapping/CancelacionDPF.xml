@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map>
+    <query>	                 
+		<class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>		            
+		<query-name>query.vo_SaldosARenovar</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT S.JTS_OID
+			FROM   SALDOS S
+			INNER JOIN  VW_CUENTAS_PERMITIDAS V ON S.JTS_OID = V.JTS_OID
+			WHERE  (S.c1627 &lt;= (select fechaproceso from parametros) AND
+			       (S.c1604 &gt; 0.0 OR S.c1608 &gt; 0.0) AND
+				S.c1632 &gt;= 0 AND S.c1785 = 4) AND
+				S.C1659 &lt;&gt; 'N' AND
+				S.tz_lock = 0
+				AND (S.MATRICULA_LIMITE &lt;&gt; 'A' OR S.MATRICULA_LIMITE IS NULL) 
+				AND S.C1679 = '0' 
+		</sentence>
+		<attribute>
+			<attribute-name>JTS_OID</attribute-name>
+			<column-name>JTS_OID</column-name>
+			<column-type>double</column-type>
+		</attribute>
+	</query>
+	<class>
+		<class-name>topsystems.automaticprocess.cancelaciondpf.objectsdomain.BitacoraRenovacionDPFImpl</class-name>
+		<entity-name>core.vo.BitacoraRenovacionDPF</entity-name>
+		<table-name>BITACORA_RENOVACION_DPF</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>fechaProceso</attribute-name>
+			<column-name>FECHA_PROCESO</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>numeroEjecucion</attribute-name>
+			<column-name>NRO_EJECUCCION</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>saldoJTSOID</attribute-name>
+			<column-name>SALDO_JTS_OID</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>descripcion</attribute-name>
+			<column-name>DESCRIPCION</column-name>
+		</attribute>
+	</class>
+</map>

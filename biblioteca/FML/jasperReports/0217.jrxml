@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2022-09-08T16:32:51 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RegistroFirmaPFPJ" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9595ffc2-cca0-4398-b0d7-d4cbcc99c133">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="NUMPER" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Número de Persona]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+ ISNULL(P.PRIMERNOMBRE,'') AS PRIMERNOMBRE,
+ ISNULL(P.SEGUNDONOMBRE, '') AS SEGUNDONOMBRE,
+ ISNULL(P.APELLIDOPATERNO, '') AS APELLIDOPATERNO,
+ ISNULL(D.TIPO_DOC_FISICO, '') AS TIPO_DOC_FISICO, 
+ ISNULL(D.NUM_DOC_FISICO, 0) AS NUM_DOC_FISICO,
+ ISNULL(D.TIPODOCUMENTO, '') AS TIPODOCUMENTO, 
+ ISNULL(D.NUMERODOCUMENTO, 0) AS NUMERODOCUMENTO,
+ ISNULL(P.FECHANACIMIENTO, '') AS FECHANACIMIENTO,
+ ISNULL(P.NACIONALIDAD, '') AS NACIONALIDAD,
+ ISNULL(P.FECHAALTA, '') AS FECHAALTA
+FROM CLI_PERSONASFISICAS AS P, CLI_DOCUMENTOSPFPJ AS D 
+WHERE (P.NUMEROPERSONAFISICA = D.NUMEROPERSONAFJ) 
+AND P.NUMEROPERSONAFISICA=$P{NUMPER}
+AND P.TZ_LOCK=0
+AND D.TZ_LOCK=0]]>
+	</queryString>
+	<field name="PRIMERNOMBRE" class="java.lang.String"/>
+	<field name="SEGUNDONOMBRE" class="java.lang.String"/>
+	<field name="APELLIDOPATERNO" class="java.lang.String"/>
+	<field name="TIPO_DOC_FISICO" class="java.lang.String"/>
+	<field name="NUM_DOC_FISICO" class="java.lang.String"/>
+	<field name="TIPODOCUMENTO" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="FECHANACIMIENTO" class="java.sql.Timestamp"/>
+	<field name="NACIONALIDAD" class="java.lang.String"/>
+	<field name="FECHAALTA" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement x="300" y="0" width="220" height="40" uuid="34e7ee2a-466d-4e57-b510-b9909ff3b6f9"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGISTRO DE FIRMA
+PERSONA HUMANA ]]></text>
+			</staticText>
+			<image hAlign="Left" vAlign="Middle" onErrorType="Icon">
+				<reportElement x="-20" y="-20" width="320" height="80" uuid="8edc6989-3195-4c18-bbda-8fda5d2e2055">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="430" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="40" y="61" width="140" height="20" uuid="9ef2382c-425f-47d7-bd5c-c42f8d6666f7"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Apellido y Nombres:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="81" width="80" height="20" uuid="36856da2-28a5-45ee-832d-74827fd05a98"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Doc. Tipo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="40" y="41" width="480" height="20" forecolor="#000000" backcolor="#C6D5F7" uuid="069a0d57-3fa9-4ac1-b903-3888961268d3"/>
+				<textElement markup="html">
+					<font fontName="Times New Roman" size="15" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[DATOS DE LA PERSONA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="230" y="11" width="140" height="20" uuid="8484af31-eda8-491f-9149-9ba0eff86424"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="13"/>
+				</textElement>
+				<text><![CDATA[Fecha de Habilitación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="221" width="480" height="200" uuid="e3872a29-6751-453a-bc46-2b5ea7cb8f4c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified">
+					<font fontName="Times New Roman" size="13"/>
+				</textElement>
+				<text><![CDATA[Me/nos   NOTIFICO/NOTIFICAMOS   en   este   acto,   que    estos    documentos    electrónicos    han    sido    firmados    con    “firma/s    ológrafa/s”    de acuerdo a Comunicación “A” 6068 del BCRA, referida a: “Gestión crediticia”, “Clasificación de  deudores”,  “Conservación  y  reproducción  de  documentos”  y  “Protección  de  los  usuarios  de  servicios  financieros”.  Instrumentación  de  documentos  en  soporte  electrónico  o  de  características  similares;  la  cual  puede  ser  consultada    ingresando  a http.//www.bcra.gob.ar/BCRA.
+Los archivos que incluyen la totalidad de la documentación suscripta se remitirán a la  dirección  de  correo  electrónico  informada  por  el  cliente;  o  en  su  defecto  se dejarán disponibles en AUTOCONSULTAS ingresando a través de http://www.nbch.com.ar.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="201" width="220" height="20" uuid="a21a7f9d-a163-4955-8c6f-743fe2ae3d4e"/>
+				<textElement>
+					<font fontName="Times New Roman" size="15" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECIBO. NOTIFICACIONES.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="170" y="81" width="349" height="1" uuid="b934a0d4-048f-4589-82c5-39f47928ec7c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="220" y="101" width="300" height="1" uuid="842b393e-a454-46f8-954b-2cebb22b3c6f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="110" y="122" width="410" height="1" uuid="5455254f-edd7-487c-8c50-24846b8a5ecb">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="198" y="141" width="322" height="1" uuid="73c839eb-16ca-4e4c-b6fb-58089b784d3d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="155" y="161" width="365" height="1" uuid="4a084ef0-0262-4265-b1ef-08250f3f435a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="194" y="82" width="26" height="20" uuid="80a0e76d-4659-427b-a7d6-809c7d8a77de"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[N°:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="128" y="101" width="62" height="1" uuid="48f9ca25-1039-43fe-bb5c-985782f5272d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="370" y="31" width="149" height="1" uuid="8999d491-cd56-4323-be6d-ace557cdcd21">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="180" y="61" width="340" height="20" uuid="3a443563-76f0-4159-97b2-9f6978e869ff"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APELLIDOPATERNO}+" "+$F{PRIMERNOMBRE}+" "+$F{SEGUNDONOMBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="101" width="60" height="20" uuid="f91cb8f5-a615-41df-91ca-92ca50c8e5b2"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPODOCUMENTO}+":"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="230" y="83" width="290" height="18" uuid="cfd23d60-5ad0-407a-badf-25528cf1db54"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_DOC_FISICO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="102" width="410" height="19" uuid="1052a114-a591-4e28-9c01-e68936dd9a6c"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="131" y="81" width="58" height="20" uuid="13acd46d-4769-4695-ba4d-b3048d1e2d4b"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_DOC_FISICO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="204" y="122" width="220" height="19" uuid="e8714ce9-41dc-4007-ada6-5b6790c71c7d"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHANACIMIENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="155" y="141" width="200" height="21" uuid="5b58db12-acdf-491c-8fa2-b9e733e79106"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NACIONALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="380" y="11" width="140" height="19" uuid="008c00ba-7744-4ed0-b541-f607fd7874c2"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHAALTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="141" width="110" height="20" uuid="04fba3c2-830e-42f7-b360-fddd64e6be52">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Nacionalidad: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="121" width="158" height="20" uuid="fdcc2760-18b5-4eba-9130-68d066ff6f37">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Fecha de Nacimiento:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="122" splitType="Stretch">
+			<staticText>
+				<reportElement x="37" y="23" width="142" height="20" uuid="778e048d-928b-4890-b402-d497196a6a1e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Firma del Solicitante]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="181" y="23" width="144" height="20" uuid="492c8958-fcee-423f-bb61-fe4abad8b313"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Aclaración Firma]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="328" y="23" width="188" height="20" uuid="d4482516-dd42-41fb-b25b-b413368f4891"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14"/>
+				</textElement>
+				<text><![CDATA[Tipo y Nº de Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="90" width="50" height="14" uuid="d1a4654c-33c2-45f7-8c99-f6a448caaa24"/>
+				<text><![CDATA[DEP 000]]></text>
+			</staticText>
+			<line>
+				<reportElement x="37" y="16" width="480" height="1" uuid="04007e8c-2d86-43a9-bcc8-cf61ebd67f23">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="430" y="90" width="50" height="14" forecolor="#808080" uuid="c13169d9-8813-4e7e-bd23-87aaed036131"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["PÁG. " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="480" y="90" width="39" height="14" forecolor="#808080" uuid="5ec63548-b006-422a-8abf-990d57f5cd51"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA["/" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

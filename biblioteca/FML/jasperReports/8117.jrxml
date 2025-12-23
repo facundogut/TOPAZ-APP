@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2022-08-29T16:41:32 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="8117" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7efe036f-fe89-4ffd-ab32-f5ac55a2cde5">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="Contrato" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Nro. Contrato]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+	(SELECT 
+		PR.DESCRIPCION 
+	FROM 
+		CLI_PROVINCIAS PR, 
+		CLI_DIRECCIONES D2 
+	WHERE 
+		D2.ID = S.SUCURSAL 
+		AND D2.FORMATO = 'S' 
+		AND D2.TIPODIRECCION = 'R' 
+		AND D2.PAIS = PR.CODIGOPAIS 
+		AND D2.PROVINCIA = PR.DIM1) AS PROVINCIA,
+	(SELECT 
+		LOC.DESCRIPCION_DIM3 
+	FROM 
+		CLI_LOCALIDADES LOC, 
+		CLI_DIRECCIONES D2 
+	WHERE 
+		D2.ID = S.SUCURSAL 
+		AND D2.FORMATO = 'S' 
+		AND D2.TIPODIRECCION = 'R' 
+		AND D2.PAIS = LOC.CODIGOPAIS 
+		AND D2.PROVINCIA = LOC.DIM1
+		AND D2.DEPARTAMENTO =LOC.DIM2 
+		AND D2.LOCALIDAD = LOC.DIM3) AS LOCALIDAD,
+	P.FECHAPROCESO, 
+	C.NUMERO_COFRE, 
+	CC.CODIGO
+FROM 
+	SUCURSALES S, 
+	PARAMETROS P, 
+	COF_COFRES C, 
+	COF_COFRES_CONTRATOS CC
+WHERE 
+	S.SUCURSAL = C.DEPENDENCIA 
+	AND C.CODIGO = CC.CODIGO_COFRE 
+	AND CC.CODIGO = $P{Contrato}]]>
+	</queryString>
+	<field name="PROVINCIA" class="java.lang.String"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<field name="FECHAPROCESO" class="java.sql.Timestamp"/>
+	<field name="NUMERO_COFRE" class="java.math.BigDecimal"/>
+	<field name="CODIGO" class="java.math.BigDecimal"/>
+	<variable name="Localidad" class="java.lang.String">
+		<variableExpression><![CDATA[$F{LOCALIDAD} + "," + $F{PROVINCIA}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="90" splitType="Stretch">
+			<image>
+				<reportElement x="49" y="20" width="130" height="65" uuid="e4b1f401-0355-4acc-9bd2-e70a96dc7434"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="290" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="40" width="60" height="15" uuid="548b0bc1-04a4-46cc-94dd-6ca3c5ea29e8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Lugar:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="354" y="40" width="46" height="15" uuid="fe852ffd-d6fd-4f82-8dfc-b4c373e0b94b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="550" height="17" uuid="f271ec67-cb77-4f50-afd6-075c9e9438d3"/>
+				<textElement textAlignment="Left">
+					<font size="12" isBold="true"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[RESCISIÓN DE CONTRATO DE CAJA DE SEGURIDAD. RETIRO DE BIENES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="120" width="160" height="15" uuid="d700dab5-35db-476c-acdb-c4dcb5976a1f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ref.: CAJA DE SEGURIDAD N° ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="268" y="120" width="132" height="15" uuid="6d9a2fc4-c68c-475a-98b4-bcb01b302dca">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contrato de locación N° ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="160" width="513" height="40" uuid="f8ad975d-53ac-4a2f-84b4-f9692f9d04fa"/>
+				<textElement textAlignment="Justified"/>
+				<text><![CDATA[En la fecha el USUARIO retira el contenido total de la Caja de Seguridad de la referencia, reintegrando al BANCO la misma y sus 2 (dos) llaves, quedando de esta forma rescindido el contrato celebrado, no teniendo nada que reclamar al BANCO en razón del mismo.]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="400" y="40" width="150" height="15" uuid="732c7d90-abb6-418f-9831-fa5788ce415b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHAPROCESO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="120" width="100" height="15" uuid="d1761852-4918-4eec-96ba-10a7319addb6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NUMERO_COFRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="400" y="120" width="150" height="15" uuid="c7ffe0bb-f9e2-4489-8b23-2423c9c93ea3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CODIGO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="250" width="301" height="15" uuid="dce5d594-31a9-4c97-97ff-e68ef1d25614">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Aclaración: ........................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="220" width="301" height="15" uuid="8d4a6ccf-06c9-4dd2-b13f-f68baa93afeb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Firma: ................................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="289" y="275" width="261" height="15" uuid="f8b13eea-563f-45db-b41f-31bedbcb47a3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Certificación por funcionario del Banco.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="60" y="40" width="294" height="15" uuid="92a525da-ab5b-409c-971e-5c414c11fd7f"/>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD} + ", " + $F{PROVINCIA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<noData>
+		<band height="50"/>
+	</noData>
+</jasperReport>

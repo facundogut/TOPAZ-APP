@@ -1,0 +1,152 @@
+VERSION:055_5
+TN  NN 1006TConsulta Generica                       C00000 00
+*$2021-10-07 12:04:57SCOLLAZO
+VNSSNS 020002000101990911SSSD000000000000000000000000000000000000000
+/T=Datos del Castigo
+/C=192192192
+*$2021-10-28 14:51:52SCOLLAZO
+KNNNNN 020006001001310881000101
+/T=Ingrese Datos
+/F=0012700NNN000000000Arial                                   
+*$2021-10-28 14:51:49SCOLLAZO
+ NNNNN 43881   Numerador de Castigo                              INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:25:30SCOLLAZO
+ NNNNN 43870   Castigo                                           IINSNA020034017200570296021011500000034002700570157000
+/V=C43881
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:51:35SCOLLAZO
+ NNNNN 43880   Comentario                                        I SSN 020071017201180860000010000000071002700940152100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:51:41SCOLLAZO
+CNNNNN ME00000000000000000000100
+/F=F(LEN,F(LTRIM,C43880))=0
+/M=Ingrese Comentario
+*$2022-05-23 18:31:22SCOLLAZO
+TN  NN 1006TConsulta Generica                       C00000 00
+*$2021-10-06 15:24:36SCOLLAZO
+VNSSNS 010002000105391008SSSD000000000000000000000000000000000000000
+/T=Selección de Clientes
+/C=192192192
+*$2021-10-28 14:52:40SCOLLAZO
+KNNNNN 010005001004670984000101
+/T=Seleccione Clientes
+/F=0012700NNN000000000Arial                                   
+*$2021-10-28 14:52:09SCOLLAZO
+ NNNNN 08010   Filtro ayuda                                      INNSNK000007015200300452001011000000007000700300137000
+/V=CODIGOCLIENTE IN (SELECT Cliente FROM VW_CASTIGOCARTERA WHERE Cliente NOT IN (SELECT CLIENTE FROM CRE_DET_CASTIGOCARTERA WHERE TZ_LOCK=0 AND NUMERO_LISTA IN (SELECT NUMERO_LISTA FROM CRE_CAB_CASTIGOCARTERA WHERE ESTADO IN ('I','C') AND TZ_LOCK=0)))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:49:43SCOLLAZO
+ NNNNN 34151                                                     I SSN 010025002304210971021011600000026006000490165000
+/L=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:52:30SCOLLAZO
+ NNNNN 00900   Selecciona Todos?                                 I NSNK010431015205340219001011120000431002304540132000
+/V=N
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:52:35SCOLLAZO
+CNNNNN   00000000000000000000100
+/F=A(C900="S")
+/P=I141
+/M=Todas los Clientes
+*$2021-10-28 14:51:13SCOLLAZO
+CNNNNN ME00000000000000000000100
+/?=!I141
+/F=A(C566="")OA(C566=" ")
+/M=Debe Seleccionar al menos un Cliente
+*$2021-10-28 14:29:12SCOLLAZO
+CNNNNN  m00000000000000000000101
+/?=I141
+/R=TOP/CLIENTES, SP_CASTIGOCARTERA, C43870.1 I
+*$2021-10-28 14:51:17SCOLLAZO
+TN  NN 1008TBusco Clientes                          S34510 00
+/?=!I141
+/F=P553
+*$2021-10-28 14:31:30SCOLLAZO
+ NNNNN 34516   Tipo de Persona                                   INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:31:52SCOLLAZO
+CNNNNN   00000000000000000000100
+/F=C9509=1
+/P=I140
+/M=Encontre Cliente
+*$2021-10-28 14:31:56SCOLLAZO
+TN  NN 1001TAlta Detalle                            A43521 00
+/?=I140
+*$2021-10-28 15:07:42SCOLLAZO
+ NNNNN 43882   Número de Castigo                                 INNSNA020034017200570296021011000000034002700570157000
+/V=C43870.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 15:07:35SCOLLAZO
+ NNNNN 43883   Cliente                                           INNSNA020034017200570296021011000000034002700570157000
+/V=C34513.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 15:07:37SCOLLAZO
+ NNNNN 43884   Estado                                            INNSNK020034017200570296021011000000034002700570157000
+/V=A
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 15:07:39SCOLLAZO
+TN  NN 1006TItero                                   C00000 00
+/?=I140
+*$2021-10-08 11:00:47SCOLLAZO
+CNNNNN  I00000000000000000000100
+/A=I140
+/R=3
+*$2021-10-28 14:33:30SCOLLAZO
+TN  NN 1001TAlta Generica                           A43511 00
+*$2021-10-28 14:35:11SCOLLAZO
+ NNNNN 43870   Número de Lista                                   INNSNA020034017200570296021011000000034002700570157000
+/V=C43870.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:34:14SCOLLAZO
+ NNNNN 43880   Comentario                                        INSSNA020202017202490860000010000000199002702220152000
+/V=C43880.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:34:28SCOLLAZO
+ NNNNN 43871   Estado                                            INNSNK020166047701890582020010000000166033201890457000
+/V=I
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:34:41SCOLLAZO
+ NNNNN 43872   Sucursal Ingreso                                  INNSNA020166047701890582020010000000166033201890457000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:34:45SCOLLAZO
+ NNNNN 43873   Usuario Ingreso                                   INNSNA020166047701890582020010000000166033201890457000
+/V=C9505
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:34:50SCOLLAZO
+ NNNNN 43874   Fecha Ingreso                                     INNSNA020166047701890582020010000000166033201890457000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:34:57SCOLLAZO
+ NNNNN 43875   Hora Ingreso                                      INNSNA020166047701890582020010000000166033201890457000
+/V=C9506
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-10-28 14:35:00SCOLLAZO
+*#I145#Ver todas las Asistencias
+*#I141#Todos los Clientes
+*#I140#Encontre Cliente

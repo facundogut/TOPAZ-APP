@@ -1,0 +1,1050 @@
+VERSION:055_5
+TN  NN 1006TConsulta Generica                       C00000 00
+*$2023-02-07 17:37:49TOP
+*N  NN Recibe parametros del webservice
+*$2025-01-29 14:41:22c00candigi
+CNNNNN   00000000000000000000100
+/A=I99
+*$2025-01-29 16:13:09c00candigi
+ NNNNN 00120   idPersona                                         INNSNI000007015200300302021011000000007000700300137000
+/V=idPersona
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-06 11:54:18TOP
+ NNNNN 04355   jts_oid                                           INNSNI000007015200300202021011000000007000700300137000
+/V=jts_oid
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-06 11:54:27TOP
+ NNSNN 00556   accion                                            INNSNI000217011902450440001011000000015001600380146000
+/V=accion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-06 12:16:11TOP
+*N  NN Parametros válidos?
+*$2025-01-29 14:20:42c00candigi
+CNNNNN  I00000000000000000000100
+/?=C556#'A'YC556#'B'
+/P=I99I44
+/R=14
+*$2025-01-29 14:43:52c00candigi
+CNNNNN  I00000000000000000000100
+/?=C120=0OC4355=0
+/P=I99I45
+/R=14
+*$2023-03-17 16:28:54FMK
+*N  NN Es persona física?
+*$2025-01-29 14:20:57c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=34
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 14:23:43c00candigi
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V="NUMEROPERSONAFJ="+C120.0+" AND TIPOPERSONA='F' AND LEFT(TZ_LOCK, 1) IN (0, 2, 4)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 14:58:45c00candigi
+CNSSNN   00000000000000000000100
+/?=!I99
+/F=F(CANTIDAD,C109,C9208)=0
+/P=I99I40
+/M=existe persona
+*$2025-01-29 15:17:47c00candigi
+*N  NN Existe cuenta?
+*$2025-01-29 14:40:20c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=3316
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-06 17:41:45TOP
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V="JTS_OID_CUENTA="+C4355.0+" AND LEFT(TZ_LOCK, 1) IN (0, 2, 4)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 14:59:32c00candigi
+CNSSNN   00000000000000000000100
+/?=!I99
+/F=F(CANTIDAD,C109,C9208)=0
+/P=I99I42
+/M=No existe cuenta
+*$2025-01-29 15:17:42c00candigi
+*N  NN Existe causa?
+*$2025-01-29 14:40:30c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=3315
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-17 12:53:34FMK
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V="NRO_CAUSA IN(SELECT NRO_CAUSA FROM DJ_CAUSA_CUENTA WHERE JTS_OID_CUENTA="+C4355.0+" AND TZ_LOCK=0) AND TZ_LOCK=0 AND ESTADO='A' "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-25 09:02:05c00candigi
+CNSSNN   00000000000000000000100
+/?=!I99
+/F=F(CANTIDAD,C109,C9208)=0
+/P=I99I43
+/M=Causa inválida
+*$2025-02-25 09:02:20c00candigi
+*N  NN cuenta producto = 10 ? (Depositos Judiciales Litis y Alimentos)
+*$2025-01-29 15:01:35c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=21
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 15:01:48c00candigi
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V="JTS_OID="+C4355.0+" AND PRODUCTO = 10 AND LEFT(TZ_LOCK, 1) IN (0, 2, 4)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 15:02:23c00candigi
+CNSSNN   00000000000000000000100
+/?=!I99
+/F=F(CANTIDAD,C109,C9208)=0
+/P=I99I41
+/M=Producto de saldo incorrecto
+*$2025-01-29 15:17:33c00candigi
+*N  NN Es alta o baja?
+*$2025-01-29 15:06:13c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99YC556.0='A'
+/P=I50
+*$2025-01-29 15:15:59c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99YC556.0='B'
+/P=I51
+*$2025-01-29 15:16:05c00candigi
+TN  NN 1006TConsulta cantidad de beneficiarios      C00000 00
+/?=!I99
+*$2025-01-31 10:09:58c00candigi
+ NNNNN 00025   Fecha Valor                                       INNNNA000000017100240291000011000000000000000240153000
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-01-31 10:09:48c00candigi
+*N  NN Tiene beneficiarios?
+*$2025-01-31 10:10:07c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=3315
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-31 10:10:07c00candigi
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V="ESTADO='A' AND NRO_CAUSA in (SELECT NRO_CAUSA FROM DJ_BENEFICIARIOS b WHERE b.JTS_OID_CUENTA =" +C4355.1+ " AND LEFT(b.TZ_LOCK, 1) IN (0, 2, 4)) AND LEFT(TZ_LOCK, 1) IN (0, 2, 4)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-25 09:07:46c00candigi
+CNSSNN   00000000000000000000100
+/F=F(CANTIDAD,C109,C9208)=0
+/P=I60
+/M=No tiene beneficiarios
+*$2025-01-31 10:10:07c00candigi
+TN  NN 1006TA - Existe beneficiario en causa?       C00000 00
+/?=!I99YI50
+*$2025-02-06 09:23:48c00candigi
+*N  NN Existe Beneficiario en causa?
+*$2025-02-06 09:21:10c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=3315
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-06 09:21:10c00candigi
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V=" ESTADO='A' AND NRO_CAUSA in (SELECT NRO_CAUSA FROM DJ_BENEFICIARIOS b WHERE b.JTS_OID_CUENTA =" +C4355.1+ " AND ID_BENEFICIARIO = "+C120.1+" AND LEFT(b.TZ_LOCK, 1) IN (0, 2, 4)) AND LEFT(TZ_LOCK, 1) IN (0, 2, 4)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-25 09:07:56c00candigi
+CNSSNN   00000000000000000000100
+/F=F(CANTIDAD,C109,C9208)#0
+/P=I99I75
+/M=Existe beneficiario en causa
+*$2025-02-06 09:22:14c00candigi
+TN  NN 1006TA - Administra Juez, Secretario y CuentaC00001 00
+/?=!I99YI50YI60
+*$2025-02-06 08:50:28c00candigi
+*N  NN Si no tengo beneficiarios: Ejecutar SP: Borrar poderes y desbloquear cuenta.
+*$2025-01-30 13:56:33c00candigi
+ NNNNN 00401   jts_oid                                           INNSNA000007015200300302021011000000007000700300137000
+/V=C4355.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:48:44c00candigi
+ NNNNN 03251   idPersona                                         INNSNA000007015200300302021011000000007000700300137000
+/V=C120.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:49:08c00candigi
+ NNNNN 28204   accion                                            INNNNK000007015200300202001011000000007000700300137000
+/V=B
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 13:06:50c00candigi
+ NNNNN 09500   Fecha Sistema                                     INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:45:48c00candigi
+ NNNNN 09502   Sucursal Sist.                                    INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:45:58c00candigi
+ NNNNN 09507   Nro de Asiento                                    INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:46:10c00candigi
+ NNNNN 09503   Codigo de Oper.                                   INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:46:30c00candigi
+ NNNNN 09505   Iniciales Usuar                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:46:43c00candigi
+ NNNNN 09506   Hora del Sistem                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:46:57c00candigi
+ NNNNN 00763   causaTipo                                         INNNNF000007015200300452001011000000007000700300137000
+/V="AL"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 13:03:33c00candigi
+ NNNNN 00616   bloqueoCodigo                                     INNSNK000007015200300202021011000000007000700300137000
+/V=9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 13:17:46c00candigi
+*N  NN -  Ejecutar SP con Acción "A"
+*$2025-01-30 13:56:12c00candigi
+CNNNNN  m00000000000000000000100
+/R=TOP/CLIENTES SP_VJ_ADMINISTRA_JUEZ C401 I, C3251 I, C28204 I, C9500 I, C9502 I, C9507 I, C9503 I, C9505 I, C9506 I, C763 I, C616 I, C37276 O, C3869 O
+*$2025-02-05 13:18:15c00candigi
+*N  NN Resultados SP
+*$2025-01-30 15:50:24c00candigi
+ NNNNN 37276   codigo                                            INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:50:46c00candigi
+ NNNNN 03869   descripcion                                       INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-30 15:51:08c00candigi
+CNNNNN   00000000000000000000100
+/?=C37276=1
+/P=I99I80
+/M=Error en SP
+*$2025-02-03 09:27:43c00candigi
+TN  NN 1006TA - ALTA Beneficiario                   C00001 00
+/?=!I99YI50
+*$2025-02-06 08:50:46c00candigi
+*N  NN Dar de alta al beneficiario, otorgar poderes, grabar bitacora e histórico del módulo.
+*$2025-02-03 14:00:44c00candigi
+ NNNNN 00401   jts_oid                                           INNSNA000007015200300302021011000000007000700300137000
+/V=C4355.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 03251   idPersona                                         INNSNA000007015200300302021011000000007000700300137000
+/V=C120.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 28204   accion                                            INNNNA000007015200300202001011000000007000700300137000
+/V=C556.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 09500   Fecha Sistema                                     INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 09502   Sucursal Sist.                                    INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 09507   Nro de Asiento                                    INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 09503   Codigo de Oper.                                   INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 09505   Iniciales Usuar                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 09506   Hora del Sistem                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 00763   causaTipo                                         INNNNF000007015200300452001011000000007000700300137000
+/V="AL"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-06 08:48:42c00candigi
+*N  NN -  Ejecutar SP con Acción "A"
+*$2025-02-03 09:09:33c00candigi
+CNNNNN  m00000000000000000000100
+/R=TOP/CLIENTES SP_VJ_ADMINISTRA_BENEFICIARIO C401 I, C3251 I, C28204 I, C9500 I, C9502 I, C9507 I, C9503 I, C9505 I, C9506 I, C763 I, C37276 O, C3869 O
+*$2025-02-06 08:49:00c00candigi
+*N  NN Resultados SP
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 37276   codigo                                            INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+ NNNNN 03869   descripcion                                       INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:09:33c00candigi
+CNNNNN   00000000000000000000100
+/?=C37276=1
+/P=I99I90
+/M=Exito en SP
+*$2025-02-03 09:27:50c00candigi
+TN  NN 1006TB - Existe beneficiario en Causa?       C00001 00
+/?=!I99YI51
+*$2025-02-06 08:50:53c00candigi
+*N  NN Existe Beneficiario en causa?
+*$2025-02-03 10:38:48c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=3315
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:38:48c00candigi
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V=" ESTADO='A' AND NRO_CAUSA in (SELECT NRO_CAUSA FROM DJ_BENEFICIARIOS b WHERE b.JTS_OID_CUENTA =" +C4355.1+ " AND ID_BENEFICIARIO = "+C120.1+" AND LEFT(b.TZ_LOCK, 1) IN (0, 2, 4)) AND LEFT(TZ_LOCK, 1) IN (0, 2, 4)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-25 09:18:39c00candigi
+CNSSNN   00000000000000000000100
+/F=F(CANTIDAD,C109,C9208)=0
+/P=I99I70
+/M=No existe beneficiario en causa
+*$2025-02-03 14:11:14c00candigi
+TN  NN 1006TB - BAJA Beneficiario                   C00001 00
+/?=!I99YI51Y!I70
+*$2025-02-06 08:51:03c00candigi
+*N  NN Dar de baja al beneficiario, quitar poderes, grabar bitacora e histórico del módulo.
+*$2025-02-03 14:01:20c00candigi
+ NNNNN 00401   jts_oid                                           INNSNA000007015200300302021011000000007000700300137000
+/V=C4355.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 03251   idPersona                                         INNSNA000007015200300302021011000000007000700300137000
+/V=C120.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 28204   accion                                            INNNNA000007015200300202001011000000007000700300137000
+/V=C556.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 09500   Fecha Sistema                                     INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 09502   Sucursal Sist.                                    INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 09507   Nro de Asiento                                    INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 09503   Codigo de Oper.                                   INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 09505   Iniciales Usuar                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 09506   Hora del Sistem                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 00763   causaTipo                                         INNNNF000007015200300452001011000000007000700300137000
+/V="AL"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-06 08:48:46c00candigi
+*N  NN -  Ejecutar SP con Acción "B"
+*$2025-02-03 14:01:31c00candigi
+CNNNNN  m00000000000000000000100
+/R=TOP/CLIENTES SP_VJ_ADMINISTRA_BENEFICIARIO C401 I, C3251 I, C28204 I, C9500 I, C9502 I, C9507 I, C9503 I, C9505 I, C9506 I, C763 I, C37276 O, C3869 O
+*$2025-02-06 08:49:12c00candigi
+*N  NN Resultados SP
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 37276   codigo                                            INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+ NNNNN 03869   descripcion                                       INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:40:12c00candigi
+CNNNNN   00000000000000000000100
+/?=C37276=1
+/P=I99I91
+/M=Exito en SP
+*$2025-02-03 10:40:12c00candigi
+TN  NN 1006TB - Consulta cantidad de beneficiarios  C00000 00
+/?=!I99YI51Y!I70
+*$2025-02-06 08:51:20c00candigi
+ NNNNN 00025   Fecha Valor                                       INNNNA000000017100240291000011000000000000000240153000
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-03 10:43:47c00candigi
+*N  NN Luego de la baja, Quedan beneficiarios en la Causa?
+*$2025-02-03 14:02:05c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=3315
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:43:47c00candigi
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V=" ESTADO='A' AND NRO_CAUSA in (SELECT NRO_CAUSA FROM DJ_BENEFICIARIOS b WHERE b.JTS_OID_CUENTA =" +C4355.1+ " AND LEFT(b.TZ_LOCK, 1) IN (0, 2, 4)) AND LEFT(TZ_LOCK, 1) IN (0, 2, 4)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-25 09:18:49c00candigi
+CNSSNN   00000000000000000000100
+/F=F(CANTIDAD,C109,C9208)=0
+/P=I61
+/M=No tiene beneficiarios
+*$2025-02-03 10:46:18c00candigi
+TN  NN 1006TB - Administra Juez, Secretario y CuentaC00001 00
+/?=!I99YI51Y!I70YI61
+*$2025-02-06 08:50:35c00candigi
+*N  NN Si no tengo beneficiarios: Ejecutar SP: Asociar Juez-Secretario: Otorgar poderes, grabar bitacor..
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 00401   jts_oid                                           INNSNA000007015200300302021011000000007000700300137000
+/V=C4355.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 03251   idPersona                                         INNSNA000007015200300302021011000000007000700300137000
+/V=C120.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 28204   accion                                            INNNNK000007015200300202001011000000007000700300137000
+/V=A
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 13:06:29c00candigi
+ NNNNN 09500   Fecha Sistema                                     INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 09502   Sucursal Sist.                                    INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 09507   Nro de Asiento                                    INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 09503   Codigo de Oper.                                   INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 09505   Iniciales Usuar                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 09506   Hora del Sistem                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 00763   causaTipo                                         INNNNF000007015200300452001011000000007000700300137000
+/V="AL"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 13:04:10c00candigi
+ NNNNN 00616   bloqueoCodigo                                     INNSNK000007015200300202021011000000007000700300137000
+/V=9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 13:17:49c00candigi
+*N  NN -  Ejecutar SP con Acción "B"
+*$2025-02-04 14:34:56c00candigi
+CNNNNN  m00000000000000000000100
+/P=I71
+/R=TOP/CLIENTES SP_VJ_ADMINISTRA_JUEZ C401 I, C3251 I, C28204 I, C9500 I, C9502 I, C9507 I, C9503 I, C9505 I, C9506 I, C763 I, C616 I, C37276 O, C3869 O
+*$2025-02-05 13:18:22c00candigi
+*N  NN Resultados SP
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 37276   codigo                                            INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+ NNNNN 03869   descripcion                                       INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:34:56c00candigi
+CNNNNN   00000000000000000000100
+/?=C37276=1
+/P=I99I81
+/M=Error en SP
+*$2025-02-04 14:34:56c00candigi
+TN  NN 1006TTJD - Persona tiene tarjeta de débito?  C00000 00
+/?=!I99
+*$2025-02-06 08:51:32c00candigi
+*N  NN Tiene beneficiarios?
+*$2025-02-05 09:47:00c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=223
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V="ESTADO in ('0', '1') AND NRO_PERSONA = + "+C120.1+" AND TIPO_TARJETA IN (SELECT tt.TIPO_TARJETA FROM TJD_TIPO_TARJETA tt where tt.CLASE=1)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+CNSSNN   00000000000000000000100
+/F=F(CANTIDAD,C109,C9208)=0
+/P=I110
+/M=No tiene tarjeta debito
+*$2025-02-05 09:47:00c00candigi
+TN  NN 1006TTJD - Selección ID de tarjeta base      C00000 00
+/?=!I99YI50YI110
+*$2025-02-06 08:51:38c00candigi
+ NNNNN 34290   Numerador Maest                                   INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 34291   Numerador Maste                                   INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ N  NN 01239   Largo máximo de                                   INNSNK000007015200300202021011000000007000700300137000
+/V=6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00565   Valor máximo de                                   INNSNK000007015200300302021011000000007000700300137000
+/?=C35330.0=1
+/V=999999999
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00565   Valor máximo de                                   INNSNK000007015200300202021011000000007000700300137000
+/?=C35330.0#1
+/V=9999999
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00910   Mensaje                                           INNNNK000007015200300452001011000000007000700300137000
+/?=C35330.0=1
+/V=No hay números disponibles para generar el nro. de tarjeta Maestro
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00910   Mensaje                                           INNNNK000007015200300452001011000000007000700300137000
+/?=C35330.0#1
+/V=No hay números disponibles para generar el nro. de tarjeta Master Debit
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+CNNNNN   00000000000000000000110
+/?=C35330.0=1
+/F=(C34290>C565)
+/P=I99I263
+/M=C910.0
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 09208   Descripción Err                                   INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI263
+/V=Error - No hay números disponibles para generar el nro. de tarjeta Maestro
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+CNNNNN   00000000000000000000110
+/?=C35330.0#1
+/F=(C34291>C565)
+/P=I99I264
+/M=C910.0
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 09208   Descripcion Err                                   INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI264
+/V=Error - No hay números disponibles para generar el nro. de tarjeta Master Debit
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 10:04:35c00candigi
+*N  NN * * * * * *
+*$2025-02-05 09:54:00c00candigi
+*N  NN Obtener el máximo tipo de tarjeta para producto 10
+*$2025-02-05 09:54:38c00candigi
+ NNNNN 00109   Descriptor                                        INNNNK000007015200300202001011000000007000700300137000
+/?=!I99
+/V=3492
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 10:02:47c00candigi
+ NNNNN 00549   Campo                                             INNSNK000007015200300302021011000000007000700300137000
+/?=!I99
+/V=34027
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 10:02:47c00candigi
+ NNNNN 00910   WHERE                                             INNNNF000007015200300452001011000000007000700300137000
+/?=!I99
+/V="TZ_LOCK = 0 AND PRODUCTO = (SELECT s.PRODUCTO FROM SALDOS s WHERE s.TZ_LOCK = 0 AND s.JTS_OID = "+C4355.1+" )"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 10:05:51c00candigi
+ NNNNN 03860   Tipo de Tarjeta                                   INNNNF000007015200300202001011000000007000700300137000
+/?=!I99
+/V=F(MAXIMO, C109.0, C549.0, C910.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 10:01:17c00candigi
+ NNNNN 05358   BIN                                               INNSN 000007015200300302001011000000007000700300137000
+/?=!I99
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 04356   Bin                                               INNNNA000007015200300302021011000000007000700300137000
+/?=!I99
+/V=C5358
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 04162   Largo numerador                                   INNNNF000007015200300302021011000000007000700300137000
+/?=!I99YC35330.0=1
+/V=F(LEN, C34290.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 04162   Largo numerador                                   INNNNF000007015200300302021011000000007000700300137000
+/?=!I99YC35330.0#1
+/V=F(LEN, C34291.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 04163   cant a cortar                                     INNNNF000007015200300302021011000000007000700300137000
+/?=!I99YC35330.0=1
+/V=15-C4162.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 04163   cant a cortar                                     INNNNF000007015200300302021011000000007000700300137000
+/?=!I99YC35330.0#1
+/V=13-C4162.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00363   Alfa de 35                                        INNNNF000007015200300452001011000000007000700300137000
+/?=!I99YC35330.0=1
+/V=F(PAD, C4356.0, -15)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00363   Alfa de 35                                        INNNNF000007015200300452001011000000007000700300137000
+/?=!I99YC35330.0#1
+/V=F(PAD, C4356.0, -13)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00364   Alfa de 35                                        INNNNF000007015200300452001011000000007000700300137000
+/?=!I99
+/V=F(LEFT, C363.0, C4163.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00373   Alfa de 35                                        INNNNF000007015200300452001011000000007000700300137000
+/?=!I99YC35330.0=1
+/V=C364.0+C34290.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00373   Alfa de 35                                        INNNNF000007015200300452001011000000007000700300137000
+/?=!I99YC35330.0#1
+/V=C364.0+C34291.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 34636   ID Tarjeta base                                   INNSNF000007015200300452021011000000007000700300137000
+/?=!I99
+/V=C373.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 43759   Descriptor TJD_                                   INNSNK000007015200300202021011000000007000700300137000
+/?=!I99
+/V=4569
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/?=!I99
+/V="NumRaiz = '"+C34636.0+"'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 43761   Existe número d                                   INNSNF000007015200300202021011000000007000700300137000
+/?=!I99
+/V=F(CANTIDAD,C43759,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+CNNNNN   00000000000000000000110
+/?=!I99
+/F=C43761.0>0
+/P=I265
+/M=Existe número de tarjeta base en TJD_ITF_TARJETA_RAIZ
+*$2025-02-05 09:47:00c00candigi
+TN  NN 1006TTJD - Iteración numerador tarjeta base  C00000 00
+/?=!I99YI50YI110Y!I265
+*$2025-02-06 09:27:29c00candigi
+CNNNNN  I00000000000000000000100
+/R=7
+*$2025-02-06 09:00:06c00candigi
+TN  NN 1006TTJD -  Administra Tarjetas Debito       C00000 00
+/?=!I99
+*$2025-02-06 08:52:47c00candigi
+*N  NN Asociar una tarjeta de debito al saldo
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 00401   jts_oid                                           INNSNA000007015200300302021011000000007000700300137000
+/V=C4355.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 03251   idPersona                                         INNSNA000007015200300302021011000000007000700300137000
+/V=C120.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 28204   accion                                            INNNNA000007015200300202001011000000007000700300137000
+/V=C556.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 09500   Fecha Sistema                                     INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 09502   Sucursal Sist.                                    INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 09507   Nro de Asiento                                    INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 09503   Codigo de Oper.                                   INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 09505   Iniciales Usuar                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 09506   Hora del Sistem                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 34636   ID Tarjeta base                                   INNSNF000007015200300452021011000000007000700300137000
+/V=C34636.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 10:11:43c00candigi
+*N  NN * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+*$2025-02-05 09:47:00c00candigi
+*N  NN -  Ejecutar SP ALTA de Tarjeta Nueva
+*$2025-02-06 08:52:58c00candigi
+CNNNNN  m00000000000000000000100
+/?=I110YI50
+/R=TOP/CLIENTES SP_PROCESO_TJD_SOLICITUD_LINK_ALTA C401 I, C3251 I, C28204 I, C9500 I, C9502 I, C9507 I, C9503 I, C9505 I, C9506 I, C34636 I, C37276 O, C3869 O
+*$2025-02-05 09:50:02c00candigi
+*N  NN Resultados SP
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 37276   codigo                                            INNSN 000007015200300202021011000000007000700300137000
+/?=I110YI50
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 14:45:21c00candigi
+ NNNNN 03869   descripcion                                       INNSN 000007015200300452001011000000007000700300137000
+/?=I110YI50
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 14:45:26c00candigi
+*N  NN * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+*$2025-02-05 09:47:00c00candigi
+*N  NN -  Ejecutar SP Administra TJD Existente
+*$2025-02-06 08:53:09c00candigi
+CNNNNN  m00000000000000000000100
+/?=!I110
+/R=TOP/CLIENTES SP_PROCESO_TJD_SOLICITUD_LINK_VINCULACION C401 I, C3251 I, C28204 I, C9500 I, C9502 I, C9507 I, C9503 I, C9505 I, C9506 I, C37276 O, C3869 O
+*$2025-02-05 14:45:38c00candigi
+*N  NN Resultados SP
+*$2025-02-05 09:47:00c00candigi
+ NNNNN 37276   codigo                                            INNSN 000007015200300202021011000000007000700300137000
+/?=!I110
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 14:45:38c00candigi
+ NNNNN 03869   descripcion                                       INNSN 000007015200300452001011000000007000700300137000
+/?=!I110
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 14:45:38c00candigi
+*N  NN * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * 
+*$2025-02-05 09:47:00c00candigi
+*N  NN Control de resultados de SP
+*$2025-02-05 09:47:00c00candigi
+*N  NN - El procesos debe finalizar sin tener en cuenta los resultados de tarjetas de débito
+*$2025-02-05 09:47:00c00candigi
+CNNNNN   00000000000000000000100
+/?=C37276=1Y1=0
+/P=I99I100
+/M=Exito en SP
+*$2025-02-06 10:22:51c00candigi
+TN  NN 1006TRetorno                                 C00001 00
+*$2025-01-29 13:13:54c00candigi
+ NNNNN 00622   RETORNO                                           INNNNK000007015200300302001011000000007000700300137000
+/V=OK
+/P=RETORNO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 12:12:29TOP
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/V=200
+/P=ERR_HTTP_CODE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-17 16:02:14FMK
+*N  NN Codigos de resultado
+*$2025-02-03 09:24:38c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99
+/V=1
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:24:38c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=!I99
+/V=0
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 09:24:38c00candigi
+*N  NN Respuestas ok:
+*$2025-01-29 16:19:26c00candigi
+ NNNNN 03869   respuesta.descripcion                             INNSNF000007015200300452001011000000007000700300137000
+/?=!I99YI50
+/V="Alta realizada"
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-06 10:22:38c00candigi
+ NNNNN 03869   respuesta.descripcion                             INNSNF000007015200300452001011000000007000700300137000
+/?=!I99YI51
+/V="Baja realizada"
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-06 10:22:44c00candigi
+*N  NN Respuestas error:
+*$2025-01-29 16:19:29c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99YI40
+/V=21
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-07 15:00:26c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99YI40
+/V=No existe persona humana
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 15:04:56c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99YI43
+/V=2
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-07 15:01:59c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99YI43
+/V=Tipo o estado de causa inválido
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 16:38:13c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99YI41
+/V=22
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-07 15:02:17c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99YI41
+/V=Producto de Cuenta inválido
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 15:05:06c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99YI42
+/V=23
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-07 15:02:33c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99YI42
+/V=No existe la cuenta para una causa judicial
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 15:05:12c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99YI44
+/V=1
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-07 15:02:45c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99YI44
+/V=Acción incorrecta
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 15:05:16c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99YI45
+/V=1
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-07 15:02:56c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99YI45
+/V=Valores de entrada incorrecto
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-29 15:05:22c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99YI70
+/V=24
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-07 15:03:13c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99YI70
+/V=Beneficiario no relacionado a la causa
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 10:33:38c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99YI75
+/V=25
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-07 15:03:25c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99YI75
+/V=Beneficiario ya existe en causa
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-06 09:22:51c00candigi
+*N  NN ERROR SP: Descripcion
+*$2025-02-03 09:25:18c00candigi
+ NNNNN 03869   respuesta.descripcion                             INNSNA000007015200300452001011000000007000700300137000
+/?=I99YI80
+/V=C3869.4
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:26:20c00candigi
+ NNNNN 03869   respuesta.descripcion                             INNSNA000007015200300452001011000000007000700300137000
+/?=I99YI90
+/V=C3869.5
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:26:26c00candigi
+ NNNNN 03869   respuesta.descripcion                             INNSNA000007015200300452001011000000007000700300137000
+/?=I99YI91
+/V=C3869.7
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:26:32c00candigi
+ NNNNN 03869   respuesta.descripcion                             INNSNA000007015200300452001011000000007000700300137000
+/?=I99YI81
+/V=C3869.9
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-04 14:26:38c00candigi
+ NNNNN 03869   respuesta.descripcion                             INNSNA000007015200300452001011000000007000700300137000
+/?=I99YI100
+/V=C3869.13
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 09:47:33c00candigi
+*#I263#Tarjetas - No hay números disponibles de tarjeta Maestro
+*#I453#Encuentra Menor autorizado
+*#I326#Condicion es S
+*#I325#Envío cierre de trámite Topaz es utilizado
+*#I452#Encuentra Menor emancipado
+*#I51#accionBAJA
+*#I324#Convenio privado, no aplica Dominio/Subdominio
+*#I42#Existe cuenta
+*#I50#accionALTA
+*#I71#sinBeneficiarios
+*#I43#Tipo AL
+*#I290#Caracteres validos en telefono
+*#I70#beneficiarioInvalido
+*#I40#existe persona
+*#I99#Error
+*#I264#Tarjetas - No hay nros. disponibles de tarjeta Master Debit
+*#I80#resultadoSP
+*#I41#saldoIncorrecto
+*#I265#Tarjetas - Existe tarjeta base en TJD_ITF_TARJETA_RAIZ
+*#I81#errorBajaSP_Juez
+*#I620#No tiene producto
+*#I44#Accion Incorrecta
+*#I314#Error - Cliente con intermediacion financiera no valida
+*#I45#Entradas en cero
+*#I269#Poder con Formula
+*#I315#Tiene actividad economica
+*#I950#Sin calle Especificada
+*#I312#Error - Período seleccionado mayor al estipulado en el producto
+*#I951#Sin Número Especificado
+*#I323#Existe registro de Email Notificación
+*#I313#Error - Período seleccionado mayor al estipulado en el producto
+*#I322#Usuario es de tipo Cajero
+*#I310#Error - Periodicidad de estado de cuenta no válida
+*#I91#errorBajaSP_benef
+*#I100#resultadoAsociacionTD
+*#I321#Cuenta es de Tipo Cuenta Sueldo
+*#I311#Error - Período seleccionado mayor al estipulado en producto
+*#I90#resultadoSP_BENEF
+*#I60#sinBeneficiario
+*#I110#sinTarjeta
+*#I361#Apoderamiento 14
+*#I451#Encuentra Menor Adolscente
+*#I61#sinBeneficiariosLuegoDeBaja
+*#I75#existeBeneficiarioEnCausa
+*#I360#Apoderamiento 6
+*#I327#Condicion es N

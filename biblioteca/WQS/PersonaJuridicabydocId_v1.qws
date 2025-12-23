@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/personaJuridicabydocId/{docId}</uri>
+    <serviceDescription>Devuelve el id persona en base a su número de documento</serviceDescription>
+    <querys>
+        <query id="1" name="Query1" type="MULTIPLE">
+            <sql>SELECT pj.NUMEROPERSONAJURIDICA
+
+FROM CLI_PERSONASJURIDICAS pj
+
+JOIN CLI_DocumentosPFPJ dpj ON pj.NUMEROPERSONAJURIDICA=dpj.NUMEROPERSONAFJ AND ((dpj.TZ_LOCK &lt; 300000000000000 OR dpj.TZ_LOCK &gt;= 400000000000000) AND (dpj.TZ_LOCK = 0 OR dpj.TZ_LOCK &gt;= 200000000000000))
+ 
+WHERE dpj.NUMERODOCUMENTO=?
+
+AND ((pj.TZ_LOCK &lt; 300000000000000 OR pj.TZ_LOCK &gt;= 400000000000000) AND (pj.TZ_LOCK = 0 OR pj.TZ_LOCK &gt;= 200000000000000)) </sql>
+            <input>
+                <inParameter description="Documento de la persona jurídica" type="STRING">docId</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Resultado1">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NUMEROPERSONAJURIDICA</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

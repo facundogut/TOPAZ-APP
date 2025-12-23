@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/depjudicial/getJuzgado/{NroJuzgado}/{FiltroAT}/{pagina}/{largopagina}</uri>
+    <serviceDescription>Consulta Juzgado por Nro Juzgado y Estado</serviceDescription>
+    <title>ConsultaGetJuzgado</title>
+    <querys>
+        <query id="1" name="paginado" type="MULTIPLE">
+            <sql>DECLARE 
+  		
+  @NroJuzgado NUMERIC(12,0),
+  @FiltroAT    VARCHAR(2),
+	
+  @pagina  AS INT ,
+  @largopagina AS INT ,
+ 
+  
+  @TotalRegistros INT = 0,
+  @resto INT = 0,
+  @primerRegistroPag INT = 0,
+  @ultimoRegistroPag INT =0;
+
+
+  SET @NroJuzgado = ? 
+  SET @FiltroAT = ?
+  SET @pagina = ?
+  SET @largopagina = ?
+
+SET @TotalRegistros = (
+  
+						SELECT COUNT( DISTINCT JG.NRO_JUZGADO)
+						FROM DJ_JUZGADOS JG, DJ_INTEGRANTES_JUZGADOS IJ WHERE JG.NRO_JUZGADO = IJ.NRO_JUZGADO 
+						AND (0=@NroJuzgado OR JG.NRO_JUZGADO=@NroJuzgado) 
+						AND ((CASE WHEN (JG.TZ_LOCK=0) THEN 'A' ELSE 'I' END )= @FiltroAT OR 'T'= @FiltroAT)
+						AND ((CASE WHEN (IJ.TZ_LOCK=0) THEN 'A' ELSE 'I' END )=@FiltroAT OR 'T'=@FiltroAT)
+						AND (SUBSTRING(CAST(JG.TZ_LOCK AS VARCHAR), 1, 1)) NOT IN (1)
+						AND (SUBSTRING(CAST(IJ.TZ_LOCK AS VARCHAR), 1, 1)) NOT IN (1)
+ )
+
+  SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina)
+  SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1
+  SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina)
+  
+  IF (@resto &lt; 0)
+  	BEGIN
+  		SET @resto = 0
+  	END 
+  IF (@ultimoRegistroPag &gt; @TotalRegistros )
+  	BEGIN
+  	    SET @ultimoRegistroPag=@TotalRegistros
+  	END 
+  
+
+IF(@pagina&gt;(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)))
+BEGIN
+SELECT 
+	NULL AS NroJuzgado,
+	NULL AS NroEcom,
+	NULL AS IdPersona,
+	NULL AS Nombre,
+	NULL AS Circunscripcion,
+	NULL AS Fuero,
+	NULL AS Estado,
+	NULL AS Integrantes,
+	--NULL AS admDescripcion,
+	--NULL AS tarjNumero,
+	@pagina 																	AS paginaActual, 
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,
+	@largopagina 																AS registroPorPag,
+	@TotalRegistros 														  	AS totalRegistros,
+	@primerRegistroPag 													  		AS primerRegistroPag,
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,
+	@resto 																	  	AS siguientesRegistros 
+END
+ELSE
+BEGIN
+SELECT 	ROW_NUMBER() OVER(ORDER BY NroJuzgado) AS ORDEN, 
+		NroJuzgado,
+		NroEcom,
+		IdPersona,
+		Nombre,
+		Circunscripcion,
+		Fuero,
+		Estado,
+		Integrantes,		
+		--admDescripcion,
+		--tarjNumero,
+		paginaActual,
+		cantidadPaginas,
+		registroPorPag,
+		totalRegistros,
+		primerRegistroPag,
+		ultimoRegistroPag,
+		siguientesRegistros
+		
+
+FROM
+(
+SELECT
+NroJuzgado,
+NroEcom,
+IdPersona,
+Nombre,
+Circunscripcion,
+Fuero,
+(CASE WHEN (JG.TZ_LOCK=0) THEN 'A' ELSE 'I' END )AS Estado,
+IJ.ID_PERSONA AS Integrantes,
+@pagina 																	AS paginaActual, 
+(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,
+@largopagina 																AS registroPorPag,
+@TotalRegistros 														  	AS totalRegistros,
+@primerRegistroPag 													  		AS primerRegistroPag,
+@ultimoRegistroPag 													  		AS ultimoRegistroPag,
+@resto 																	  	AS siguientesRegistros 	
+
+FROM
+(
+SELECT 	ROW_NUMBER() OVER(ORDER BY NroJuzgado) AS ORDEN, 
+NroJuzgado, NroEcom, IdPersona, Nombre, Circunscripcion, Fuero, tz_lock
+FROM
+(
+SELECT 
+JG.NRO_JUZGADO AS NroJuzgado,
+JG.NRO_ECOM AS NroEcom,
+JG.ID_PERSONA AS IdPersona,
+JG.NOMBRE AS Nombre,
+JG.CIRCUNSCRIPCION AS Circunscripcion,
+JG.FUERO AS Fuero,
+JG.TZ_LOCK
+FROM DJ_JUZGADOS JG
+WHERE (0= @NroJuzgado OR JG.NRO_JUZGADO = @NroJuzgado) 
+AND ((CASE WHEN (JG.TZ_LOCK=0) THEN 'A' ELSE 'I' END )= @FiltroAT OR 'T'= @FiltroAT)
+AND (SUBSTRING(CAST(JG.TZ_LOCK AS VARCHAR), 1, 1)) NOT IN (1)
+) DATOS 
+ORDER BY ORDEN
+OFFSET ((@pagina - 1) * @largopagina) ROWS 
+FETCH NEXT @largopagina ROWS ONLY
+) JG, 
+DJ_INTEGRANTES_JUZGADOS IJ WHERE JG.NROJUZGADO = IJ.NRO_JUZGADO
+AND ((CASE WHEN (IJ.TZ_LOCK=0) THEN 'A' ELSE 'I' END )=@FiltroAT OR 'T'=@FiltroAT)
+AND (SUBSTRING(CAST(IJ.TZ_LOCK AS VARCHAR), 1, 1)) NOT IN (1)
+) DATOS 
+
+ORDER BY ORDEN
+;
+
+END</sql>
+            <input>
+                <inParameter description="" type="LONG">NroJuzgado</inParameter>
+                <inParameter description="" type="STRING">FiltroAT</inParameter>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="NroJuzgado" name="dato.Juzgados">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NroJuzgado</queryname>
+                        <servicename>NroJuzgado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NroEcom</queryname>
+                        <servicename>NroEcom</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>IdPersona</queryname>
+                        <servicename>IdPersona</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Nombre</queryname>
+                        <servicename>Nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Circunscripcion</queryname>
+                        <servicename>Circunscripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Fuero</queryname>
+                        <servicename>Fuero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Estado</queryname>
+                        <servicename>Estado</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="integrantes">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>integrantes</queryname>
+                        <servicename>IdPersona</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

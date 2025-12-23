@@ -1,0 +1,528 @@
+VERSION:054_5
+TN  NN 1006TValidación CLE_CHEQUES_SALIENTE         C00001 00
+*N  NN *** Acción de A - Alta ò B - Baja ***
+ NSSNS 05680   Opciones       INNSNL00000701860031038100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN *** No. Depósito / Cliente / Moneda / No. Cheque / Serie /Banco.-
+ NSSNS 00198   No. Depósito   INNSNL00000701860031038100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00617   Cliente        INNSNL00000701860031038100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00611   Moneda         INNSNL00000701860031038100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04161   No. Cheque     INNSNL00000701860031038100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00387   Serie          INNSNL00000701860031038100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00848   Banco          INNSNL00000701860031038100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00485   Fecha Vto. Chq.INNSNL00000701860031038100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00682   Importe        INNSNL00000701860031038100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN *** Banda por A
+ NSSNS 00410   Banda          INNSNL00000701860031038100001100000000700070031016000
+/?=A(C5680="A")
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN *** Alta => I57 / Baja => I58
+CNNNNN   00000000000000000000100
+/F=A(C5680="A")
+/P=I57
+CNNNNN   00000000000000000000100
+/F=A(C5680="B")
+/P=I58
+TN  NN 1006TValidación CLE_CHEQUES_SALIENTE         C00001 00
+/?=(I57)
+ NSSNS 07003   NRo de cheque  INNSNA00000701860031038100001100000000700070031016000
+/V=C4161.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 07002   Numero de serieINNSNA00000701860031038100001100000000700070031016000
+/V=C387.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNN 07004   Banco          INNSNA00000701500027021000001100000000700070027012600
+/V=C848.1
+ NSSNS 07001   Moneda         INNSN 00000701860031025100001100000000700070031016000
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=(C9509=1)
+/M=El Cheque ya existe...
+TN  NN 1006TConsulta Banco y Suc. Cheque            C00001 00
+/?=(I57)
+ NNNNN 00410   Ingrese Cheque INSSNA00002401630047043400001100000002400380047014800
+/V=C410.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=(C410<' ')
+/A=I20
+ NSSNN 00661   Tip Doc y Mon  INNSNF00005301630076022312101000000005300380076013800
+/?=(I20)
+/V=F(MID,C410,2,2)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 00661   Tip Doc y Mon  INNSN 00005301630076022312001000000005300380076013800
+/?=!(I20)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=(C661=90)O(C661=22)
+/M=Cheque común. No aplica en esta operativa.
+CNNNNN ME00000000000000000000100
+/F=(C661=94)O(C661=95)
+/M=Letra común. No aplica en esta operativa.
+CNNNNN ME00000000000000000000100
+/F=(C661=0)
+/M=Ingrese el tipo de documento
+ NSSNN 04905   Codigo de BancoINNSNF00008201630105023710101000000008200380105014800
+/?=(I20)
+/V=F(MID,C410,14,2)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04905   Codigo de BancoINNSN 00008201630105021810001000000008200380105014800
+/?=!(I20)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=(I20)
+/F=(C661=90OC661=91OC661=94)Y(C6403.2='D')
+/M=Error- Cheque ingresado en moneda no válida
+CNNNNN ME00000000000000000000100
+/?=(I20)
+/F=(C661=22OC661=92OC661=95)Y(C6403.2='N')
+/M=Error- Cheque ingresado en moneda no válida
+ NNNNN 04906   Sucursal       INNSNF00011101630134023710101000000011100380134014800
+/?=(I20)
+/V=F(MID,C410,16,3)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04907   Nombre del Bco.INNSN 00008202520105043610101000000005600190079012900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04906   Sucursal       INNSN 00011101630134023710101000000011100380134014800
+/?=!(I20)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04908   Nombre SucursalINNSN 00011102520134043610101000000005600190079012900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 04907   Nombre del Bco.INNSN 00002100560041036710101100000000700070027012600
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+ NSSNS 04908   Nombre SucursalINNSN 00003900560059036710101100000000700070027012600
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04161   Número Cheque  INNSN 00014001630163028110001000000014000380163014800
+/?=!(I20)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04161   Numero Cheque  INNSNF00014001630163028812101000000014000380163014800
+/?=(I20)
+/V=F(MID,C410,6,6)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNSSNS ME00000000000000000000100
+/?=!(I20)
+/F=(C4161=0)
+/M=Número de cheque no puede ser 0
+ NSSNS 00049   Cuenta:        INNSN 00016901630192028812001000000016900380192014800
+/?=!(I20)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00049   Cuenta:        INNSNF00016901630192028810101000000016900380192014800
+/?=(I20)
+/V=F(MID,C410,24,10)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNSSNS ME00000000000000000000100
+/?=!(I20)
+/F=(C49=0)
+/M=La Cuenta No Puede Ser 0
+ NSSNS 00387   Serie Cheque   INNSN 00019801630221028810001000000019800380221014800
+/?=!(I20)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00387   Serie Cheque   INNSNF00019801630221028810101000000019800380221014800
+/?=(I20)
+/V=F(MID,C410,4,2)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN *** PT (13/04/10) - Por req. de LM, se modifica la Suc. p/determinar la Cámara de la Suc. del Sistema por la 1.-
+ NNNNN 06021   Sucursal       INNSNK00027901450299018300001000000027900410302007700
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06020   Nombre         INNSN 00027901450299018300001000000027900410302007700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06035   Zona Clearing  INNSN 00027901450299018300001000000027900410302007700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02040   Zona Clearing  INNSNA00027901450299018300001000000027900410302007700
+/V=C6035
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02041   Nro. de Banco  INNSNA00027901450299018300001000000027900410302007700
+/V=C4905.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02042   Sucursal       INNSNA00027901450299018300001000000027900410302007700
+/V=C4906.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02043   Nro. Cámara    INNSN 00027901450299018300001000000027900410302007700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02044   Plazo Compens. INNSN 00027901450299018300001000000027900410302007700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02049   Pzo.Presentac  INNSN 00027901450299018300001000000027900410302007700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 00040   Cod Compensac. INNSNF00022701630250028800101000000022700380250014800
+/V=C2044
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00616   Codigo Verif 1 INNSN 00025701630280028802001000000025800380281014800
+/?=!(I20)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00616   Codigo Verif 1 INNSNF00025701630280028802101000000025800380281014800
+/?=(I20)
+/V=F(MID,C410,13,1)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00537   Codigo Verif 2 INNSN 00028501630308028802001000000028500380308014800
+/?=!(I20)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00537   Codigo Verif 2 INNSNF00028501630308028802101000000028500380308014800
+/?=(I20)
+/V=F(MID,C410,21,1)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00089   Codigo Verif 3 INNSN 00031401630337028802001000000031400380337014800
+/?=!(I20)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00089   Codigo Verif 3 INNSNF00031401630337028802101000000031400380337014800
+/?=(I20)
+/V=F(MID,C410,22,1)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00068   Importe        INNSNA00034301630366028802001000000034300380366014800
+/V=C0682.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=(C68=0)
+/M=El Importe No Puede Ser 0
+CNNNNN ME00000000000000000000100
+/F=(C68<0)
+/M=El Importe No Puede Ser Menor a 0
+CNNNNN ME00000000000000000000100
+/F=(C068<C5264.4)
+/M=El importe es menor al mínimo exigido para esta operativa.
+ NSSNS 00025   Fecha Vto Cheq INNSNA00037201630395026910001000000037200380395014800
+/V=C485.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=(C9500>C25)
+/M=Fecha del Cheque Menor Que Fecha del Sistema
+ NNNNN 00663   Código Cámara  INNSN 00002406270047068202001000000002404710047058100
+/?=(C2043=0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00663   Código Cámara  INNSNA00002406270047070102101000000002404710047058100
+/?=(C2043>0)
+/V=C2043
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 08202   Nom. de Camara INNSN 00002407120047089610101000000005600190079012900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Código Banco = Propio.-
+*$2015-07-02 15:29:31SCOLLAZO
+ NNNNN 03236   Funcionalidad  INNNNK00000701520030045200101100000000700070030013700
+/V=GENERAL
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-06-30 17:26:21SCOLLAZO
+ NNNNN 03237   Parametro      INNNNK00000701520030045200101100000000700070030013700
+/V=CODIGO PROPIO BANCO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-06-30 17:26:29SCOLLAZO
+ NNNNN 03238   Valor          INNNN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-06-30 17:26:04SCOLLAZO
+ NNNNN 00650   Alfa de 35     INNNNA00000701520030045200101100000000700070030013700
+/V=C4905
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-07-02 15:28:00SCOLLAZO
+ NNNNN 00002   Cliente        INNSNF00000701520027030200001100010000700070027013700
+/?=(C3238=C650)
+/V=C49/100
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2015-07-02 15:29:50SCOLLAZO
+ NNNNN 01002   Nomb.Reducido  INNSN 00000701520027045202001100010000700070027013700
+/?=(C3238=C650)
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2015-07-02 15:29:53SCOLLAZO
+*N  NN ######################################################################
+*N  NN *** Lectura Tabla de Libradores.-
+ NSSNN 04240   Código Banco   INNSNA00036802520391043610101000000005600190079012900
+/V=C4905.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04241   Sucursal Banco INNSNA00036802520391043610101000000005600190079012900
+/V=C4906.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04242   Cuenta         INNSNA00036802520391043610101000000005600190079012900
+/V=C0049.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04243   Librador       INNSN 00036802520391043610101000000005600190079012900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Si no existe el Reg. de la Tabla de Libradores => I21
+CNNNNN   00000000000000000000100
+/F=(C9509=0)
+/P=I21
+*N  NN ######################################################################
+ NSSNN 03919   Librador       INNSNA00005306270076094410101000000005304710076057100
+/?=(C3238=C650)
+/V=C1000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-07-02 15:29:56SCOLLAZO
+ NSSNN 03919   Librador       INNSNA00005306270076094210101000000005304710076057100
+/?=(C3238#C650Y!I21YA(F(LTRIM,C4243)#""))
+/V=C4243.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-07-02 15:30:10SCOLLAZO
+ NSSNN 03919   Librador       INSSNl00005306270076094310001000000005304710076057100
+/?=(C3238#C650YI21O(!I21YA(F(LTRIM,C4243)="")))
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-07-02 15:30:15SCOLLAZO
+TN  NN 1003TAlta Automatica Generica                T01781 00
+/?=(I57)
+ NNNNN 07119   Nro de cheque  INNSNA00002101440044027202101100000002100290044012900
+/V=C4161.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07118   Numero de serieINNSNA00004901440072027200101100000004900290072012900
+/V=C387.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07120   Banco          INNSNA00010501440128027200101100000010500290128012900
+/V=C848.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07117   Moneda         INNSNA00007701440100027202101100000007700290100012900
+/V=C611.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00003   Moneda         INNSNA00008101250104023400001100000008200300105011000
+/V=C7117.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07116   Tipo Doc       INNSNA00010501440128025300001100000010500290128012900
+/V=C661.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07121   Sucural banco  INNSNA00013301440156027200101100000013300290156012900
+/V=C4906.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07123   Codigo camara  INNSNA00018901440212027202001100000018900290212012900
+/V=C663.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07124   Codigo Verif 1 INNSNA00021701440240027202001100000021700290240012900
+/V=C616.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07125   Cod de Verif 2 INNSNA00024501440268027200001100000024500290268012900
+/V=C537.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07126   Cod de verif 3 INNSNA00027301440296027202001100000027300290296012900
+/V=C0089.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07127   Num Cuenta Gir.INNSNA00030101440324027202101100000030100290324012900
+/V=C0049.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07128   Fecha Alta     INNSNA00032901440352025300001100000032900290352012900
+/V=C0025.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07129   Nro Deposito   INNSNA00002105840044071202101100000002104690044056900
+/V=C198.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07130   Importe        INNSNA00004905840072071202101100000004904690072056900
+/V=C0068.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07131   Cod Compensac. INNSNA00007705840100071200101100000007704690100056900
+/V=C0040.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN **************************************************
+*N  NN *** Calcula la Fecha de Acreditación usando la 
+*N  NN *** Función NextWorkingDay con los parámetros:
+*N  NN *** C7128(Fecha del Cheque).-
+*N  NN *** C7131(Plazo Compensación).-
+*N  NN *** Constante 858 (País - Uruguay).-
+*N  NN *** C9502 (Sucursal del Sistema).-
+*N  NN **************************************************
+ NNNNN 06447   Plazo PresentacINNSNA00001801310038023300101000000001800160038012100
+/V=C2049.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00066   Nro. Dias      INNSNA00001801310038023300101000000001800160038012100
+/V=C0040.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06446   Fecha Envío CamINNSNF00001801310038023300101000000001800160038012100
+/V=C7128
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07132   Fecha Acred.   INNSNF00001801310038023300101000000001800160038012100
+/V=F(nextworkingday,C7128,C66,858,C9502)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ***
+ NNNNN 07133   Código Cliente INNSNA00013305840156071202101100000013304690156056900
+/V=C617.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ***
+ NNNNN 07134   Estado         INNSNK00016105840184071202101100000016104690184056900
+/V=9
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1003TAlta Automatica Generica                T01741 00
+/?=(I57)Y(I21)
+ NSSNN 04240   Código Banco   INNSNA00036802520391043610101000000005600190079012900
+/V=C4905.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04241   Sucursal Banco INNSNA00036802520391043610101000000005600190079012900
+/V=C4906.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04242   Cuenta         INNSNA00036802520391043610101000000005600190079012900
+/V=C0049.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04243   Librador       INNSNF00036802520391043610101000000005600190079012900
+/V=C3919.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1005TBaja Generica                           B01781 00
+/?=(I58)
+ NNNNN 07119   Nro de cheque  INNSNA00002101440044027202101100000002100290044012900
+/V=C4161.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07118   Numero de serieINNSNA00004901440072027200101100000004900290072012900
+/V=C387.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07120   Banco          INNSNA00010501440128027200101100000010500290128012900
+/V=C848.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07117   Moneda         INNSNA00007701440100027202101100000007700290100012900
+/V=C611.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Aviso la Baja (muestro el No. de Cheque).-
+CNNNNN M 00000000000000000000110
+/M="Cheque: "+C7119+" dado de baja..."
+TN  NN 1006TOperación 0                             C00001 00
+DN  NN 0000Ov00
+*#I57#Alta
+*#I58#Baja

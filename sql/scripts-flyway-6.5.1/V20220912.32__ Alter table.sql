@@ -1,0 +1,3 @@
+﻿execute('
+ALTER TABLE CONV_CONVENIOS_REC ADD EquemaComision VARCHAR(1)
+')

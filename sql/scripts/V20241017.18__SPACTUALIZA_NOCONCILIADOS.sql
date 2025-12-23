@@ -1,0 +1,181 @@
+EXECUTE('
+CREATE PROCEDURE SP_ACTUALIZO_CONCILIACION
+    @ELEMENT0 NVARCHAR(4), --C79550
+    @ELEMENT3 VARCHAR(6), --79551
+    --@TOPAZPOSTINGNUMBER NUMERIC(15) = 0,
+    --@NRECEIVED NUMERIC(10) = 1,
+    --@NSEND NUMERIC(10) = 0,
+    --@TIMEOUT NUMERIC(1) = 0,
+    --@ELEMENT7 VARCHAR(10) = ''0906033600'', 
+    --@ELEMENT11 VARCHAR(6) = ''021952'', 
+    @ELEMENT12 NVARCHAR(6),  -- Hora transacciOn -- c79554
+    @ELEMENT13 NVARCHAR(4),  -- Fecha transacciOn - c79553
+    @ELEMENT37 NVARCHAR(99), -- NUmero transacciOn - c79557
+    @ELEMENT41 NVARCHAR(16), -- Identificacion cajero - c79559
+    @ELEMENT4 NVARCHAR(12),  -- Importe - c79560
+    @ELEMENT102 NVARCHAR(99),-- From account - c79562
+    @ELEMENT103 NVARCHAR(21), -- Cuenta destino (TOACCOUNT) - C79563
+    @ELEMENT49 NVARCHAR(50), -- Moneda - c79564, valor se especifica en el INSERT
+    ---- PARA EL UPDATE ----
+    @FECHACAPTURA NVARCHAR(4),-- Fecha captura - c79552
+    @ELEMENT35 VARCHAR (50),
+    @TOPAZBRANCH NUMERIC(5) 
+AS
+BEGIN
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        
+        -- Corto la cta_Redlink para que grabe en la tp sin el tipo
+        SET @ELEMENT102 = SUBSTRING(@ELEMENT102, 3, LEN(@ELEMENT102));
+        SET @ELEMENT103 = SUBSTRING(@ELEMENT103, 3, LEN(@ELEMENT103));
+        
+        SET @ELEMENT4 =RIGHT(REPLICATE(''0'', 12) + 
+            			REPLACE(REPLACE(CONVERT(varchar(12),@ELEMENT4), ''.'', ''''), '','', ''''), 12);
+        -- Asignar valor con la fecha y hora actual
+        DECLARE @FECHAMENSAJE DATETIME;
+        SET @FECHAMENSAJE = GETDATE();
+        
+        DECLARE @ELEMENT7 NVARCHAR(10);
+        SET @ELEMENT7 = (SELECT RIGHT(''0'' + CAST(MONTH(GETDATE()) AS VARCHAR(2)), 2) + 
+                                RIGHT(''0'' + CAST(DAY(GETDATE()) AS VARCHAR(2)), 2) + 
+                                RIGHT(''0'' + CAST(DATEPART(HOUR, GETDATE()) % 12 AS VARCHAR(2)), 2) + 
+                                RIGHT(''0'' + CAST(DATEPART(MINUTE, GETDATE()) AS VARCHAR(2)), 2) + 
+                                RIGHT(''0'' + CAST(DATEPART(SECOND, GETDATE()) AS VARCHAR(2)), 2));
+
+        -- INSERT en TP_TOPAZPOSCONTROL
+        INSERT INTO TP_TOPAZPOSCONTROL (ELEMENT0, ELEMENT3, TOPAZBRANCH, TOPAZPROCESSDATE, TOPAZPOSTINGNUMBER, NRECEIVED, NSEND, TIMEOUT, ELEMENT7, ELEMENT11, ELEMENT12, ELEMENT13, ELEMENT37, ELEMENT41, ELEMENT102, ELEMENT103, ELEMENT49, ELEMENT4,FECHAMENSAJE,ELEMENT35)
+        VALUES (@ELEMENT0, @ELEMENT3,@TOPAZBRANCH,(SELECT fechaproceso FROM PARAMETROS), 0, 1, 0, 0, @ELEMENT7, ''021952'', @ELEMENT12, @ELEMENT13, @ELEMENT37, @ELEMENT41, @ELEMENT102, @ELEMENT103, 
+            CASE 
+                WHEN @ELEMENT49 = ''1'' THEN ''032''  -- Comparación como NVARCHAR
+                WHEN @ELEMENT49 = ''2'' THEN ''840'' -- Comparación como NVARCHAR
+                ELSE NULL
+            END,
+            @ELEMENT4, @FECHAMENSAJE,@ELEMENT35);
+
+        -- UPDATE del campo CONCILIACION en TJD_TLF_SUMMARY
+        UPDATE TJD_TLF_SUMMARY
+        SET CONCILIACION = ''S''
+        WHERE TIPOMENSAJE = ''200''
+        AND FECHACAPTURA = @FECHACAPTURA
+        AND FECHATRANSACCION = @ELEMENT13
+        AND HORATRANSACCION = @ELEMENT12
+        AND NUMEROTRANSACCION = @ELEMENT37
+        AND IDENTIFICACIONCAJERO = @ELEMENT41;
+        
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+        
+        SELECT 
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END;
+
+')
+
+EXECUTE('
+CREATE PROCEDURE SP_ACTUALIZO_CONCILIACION_RECIBIDOS
+    @ELEMENT0 NVARCHAR(4), --C79550
+    @ELEMENT3 VARCHAR(6), --79551
+    @TOPAZPOSTINGNUMBER NUMERIC(15), --9501
+    @TOPAZBRANCH NUMERIC(5) ,
+     --@ELEMENT11 VARCHAR(6) = ''021952'', -- VER ESTE CAMPO CON ENZO /
+    @ELEMENT12 NVARCHAR(6),  -- Hora transacción - c79554
+    @ELEMENT13 NVARCHAR(4),  -- Fecha transacción - c79553
+    @ELEMENT37 NVARCHAR(99), -- Número transacción - c79557
+    @ELEMENT41 NVARCHAR(16), -- Identificación cajero - c79559
+    @ELEMENT4 NVARCHAR(12),  -- Importe - c57
+    @ELEMENT102 NVARCHAR(99),-- From account - c79562
+    @ELEMENT49 NVARCHAR(50), -- Moneda - 109
+    @ELEMENT103 NVARCHAR(21), -- Cuenta destino (TOACCOUNT) - C79563
+    @ELEMENT39 NUMERIC(2),  -- Este elemento se usa para condicionar 
+    ---- PARA EL UPDATE ----
+    @FECHACAPTURA NVARCHAR(4),  -- Fecha captura - c79552
+    @ELEMENT35 VARCHAR (50)
+AS
+BEGIN
+	DECLARE @EXISTEASIENTO NUMERIC (2);
+	SET @EXISTEASIENTO=0;
+    BEGIN TRY
+        BEGIN TRANSACTION;
+        SET @EXISTEASIENTO = (SELECT COUNT(*) FROM ASIENTOS WITH (NOLOCK) WHERE ASIENTO=@TOPAZPOSTINGNUMBER 
+        					 AND SUCURSAL=@TOPAZBRANCH 
+        				     AND FECHAPROCESO= (SELECT FECHAPROCESO FROM PARAMETROS WITH (NOLOCK)))
+        IF ((@ELEMENT39) > 0 OR (@ELEMENT39 = 0 AND @EXISTEASIENTO =0))
+        BEGIN
+        SET @ELEMENT4 =RIGHT(REPLICATE(''0'', 12) + 
+            			REPLACE(REPLACE(CONVERT(varchar(12),@ELEMENT4), ''.'', ''''), '','', ''''), 12);
+            -- DELETE en TP_TOPAZPOSCONTROL
+            DELETE FROM TP_TOPAZPOSCONTROL
+            WHERE ELEMENT0 = ''0220''
+            AND ELEMENT12 = @ELEMENT12
+            AND ELEMENT13 = @ELEMENT13
+            AND ELEMENT37 = @ELEMENT37
+            AND ELEMENT41 = @ELEMENT41
+            AND ELEMENT4 = @ELEMENT4;
+
+            -- Actualización del campo CONCILIACION en TJD_TLF_SUMMARY
+            UPDATE TJD_TLF_SUMMARY
+            SET CONCILIACION = ''N''
+            WHERE TIPOMENSAJE = ''200'' 
+            AND FECHACAPTURA = @FECHACAPTURA
+            AND FECHATRANSACCION = @ELEMENT13
+            AND HORATRANSACCION = @ELEMENT12
+            AND NUMEROTRANSACCION = @ELEMENT37
+            AND IDENTIFICACIONCAJERO = @ELEMENT41;
+        END
+        ELSE
+        BEGIN
+        
+        -- Corto la cta_Redlink para que grabe en la tp sin el tipo
+        SET @ELEMENT102 = SUBSTRING(@ELEMENT102, 3, LEN(@ELEMENT102));
+        SET @ELEMENT103 = SUBSTRING(@ELEMENT103, 3, LEN(@ELEMENT103));
+        --Seteo valor con la fecha y hora actual
+        DECLARE @FECHAMENSAJE DATETIME;
+        SET @FECHAMENSAJE = GETDATE();
+        
+        SET @ELEMENT4 =RIGHT(REPLICATE(''0'', 12) + 
+            		REPLACE(REPLACE(CONVERT(varchar(12),@ELEMENT4), ''.'', ''''), '','', ''''), 12);
+        ---ARMO MES+DIA+HORA+MINUTO+SEGUNDOS
+			DECLARE @ELEMENT7 NVARCHAR(10);
+        	SET @ELEMENT7 = (SELECT RIGHT(''0'' + CAST(MONTH(GETDATE()) AS VARCHAR(2)), 2) + 
+                                RIGHT(''0'' + CAST(DAY(GETDATE()) AS VARCHAR(2)), 2) + 
+                                RIGHT(''0'' + CAST(DATEPART(HOUR, GETDATE()) % 12 AS VARCHAR(2)), 2) + 
+                                RIGHT(''0'' + CAST(DATEPART(MINUTE, GETDATE()) AS VARCHAR(2)), 2) + 
+                                RIGHT(''0'' + CAST(DATEPART(SECOND, GETDATE()) AS VARCHAR(2)), 2));
+           
+            -- Insert de nuevo registro en TP_TOPAZPOSCONTROL
+            INSERT INTO TP_TOPAZPOSCONTROL (ELEMENT0,TOPAZBRANCH, TOPAZPROCESSDATE, ELEMENT3, TOPAZPOSTINGNUMBER, NRECEIVED, NSEND, TIMEOUT, ELEMENT7, ELEMENT11, ELEMENT12, ELEMENT13, ELEMENT37, ELEMENT41, ELEMENT102, ELEMENT49, ELEMENT4, ELEMENT103, ELEMENT39,FECHAMENSAJE,ELEMENT35)
+            VALUES (''0230'',@TOPAZBRANCH,(SELECT fechaproceso FROM PARAMETROS), @ELEMENT3,@TOPAZPOSTINGNUMBER, 1, 0, 0, @ELEMENT7, ''021952'', @ELEMENT12, @ELEMENT13, @ELEMENT37, @ELEMENT41, @ELEMENT102, 
+                CASE 
+                    WHEN @ELEMENT49 = ''1'' THEN ''032''  
+                    WHEN @ELEMENT49 = ''2'' THEN ''840'' 
+                    ELSE NULL
+                END,
+                @ELEMENT4, @ELEMENT103, ''00'',@FECHAMENSAJE,@ELEMENT35);
+        END
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        --errores
+        ROLLBACK TRANSACTION;
+        DECLARE @ErrorMessage NVARCHAR(4000);
+        DECLARE @ErrorSeverity INT;
+        DECLARE @ErrorState INT;
+        
+        SELECT 
+            @ErrorMessage = ERROR_MESSAGE(),
+            @ErrorSeverity = ERROR_SEVERITY(),
+            @ErrorState = ERROR_STATE();
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END;
+
+')

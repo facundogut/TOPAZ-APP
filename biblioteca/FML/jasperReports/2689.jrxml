@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-09-24T16:24:12 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pagos Varios" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="582485b7-1692-49bb-888a-02e23113925f">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<parameter name="NRO_CONVENIO" class="java.lang.String">
+		<parameterDescription><![CDATA[Número de Convenio]]></parameterDescription>
+	</parameter>
+	<parameter name="TOPAZ_SUCURSAL_SISTEMA" class="java.lang.Integer" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SET Language 'Spanish';
+
+
+SELECT TOP 1
+   day(pa.fechaproceso) AS dia,
+    DATENAME(month,fechaproceso) AS mes,
+    year(fechaproceso)AS año,
+	--CONVENIO--
+	(SELECT CASE CONCAT('',a.Cuit) WHEN '0' THEN REPLICATE('_',11) WHEN '' THEN REPLICATE('_',11) ELSE CONCAT('',a.Cuit) END) AS Cuit,
+	(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',5) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',a.Plazo) END) AS Plazo, 
+	(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',10) ELSE dbo.Fn_NumberToWords(a.Plazo) END) AS W_Plazo,
+	a.FecAlta, 
+	a.Id_ConvPago, 
+	(SELECT CASE CONCAT('',a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE LEFT(CONVERT(VARCHAR,a.FecAlta,106),2) END) AS DIA_ALTA,  
+	(SELECT CASE CONCAT('', a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE (SELECT dbo.Fn_NumberToWords(RIGHT(CONVERT(VARCHAR,FecAlta,106),4))) END) AS AÑO_ALTA,
+	
+	-- CUENTA DEBITO -- 
+	(SELECT CASE CONCAT('',b.CUENTA) WHEN '' THEN REPLICATE('_',12)  ELSE CONCAT('',b.CUENTA) END)AS CUENTA, 
+	(SELECT CASE CONCAT('',e.C6251) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',e.C6251) END )AS TIPO_CUENTA,
+	(SELECT CASE CONCAT('',b.SUCURSAL) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',b.SUCURSAL) END) AS SUCURSAL, 
+	(SELECT CASE CONCAT('',d.NOMBRESUCURSAL) WHEN ''  THEN REPLICATE('_',25)  ELSE CONCAT('',d.NOMBRESUCURSAL) END) AS LOC_SUC, 
+	
+	
+	-- DIRECCION FISCAL --
+	(SELECT CASE CONCAT('',tf.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',n.NUMERO) END) AS TEL_DF,
+	(SELECT  CASE CONCAT('',n.CALLE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',n.CALLE)  END) AS CALLE_DF, 
+	(SELECT CASE CONCAT('',n.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',n.NUMERO) END) AS NRO_DF, 
+	(SELECT CASE CONCAT('apto ',n.APARTAMENTO) WHEN 'apto ' THEN '' ELSE CONCAT('apto ',n.APARTAMENTO) END)AS APTO_DF, 
+   	(SELECT CASE CONCAT('piso ',n.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ',n.PISO)  END) AS PISO_DF,
+	(SELECT CASE CONCAT('',p.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',p.DESCRIPCION_DIM3) END) AS LOCALIDAD_DF,
+	(SELECT CASE CONCAT('', o.DESCRIPCION) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('', o.DESCRIPCION) END) AS PROVINCIA_DF,
+	
+	--DIRECCION REAL --
+	(SELECT CASE CONCAT('',tr.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',n.NUMERO) END ) AS TEL_DR,
+	(SELECT CASE CONCAT('',r.CALLE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',r.CALLE) END) AS CALLE_DR,
+	(SELECT CASE CONCAT('',r.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',r.NUMERO) END) AS NRO_DR,
+	(SELECT CASE CONCAT('apto ',r.APARTAMENTO) WHEN 'apto ' THEN '' ELSE  CONCAT('apto ',r.APARTAMENTO) END) AS APTO_DR,
+	(SELECT CASE CONCAT('piso ', r.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ', r.PISO) END) AS PISO_DR,
+	(SELECT CASE CONCAT('',t.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',t.DESCRIPCION_DIM3) END) AS LOCALIDAD_DR,
+	(SELECT CASE CONCAT('',s.DESCRIPCION) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',s.DESCRIPCION) END)  AS PROVINCIA_DR,
+	
+	-- SUCURSAL -- 
+	(SELECT CASE CONCAT('',v.NOMBREDEP) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',v.NOMBREDEP) END) AS DEP_CONTRATO,
+	
+	--CLIENTE  --
+	(SELECT CASE CONCAT('', w.NOMBRECLIENTE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('', w.NOMBRECLIENTE) END) AS NOMBRECLIENTE,
+	(SELECT CASE CONCAT('',w.TIPO) WHEN '' THEN REPLICATE('_',15) WHEN 'J' THEN 'la Empresa' WHEN 'I' THEN 'la Institución' WHEN 'F' THEN 'la Persona' END) AS REPRESENTACION,
+	--CONVENIO--
+	(SELECT CASE CONCAT('', a.NomConvPago) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('', a.NomConvPago) END) AS NOMBRECONVENIO
+	
+	FROM CONV_CONVENIOS_PAG a 
+    --CUENTA PAG --
+    LEFT JOIN SALDOS b ON a.CuentaDeb = b.JTS_OID AND b.TZ_LOCK = 0
+    LEFT JOIN CLI_DIRECCIONES c ON b.SUCURSAL = c.ID AND c.TZ_LOCK = 0
+    LEFT JOIN SUCURSALES d ON d.SUCURSAL = b.SUCURSAL AND d.TZ_LOCK = 0
+    LEFT JOIN PRODUCTOS e ON b.PRODUCTO = e.C6250 AND e.TZ_LOCK = 0
+    LEFT JOIN CLI_ClientePersona x ON a.Cliente = x.CODIGOCLIENTE AND x.TITULARIDAD = 'T' AND x.TZ_LOCK = 0
+    --DIRECCION FISCAL--
+	LEFT JOIN CLI_DIRECCIONES n ON a.Dir_Id = n.ID AND a.Dir_Formato =n.FORMATO AND a.Dir_Tipo = n.TIPODIRECCION AND a.Dir_ordinal = n.ORDINAL_DIR AND n.TZ_LOCK = 0
+	LEFT JOIN CLI_TELEFONOS tf ON tf.ID = a.Cliente AND tf.FORMATO IN ('PF','PJ') AND tf.ORDINAL = 1 AND tf.TIPO = 'LE' AND tf.TZ_LOCK = 0
+	LEFT JOIN CLI_PROVINCIAS o ON o.CODIGOPAIS =n.PAIS AND o.DIM1 = n.PROVINCIA AND o.TZ_LOCK = 0
+	LEFT JOIN CLI_LOCALIDADES p ON p.DIM1 = n.PROVINCIA AND p.DIM2 = n.DEPARTAMENTO AND p.DIM3 = n.LOCALIDAD AND p.TZ_LOCK = 0
+    --DIRECCION REAL--
+	LEFT JOIN  CLI_DIRECCIONES r ON a.Dir_Id = r.ID AND a.Dir_Formato = r.FORMATO AND r.TIPODIRECCION = 'R' AND r.TZ_LOCK = 0
+	LEFT JOIN CLI_TELEFONOS tr ON a.Cliente = tr.ID AND tr.FORMATO IN ('PF','PJ') AND tr.ORDINAL = 1 AND tr.TIPO = 'LE' AND tr.TZ_LOCK = 0
+    LEFT JOIN  CLI_PROVINCIAS s ON s.CODIGOPAIS = r.PAIS AND s.DIM1 = r.PROVINCIA AND s.TZ_LOCK = 0 AND s.TZ_LOCK = 0
+	LEFT JOIN CLI_LOCALIDADES t ON t.DIM1 = r.PROVINCIA AND t.DIM2 = r.DEPARTAMENTO AND t.DIM3 = r.LOCALIDAD AND t.TZ_LOCK = 0
+	    --SUCURSAL --
+	    LEFT JOIN CLI_DIRECCIONES u ON u.ID =  x.NUMEROPERSONA AND u.FORMATO = 'S' AND u.TIPODIRECCION = 'R' AND u.TZ_LOCK = 0
+	    LEFT JOIN CLI_DEPARTAMENTOS v ON v.CODIGOPAIS = u.PAIS AND v.DEPARTAMENTO = u.DEPARTAMENTO AND v.PROVINCIA = u.PROVINCIA AND v.TZ_LOCK = 0
+	    
+	    --CLIENTE ---
+	    LEFT JOIN CLI_CLIENTES w ON w.CODIGOCLIENTE = a.Cliente  AND w.TZ_LOCK = 0
+	    JOIN parametros pa ON 1=1
+	    WHERE a.Id_ConvPago =  $P{NRO_CONVENIO}  AND a.TZ_LOCK = 0]]>
+	</queryString>
+	<field name="dia" class="java.lang.Integer"/>
+	<field name="mes" class="java.lang.String"/>
+	<field name="año" class="java.lang.Integer"/>
+	<field name="Cuit" class="java.lang.String"/>
+	<field name="Plazo" class="java.lang.String"/>
+	<field name="W_Plazo" class="java.lang.String"/>
+	<field name="FecAlta" class="java.sql.Timestamp"/>
+	<field name="Id_ConvPago" class="java.math.BigDecimal"/>
+	<field name="DIA_ALTA" class="java.lang.String"/>
+	<field name="AÑO_ALTA" class="java.lang.String"/>
+	<field name="CUENTA" class="java.lang.String"/>
+	<field name="TIPO_CUENTA" class="java.lang.String"/>
+	<field name="SUCURSAL" class="java.lang.String"/>
+	<field name="LOC_SUC" class="java.lang.String"/>
+	<field name="TEL_DF" class="java.lang.String"/>
+	<field name="CALLE_DF" class="java.lang.String"/>
+	<field name="NRO_DF" class="java.lang.String"/>
+	<field name="APTO_DF" class="java.lang.String"/>
+	<field name="LOCALIDAD_DF" class="java.lang.String"/>
+	<field name="PROVINCIA_DF" class="java.lang.String"/>
+	<field name="TEL_DR" class="java.lang.String"/>
+	<field name="CALLE_DR" class="java.lang.String"/>
+	<field name="NRO_DR" class="java.lang.String"/>
+	<field name="APTO_DR" class="java.lang.String"/>
+	<field name="PISO_DR" class="java.lang.String"/>
+	<field name="LOCALIDAD_DR" class="java.lang.String"/>
+	<field name="PROVINCIA_DR" class="java.lang.String"/>
+	<field name="DEP_CONTRATO" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="REPRESENTACION" class="java.lang.String"/>
+	<field name="NOMBRECONVENIO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="83" splitType="Stretch">
+			<image>
+				<reportElement x="50" y="10" width="140" height="60" uuid="247949ce-1fa1-4381-8efc-b65d4cb2bd70"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="73" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="50" y="40" width="440" height="20" uuid="7775ee31-4dec-4ffe-8a47-b2e0b1d412d4"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p>En la Ciudad de Resistencia, el día "+$F{dia}+" de "+$F{mes}+" de "+$F{año}+", entre Nuevo Banco del Chaco S.A., con domicilio en la calle Güemes Nº 102 de la ciudad de Resistencia, en adelante “Banco”, representado en este acto por los abajo firmantes, los cuales comparecen en el carácter de apoderados, con facultades suficientes para este acto, otorgadas mediante Poder General Amplio de Administración y Disposición instrumentado en Escritura N° 75 de fecha 15/07/2016 pasada ante el Escribano Ariel Alfredo Farías, por una parte y, por la otra "+$F{NOMBRECONVENIO}+ ", CUIT Nº "+$F{Cuit}+", con domicilio en "+$F{CALLE_DR}+" Nº"+$F{NRO_DR}+" "+$F{APTO_DR}+" "+$F{PISO_DR}+", de la localidad de "+$F{LOCALIDAD_DR}+", teléfono "+$F{TEL_DR}+", con domicilio fiscal en "+$F{CALLE_DF}+" Nº"+$F{NRO_DF}+", de la localidad de "+$F{LOCALIDAD_DF}+", provincia de "+$F{PROVINCIA_DF}+" representada en este acto por los abajo firmantes, los que comparecen en nombre y representación de la "+
+"empresa, en adelante la “Entidad”, convienen en celebrar el presente Convenio, que se "+"regirá de acuerdo a las siguientes cláusulas y condiciones:"+
+"<br>"+"<br>"+
+"<b>Primera:</b> La Entidad solicita y el Banco"+ " acepta, prestar el Servicio de Pago de las"+" asistencias que otorga la Entidad a sus asociados por cuenta y orden de la Entidad,"+" mediante la modalidad de pago en Ventanilla de Cajas, en los términos y condiciones que a continuación se detallan."+
+"<br>"+"<br>"+
+"<b>Segunda:</b> La entidad se compromete a suministrar a El Banco, la base de datos de"+" sus asociados a efectos de los respectivos pagos. Queda acordado que a la fecha la "+
+"operatoria alcanzará a los beneficiarios, radicados en la Provincia del Chaco. "+
+"<b>OPERATORIA:</b> Las partes detallan la operatoria en el <b>“ANEXO I”</b> que forma parte del"+
+"presente Convenio."+
+"<br>"+"<br>"+
+"<b>Tercera:</b> La entidad deberá presentar, con cuarenta y ocho (48) horas de anticipación a"+" la fecha de pago, al <b>Departamento de Control de Operaciones</b> – Güemes 102 3er. Piso"+ " – Resistencia, un soporte magnético elaborado conforme a especificaciones técnicas"+ " previstas por El Banco, con más planillas de respaldo, con el detalle de"+ "los pagos a realizarse."+
+"<br>"+"<br>"+
+"<b>Cuarta:</b> Los fondos a transferirse deberán ser líquidos y de libre disposición al"+ " momento de la solicitud del servicio, a cuyo efecto, el importe total correspondiente a pagos, gastos"+" de procesamiento, comisiones y cargas fiscales pertinentes, deberá ser depositado por la"+" Entidad en su Cuenta Nº ..................... Sucursal........................ del Banco con"+" Cuarenta y Ocho (48) horas de anticipación a la fecha de inicio de pago. La Entidad"+" autoriza al Banco, en forma irrevocable, mientras dure el presente convenio, para debitar"+" de la cuenta detallada y/o cualquier otra cuenta y/o saldo acreedor que registre la entidad,"+" los importes necesarios para el cumplimiento del cobro de las comisiones, para lo cual el presente sirve de suficiente autorización."+
+"<br>"+"<br>"+
+"<b>Quinta:</b> Concluido el período de pago, El Banco pondrá a disposición de La Entidad "+ "una planilla de rendición con el detalle de los pagos efectuados. Se adjuntará a la misma,"+" copia de los comprobantes de débitos efectuados de la cuenta, conforme <b>ANEXO I</b>."+
+"<br>"+"<br>"+
+"<b>Sexta:</b> el Banco percibirá en concepto de Comisiones por servicio solicitado, la suma"+" equivalente al 3.00 %o (Tres por mil) más I.V.A., a cargo de la Entidad"+" El Banco podrá ajustar las comisiones establecidas, para lo cual deberá comunicar a la"+
+" Entidad con treinta (30) días de anticipación la aplicación de los nuevos valores En caso"+" de disconformidad con los mismos, la Entidad podrá rescindir el presente convenio, sin"+" que ello genere derecho a indemnización alguna para las partes."+
+"<br>"+"<br>"+
+"<b>Séptima:</b> si el convenio no es utilizado por el transcurso de seis (6) meses consecutivos"+" el banco queda autorizado por este acto a darlo de baja sin notificación a la entidad y sin"+" que tal actitud genere responsabilidad alguna para el Banco."+
+"<br>"+"<br>"+
+"<b>Octava:</b> El Banco no asume otra responsabilidad ajena de la que deriva del cumplimiento"+" de lo establecido en la cláusula primera del presente Convenio, con las aclaraciones"+" producidas en las cláusulas siguientes, quedando establecido que se limitará única y"+" exclusivamente a realizar los pagos por ventanilla con base de datos que solicite la"+" Entidad en el marco del presente acuerdo, sin que el Banco esté obligado al cumplimiento"+" de cualquier otra función no determinada expresamente en el presente Convenio;"+" quedando expresamente establecido que no tendrá responsabilidad alguna para el caso"+" de que por fuerza mayor y/o por causas ajenas no pudiere cumplimentar alguna de las"+" obligaciones establecidas. La Entidad es exclusiva responsable de los datos entregados"+" al Banco conforme lo establecido en las Cláusulas Segunda y Tercera, respondiendo"+" asimismo por cualquier demora en los pagos resultante de la falta de cumplimiento en"+" tiempo y forma de las obligaciones asumidas en dichas cláusulas y las siguientes."+" La Entidad será la responsable de informar y solucionar los inconvenientes que se les"+" presenten a sus asociados en cuanto a montos, fechas de acreditación, acreditaciones no"+" efectuadas entre otros."+
+"<br>"+"<br>"+
+"<b>Novena:</b> La vigencia del presente convenio se estipula por el término de Un (1) año"+", a partir de la fecha indicada al comienzo, renovable anualmente en forma automática por"+" períodos iguales y consecutivos. Sin perjuicio de ello, podrá ser rescindido por una de las"+" partes, sin invocación de causa, en cualquier momento y aún antes del vencimiento,"+" previa denuncia del mismo formulada en forma fehaciente (para la entidad con acuse de"+" recibo por parte del banco del área convenios) al otro contratante con treinta (30) días"+" corridos de anticipación al de su efectivizarían, sin que tal actitud genere responsabilidad "+"alguna para el denunciante."+
+"<br>"+"<br>"+
+"<b>Décima:</b> Si se suscitaran casos no específicamente contemplados en este convenio,"+" las partes acuerdan que negociarán de buena fe la incorporación de las Cláusulas necesarias"+" destinadas a subsanarlos, cuyas modificaciones serán incorporadas al Convenio a través de Anexos."+
+"<br>"+"<br>"+
+"<b><u>Décima primera:</u></b> El impuesto de sellos estará a cargo por partes iguales entre"+" los"+" firmantes y cualquier otro gasto o impuesto que pudiere corresponder, estarán a cargo en"+"su totalidad de la Entidad."+
+"<br>"+"<br>"+
+"<b>Décima segunda:</b> A todos los efectos legales, judiciales o extrajudiciales, las partes fijan"+" domicilios especiales en los arriba indicados, donde serán válidas todas las notificaciones"+" o emplazamientos que hubiere lugar, aceptando expresamente la competencia de los Tribunales Ordinarios con asiento en la ciudad de Resistencia, para cualquier litigio que"+" con motivo del mismo pudiere suscitarse."+
+"<br>"+"<br>"+
+"En prueba de conformidad se firman tres ejemplares de un mismo tenor y a un solo"+
+" efecto, en el lugar y fecha indicados al comienzo. </p>"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="50" y="10" width="440" height="21" uuid="e9610337-96db-4835-bee3-d2c61293d77d"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<u><b>CONVENlO DE PAGOS POR VENTANILLA N° "+$P{NRO_CONVENIO}+"</b></u>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="38" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="10" width="100" height="19" uuid="8a8cb999-c043-4a42-83de-22b94915df05"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="10" width="100" height="19" uuid="29a41a90-53af-4836-bef6-5b082beb56d6"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

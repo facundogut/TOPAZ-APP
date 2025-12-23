@@ -1,0 +1,14 @@
+﻿EXECUTE('
+UPDATE dbo.OPERACIONES
+SET NOMBRE = ''Graduación y grandes exp''
+	, DESCRIPCION = ''Graduación y grandes exp''
+WHERE TITULO = 6200 AND IDENTIFICACION = 5922
+')
+
+
+EXECUTE('
+UPDATE dbo.OPERACIONES
+SET DESCRIPCION = ''ABMC Vinculaciones - Relaciones''
+WHERE TITULO = 6200 AND IDENTIFICACION = 5923
+')
+

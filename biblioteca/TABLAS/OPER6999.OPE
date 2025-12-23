@@ -1,0 +1,363 @@
+VERSION:051
+*@1NBC
+*@2Créditos - Dar de Baja los Seguros de Vida de los Préstamos
+*@3Alvaro Pastorino
+*@41 - Consulta de Préstamos
+*@42 - Controla que haya sido dado de Alta el Seguro en la Migración
+*@43 - Si está dado de Alta, averiguo qué tipo de Baja quiere dar:
+*@4          a - Baja On-Line: Se bajan todos los Registros ejecutando un Store
+*@4          b - Se da un alta en la Tabla de Baja, para que sea procesado en la noche.
+*@4
+*@4
+*@4
+*@4
+TN  NN 1006TConsulta Generica                       C0211 00
+VNNNNN 010001000104800801SSSD000000000000000000000000000000000000000
+/T=Consulta de Préstamo para bajar el Seguro de Vida
+/C=192192192
+KNNNNN 010011001301490785000101
+/T=   Búsqueda de Préstamo por Cliente / Operación   
+/F=0015700NNN000000000Arial                                   
+KNNNNN 010157001304050785000101
+/T=   Préstamo   
+/F=0015700NNN000000000Arial                                   
+ NSSNN 6996   Forma Búsqueda I NSN 01004001870235032500101111000004000460063017600
+/F=0012700NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C6996="C")
+/P=I60
+CNNNNN ME00000000000000000000100
+/F=A(C6996="D")
+/P=I61
+/M=Opción inválida...
+CNNNNN   00000000000000000000100
+/F=A(C6996="O")
+/P=I62
+ NNNNN 0902   Cliente        I NNN 01007501870098030602001000000007500460098017600
+/?=(I60)
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+ NSSNS 1004   Pais ResidenciaDNNNN 00004201710065051300101100000007100750091018500
+/?=(I60)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 1000   Nombre         ICNSN 01007503450098076100101050000000700070027011900
+/?=(I60)
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0027   Operación      I NNN 01011001870133032502001000000011000460133017600
+/?=(I62)
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+ NSSNS 8010   Filtro ayuda   INNNNF00004201710065051300101100000007100750091018500
+/?=(I60)
+/V="C1785 in (5,6) AND C1803 = " + C902.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 8010   Filtro ayuda   INNNNF00004201710065051300101100000007100750091018500
+/?=(I62)
+/V="C1785 in (5,6) AND OPERACION = " + C27.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 8010   Filtro ayuda   INNNNF00004201710065051300101100000007100750091018500
+/V=C8010+" and C1651 = ' '"
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 5515   Ayuda Ctas     IENNN 01018400340294076502101160000004700300067013000
+/L=0
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0001   Sucursal       INNNNA00040301080426023402101100000040300200426009300
+/V=C1591.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6021   Sucursal       INNNNA00040301080426023402101100000040300200426009300
+/V=C1591.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6020   Nombre         INNNN 00040301080426023402101100000040300200426009300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0007   Producto       IDNNNA01033801880361034602101150000033800460361017600
+/V=C1592.1
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+ NNNNN 6250   Nro. Producto  INNNNA00031702630340063000101100000012402490144029900
+/V=C0007.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6800   Clasificación  INNNN 00034403830367075000101100000012402490144029900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6251   Descripcion    ICNNN 01033803690361076600101150000012402490144029900
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6270   Algoritmo Pago INNNN 00031702630340063000101100000012402490144029900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6271   Rubro operativoINNNN 00031702630340063000101100000012402490144029900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0005   Cuenta         IDNSNA01031001880333034602101150000031000460333017600
+/V=C1593.1
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+ NNNNN 0003   Moneda         IDNSNA01036601880389034602101150000036600460389017600
+/V=C1594.1
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+ NSSNS 6400   Descripcion    ICNNN 01036603690389056600101150000006002650080039100
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 0006   Nro. Préstamo  INNSNA00029201110315023702101100000029200110315009600
+/V=C5515.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0008   Ordinal        INNSNA00032106460344077200101100000032105580344063100
+/V=C1596.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1610   Intereses Real INNSN 00000701520030030202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0902   Cliente        INNNNF00009501870118031502001000000009500460118017600
+/?=(I62)
+/V=C1803.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1004   Pais ResidenciaDNNNN 00004201710065051300101100000007100750091018500
+/?=(I62)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 1000   Nombre         ICNSN 01031003690333076600101050000000700070027011900
+/?=(I62)
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+*N  NN ***********************************
+*N  NN *** Indicadores por Tipo de Préstamo.-
+*N  NN ***********************************
+*N  NN *** Préstamo Amortizable
+CNNNNN   00000000000000000000100
+/?=C6252=5Y(A(C6259="F")OA(C6259="H"))
+/P=I80
+/A=I81I82I83I84I85I86
+/M=Francés Hamburgués
+/R=Francés o Hamburgués
+*N  NN *** Plan de Pagos
+CNNNNN   00000000000000000000100
+/?=C6252=5YA(C6259="C")
+/P=I81
+/A=I80I82I83I84I85I86
+/M=Plan de Pagos
+/R=Plan de Pagos
+*N  NN *** Plazo Fijo
+CNNNNN   00000000000000000000100
+/?=C6252=5Y(A(C6259=" ")OA(C6259=""))
+/P=I82
+/A=I80I81I83I84I85I86
+/M=Plazo Fijo
+/R=Plazo Fijo
+*N  NN *** Acuerdo en Cuenta
+CNNNNN   00000000000000000000100
+/?=A(C6800="C")OA(C6800="V")
+/P=I83
+/A=I80I81I82I84I85I86
+/M=Acuerdo Cuenta
+/R=Acuerdo Cuenta
+*N  NN *** Tarjeta de Crédito
+CNNNNN   00000000000000000000100
+/?=A(C6800="T")OA(C6800="S")
+/P=I84
+/A=I80I81I82I83I85I86
+/M=Tarjeta Crédito
+/R=Tarjeta Crédito
+*N  NN *** Línea Avisada
+CNNNNN   00000000000000000000100
+/?=A(C6800="A")
+/P=I85
+/A=I80I81I82I83I84I86
+/M=Línea Avisada
+/R=Línea Avisada
+*N  NN *** Descuento de Documentos
+CNNNNN   00000000000000000000100
+/?=C6252=6
+/P=I86
+/A=I80I81I82I83I84I85
+/M=Descuento de Documentos
+/R=Descuento de Documentos
+*N  NN *** Leasing
+CNNNNN   00000000000000000000100
+/?=A(C6800="L")
+/P=I87
+/M=Leasing
+/R=Leasing
+*N  NN ***********************************
+ NNNNN 1810   OID Saldo      INNNNA00041406280437078602101100000041705600440062200
+/V=C1810.1
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/A=I100I101I102I103
+ NNNNN 0075   Fecha          INNSNK00000701520027030201001100010000700070027013700
+/V=20110810
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+CNNNNN   00000000000000000000100
+/F=!(C1620<C075)
+/P=I104
+*N  NN ***********************************
+TN  NN 1006TConsulta Amortizable                    C6611 00
+ NSSNN 6119   SALDO JTS OID  INNSNA00000701520030020202101100000000700070030013700
+/V=C1810.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 7370   DESCRIPCION    INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=(C9509=0)
+/P=I100
+CNNNNN   00000000000000000000100
+/?=(C9509=1)
+/P=I101
+*N  NN *** No tiene Seguro de Vida para Bajar (NO existe reg. de Alta)
+VNNNNN 020198022901320346SSSD000020000000000000000000000000000000000
+/T=   Atención!
+/?=(I100)
+/C=192192192
+KNNNNN 020020004000400299010100
+/?=(I100)
+/T=El Préstamo seleccionado no tiene
+/F=0015700NNN000000000Arial                                   
+KNNNNN 020048004100680300010100
+/?=(I100)
+/T=Seguro de Vida asociado...
+/F=0015700NNN000000000Arial                                   
+*N  NN *** No tiene Seguro de Vida para Bajar (NO existe reg. de Alta y Estado#'A')
+VNNNNN 020198022901320346SSSD000020000000000000000000000000000000000
+/T=   Atención!
+/?=(I101)Y!(C6905='A')
+/C=192192192
+KNNNNN 020020004000400299010100
+/?=(I101)Y!(C6905='A')
+/T=El Préstamo seleccionado no tiene
+/F=0015700NNN000000000Arial                                   
+KNNNNN 020048004100680300010100
+/?=(I101)Y!(C6905='A')
+/T=Seguro de Vida asociado...
+/F=0015700NNN000000000Arial                                   
+*N  NN *** El seguro es obligatorio. No se permite baja.
+VNNNNN 020198022901320346SSSD000020000000000000000000000000000000000
+/T=   Atención!
+/?=(I101)Y(C6905='A')YI104
+/C=192192192
+KNNNNN 020020004000400299010100
+/?=(I101)Y(C6905='A')YI104
+/T=El Préstamo seleccionado tiene
+/F=0015700NNN000000000Arial                                   
+KNNNNN 020048004100680300010100
+/?=(I101)Y(C6905='A')YI104
+/T=Seguro de Vida obligatorio...
+/F=0015700NNN000000000Arial                                   
+CNNNNN MP00000000000000000000100
+/?=(I101)Y(C6905='A')YI104
+/M=<Enter> para continuar
+*N  NN *** Tiene Seguro de Vida para Bajar
+*N  NN *** Forma de Baja: I102 - On-Line / I103 - Proceso
+CNNNNN   00000000000000000000100
+/?=(I101)Y(C6905='A')
+/P=I102
+TN  NN 1001TAlta Generica                           A6621 00
+/?=(I102OI103)
+ NNNNN 7371   SALDO_JTS_OID  INNSNA00000701520027030200101100010000700070027013700
+/V=C1810.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 8654   CUOTA          INNSNK00000701520027030200101100010000700070027013700
+/V=0
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 8655   ID_CARGO       INNSNK00000701520027030200101100010000700070027013700
+/V=8701
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 8656   FECHA_REGISTRO INNSNA00000701520027030200101100010000700070027013700
+/V=C9500
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 8766   ESTADO         INNSNK00000701520027030200101100010000700070027013700
+/V=N
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 9306   DESCRIPCION    INNSNK00000701520027030200101100010000700070027013700
+/V= 
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+TN  NN 1006TConsulta Generica                       C0001 00
+ NNNNN 0028   Concepto       INNNNF00003401350054049200101100000003400270054014700
+/?=(I100)O((I101)Y!(C6905.2='A'))
+/V="Baja Seguro de Vida: N/A."
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0028   Concepto       INNNNF00003401350054049200101100000003400270054014700
+/?=(I102OI103)
+/V="Baja Seguro de Vida: " + C0005.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *****************************************************
+*N  NN *** Para dar la Baja On-Line, llamo a la Operación 6998 que
+*N  NN *** ejecuta el SP_BAJA_GASTO_SEGURO con el alta del registro
+*N  NN *** ya dado en la Tabla CRE_BAJA_GASTOS_SEGURO.-
+*N  NN *** Me guardo el JTS_OID para aplicar dicha Operación.-
+*N  NN *****************************************************
+ NNNNN 3992   Jts-Oid Saldo  INNSNA00000701520027030200001100010000700070027013700
+/?=(I102)
+/V=C1810.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+DN  NN 6998Ov00
+/?=(I102)
+*#I61#Consulta por Tipo Documento (inhabilitada)
+*#I62#Consulta por No. Operación
+*#I100#NO existe el Seguro para el Préstamo
+*#I101#Existe el Seguro para el Préstamo
+*#I102#Puedo dar de Baja y voy por On-Line
+*#I103#Puedo dar de Baja y voy por Proceso
+*#I104#No se permite baja
+*#I60#Consulta por No. Cliente

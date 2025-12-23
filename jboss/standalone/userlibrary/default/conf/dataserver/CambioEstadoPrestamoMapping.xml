@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by DC (TS) -->
+<map>		
+	
+ 	<class>
+			<class-name>topsystems.automaticprocess.maduracion.CambioEstadoPrestamos</class-name>
+			<entity-name>core.vo_cambio_estado</entity-name>
+			<table-name>CR_ANALSIS_ESTADO_PRESTAMOS</table-name>
+			<database-name>TOP/CLIENTES</database-name>
+			<attribute>
+				<attribute-name>tz_lock</attribute-name>
+				<column-name>TZ_LOCK</column-name>
+			</attribute>
+			<attribute>
+				<attribute-name>rubroEntrada</attribute-name>
+				<column-name>RUBRO_ENTRADA</column-name>
+				<key>primary</key>
+			</attribute>
+			<attribute>
+				<attribute-name>criterio</attribute-name>
+				<column-name>CRITERIO</column-name>
+				<key>primary</key>
+			</attribute>
+			<attribute>
+				<attribute-name>diasAtraso</attribute-name>
+				<column-name>DIAS_ATRASO</column-name>
+				<key>primary</key>
+			</attribute>
+			<attribute>
+				<attribute-name>estadoDestinoPrestamo</attribute-name>
+				<column-name>ESTADO_DESTINO_PRESTAMO</column-name>
+			</attribute>
+			
+	</class>	
+	<class>
+				<class-name>topsystems.automaticprocess.maduracion.BitacoraCambioEstadoPrestamo</class-name>
+				<entity-name>core.vo_BitacoraCambioEstadoPrestamo</entity-name>
+				<table-name>BITACORA_ESTADO_CREDITO</table-name>
+				<database-name>TOP/CLIENTES</database-name>
+				<attribute>
+					<attribute-name>fechaProceso</attribute-name>
+					<column-name>FECHA_PROCESO</column-name>
+					<key>primary</key>
+				</attribute>
+				<attribute>
+					<attribute-name>saldoJtsOid</attribute-name>
+					<column-name>SALDO_JTS_OID</column-name>
+					<key>primary</key>
+				</attribute>
+				<attribute>
+					<attribute-name>estadoAnterior</attribute-name>
+					<column-name>ESTADO_ANT</column-name>
+					<key>primary</key>
+				</attribute>
+				<attribute>
+					<attribute-name>estadoActual</attribute-name>
+					<column-name>ESTADO_ACT</column-name>
+				</attribute>
+				
+	</class>	
+	<!-- QUERY'S -->
+		<query>
+				<class-name>topsystems.automaticprocess.maduracion.CambioEstadoPrestamos</class-name>
+				<query-name>query.AnalisisEstadoPrestamos</query-name>
+				<database-name>TOP/CLIENTES</database-name>
+				<sentence>
+					SELECT rubro_entrada,criterio,dias_atraso,estado_destino_prestamo, tipo_categorizacion_manual
+					FROM   CR_ANALSIS_ESTADO_PRESTAMOS c
+					WHERE  c.tz_lock=0 
+				</sentence>
+				<attribute>
+					<attribute-name>rubroEntrada</attribute-name>
+					<column-name>rubro_entrada</column-name>
+					<column-type>double</column-type>
+				</attribute>
+				<attribute>
+					<attribute-name>criterio</attribute-name>
+					<column-name>criterio</column-name>
+					<column-type>double</column-type>
+				</attribute>
+				<attribute>
+					<attribute-name>diasAtraso</attribute-name>
+					<column-name>dias_atraso</column-name>
+					<column-type>double</column-type>
+				</attribute>
+				<attribute>
+					<attribute-name>estadoDestinoPrestamo</attribute-name>
+					<column-name>estado_destino_prestamo</column-name>
+					<column-type>double</column-type>
+				</attribute>
+				<attribute>
+					<attribute-name>tipoCategorizacionManual</attribute-name>
+					<column-name>tipo_categorizacion_manual</column-name>
+					<column-type>String</column-type>
+				</attribute>
+	</query>
+	<query>
+				<class-name>topsystems.automaticprocess.maduracion.CambioEstadoPrestamos</class-name>
+				<query-name>query.AnalisisEstadoUnPrestamo</query-name>
+				<database-name>TOP/CLIENTES</database-name>
+				<sentence>
+				select rubro_entrada,criterio,dias_atraso,estado_destino_prestamo from 
+				(SELECT rubro_entrada,criterio,dias_atraso,estado_destino_prestamo
+				FROM   CR_ANALSIS_ESTADO_PRESTAMOS c
+				WHERE  c.tz_lock=0 and c.rubro_entrada=? and criterio=?  
+         			and dias_atraso &gt;=? order by  dias_atraso) where  ROWNUM = 1
+				</sentence>
+				<attribute>
+					<attribute-name>rubroEntrada</attribute-name>
+					<column-name>rubro_entrada</column-name>
+					<column-type>double</column-type>
+				</attribute>
+				<attribute>
+					<attribute-name>criterio</attribute-name>
+					<column-name>criterio</column-name>
+					<column-type>double</column-type>
+				</attribute>
+				<attribute>
+					<attribute-name>diasAtraso</attribute-name>
+					<column-name>dias_atraso</column-name>
+					<column-type>double</column-type>
+				</attribute>
+				<attribute>
+					<attribute-name>estadoDestinoPrestamo</attribute-name>
+					<column-name>estado_destino_prestamo</column-name>
+					<column-type>double</column-type>
+				</attribute>
+	</query>
+	<!-- QUERY'S -->
+	<query>
+		<class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+		<query-name>query.CambioEstadoPrestamo</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT jts_oid FROM   saldos  s
+			WHERE  s.c9314 = 5  AND (s.c1604 &lt; 0 OR s.c1608 &gt; 0) 
+			AND S.ESTADOATRASO NOT IN (SELECT ESTADO FROM CR_EVALUACION_ESTADOS WHERE EVALUA_AUTO='N') 
+			AND s.tz_lock=0  
+		</sentence>
+		<attribute>
+			<attribute-name>JTS_OID</attribute-name>
+			<column-name>JTS_OID</column-name>
+			<column-type>double</column-type>
+		</attribute>
+	</query>
+</map>

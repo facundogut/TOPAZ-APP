@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by DC (TS) -->
+<map>	
+
+
+	
+	
+	<class>
+		<class-name>topsystems.automaticprocess.cambioderubroforzado.CambioRubroForzado</class-name>
+		<entity-name>core.vo_CambioRubroForzado</entity-name>
+		<table-name>CR_CAMBIO_RUBRO_FORZADO</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>TZ_LOCK</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>rubroOrigen</attribute-name>
+			<column-name>RUBRO_ORIGEN</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>rubroDestino</attribute-name>
+			<column-name>RUBRO_DESTINO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>estado</attribute-name>
+			<column-name>ESTADO</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+		<attribute-name>criterio</attribute-name>
+		<column-name>CRITERIO</column-name>
+		<key>primary</key>
+	</attribute>
+	</class>	
+	
+	
+	<!-- QUERY'S -->
+	<query>
+	<class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+	<query-name>query.CambioRubroForzado</query-name>
+	<database-name>TOP/CLIENTES</database-name>
+	<sentence>
+	SELECT S.JTS_OID
+	FROM   SALDOS S
+	WHERE  S.C1785 = 5 AND (C1604 &lt; 0 OR C1608 &gt; 0) 
+	AND S.C1728 &lt;&gt; 'C'
+	AND	S.TZ_LOCK = 0 AND (S.C1734 &lt;&gt; ' ' AND S.C1734 IS NOT NULL)
+	</sentence>
+	<attribute>
+		<attribute-name>JTS_OID</attribute-name>
+		<column-name>JTS_OID</column-name>
+		<column-type>long</column-type>
+	</attribute>
+	</query>
+	<class>
+			<class-name>topsystems.automaticprocess.cambioderubroforzado.BitacoraCambioRubroEstadoForzado</class-name>
+			<entity-name>core.vo_BitacoraCambioRubroEstadoForzado</entity-name>
+			<table-name>BITACORA_CAMBIO_RUBYEST</table-name>
+			<database-name>TOP/CLIENTES</database-name>
+			<attribute>
+				<attribute-name>saldoJtsOid</attribute-name>
+				<column-name>SALDO_JTS_OID</column-name>
+				<key>primary</key>
+			</attribute>
+			<attribute>
+				<attribute-name>fechaProceso</attribute-name>
+				<column-name>FECHA_PROCESO</column-name>
+				<key>primary</key>
+			</attribute>
+			<attribute>
+				<attribute-name>rubroOrigen</attribute-name>
+				<column-name>RUBRO_ORIGEN</column-name>
+			</attribute>
+			<attribute>
+				<attribute-name>rubroDestino</attribute-name>
+				<column-name>RUBRO_DESTINO</column-name>
+			</attribute>
+			<attribute>
+				<attribute-name>estadoOrigen</attribute-name>
+				<column-name>ESTADO_ORIGEN</column-name>
+			</attribute>
+			<attribute>
+				<attribute-name>estadoDestino</attribute-name>
+				<column-name>ESTADO_DESTINO</column-name>
+			</attribute>
+			<attribute>
+			<attribute-name>secuenciador</attribute-name>
+			<column-name>SECUENCIADOR</column-name>
+			</attribute>
+	</class>	
+</map>

@@ -1,0 +1,273 @@
+service CONSULTAULT10MOVSAUX; 
+description "Parámetros de entrada al servicio Ultimos 10 movimientos"; 
+
+
+	action: SQLQuery HAYREGISTROS(
+				
+			SucursalDeb: numeric,
+			ProductoDeb: numeric,     
+			CuentaDeb:   numeric,      
+			MonedaDeb:   numeric,
+			OperacionDeb: numeric
+
+  ):[
+			SCODERROR: numeric,
+      CODIGOCLIENTE:	numeric as CodigoCliente,
+			NOMBRECLIENTE:	string as NombreCliente,
+			TIPO: string as Tipo
+	]{
+      properties {
+        ("statement", "select 0 as SCODERROR,  CODIGOCLIENTE as CodigoCliente, fn_itf_translate(NOMBRECLIENTE) as NombreCliente, TIPO as Tipo from cli_clientes where codigocliente in(select C1803 from saldos where sucursal=? and moneda=? and cuenta=? and producto=? and operacion=?)"),
+        ("0", "SucursalDeb"), 
+        ("1", "MonedaDeb"), 
+        ("2", "CuentaDeb"), 
+        ("3", "ProductoDeb"),
+        ("4", "OperacionDeb")
+      };
+      
+      action:	SQLQuery TIPOPRODUCTO() : [
+        STIPOPRODUCTO: numeric
+      ]{
+          properties {
+            ("statement", "select C6252 as STIPOPRODUCTO from Productos where C6250=?"),
+            ("0", "ProductoDeb")
+          };
+	           
+          action:SQLQuery DATOSALDOSCTACTE() : [
+            SALDOACTUAL:	float as SaldoActual,
+            SALDOCONFIRMAR:	float as SaldoConfirmar,
+            SALDOSIGUIENTE: float as SaldoSiguiente,
+            SALDOGARANTIA: numeric as SaldoGarantia,
+            CAPITAL: float as Capital,
+            FECHAAPERTURA: date as FechaApertura,
+            FECHAVTO: date as FechaVto, 
+            PLAZO: numeric as Plazo, 
+            TASA: numeric as Tasa, 
+            INTDEVENGAR: float as IntDevengar, 
+            INTDEVENGADO: float as IntDevengado
+          ]{
+			
+            condition{"STIPOPRODUCTO == 2"};
+            
+            properties 	{
+              ("statement", "select C1604 as SaldoActual, C1606 as SaldoConfirmar, C1607 as SaldoSiguiente, C1719 as SaldoGarantia, C1601 as Capital, C1621 as FechaApertura, C1627 as FechaVto, C1642 as Plazo, C1632 as Tasa, (C1608-C1611) as IntDevengar, C1611 as IntDevengado from saldos where sucursal=? and moneda=? and cuenta=? and producto=? and operacion=?"),
+              ("0", "SucursalDeb"), 
+              ("1", "MonedaDeb"), 
+              ("2", "CuentaDeb"), 
+              ("3", "ProductoDeb"),
+              ("4", "OperacionDeb")
+            };
+            
+            action: SQLQuery ULT10MOVSCTACTE() : [
+              XML_TAG: string,
+              FECHA_PROCESADO: date as Fecha_Procesado,
+              FECHA_VALOR: string as Fecha_Valor, 
+              DEBITO_CREDITO: string as Debito_Credito,
+              MONTO: string as Monto,
+              CONCEPTO: string as Concepto,
+              C0002: numeric,
+              NROCOMPROBANTE: numeric as NroComprobante
+            ]{
+              condition{"SCODERROR == 0"};
+              
+              properties {
+                ("statement", "SELECT * from (SELECT  'Movimiento' as XML_TAG, M.FechaProceso as Fecha_Procesado, TO_CHAR(M.FechaValor, 'yyyy.mm.dd') as Fecha_Valor, M.DebitoCredito as Debito_Credito, M.CapitalRealizado as Monto, upper(M.Concepto) as Concepto, to_number(M.Cliente) as C0002,M.ASIENTO AS NroComprobante FROM Movimientos_Contables M,  Asientos S WHERE Sucursal_Cuenta=? AND Moneda=? AND Cuenta=? AND Producto=? AND Operacion_Cuenta=? AND M.Asiento=S.Asiento AND M.FECHAPROCESO=S.FECHAPROCESO AND M.Sucursal=S.Sucursal AND S.ESTADO=77 ORDER BY M.FECHAPROCESO DESC, M.HoraSistema DESC)where ROWNUM < 11"),
+                ("0", "SucursalDeb"), 
+                ("1", "MonedaDeb"), 
+                ("2", "CuentaDeb"), 
+                ("3", "ProductoDeb"),
+                ("4", "OperacionDeb")
+              };
+              
+              action: OperationQuery ejecutarOperacionCC(): [
+                C6002:  float as Disponible
+              ]{
+              
+                properties {
+                  ("operationNumber", "9969"),
+                  ("transaction", "2")
+                }
+                
+              }
+
+            }
+          };
+              
+          action:SQLQuery DATOSALDOSCA() : [
+            SALDOACTUAL:	float as SaldoActual,
+            SALDOCONFIRMAR:	float as SaldoConfirmar,
+            SALDOSIGUIENTE: float as SaldoSiguiente,
+            SALDOGARANTIA: numeric as SaldoGarantia,
+            CAPITAL: float as Capital,
+            FECHAAPERTURA: date as FechaApertura,
+            FECHAVTO: date as FechaVto, 
+            PLAZO: numeric as Plazo, 
+            TASA: numeric as Tasa, 
+            INTDEVENGAR: float as IntDevengar, 
+            INTDEVENGADO: float as IntDevengado
+          ]{
+              
+            condition{"STIPOPRODUCTO == 3"};
+            
+            properties 	{
+              ("statement", "select C1604 as SaldoActual, C1606 as SaldoConfirmar, C1607 as SaldoSiguiente, C1719 as SaldoGarantia, C1601 as  Capital, C1621 as FechaApertura, C1627 as FechaVto, C1642 as Plazo, C1632 as Tasa, (C1608-C1611) as IntDevengar, C1611 as IntDevengado  from saldos where sucursal=? and moneda=? and cuenta=? and producto=? and operacion=?"),
+              ("0", "SucursalDeb"), 
+              ("1", "MonedaDeb"), 
+              ("2", "CuentaDeb"), 
+              ("3", "ProductoDeb"),
+              ("4", "OperacionDeb")
+            };
+                
+            action: SQLQuery ULT10MOVSCA(): [
+              XML_TAG: string,
+              FECHA_PROCESADO: date as Fecha_Procesado,
+              FECHA_VALOR: string as Fecha_Valor, 
+              DEBITO_CREDITO: string as Debito_Credito,
+              MONTO: string as Monto,
+              CONCEPTO: string as Concepto,
+              C0002: numeric as Cliente ,
+              NROCOMPROBANTE: numeric as NroComprobante
+            ]{
+                  
+              condition{"SCODERROR == 0"};
+              
+              properties { 
+                ("statement", "SELECT * from (SELECT  'Movimiento' as XML_TAG, M.FechaProceso as Fecha_Procesado, TO_CHAR(M.FechaValor, 'yyyy.mm.dd') as Fecha_Valor, M.DebitoCredito as Debito_Credito, M.CapitalRealizado as Monto, upper(M.Concepto) as Concepto, to_number(M.Cliente) as C0002,M.ASIENTO AS NroComprobante FROM Movimientos_Contables M,  Asientos S WHERE Sucursal_Cuenta=? AND Moneda=? AND Cuenta=? AND Producto=? AND Operacion_Cuenta=? AND M.Asiento=S.Asiento AND M.FECHAPROCESO=S.FECHAPROCESO AND M.Sucursal=S.Sucursal AND S.ESTADO=77 ORDER BY M.FECHAPROCESO DESC, M.HoraSistema DESC)where ROWNUM < 11"),
+                ("0", "SucursalDeb"), 
+                ("1", "MonedaDeb"), 
+                ("2", "CuentaDeb"), 
+                ("3", "ProductoDeb"),
+                ("4", "OperacionDeb")
+              };
+              
+              action: OperationQuery ejecutarOperacionCA(): [
+                C6002:  float as Disponible
+              ]{
+              
+                properties {
+                  ("operationNumber", "9969"),
+                  ("transaction", "2")
+                }
+                
+              }
+            
+            }
+          };
+
+          action:SQLQuery DATOSALDOSPRESTAMOS() : [
+            SALDOACTUAL:	float as SaldoActual,
+            SALDOCONFIRMAR:	float as SaldoConfirmar,
+            SALDOSIGUIENTE: float as SaldoSiguiente,
+            SALDOGARANTIA: numeric as SaldoGarantia,
+            CAPITAL: float as Capital,
+            FECHAAPERTURA: date as FechaApertura,
+            FECHAVTO: date as FechaVto, 
+            PLAZO: numeric as Plazo, 
+            TASA: numeric as Tasa, 
+            INTDEVENGAR: float as IntDevengar, 
+            INTDEVENGADO: float as IntDevengado
+          ]{
+          
+            condition{"STIPOPRODUCTO == 5"};
+
+            properties 	{
+              ("statement", "select C1604 as SALDOACTUAL, C1606 as SALDOCONFIRMAR, C1607 as SALDOSIGUIENTE, C1719 as SALDOGARANTIA, C1601 as  CAPITAL, C1621 as FECHAAPERTURA, C1627 as FECHAVTO, C1642 as PLAZO, C1632 as TASA, (C1608-C1611) as INTDEVENGAR, C1611 as INTDEVENGADO  from saldos where sucursal=? and moneda=? and cuenta=? and producto=? and operacion=?"),
+              ("0", "SucursalDeb"), 
+              ("1", "MonedaDeb"), 
+              ("2", "CuentaDeb"), 
+              ("3", "ProductoDeb"),
+              ("4", "OperacionDeb")
+            };
+	
+            action: SQLQuery ULT10MOVSPRESTAMOS(): [ 
+              XML_TAG: string,		 	
+              FECHA_PROCESADO: date as Fecha_Procesado,
+              FECHA_VALOR: string as Fecha_Valor, 
+              DEBITO_CREDITO: string as Debito_Credito,
+              MONTO: string as Monto,
+              CONCEPTO: string as Concepto,
+              C0002: numeric as Cliente,
+              NROCOMPROBANTE: numeric as NroComprobante
+            ]{
+            
+              condition{"SCODERROR == 0"};
+              
+              properties { 
+                ("statement", "SELECT * from (SELECT  'Movimiento' as XML_TAG, M.FechaProceso as Fecha_Procesado, TO_CHAR(M.FechaValor, 'yyyy.mm.dd') as Fecha_Valor, M.DebitoCredito as Debito_Credito, M.CapitalRealizado as Monto, upper(M.Concepto) as Concepto, to_number(M.Cliente) as C0002,M.ASIENTO AS NroComprobante FROM Movimientos_Contables M,  Asientos S WHERE Sucursal_Cuenta=? AND Moneda=? AND Cuenta=? AND Producto=? AND Operacion_Cuenta=? AND M.Asiento=S.Asiento AND M.FECHAPROCESO=S.FECHAPROCESO AND M.Sucursal=S.Sucursal AND S.ESTADO=77 ORDER BY M.FECHAPROCESO DESC, M.HoraSistema DESC)where ROWNUM < 11"),
+                ("0", "SucursalDeb"), 
+                ("1", "MonedaDeb"), 
+                ("2", "CuentaDeb"), 
+                ("3", "ProductoDeb"),
+                ("4", "OperacionDeb")
+              }
+            }
+          };
+          
+          action:SQLQuery ORDNALDPF() : [
+            SORDINALDEB: numeric 
+					]{
+          
+            condition{"STIPOPRODUCTO == 4"};
+            
+            properties {
+              ("statement", "SELECT  MAX(ordinal) as SORDINALDEB from Saldos where sucursal=? and moneda=? and cuenta=? and producto=? and operacion=? "),
+              ("0", "SucursalDeb"), 
+              ("1", "MonedaDeb"), 
+              ("2", "CuentaDeb"), 
+              ("3", "ProductoDeb"),
+              ("4", "OperacionDeb")
+            };
+            
+            action:SQLQuery DATOSALDOSDPF() : [
+              SALDOACTUAL:	float as SaldoActual,
+              SALDOCONFIRMAR:	float as SaldoConfirmar,
+              SALDOSIGUIENTE: float as SaldoSiguiente,
+              SALDOGARANTIA: numeric as SaldoGarantia,
+              CAPITAL: float as Capital,
+              FECHAAPERTURA: date as FechaApertura,
+              FECHAVTO: date as FechaVto, 
+              PLAZO: numeric as Plazo, 
+              TASA: numeric as Tasa, 
+              INTDEVENGAR: float as IntDevengar, 
+              INTDEVENGADO: float as IntDevengado
+            ]{
+            
+              condition{"STIPOPRODUCTO == 4"};
+              
+              properties {
+								("statement", "select C1604 as SALDOACTUAL, C1606 as SALDOCONFIRMAR, C1607 as SALDOSIGUIENTE, C1719 as SALDOGARANTIA, C1601 as  CAPITAL, C1621 as FECHAAPERTURA, C1627 as FECHAVTO, C1642 as PLAZO, C1632 as TASA, (C1608-C1611) as INTDEVENGAR, C1611 as INTDEVENGADO  from saldos where sucursal=? and moneda=? and cuenta=? and producto=? and operacion=? and ordinal=? "),
+								("0", "SucursalDeb"), 
+								("1", "MonedaDeb"), 
+								("2", "CuentaDeb"), 
+								("3", "ProductoDeb"),
+								("4", "OperacionDeb"),
+								("5", "SORDINALDEB")
+              };
+              
+              action: SQLQuery ULT10MOVSDPF(): [ 
+                XML_TAG: string,
+                FECHA_PROCESADO: date as Fecha_Procesado,
+                FECHA_VALOR: string as Fecha_Valor, 
+                DEBITO_CREDITO: string as Debito_Credito,
+                MONTO: string as Monto,
+                CONCEPTO: string as Concepto,
+                C0002: numeric as Cliente,
+                NROCOMPROBANTE: numeric as NroComprobante
+              ]{
+              
+                condition{"SCODERROR == 0"};
+                
+                properties { 
+                  ("statement", "SELECT * from (SELECT  'Movimiento' as XML_TAG, M.FechaProceso as Fecha_Procesado, TO_CHAR(FechaValor, 'yyyy.mm.dd') as Fecha_Valor, DebitoCredito as Debito_Credito, CapitalRealizado as Monto, upper(Concepto) as Concepto, to_number(Cliente) as C0002,M.ASIENTO AS NroComprobante FROM Movimientos_Contables M WHERE Sucursal_Cuenta=? AND Moneda=? AND Cuenta=? AND Producto=? AND Operacion_Cuenta=? ORDER BY M.FECHAPROCESO DESC, M.HoraSistema DESC)where ROWNUM < 11"),
+                  ("0", "SucursalDeb"), 
+                  ("1", "MonedaDeb"), 
+                  ("2", "CuentaDeb"), 
+                  ("3", "ProductoDeb"),
+                  ("4", "OperacionDeb")
+                }
+                
+              }
+            }
+          }               
+      }
+  }

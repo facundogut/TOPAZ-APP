@@ -1,0 +1,71 @@
+VERSION:054_5
+TN  NN 1006TConsulta Generica                       C05811 00
+ NNNNN 00025   Fecha Valor    INNNNA00000001330020024300001100000000000000020011900
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 00339   Alfa 11        INNSNK00000701500027033002001100000000700070027012600
+/V=1115
+/F=0012400NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+VNSSNS 010001000504440800SSSD000000000000000000000000000000000000000
+/T=Generación y Envío de planillas al clearing
+/C=192192192
+KNNNNN 010009001003740780000001
+/T=Generación y Envío de planillas al clearing
+/F=0013700NNN000000000Arial                                   
+ NNNNN 06525   Estado         I NSN 01004501700244036302001111000004500400065015900
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06528   Tipo Persona   I NSN 01004505540244074702001111000004504230065054200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Registros en estado de moviemiento = 'A'
+ NNNNN 08010   Filtro ayuda   INNSNF00000701500027321002001100000000700070027012600
+/?=1=0
+/V="ESTADO_MOV=('A')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08010   Filtro ayuda   INNSNF00000701500027321002001100000000700070027012600
+/?=1=0
+/V="ESTADO_MOV='A' AND ESTADO_ACTUAL='" + C6525 + "' AND TIPO_PERSONA='" + C6528 + "' "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08010   Filtro ayuda   INNSNF00000701500027321002001100000000700070027012600
+/V="ESTADO_MOV='A' "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08010   Filtro ayuda   INNSNF00000701500027321002001100000000700070027012600
+/V=C8010 + "AND NOT EXISTS (SELECT * FROM VW_EXCEPCION_NEGA_DOCUMENTO d "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08010   Filtro ayuda   INNSNF00000701500027321002001100000000700070027012600
+/V=C8010 + "WHERE d.TIPODOCUMENTO=CRE_CLEARING_NEGATIVA.TIPO_DOCUMENTO "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08010   Filtro ayuda   INNSNF00000701500027321002001100000000700070027012600
+/V=C8010 + "AND d.NUMERODOCUMENTO = CRE_CLEARING_NEGATIVA.NRO_DOCUMENTO "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08010   Filtro ayuda   INNSNF00000701500027321002001100000000700070027012600
+/V=C8010 + "AND d.FECHA_VTO >='"+ C25+"' )"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-06-29 09:28:36SCOLLAZO
+ NSSNS 02099   Ayu. Lista DescI SSN 01008500400358074702101060000021002490230036800
+/L=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+ NNNNN 00566   Selecc multipleINNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C566.0="")OA(C566.0=" ")
+/P=I50
+/M=No selecciono ningún registro.
+DN  NN 6124OV00
+/?=!I50
+DN  NN 6125OV00
+/?=I50
+*#I50#Envía Todo

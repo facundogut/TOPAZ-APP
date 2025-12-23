@@ -1,0 +1,1 @@
+Execute('DELETE FROM dbo.ITF_MASTER WHERE ID = 121;')

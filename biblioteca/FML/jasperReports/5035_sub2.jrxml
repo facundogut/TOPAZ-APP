@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2021-12-02T02:29:18 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="5035_sub2" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="fe14a076-7ca4-477b-966f-4f1871c74aee">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[select a.USUARIO, g.DESCRIPCION , u.NOMBRE , a.GRUPO_TEMPORAL, p.FECHAPROCESO from ASIGNACION_GRUPOS a, parametros p, usuarios u, grupos g
+where u.CLAVE = a.USUARIO 
+and a.FECHA_FINAL = DATEADD(d,-1,(p.FECHAPROCESO))
+and a.ESTADO = 'F'
+and a.TZ_LOCK = 0
+and a.GRUPO_TEMPORAL = g.GRUPO]]>
+	</queryString>
+	<field name="USUARIO" class="java.lang.String"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="GRUPO_TEMPORAL" class="java.lang.String"/>
+	<field name="FECHAPROCESO" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="340" height="17" uuid="def9c0c2-07d0-4cce-be14-38ab4198d704"/>
+				<text><![CDATA[Los siguientes usuarios han sido reestablecidos a su grupo original en el día]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="342" y="0" width="100" height="17" uuid="7254be3e-2c85-4d20-aea7-c84af8431b5f"/>
+				<textFieldExpression><![CDATA[$F{FECHAPROCESO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="150" height="18" uuid="d8e40e10-7237-4411-afee-8cb306c6077b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{USUARIO} + "(" + $F{NOMBRE} + ")"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="0" width="404" height="18" uuid="0528497b-d2cd-4e81-ba57-490a8a8c7fe1"/>
+				<textFieldExpression><![CDATA["Grupo actual: " + $F{GRUPO_TEMPORAL} + "(" + $F{DESCRIPCION} + ")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

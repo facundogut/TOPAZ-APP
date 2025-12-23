@@ -1,0 +1,346 @@
+VERSION:051
+TN  NN 1006T1 - Pasaje de Parametros                C0001 00
+ NSSNS 0556   TipoCierre     I NNN 00002401460044023002101100000002400340044012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -**** Campos del Middleware
+ NNNNN 4162   NroTransaccion I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 1444   NodoCliente    I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4161   TicketSesion   I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0254   InfoOrigen     I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4404   ModoAutentica  I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4402   CodCanal       I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0317   Origen         I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 2612   NroDepOrigen   I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0622   IdAutentica    I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+*N  NN -*************************************
+*N  NN -**** Tipo de Cierre
+*N  NN -**** I60- Parcial
+CNNNNN   00000000000000000000100
+/F=A(C556="P")
+/P=I60
+/M=InfoOrigen Inválida
+*N  NN -**** I61- Total
+CNNNNN   00000000000000000000100
+/F=A(C556="T")
+/P=I61
+/M=InfoOrigen Inválida
+*N  NN -**** Validacion de Datos de Ingreso
+*N  NN -**** 1- InfoOrigen Inválida
+ NNNNN 4898   CODERROR       I NNNK00000701330027018102001100000000700070027012600
+/?=F(LEN,C254)>19
+/V=1
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=F(LEN,C254)>19
+/P=I70
+/M=InfoOrigen Inválida
+*N  NN -**** 2- Modo Autentica Inváida
+ NNNNN 4898   CODERROR       I NNNK00000701330027018102001100000000700070027012600
+/?=A(C4404#"T")YA(C4404#"P")YA(C4404#"U")YA(C4404#"F")YA(C4404#"C")YA(C4404#"O")Y!I70YA(C4404#"N")
+/V=2
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/?=!I70
+/F=A(C4404#"T")YA(C4404#"P")YA(C4404#"U")YA(C4404#"F")YA(C4404#"C")YA(C4404#"O")YA(C4404#"N")
+/P=I71
+/M=Modo Autentica Inváida
+*N  NN -**** 3- Codigo Canal Inválido
+ NNNNN 4898   CODERROR       I NNNK00000701330027018102001100000000700070027012600
+/?=A(C4402#"A")YA(C4402#"I")YA(C4402#"N")YA(C4402#"T")Y!I71
+/V=3
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/?=!I71
+/F=A(C4402#"A")YA(C4402#"I")YA(C4402#"N")YA(C4402#"T")
+/P=I72
+/M=Codigo Canal Inválido
+*N  NN -**** 4- Origen Inválido
+ NNNNN 4898   CODERROR       I NNNK00000701330027018102001100000000700070027012600
+/?=F(LEN,C317)>19Y!I72
+/V=4
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/?=!I72
+/F=F(LEN,C317)>19
+/P=I73
+/M=Origen Inválido
+*N  NN -**** 5- IdAtutentica Inválido
+ NNNNN 4898   CODERROR       I NNNK00000701330027018102001100000000700070027012600
+/?=F(LEN,C622)>19Y!I73
+/V=5
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/?=!I73
+/F=F(LEN,C622)>19
+/P=I74
+/M=IdAtutentica Inválido
+CNNNNN   00000000000000000000100
+/?=I70OI71OI72OI73OI74
+/P=I91
+ NSSNS 0488   NroLote        I NNNK00005201460072023002101100000005200340072012300
+/?=I91
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0428   Fecha          I NNNK00005201460072023002101100000005200340072012300
+/?=I91
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0885   Hora           INNNNK00005201460072023002101100000005200340072012300
+/?=I91
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006T2 - Realizo Cierre Parcial              C0001 00
+/?=I60Y!I91
+*N  NN -**** El SP incrementa el Nro Lote en 1
+ NSSNS 0556   TipoCierre     INNNNA00002401460044023002101100000002400340044012300
+/V=C556.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1444   NodoCliente    INNNNA00000701330027018102001100000000700070027012600
+/V=C1444.1
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 2373   NroDepOrigen   INNNNA00000701330027018102001100000000700070027012600
+/V=C2612.1
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NSSNS 0488   NroLote        INNNNK00005201460072023002101100000005200340072012300
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0428   Fecha          INNNNK00005201460072023002101100000005200340072012300
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0885   Hora           INNNNK00005201460072023002101100000005200340072012300
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4191   TotalEfecPesos INNNNK00005201460072023002101100000005200340072012300
+/?=1=0
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4192   TotalEfecDolar INNNNK00005201460072023002101100000005200340072012300
+/?=1=0
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4193   TotalCheqPesos INNNNK00005201460072023002101100000005200340072012300
+/?=1=0
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4194   TotalCheqDolar INNNNK00005201460072023002101100000005200340072012300
+/?=1=0
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -**** Ejecuto SP ITF_CIERRE_BUZON
+CNNNNN  m00000000000000000000100
+/M=SQL
+/R=Top/Clientes SP_ITF_CIERRE_BUZON,C556 I,C1444 I,C2373 I,C488 O,C428 O,C885 O
+ NSSNS 0488   NroLote        INNNN 00005201460072023002101100000005200340072012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0428   Fecha          INNNN 00005201460072023002101100000005200340072012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0885   Hora           INNNN 00005201460072023002101100000005200340072012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C488>0
+/P=I65
+/M=IdAtutentica Inválido
+*N  NN -**** I66- Error al Ejecutar el SP
+ NNNNN 4898   CODERROR       I NNNK00000701330027018102001100000000700070027012600
+/?=C488=0
+/V=6
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C488=0
+/P=I66
+/M=IdAtutentica Inválido
+ NSSNS 0488   NroLote        I NNNK00005201460072023002101100000005200340072012300
+/?=I66
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0428   Fecha          I NNNK00005201460072023002101100000005200340072012300
+/?=I66
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0885   Hora           I NNN 00005201460072023002101100000005200340072012300
+/?=I66
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006T3 - Realizo Cierre Total                C0001 00
+/?=I61Y!I91Y!I66
+*N  NN -**** El SP setea el Nro Lote en 0
+ NSSNS 0556   TipoCierre     INNNNA00002401460044023002101100000002400340044012300
+/V=C556.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1444   NodoCliente    INNNNA00000701330027018102001100000000700070027012600
+/V=C1444.1
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 2373   NroDepOrigen   INNNNA00000701330027018102001100000000700070027012600
+/V=C2612.1
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NSSNS 0488   NroLote        INNNNK00005201460072023002101100000005200340072012300
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0428   Fecha          INNNNK00005201460072023002101100000005200340072012300
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0885   Hora           INNNNK00005201460072023002101100000005200340072012300
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -**** Ejecuto SP ITF_CIERRE_BUZON
+CNNNNN  m00000000000000000000100
+/M=SQL
+/R=Top/Clientes SP_ITF_CIERRE_BUZON,C556 I,C1444 I,C2373 I,C488 O,C428 O,C885 O
+ NSSNS 0488   NroLote        INNNN 00005201460072023002101100000005200340072012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0428   Fecha          INNNN 00005201460072023002101100000005200340072012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0885   Hora           INNNN 00005201460072023002101100000005200340072012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C488>0
+/P=I65
+/M=IdAtutentica Inválido
+*N  NN -**** I66- Error al Ejecutar el SP
+ NNNNN 4898   CODERROR       I NNNK00000701330027018102001100000000700070027012600
+/?=C488=0
+/V=6
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C488=0
+/P=I66
+/M=IdAtutentica Inválido
+ NSSNS 0488   NroLote        I NNNK00005201460072023002101100000005200340072012300
+/?=I66
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0428   Fecha          I NNNK00005201460072023002101100000005200340072012300
+/?=I66
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0885   Hora           I NNN 00005201460072023002101100000005200340072012300
+/?=I66
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006T4 - Todo OK                             C0001 00
+/?=(I60OI61)Y!I91Y!I66
+*N  NN -****** Si esta todo OK 
+ NNNNN 4898   CODERROR       I NNNK00000701330027018102001100000000700070027012600
+/V=0
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NSSNS 0488   NroLote        I NNNA00005201460072023002101100000005200340072012300
+/?=I60
+/V=C0488.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0428   Fecha          I NNNA00005201460072023002101100000005200340072012300
+/?=I60
+/V=C428.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0885   Hora           INNNNA00005201460072023002101100000005200340072012300
+/?=I60
+/V=C885.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0488   NroLote        I NNNA00005201460072023002101100000005200340072012300
+/?=I61
+/V=C0488.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0428   Fecha          I NNNA00005201460072023002101100000005200340072012300
+/?=I61
+/V=C428.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0885   Hora           INNNNA00005201460072023002101100000005200340072012300
+/?=I61
+/V=C885.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*#I71#Modo Autentica Incorrecto

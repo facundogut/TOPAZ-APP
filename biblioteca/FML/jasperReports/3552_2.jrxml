@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-08-20T14:40:29 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3552_2" pageWidth="595" pageHeight="150" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e997d415-b4f6-44ff-9473-4fa4ac5d6707">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="JTSOID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[JTSOID]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[WITH DATOS AS (
+SELECT
+    ROW_NUMBER() OVER(ORDER BY C.NUMEROCHEQUE) AS FILA, C.SERIE, C.ESTADO, C.NUMEROCHEQUE,
+CASE
+        WHEN C.NUMEROCHEQUE = CH.CHEQUEDESDE THEN C.NUMEROCHEQUE
+        WHEN C.ESTADO <> LAG(C.ESTADO) OVER(ORDER BY C.NUMEROCHEQUE) THEN C.NUMEROCHEQUE
+    END AS DESDE,
+CASE
+        WHEN LAG(C.ESTADO) OVER(ORDER BY C.NUMEROCHEQUE) = C.ESTADO THEN C.NUMEROCHEQUE
+    END AS HASTA,
+    CH.CHEQUEDESDE, CH.CHEQUEHASTA
+FROM
+    CHE_CHEQUES AS C, CHE_CHEQUERAS AS CH, SALDOS AS S
+WHERE
+    C.CUENTA = CH.CUENTA
+    AND C.MONEDA = CH.MONEDA
+    AND C.SUCURSAL = CH.SUCURSAL
+    AND C.PRODUCTO = CH.PRODUCTO
+    AND C.ORDINAL = CH.ORDINAL
+    AND C.OPERACION = CH.OPERACION
+    AND S.SUCURSAL = C.SUCURSAL
+    AND S.PRODUCTO = C.PRODUCTO
+    AND S.CUENTA = C.CUENTA
+    AND S.MONEDA = C.MONEDA 
+    AND S.OPERACION = C.OPERACION
+    AND S.ORDINAL = C.ORDINAL
+    AND C.NUMEROCHEQUE BETWEEN CH.CHEQUEDESDE AND CH.CHEQUEHASTA
+    AND C.SERIE = CH.SERIE
+    AND S.JTS_OID = $P{JTSOID})
+SELECT
+    D.SERIE,
+    D.ESTADO,
+    D.DESDE,
+    (
+    SELECT
+        TOP 1 D2.DESDE-1
+    FROM
+        DATOS D2
+    WHERE
+        D2.FILA>D.FILA
+        AND D2.DESDE IS NOT NULL ) AS HASTA,
+        D.CHEQUEHASTA
+FROM
+    DATOS D
+WHERE
+    D.DESDE IS NOT NULL AND (D.ESTADO = 'C')]]>
+	</queryString>
+	<field name="SERIE" class="java.lang.String"/>
+	<field name="ESTADO" class="java.lang.String"/>
+	<field name="DESDE" class="java.math.BigDecimal"/>
+	<field name="HASTA" class="java.math.BigDecimal"/>
+	<field name="CHEQUEHASTA" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="170" y="0" width="250" height="15" uuid="aa9407b5-1e60-4165-b453-f084e6bdacd7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Se hace entrega de los siguientes cheques sin utilizar:
+]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="15" isRemoveLineWhenBlank="true" uuid="f238d21f-f497-41f2-bbfd-049e60faa43b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Libreta de Cheque Serie ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="0" width="70" height="15" isRemoveLineWhenBlank="true" uuid="8d5cc2c3-bb3b-456e-9073-c2813fe7f5e7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{SERIE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="170" y="0" width="34" height="15" isRemoveLineWhenBlank="true" uuid="1995dc51-0b5e-404c-83e3-51d81cbd6540">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Nº]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="207" y="0" width="54" height="15" isRemoveLineWhenBlank="true" uuid="d36e52c7-71b6-4163-986e-9a72dc17901c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DESDE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="265" y="0" width="27" height="15" isRemoveLineWhenBlank="true" uuid="a280d51a-1066-4c34-9b8d-71e0974083f4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[al Nº]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="292" y="0" width="61" height="15" isRemoveLineWhenBlank="true" uuid="bd27fdbb-c9ed-4fba-8cb2-11a46b801ea3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{HASTA} == null ? $F{CHEQUEHASTA} : $F{HASTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

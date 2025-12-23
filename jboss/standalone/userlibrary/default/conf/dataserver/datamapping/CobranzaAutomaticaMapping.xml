@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_SaldosCobranzaAutomatica</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT JTS_OID
+			FROM   saldos sal
+			WHERE  sal.c1628 &lt;= (SELECT fechaproceso FROM parametros) AND -- atrasado o vence hoy
+			       sal.c1785 IN (5,6) AND -- producto prestamo o producto descuento			       
+			       sal.c3363 = 'S' AND  -- aplica para la cobranza automatica.
+			       (sal.C1728 = 'N' OR sal.C1728 = 'R') AND  -- aplica solo a los prestamos vigentes
+			       sal.tz_lock = 0 AND 
+			       sal.c1604 &lt; 0  -- no toma los saldos candelados
+			       and sal.c1665 is not null 
+			       and sal.c1665 &gt;0
+		 </sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.cobranzaautomatica.QueryPorcentajeIva</class-name>
+        <query-name>query.QueryPorcentajeIva</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT PORCENTAJE
+				  FROM COD_IVA C
+				 INNER JOIN PRODUCTOS P ON C.CODIGO = P.C6824
+						       AND C6250 = ?
+		 </sentence>
+        <attribute>
+            <attribute-name>porcentajeIva</attribute-name>
+            <column-name>PORCENTAJE_IVA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.cobranzaautomatica.CobranzaAutomaticaOrden</class-name>
+        <query-name>query.vo_SeleccionParaCobranzaAutomaticaPorCuota</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT sal.c1665, sal.JTS_OID
+					  FROM saldos sal, planpagos pp, topesproducto tp, productos p
+					 WHERE sal.tz_lock = 0 
+					   AND sal.c1785 IN (5,6)   -- producto prestamo o producto descuento			       
+					   AND sal.c1604 &lt; 0     -- no toma los saldos cancelados
+					   AND sal.c3363 = 'S'      -- aplica para la cobranza automatica.
+					   AND (sal.C1728 = 'N' OR sal.C1728 = 'R')                   -- prestamos vigentes
+					   AND sal.c1628 &lt;= (SELECT fechaproceso FROM parametros)  -- atrasado o vence hoy
+					   AND sal.c1665 is not null  
+					   AND sal.c1665 &gt; 0				
+					   AND pp.tz_lock = 0
+					   AND sal.jts_oid = pp.saldo_jts_oid
+					   AND pp.tz_lock = 0
+					   AND (pp.c2309 &gt; 0 or pp.c2310 &gt; 0)
+					   AND pp.c2302 &lt;= (SELECT fechaproceso FROM parametros)
+					   AND tp.tz_lock = 0
+					   AND sal.producto = tp.codproducto
+                       AND sal.producto = p.C6250
+					   AND sal.moneda = tp.moneda
+					   AND sal.c1665 not in (SELECT JTS_OID FROM SALDOS WHERE C1785=2 and tipo_saldo_fondo &lt;&gt; 0) --se quitan las cuentas FUCO
+					   AND sal.C1665 not in (SELECT JTS_OID FROM SALDOS WHERE C1785 IN (2,3) AND (C1604 + C1683 + C1605 + C2627) &lt;= 0 AND TZ_LOCK=0 GROUP BY JTS_OID)
+					 ORDER BY sal.c1665, pp.c2302, tp.prioridad_cobro DESC, sal.jts_oid
+				</sentence>
+        <attribute>
+            <attribute-name>contraCuenta</attribute-name>
+            <column-name>C1665</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.cobranzaautomatica.CobranzaAutomaticaOrden</class-name>
+        <query-name>query.vo_SaldosCobranzaAutomaticaOrdenadoPorCuota</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT CONTRACUENTA, SECUENCIAL, SALDOS_JTS_OID, CANTIDAD_CUOTAS
+					  FROM COBRANZA_AUTOMATICA_ORDEN
+					 WHERE FECHAPROCESO = (SELECT FECHAPROCESO FROM PARAMETROS)
+					   AND ESTADO = 'N' 
+					   AND IMPORTE_A_COBRAR = 0
+					   AND ((? = 1 AND CANTIDAD_CUOTAS = 0) OR (? = 2 AND CANTIDAD_CUOTAS &gt; 0))
+					 ORDER BY CONTRACUENTA, SECUENCIAL 
+				</sentence>
+        <attribute>
+            <attribute-name>contraCuenta</attribute-name>
+            <column-name>CONTRACUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cantidadCuotas</attribute-name>
+            <column-name>CANTIDAD_CUOTAS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.cobranzaautomatica.CobranzaAutomaticaOrden</class-name>
+        <entity-name>core.vo_CobranzaAutomaticaOrden</entity-name>
+        <table-name>COBRANZA_AUTOMATICA_ORDEN</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>contraCuenta</attribute-name>
+            <column-name>CONTRACUENTA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>cantidadCuotas</attribute-name>
+            <column-name>CANTIDAD_CUOTAS</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importeACobrar</attribute-name>
+            <column-name>IMPORTE_A_COBRAR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.cobranzaautomatica.VOCobranzaContracuenta</class-name>
+        <query-name>query.QueryCobranzaContracuenta</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+								SELECT cob.JTS_CONTRACUENTA, tp.DIAS_MORA_CTA_CTAS, s.c1628, cob.USO_SOBREGIRO
+									FROM CRE_COBRANZA_CONTRA_CTAS cob, TOPESPRODUCTO tp, SALDOS s
+									WHERE cob.jts_oid_prestamo = ?
+									AND cob.jts_oid_prestamo = s.jts_oid
+									AND s.TZ_LOCK = 0
+									AND tp.TZ_LOCK = 0
+									AND s.producto = tp.CODPRODUCTO
+									AND s.MONEDA = tp.MONEDA
+									ORDER BY cob.orden_cobro
+					</sentence>
+        <attribute>
+            <attribute-name>jtsContracuenta</attribute-name>
+            <column-name>JTS_CONTRACUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasMoraCtaCtas</attribute-name>
+            <column-name>DIAS_MORA_CTA_CTAS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>c1628</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>usoSobregiro</attribute-name>
+            <column-name>USO_SOBREGIRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.cobranzaautomatica.QueryCobranzaAutomatica</class-name>
+        <query-name>query.vo_SaldosCobranzaAutomaticaOrdenado</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT JTS_OID, C1665
+						FROM   saldos sal
+						WHERE  sal.c1628 &lt;= (SELECT fechaproceso FROM parametros) AND -- atrasado o vence hoy
+						       sal.c1785 IN (5,6) AND -- producto prestamo o producto descuento			       
+						       sal.c3363 = 'S' AND  -- aplica para la cobranza automatica.
+						       (sal.C1728 = 'N' OR sal.C1728 = 'R') AND  -- aplica solo a los prestamos vigentes
+						       sal.tz_lock = 0 AND 
+						       sal.c1604 &lt; 0  -- no toma los saldos cancelados
+						       and sal.c1665 is not null 
+						       and sal.c1665 &gt;0 
+							   ORDER BY C1665,C1628 ASC
+					 </sentence>
+        <attribute>
+            <attribute-name>jtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>contraCuenta</attribute-name>
+            <column-name>C1665</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.cobranzaautomatica.reserva.ReservasCobranzaAutomatica</class-name>
+        <query-name>query.vo_ReservaCobranzaAutomatica</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT JTS_OID, sal.c1665
+					FROM   saldos sal
+					WHERE  sal.c1628 &lt;= (SELECT fechaproceso FROM parametros) AND -- atrasado o vence hoy
+					       sal.c1785 IN (5,6) AND -- producto prestamo o producto descuento
+					       sal.c3363 = 'S' AND  -- aplica para la cobranza automatica.
+					       (sal.C1728 = 'N' OR sal.C1728 = 'R') AND  -- aplica solo a los prestamos vigentes
+					       sal.tz_lock = 0 AND 
+					       sal.c1604 &lt; 0  -- no toma los saldos candelados
+					       and sal.c1665 is not null 
+					       and sal.c1665 &gt;0
+					ORDER BY C1665
+				 </sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>JTS_OID_CONTRACUENTA</attribute-name>
+            <column-name>c1665</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

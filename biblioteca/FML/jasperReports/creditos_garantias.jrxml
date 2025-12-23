@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-11-19T13:24:17 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="creditos_garantias.jasper" pageWidth="820" pageHeight="842" columnWidth="780" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cd620229-6a8a-4a86-bc15-18762ba8d652">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="garantia" class="java.math.BigDecimal"/>
+	<parameter name="PRODUCTO" class="java.math.BigDecimal"/>
+	<parameter name="TODOS_PRODUCTO" class="java.math.BigDecimal"/>
+	<parameter name="FAMILIA" class="java.math.BigDecimal"/>
+	<parameter name="TODOS_FAMILIA" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT gr.Familia as familia, gr.Monto_Utilizado as monto_utilizado, gr.Linea as producto, 
+s.C1601 AS cant_orig, s.C1604 as saldo_prestamo, s.OPERACION as operacion, s.ORDINAL as desglose, CONVERT(NUMERIC, s.C1803) AS cliente 
+FROM VW_GARANTIASPRESTAMOS gr WITH(NOLOCK) 
+JOIN SALDOS s WITH(NOLOCK) ON gr.JTS_OID = s.JTS_OID
+ WHERE gr.Garantia = $P{garantia} 
+ AND (1=$P{TODOS_FAMILIA} OR gr.Familia = $P{FAMILIA})
+ AND (1=$P{TODOS_PRODUCTO} OR gr.Linea = $P{PRODUCTO})]]>
+	</queryString>
+	<field name="familia" class="java.math.BigDecimal"/>
+	<field name="monto_utilizado" class="java.math.BigDecimal"/>
+	<field name="producto" class="java.math.BigDecimal"/>
+	<field name="cant_orig" class="java.math.BigDecimal"/>
+	<field name="saldo_prestamo" class="java.math.BigDecimal"/>
+	<field name="operacion" class="java.math.BigDecimal"/>
+	<field name="desglose" class="java.math.BigDecimal"/>
+	<field name="cliente" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="39" splitType="Stretch">
+			<staticText>
+				<reportElement x="307" y="20" width="110" height="19" uuid="75ceb37b-3ef7-4eda-a389-4225bbbf6855"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Familia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="198" y="20" width="109" height="19" uuid="9be9167a-1742-42da-89af-6bb2bd67323d"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="417" y="20" width="110" height="19" uuid="a586c8ec-23b5-4de9-b463-41065c4539dc"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Capital Original]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="527" y="20" width="120" height="19" uuid="587706b6-8a85-4817-8909-3ba3938e36e1"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Capital]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="647" y="20" width="121" height="19" uuid="db411f3f-e377-41cd-b062-4f93a138c12a"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Garantizado]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="-10" y="0" width="778" height="20" uuid="13c2ff34-2bff-49ae-8bb4-7d4fff1d8c38"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Créditos afectados a la garantia ("+$P{garantia}+")"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="87" y="20" width="111" height="19" uuid="57e912d0-873b-4844-8d4f-1efcc299723d"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Operación/Desglose
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="20" width="97" height="19" uuid="24943d4f-5f6e-4bb2-b89d-9d6c36230aed"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cliente
+]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<textField>
+				<reportElement x="307" y="0" width="110" height="28" uuid="fee4e8d9-e91e-4405-95f7-03692f8efeb2"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{familia}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="198" y="0" width="109" height="28" uuid="ebf657d9-4621-4e51-8072-bc6b7ef4db30"/>
+				<box>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{producto}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="417" y="0" width="110" height="28" uuid="fad6c394-eb5c-4476-b949-e4c53d9d4f50"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cant_orig}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="527" y="-1" width="120" height="29" uuid="ed75368f-e67f-4b79-b2af-c8cd00c598a0"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{saldo_prestamo}.abs()]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.###;(#,##0.###-)">
+				<reportElement x="647" y="-1" width="121" height="29" uuid="01e054ee-a9a7-4049-8183-87ae219b84b7"/>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{monto_utilizado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="1" width="111" height="27" uuid="8e6541b3-2898-445d-8aa9-2ec1cdd757c2"/>
+				<box>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{operacion} +" / "+ $F{desglose}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.###;(###0.###-)">
+				<reportElement x="-10" y="0" width="97" height="28" uuid="f5ac5f5d-750a-49fb-8ad1-c4cb9f8d9589"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{cliente}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="1">
+			<line>
+				<reportElement x="-10" y="0" width="777" height="1" uuid="4167f7d5-34f3-4dfb-a474-90c6f5ecfbaa"/>
+			</line>
+		</band>
+	</columnFooter>
+</jasperReport>

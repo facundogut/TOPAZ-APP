@@ -1,0 +1,71 @@
+EXECUTE('
+CREATE PROCEDURE dbo.SP_GENERO_RESUMEN_AH 
+    @P_ID_PROCESO FLOAT(53),
+    @P_DT_PROCESO DATETIME2(0),
+    @P_RET_PROCESO FLOAT(53) OUTPUT,
+    @P_MSG_PROCESO VARCHAR(MAX) OUTPUT
+AS 
+BEGIN
+	DECLARE @RETORNO_CON_REGISTRO NUMERIC(12)
+    
+    SET @P_RET_PROCESO = NULL
+    SET @P_MSG_PROCESO = NULL
+---Volcamos CRE ADELANTO DE HABARES en la tabla de Resumen 
+---para obtener el monto para cada cv por prod,fecha y canal 
+
+    INSERT INTO dbo.CRE_ADELANTOS_HABERES_RESUMEN(
+     	JTS_OID_CV,
+        FECHA,
+        IMPORTE,
+        PRODUCTO,
+        CUOTAS,
+        PERIODICIDAD,
+        CANAL,
+        TZ_LOCK,
+        ESTADO,
+        NRO_RESERVA,
+        ID_CONVENIO,
+        CUOTA_CALCULADA,
+        CLIENTE,
+        FECHA_PROCESADO
+    
+        )
+    SELECT
+    	JTS_OID_CV,
+        FECHA,
+        SUM(IMPORTE) AS IMPORTE,
+        PRODUCTO,
+        MAX(CUOTAS) AS CUOTAS,
+        MAX(PERIODICIDAD) AS PERIODICIDAD,
+        CANAL,
+        MAX(TZ_LOCK) AS TZ_LOCK,
+        MAX(ESTADO) AS ESTADO,
+        MAX(NRO_RESERVA) AS NRO_RESERVA,
+        MAX(ID_CONVENIO) AS ID_CONVENIO,
+        SUM(CUOTA_CALCULADA) AS CUOTA_CALCULADA,
+        MAX(CLIENTE) AS CLIENTE,
+        NULL
+    	FROM dbo.CRE_ADELANTOS_HABERES WITH (NOLOCK) 
+    	WHERE ESTADO=''I''
+    	GROUP BY 
+        JTS_OID_CV,
+        FECHA,
+        PRODUCTO,
+        CANAL;
+   
+   -- Validación final y mensaje
+    SET @P_RET_PROCESO = 1
+    SET @P_MSG_PROCESO = ''La tabla CRE_ADELANTOS_HABERES_RESUMEN se ha cargado correctamente.''
+
+    SELECT @RETORNO_CON_REGISTRO = COUNT(1)
+    FROM CRE_ADELANTOS_HABERES_RESUMEN WITH (NOLOCK)
+    WHERE ESTADO=''I''
+    
+
+    IF (@RETORNO_CON_REGISTRO = 0)
+    BEGIN
+        SET @P_RET_PROCESO = 2
+        SET @P_MSG_PROCESO = ''No se insertaron registros en la tabla CRE_ADELANTOS_HABERES_RESUMEN''
+    END
+END;
+')

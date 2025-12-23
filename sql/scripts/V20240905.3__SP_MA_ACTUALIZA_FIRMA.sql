@@ -1,0 +1,47 @@
+EXECUTE(' 
+CREATE OR ALTER  PROCEDURE SP_MA_ACTUALIZA_FIRMA
+   @P_NUM_LOTE float(10),
+   @P_RET_PROCESO FLOAT OUT,
+   @P_MSG_PROCESO VARCHAR(MAX) OUT
+
+AS
+	BEGIN 
+		SET @P_RET_PROCESO = NULL
+		SET @P_MSG_PROCESO = NULL
+  
+		DECLARE
+		@FIRMA VARBINARY (MAX)
+		SELECT @FIRMA = FIRMA FROM PARAMETROSGENERALES WHERE CODIGO=450
+		
+		
+ 	 BEGIN TRANSACTION	
+      
+       BEGIN TRY
+	
+		UPDATE P
+				SET 
+					P.FIRMA = @FIRMA,
+					p.VENCIMIENTO =''20991231'' 
+				FROM CLI_PERSONAS_FIRMAS AS P
+				INNER JOIN MA_BANDEJA_SALIDA SA ON SA.NROPERSONANUEVA=P.NUMEROPERSONAFISICA AND SA.Estado=''O''
+				WHERE P.NUMERO_FIRMA=1
+				AND SA.Nro_Lote=@P_NUM_LOTE
+				AND SA.Estado=''O''
+				AND P.TZ_LOCK=0
+				AND SA.TZ_LOCK=0
+			
+			COMMIT TRANSACTION;
+			
+			SET @p_msg_proceso = ''Se actualizo correctamente la firma''
+			SET @p_ret_proceso = 1 
+	  
+	   END TRY 
+		
+		BEGIN CATCH
+	
+	        SET @p_ret_proceso = ERROR_NUMBER()
+	        SET @p_msg_proceso = ''Ocurrio un error en la actualizacion de la Firma''
+		END CATCH		
+	END
+')
+

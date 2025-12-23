@@ -1,0 +1,478 @@
+﻿<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<server>
+    <mbean code="topsystems.j2ee.jboss.server.services.TopazPropertiesService" name="topaz.core:service=SystemProperties">
+        <attribute name="TopazHome">
+      
+      ${jboss.server.base.dir}
+    
+    </attribute>
+        <attribute name="TopazUserHome">
+      
+      default
+    
+    </attribute>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.log.LogService" name="topaz.core:service=Logging">
+        <depends>
+      
+      topaz.core:service=SystemProperties
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.Server" name="topaz.core:service=Server">
+        <depends>
+      
+      topaz.core:service=SystemProperties
+    
+    </depends>
+        <depends>
+      
+      topaz.core:service=Logging
+    
+    </depends>
+        <depends>topaz.core:service=TopazVaultInitService</depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.data.MetadataLoaderService" name="topaz.server:service=MetadataLoader">
+        <attribute name="LoadMetadata">
+      
+      true
+    
+    </attribute>
+        <attribute name="LoadCatalog">
+      
+      true
+    
+    </attribute>
+        <attribute name="LoadParameters">
+      
+      true
+    
+    </attribute>
+        <attribute name="ConceptsExcludedFromDuplicateControl">
+      
+      19,69,500,501,510,512
+    
+    </attribute>
+        <depends>
+      
+      topaz.core:service=Server
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.jts.JTSService" name="topaz.server:service=JTS">
+        <depends>
+      
+      topaz.server:service=MetadataLoader
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.instalationfields.InstalationFieldsBeanService" name="topaz.server:service=InstalationFields">
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.rulesengine.RulesEngineService" name="topaz.server:service=RulesEngine">
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.python.PythonService" name="topaz.core:service=Python">
+        <depends>
+      
+      topaz.core:service=Server
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.process.ProcessService" name="topaz.server:service=ProcessManager">
+        <depends>
+      
+      topaz.core:service=Python
+    
+    </depends>
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+        <depends>topaz.server:service=ServerControlTable</depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.channel.ChannelService" name="topaz.server:service=Channels">
+        <depends>
+      
+      topaz.core:service=Server
+    
+    </depends>
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.tablerequest.TableRequestService" name="topaz.server:service=TableRequest">
+        <attribute name="User">
+      
+      TRM
+    
+    </attribute>
+        <attribute name="Machine">
+      
+      975
+    
+    </attribute>
+        <attribute name="Branch">
+      
+      1
+    
+    </attribute>
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.jbank.DispatcherService" name="topaz.server:service=Dispatcher">
+        <depends>
+      
+      topaz.core:service=Server
+    
+    </depends>
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.navigator.NavigationMotorStartup" name="topaz.server:service=Navigator">
+        <depends>
+      
+      topaz.core:service=Server
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.tipificaciontransacciones.CodigoTransaccionBeanService" name="topaz.server:service=trcodefinder">
+        <depends>
+      
+      topaz.core:service=Server
+    
+    </depends>
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.detallecontabilidad.DeshabilitarDetalleContabilidadBeanService" name="topaz.server:service=DeshabilitarDetCont">
+        <depends>
+      
+      topaz.core:service=Server
+    
+    </depends>
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.automaticprocess.eventostransaccion.EventoTransaccionBeanService" name="topaz.server:service=trcodeevent">
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.events.TopazEventsService" name="topaz.events:service=TopazEventsService">
+        <attribute name="Observers">
+      
+      
+            {
+              "observers": [
+                {"class": "com.topsystems.jtopaz.server.topazevents.observers.impl.TopazMemoryObserver"}
+              ]
+            }
+		
+    
+    </attribute>
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.command.CommandService" name="topaz.core:service=Commands">
+        <attribute name="Port">
+      
+      3888
+    
+    </attribute>
+        <attribute name="Commands">{
+  "commands": [
+    {
+      "code": "topsystems.util.commands.LogVerboseCommand",
+      "name": "verb",
+      "description": "Configure verbose level in log."
+    },
+    {
+      "code": "topsystems.util.commands.LogCommand",
+      "name": "log",
+      "description": "Shows log"
+    },
+    {
+      "code": "com.topsystems.jtopaz.commands.StatusCommand",
+      "name": "status",
+      "description": "Shows status"
+    },
+    {
+      "code": "com.topsystems.jtopaz.commands.OperationCommand",
+      "name": "oper",
+      "description": "Start a new operation"
+    },
+    {
+      "code": "com.topsystems.jtopaz.commands.ReloadCommand",
+      "name": "reload",
+      "description": "Reload the server"
+    },
+    {
+      "code": "com.topsystems.jtopaz.commands.TasksCommand",
+      "name": "tasks",
+      "description": "Tasks running"
+    },
+    {
+      "code": "com.topsystems.jtopaz.commands.ListCommand",
+      "name": "list",
+      "description": "List of operations"
+    },
+    {
+      "code": "com.topsystems.jtopaz.commands.StatisticsCommand",
+      "name": "stats",
+      "description": "Shows statistics"
+    },
+    {
+      "code": "topsystems.lockmanager.commands.ExecutionLocksCommand",
+      "name": "locks",
+      "description": "Manage Execution Locks"
+    },
+    {
+      "code": "com.topsystems.jtopaz.commands.SessionCommand",
+      "name": "session",
+      "description": "Session info"
+    },
+    {
+      "code": "topsystems.jchannels.commands.ChannelsCommand",
+      "name": "channels",
+      "description": "Channels info"
+    },
+    {
+      "code": "topsystems.processmgr.command.ProcessCommand",
+      "name": "pm",
+      "description": "Process Manager"
+    },
+    {
+      "code": "topsystems.topaz.server.commands.EnqueueCommand",
+      "name": "enqueue",
+      "description": "Manage Enqueue Instructions"
+    },
+    {
+      "code": "topsystems.util.database.pool.statistics.ConnectionCommand",
+      "name": "conn",
+      "description": "Connections Pool info"
+    },
+    {
+      "code": "com.topsystems.jtopaz.commands.TableRequestCommand",
+      "name": "tr",
+      "description": "TableRequest command"
+    },
+    {
+      "code": "topsystems.topaz.server.core.services.command.ServicesCommand",
+      "name": "services",
+      "description": "Services command"
+    },
+    {
+      "code": "topsystems.licensemgr.commands.LicenseCommand",
+      "name": "license",
+      "description": "Topaz License command"
+    },
+    {
+      "code": "topsystems.charges.command.ChargesCommand",
+      "name": "charges",
+      "description": "Charges Reload"
+    },
+    {
+      "code": "topsystems.automaticprocess.instalationfields.InstalationFieldCommand",
+      "name": "instfields",
+      "description": "Instalation Fields Reload"
+    },
+    {
+      "code": "topsystems.services.numeradorescaja.command.NumeradoresCajaCommand",
+      "name": "numcaja",
+      "description": "Numeradores de Caja"
+    },
+    {
+      "code": "topsystems.persistence.util.DataServerCommand",
+      "name": "ds",
+      "description": "Data Server command"
+    },
+    {
+      "code": "topsystems.jtprinter.util.JTPrinterCommand",
+      "name": "jpserver",
+      "description": "Printer Server command"
+    },
+    {
+      "code": "topsystems.automaticprocess.tipificaciontransacciones.CodigoTransaccionCommand",
+      "name": "trcode",
+      "description": "Transaction code"
+    },
+    {
+      "code": "topsystems.automaticprocess.detallecontabilidad.DeshabilitarDetalleContabilidadCommand",
+      "name": "desdetcont",
+      "description": "Deshabilitar Detalle Contabilidad"
+    },
+    {
+      "code": "topsystems.automaticprocess.eventostransaccion.EventoTransaccionCommand",
+      "name": "eventtrcode",
+      "description": "Evento transaccion"
+    },
+    {
+      "code": "com.topsystems.interpretedservices.server.command.InterpretedServicesCommand",
+      "name": "wsinterpreted",
+      "description": "Topaz Interpreted Services"
+    },
+    {
+      "code": "topsystems.util.log.filter.command.LogFilterCommand",
+      "name": "logfilter",
+      "description": "Topaz header log filters"
+    },
+    {
+      "code": "com.topaz.vault.command.telnet.TopazVaultTelnetCommand",
+      "name": "topazvault",
+      "description": "Topaz Vault"
+    }
+  ]
+}</attribute>
+        <depends>
+      
+      topaz.core:service=Server
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.services.reload.DefinicionContrasientos.ReloadDefinicionContrasientosService" name="topaz.server:service=ReloadDefinicionContrasientosService">
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.drools.DroolsConfigurationService" name="topaz.core:service=DroolsConfigurationService">
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.digitalfolder.DigitalFolderLoad" name="topaz.server:service=DigitalFolder">
+        <depends>
+      
+      topaz.core:service=Server
+    
+    </depends>
+    </mbean>
+    <mbean code="com.topsystems.jtopaz.opmgr.hookvalidations.HookBeanService" name="topaz.server:service=hookservice">
+        <depends>
+      
+      topaz.server:service=JTS
+    
+    </depends>
+    </mbean>
+    <mbean code="com.topsystems.interpretedservices.server.registry.InterpretedServicesStartUp" name="topaz.server:service=InterpretedServicesStartUp">
+        <depends>
+      
+		topaz.server:service=JTS
+	
+    </depends>
+    </mbean>
+    <mbean code="topaz.queuemanagerexecutor.mbean.QueueManagerExecutorBeanService" name="topaz.system:service=QueueManagerExecutorRabbit">
+        <attribute name="activated">false</attribute>
+        <attribute name="channelName">rabbit</attribute>
+        <attribute name="queueType">rabbit</attribute>
+        <attribute name="fileNameConf">rabbitmq-connection.config</attribute>
+        <attribute name="thread">3</attribute>
+        <attribute name="numOfRetries">3</attribute>
+        <attribute name="enableBitacora">true</attribute>
+        <attribute name="enableQueueError">false</attribute>
+        <attribute name="fileNameConfError">rabbitmq-error-connection.config</attribute>
+        <depends>topaz.server:service=JTS</depends>
+    </mbean>
+    <mbean code="topaz.queuemanagerexecutor.mbean.QueueManagerExecutorBeanService" name="topaz.system:service=QueueManagerExecutorKafka">
+        <attribute name="activated">false</attribute>
+        <attribute name="channelName">kafka</attribute>
+        <attribute name="queueType">kafka</attribute>
+        <attribute name="fileNameConf">kafka-connection.config</attribute>
+        <attribute name="thread">3</attribute>
+        <attribute name="numOfRetries">3</attribute>
+        <attribute name="enableBitacora">true</attribute>
+        <attribute name="enableQueueError">false</attribute>
+        <attribute name="fileNameConfError">kafka-error-connection.config</attribute>
+        <depends>topaz.server:service=JTS</depends>
+    </mbean>
+    <mbean code="topaz.queuemanagerexecutor.mbean.QueueManagerExecutorBeanService" name="topaz.system:service=QueueManagerExecutorMQSeries">
+        <attribute name="activated">{{topaz_evento_cola.enable}}</attribute>
+        <attribute name="channelName">MQSerie</attribute>
+        <attribute name="queueType">mqseries</attribute>
+        <attribute name="fileNameConf">mqseries-connection.config</attribute>
+        <attribute name="thread">3</attribute>
+        <attribute name="numOfRetries">3</attribute>
+        <attribute name="enableBitacora">true</attribute>
+        <attribute name="enableQueueError">true</attribute>
+        <attribute name="fileNameConfError">mqseries-error-connection.config</attribute>
+        <depends>topaz.server:service=JTS</depends>
+    </mbean>
+    <mbean code="topaz.queuemanagerexecutor.mbean.QueueManagerExecutorBeanService" name="topaz.system:service=QueueManagerExecutorActiveMQ">
+        <attribute name="activated">false</attribute>
+        <attribute name="channelName">ActiveMQ</attribute>
+        <attribute name="queueType">activemq</attribute>
+        <attribute name="fileNameConf">activemq-connection.config</attribute>
+        <attribute name="thread">3</attribute>
+        <attribute name="numOfRetries">3</attribute>
+        <attribute name="enableBitacora">true</attribute>
+        <attribute name="enableQueueError">true</attribute>
+        <attribute name="fileNameConfError">activemq-error-connection.config</attribute>
+        <depends>topaz.server:service=JTS</depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.controltable.ServerControlTable" name="topaz.server:service=ServerControlTable">
+        <attribute name="period">60</attribute>
+        <depends>topaz.server:service=JTS</depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.controltable.CleanControlTable" name="topaz.server:service=CleanControlTable">
+        <attribute name="period">60</attribute>
+        <attribute name="ttl">600</attribute>
+        <depends>topaz.server:service=ServerControlTable</depends>
+    </mbean>
+    <mbean code="topsystems.j2ee.jboss.server.services.mail.MailService" name="topaz.core:service=Mail">
+        <attribute name="ServerAddress">smtp.nbch.com.ar</attribute>
+        <attribute name="PoolingInterval">25</attribute>
+        <depends>topaz.core:service=Server</depends>
+    </mbean>
+    {% for canal in pos_link_canales.canales %}
+    <mbean code="topsystems.pos.service.TopazPosService" name="topaz.server:service={{ canal.name }}">
+        <attribute name="ChannelName">{{ canal.name }}</attribute>
+        <attribute name="ProtocolName">{{ canal.name }}</attribute>
+        <attribute name="Hosts">{{ pos_link_canales.dest_host }}:{{ pos_link_canales.dest_port_host }}</attribute>
+        <attribute name="AttemptsPerHost">3</attribute>
+        <attribute name="TimeToReconnect">{{ pos_link_canales.time_to_reconnect }}</attribute>
+        <attribute name="MessageLengthType">B2</attribute>
+        <attribute name="SendSignOnOffNotification">True</attribute>
+        <attribute name="ConnectionType">{{ pos_link_canales.connection_type }}</attribute>
+        <attribute name="MaxConnections">{{ pos_link_canales.max_connections }}</attribute>
+        <attribute name="Port">{{ canal.local_port_output }}</attribute>
+        <attribute name="OutputMessageResponseList">{{ pos_link_canales.output_message_response_list }}</attribute>
+        <attribute name="OutputMessageTimeout">{{ pos_link_canales.output_message_timeout }}</attribute>
+        <depends>topaz.server:service=JTS</depends>
+    </mbean>
+    {% endfor %}
+    <mbean code="com.topaz.vault.TopazVaultInitService" name="topaz.core:service=TopazVaultInitService">
+        <depends>topaz.core:service=Logging</depends>
+    </mbean>
+</server>

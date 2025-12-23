@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_clientesCategorizar</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT
+				S.JTS_OID,
+				S.PRODUCTO
+			FROM SALDOS AS S WITH (nolock)
+			WHERE
+				S.TZ_LOCK = 0
+				AND ((
+						S.C1604 &lt; 0
+						AND S.C1785 IN (5)
+						AND S.C1734 IN ('C','Z')
+						AND S.C1734 &lt;&gt; s.C1728
+					)
+					OR (
+						S.C1604 &gt; 0
+						AND S.C1785 = 4
+						AND S.C1734 IN ('I')
+						AND S.C1734 &lt;&gt; s.C1728
+						AND S.PRODUCTO &lt;&gt; (SELECT NUMERICO FROM PARAMETROSGENERALES WHERE CODIGO = 708)
+						AND S.MONEDA IN (
+							SELECT M.C6399
+							FROM MONEDAS AS M
+							WHERE
+								M.C6403 &lt;&gt; 'I'
+								AND ((M.TZ_LOCK &lt; 100000000000000 OR M.TZ_LOCK &gt;= 200000000000000)
+									AND (M.TZ_LOCK &lt; 300000000000000 OR M.TZ_LOCK &gt;= 400000000000000)
+								)
+						)
+					)
+				)
+			ORDER BY S.C1785 DESC
+        </sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_clientesCategorizarMensual</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT S.JTS_OID, S.PRODUCTO
+			FROM SALDOS AS S
+			WHERE S.PRODUCTO IN(4202,4203,4301,4302,4303,4101,4102,4103,4105,4106,4205,4206,4201) AND
+				 S.C1604 &lt;&gt; 0  AND 
+				 S.TZ_LOCK = 0 
+			ORDER BY c1785 DESC
+        </sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_clientesCategorizarVista</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT S.JTS_OID, S.PRODUCTO
+			FROM SALDOS AS S
+			WHERE 
+				S.C1651 &lt;&gt; '1' -- cuenta no cancelada
+				AND S.C1785 IN (2, 3) -- sea cuenta vista ahorro y cta cte
+				AND S.TZ_LOCK = 0
+				AND (S.C3877 &lt; (SELECT FECHAPROCESO FROM PARAMETROS) OR S.C3877 is null)
+				AND S.C1734 &lt;&gt; S.c1728 
+				AND S.C1734 &lt;&gt; ' ' 
+			ORDER  BY C1785 DESC
+        </sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.CategoriasCarteraImpl</class-name>
+        <query-name>query.vo_categoriasCartera</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT cat.codigo_atraso_destino     	  AS codigoAtrasoDestino,
+						       cat.incumplimientos            	  AS limiteCantidadIncumplimientos,
+						       cat.rubro_origen               	  AS rubroOrigen,
+						       cat.rubro_destino              	  AS rubroDestino,
+						       cat.moneda                     	  AS moneda,
+						       cat.producto_destino           	  AS productoDestino,
+						       cat.tipo_categorizacion_auto   	  AS tipoCategorizacionAutomatica,
+						       cat.tipo_categorizacion_manual 	  AS tipoCategorizacionForzada,
+						       cod.nivel_atraso               	  AS nivelAtraso,
+						       cat.periodo_generacion_cuota       AS periodoGeneracionCuota,
+						       cat.criterio                       AS criterio,
+							   cat.CAMPO_PARA_CALC_ATRASO_CATEG   AS campoParaCalcAtrasoCateg,
+							   cat.TIPO_CALENDARIO                AS tipoCalendario,
+							   cat.COMPORTAMIENTO				  AS COMPORTAMIENTO,
+							   cat.CONSIDERA_FIN_DE_MES			  AS CONSIDERA_FIN_DE_MES
+						FROM   cr_categorias_cartera     cat,
+						       cr_codigos_atraso_cartera cod
+						WHERE  cat.codigo_atraso_destino = cod.cod_atraso
+		</sentence>
+        <attribute>
+            <attribute-name>codigoAtrasoDestino</attribute-name>
+            <column-name>codigoAtrasoDestino</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>limiteCantidadIncumplimientos</attribute-name>
+            <column-name>limiteCantidadIncumplimientos</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroOrigen</attribute-name>
+            <column-name>rubroOrigen</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroDestino</attribute-name>
+            <column-name>rubroDestino</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>moneda</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>productoDestino</attribute-name>
+            <column-name>productoDestino</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoCategorizacionAutomatica</attribute-name>
+            <column-name>tipoCategorizacionAutomatica</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoCategorizacionForzada</attribute-name>
+            <column-name>tipoCategorizacionForzada</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nivelAtraso</attribute-name>
+            <column-name>nivelAtraso</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>periodoGeneracionCuota</attribute-name>
+            <column-name>periodoGeneracionCuota</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>criterio</attribute-name>
+            <column-name>criterio</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>campoParaCalcAtrasoCateg</attribute-name>
+            <column-name>campoParaCalcAtrasoCateg</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoCalendario</attribute-name>
+            <column-name>tipoCalendario</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>comportamiento</attribute-name>
+            <column-name>COMPORTAMIENTO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>consideraFinDeMes</attribute-name>
+            <column-name>CONSIDERA_FIN_DE_MES</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_saldosDobleCronograma</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT S.JTS_OID
+			FROM SALDOS AS S
+			WHERE
+				S.ORDINAL = ? AND
+				S.CUENTA = ? AND
+				S.MONEDA = ? AND
+				S.SUCURSAL = ? AND
+				(S.[C1604] &lt; 0 OR S.[C1608] &gt; 0) AND
+				S.[producto] = (SELECT P.[prodblcro] FROM [PRODUCTOS] AS P WHERE P.[C6250] = ?)
+        </sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.DobleCronogramaGenericObject</class-name>
+        <query-name>core.vo_DobleCronogramaGenericObject</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT DISTINCT P.[prodblcro] FROM [PRODUCTOS] AS P
+        </sentence>
+        <attribute>
+            <attribute-name>productoDobleCronograma</attribute-name>
+            <column-name>prodblcro</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.objectsdomain.CategoriasCarteraImpl</class-name>
+        <entity-name>core.vo_CategoriaCartera</entity-name>
+        <table-name>CR_CATEGORIAS_CARTERA</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>tz_lock</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroOrigen</attribute-name>
+            <column-name>RUBRO_ORIGEN</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>limiteCantidadIncumplimientos</attribute-name>
+            <column-name>INCUMPLIMIENTOS</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoAtrasoDestino</attribute-name>
+            <column-name>CODIGO_ATRASO_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroDestino</attribute-name>
+            <column-name>RUBRO_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>productoDestino</attribute-name>
+            <column-name>PRODUCTO_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoCategorizacionAutomatica</attribute-name>
+            <column-name>TIPO_CATEGORIZACION_AUTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>criterio</attribute-name>
+            <column-name>criterio</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>campoParaCalcAtrasoCateg</attribute-name>
+            <column-name>CAMPO_PARA_CALC_ATRASO_CATEG</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoCalendario</attribute-name>
+            <column-name>TIPO_CALENDARIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>comportamiento</attribute-name>
+            <column-name>COMPORTAMIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>consideraFinDeMes</attribute-name>
+            <column-name>CONSIDERA_FIN_DE_MES</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.automaticprocess.categorizaciondecartera.SaldoCategorizar</class-name>
+        <entity-name>core.vo_SaldoCategorizar</entity-name>
+        <table-name>SALDOS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_DIAS_ATRASO</attribute-name>
+            <column-name>C1649</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_FECHA_ULTIMA_CATEGORIZACION</attribute-name>
+            <column-name>C3877</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_TIPO_CATEGORIZACION</attribute-name>
+            <column-name>C1833</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_RUBRO_OPERATIVO</attribute-name>
+            <column-name>C1804</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_RUBRO_CONTABLE</attribute-name>
+            <column-name>C1730</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_ESTADO_ATRASO</attribute-name>
+            <column-name>C1728</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_FECHA_CASTIGADO</attribute-name>
+            <column-name>FECHA_CASTIGADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_ULT_FECHA_EN_VIGENTE</attribute-name>
+            <column-name>ULT_FECHA_VIGENTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_RUBRO_ORIGINAL</attribute-name>
+            <column-name>C1692</column-name>
+        </attribute>
+    </class>
+</map>

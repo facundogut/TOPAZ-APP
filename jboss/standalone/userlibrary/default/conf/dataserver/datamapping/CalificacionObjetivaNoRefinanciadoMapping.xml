@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.automaticprocess.objectdomain.HistoricoCalificacionObjetiva</class-name>
+        <entity-name>vo.HistoricoCalificacionObjetivaNoRefinaciada</entity-name>
+        <table-name>HISTORICO_CALIF_X_SALDO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>fechaHistorico</attribute-name>
+            <column-name>FECHA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOid</attribute-name>
+            <column-name>JTS_PRESTAMO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>calificacionObjetiva</attribute-name>
+            <column-name>CALIFICACION_OBJETIVA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>calificacionReestructurada</attribute-name>
+            <column-name>CALIFICACION_REESTRUCTURADA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoRiesgo</attribute-name>
+            <column-name>TIPO_RIESGO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>diasAtraso</attribute-name>
+            <column-name>DIAS_ATRASO </column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>origenCalificacion</attribute-name>
+            <column-name>ORIGEN</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.objectdomain.VOCalificacionObjetivaNoRefinaciada</class-name>
+        <query-name>query.HistoricoCalificacionObjetivaNoRefinaciada</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT FECHA, JTS_PRESTAMO FROM HISTORICO_CALIF_X_SALDO WHERE FECHA = (select fechaproceso from parametros) AND ORIGEN = 'A'
+			</sentence>
+        <attribute>
+            <attribute-name>fechaHistorico</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOid</attribute-name>
+            <column-name>JTS_PRESTAMO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectdomain.CalificacionObjetivaNoRefinaciada</class-name>
+        <query-name>query.CalificacionObjetivaDeudaNoRefinanciada</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>					
+								SELECT S.JTS_OID,
+									   S.C1803,  
+									   S.C1785 TIPOPRODUCTO,
+									   S.C1628,
+									   ULT_FECHA_VIGENTE,
+									   CASE WHEN CRE.CATEGORIA_COMERCIAL IS NOT NULL AND CRE.CATEGORIA_COMERCIAL='S' THEN 'C'
+											WHEN CRE.CATEGORIA_COMERCIAL IS NOT NULL AND CRE.CATEGORIA_COMERCIAL='M' THEN 'M'
+											WHEN CRE.CATEGORIA_COMERCIAL IS NOT NULL AND CRE.CATEGORIA_COMERCIAL='C' THEN 'C'
+											WHEN CRE.CATEGORIA_COMERCIAL IS NULL AND C.CATEGORIA_COMERCIAL='S' THEN 'C'
+											WHEN CRE.CATEGORIA_COMERCIAL IS NULL AND C.CATEGORIA_COMERCIAL='M' THEN 'M'
+											ELSE 'C'
+									   END  AS CATEGORIA_COMERCIAL,
+									   S.C1652
+								FROM SALDOS S
+									 INNER JOIN PLANCTAS P ON S.C1730 = P.C6326
+									 INNER JOIN CLI_CLIENTES C ON C.CODIGOCLIENTE=S.C1803
+									 INNER JOIN PRODUCTOS R ON S.PRODUCTO=R.C6250
+									 LEFT JOIN CRE_SALDOS CRE ON CRE.SALDOS_JTS_OID = S.JTS_OID	
+								WHERE S.TZ_LOCK=0
+								AND P.TZ_LOCK=0
+								AND R.TZ_LOCK=0
+								AND C.TZ_LOCK=0
+								AND ((S.C1785 IN (2, 5, 6) AND S.C1604 &lt; 0 AND S.C1728 &lt;&gt; 'C')
+									 OR (S.C1785=1 AND R.C6800='T' AND S.C1726 &gt; 0))
+								AND P.CALIFICA = 'S'
+								AND S.C1803 NOT IN (SELECT c.nro_cliente
+													FROM CRE_EMERGENCIA_AGRO a,CRE_CERTIFICADOS_EMERGENCIA c
+													WHERE a.id=c.id_emergencia
+													AND a.TZ_LOCK = 0
+													AND c.TZ_LOCK =0
+													AND a.fecha_vig_desde  &lt;= ?
+													AND a.fecha_vig_hasta  &gt;= ?)
+								ORDER BY S.C1803
+							</sentence>
+        <attribute>
+            <attribute-name>jtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroCliente</attribute-name>
+            <column-name>C1803</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoProducto</attribute-name>
+            <column-name>TIPOPRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProxVencimiento</attribute-name>
+            <column-name>C1628</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSobregiro</attribute-name>
+            <column-name>ULT_FECHA_VIGENTE</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>categoriaComercial</attribute-name>
+            <column-name>CATEGORIA_COMERCIAL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasAtrasoTC</attribute-name>
+            <column-name>C1652</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectdomain.Ponderacion</class-name>
+        <query-name>query.PonderacionAR</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT CATEGORIASUB, DESCRIP_FINANC, PONDERACION FROM CLI_CLASUBJETIVA
+			</sentence>
+        <attribute>
+            <attribute-name>calificacion</attribute-name>
+            <column-name>CATEGORIASUB</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ponderacion</attribute-name>
+            <column-name>PONDERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>DESCRIP_FINANC</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectdomain.ClasificacionPorAtraso</class-name>
+        <query-name>query.CalificacionPorAtrasosAR</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				  select modalidad, categoria, diasdesde, diasHasta from CLI_CLAOBJATRASO
+			</sentence>
+        <attribute>
+            <attribute-name>modalidad</attribute-name>
+            <column-name>modalidad</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>categoria</attribute-name>
+            <column-name>categoria</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasdesde</attribute-name>
+            <column-name>diasdesde</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasHasta</attribute-name>
+            <column-name>diasHasta</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.objectdomain.ClienteCalificacionObjetiva</class-name>
+        <entity-name>core.ClienteCalificacionObjetivaAR</entity-name>
+        <table-name>CLI_CLIENTES</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>codigoCliente</attribute-name>
+            <column-name>CODIGOCLIENTE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>categoriaObjetiva</attribute-name>
+            <column-name>CATEGORIAOBJETIVA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>objetivaRefinanciado</attribute-name>
+            <column-name>OBJETIVA_REFINANCIADO</column-name>
+        </attribute>
+    </class>
+</map>

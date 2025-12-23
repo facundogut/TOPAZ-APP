@@ -1,0 +1,322 @@
+VERSION:051
+TN  NN 1006TConsulta registros para Arqueo          C0001 00
+VN  NN 010005000504080800NNND000000000000000000000000000000000000000
+/T=Arqueo de Buzones
+/C=192192192
+ NNNNN 0119   Nodo           INNSNL00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0526   Lote           INNSNL00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 010018000703360784010111
+/T="Buzón : "+C119+" - Lote : " + C526
+/F=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030045200101100000000700070030013700
+/?=1=0
+/V="NODOCLIENTE = '" + C119 + "' AND NROLOTE = "+C526+" AND ESTADO = 'P' AND EXISTS (SELECT NODO FROM ITF_ESTADO_BUZON E WHERE E.NODO = NODOCLIENTE AND E.NRODEPORIGEN = "+C9502+"  AND E.CIERRE = 'B' AND (ITF_DEPOSITO_BUZON.NROLOTE<E.NROLOTE OR E.NROLOTE = 0))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030045200101100000000700070030013700
+/V="NODOCLIENTE = '" + C119 + "' AND NROLOTE = "+C526+" AND ESTADO = 'P' "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 8698   Ayuda buzón    IENSN 01004300170323077602101160000002000220043015200
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3548   IdInvocaTopaz  INNSNA00000701520030030202101100000000700070030013700
+/V=C8698
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3145   TicketSesion   INNSN 00000701520030030202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=A(C3153="A")
+/M=Este registro ya fue procesado por otro cajero.
+*N  NN ******
+*N  NN I20 -> Pago tarjeta
+*N  NN I21 -> Pago con cheques
+CNNNNN   00000000000000000000100
+/F=A(C4521#"")
+/P=I20
+CNNNNN   00000000000000000000100
+/F=A(C3151="C")
+/P=I21
+*N  NN ******
+VNNNNN 020005000505260800NNND000000000000000000000000000000000000001
+/T=Datos del sobre
+/C=192192192
+KNNNNN 020007000701490780000101
+/T=Datos de la Cuenta
+/F=0012700NNN000000000Arial                                   
+*N  NN ** Si es tarjeta no muestra la cuenta
+ NNNNN 0001   Sucursal       INNSNA00000701520030020202101100000000700070030013700
+/?=!I20
+/V=C3507
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0007   Producto       INNSNA00000701520030020202101100000000700070030013700
+/?=!I20
+/V=C3147
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6251   Descripcion    ICNSN 02006302750086076900101050000000700070030013700
+/?=!I20
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0005   Cuenta         IDNSNA02006301680086026402101050000006300240086015400
+/?=!I20
+/V=C3148
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0003   Moneda         IDNSNA02009401680117026402101050000009400240117015400
+/?=!I20
+/V=C3149
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6400   Descripcion    ICNSN 02009402750117076900101050000000700070030013700
+/?=!I20
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0006   Referencia     INNSNA00000701520030030202101100000000700070030013700
+/?=!I20
+/V=C3604
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0008   Ordinal        INNSNA00000701520030020202101100000000700070030013700
+/?=!I20
+/V=C3508
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1604   Saldo Actual   INNSN 00000701520030030202101100000000700070030013700
+/?=!I20
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0002   Cliente        IDNSNA02003201680055026402101050000003200240055015400
+/?=!I20
+/V=C1803.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1000   Nombre Cliente ICNSN 02003202750055076900101050000000700070030013700
+/?=!I20
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020066001600860776010000
+/?=I20
+/T=NO APLICA
+/F=0012700NNN000000000Arial                                   
+KNNNNN 020145000704520780011111
+/T="    Transacción: "+C3509+"    "
+/F=0015700NNN000000000Arial                                   
+CNNNNN  w00000000000000000000100
+/R=F
+*N  NN ** Muestra los datos de la transacción a procesar
+ NNNNN 3151   TipoDeposito   IINSN 02016901680192032300101150000016900240192015400
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 4521   Nro.Tarjeta    IDNSN 02020001680223032500101050000020000240223015400
+/?=I20
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 5398   Tipo Doc.      IINSN 02023101680254022600101050000023100240254015400
+/?=I20
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 5471   Nro Doc.       IINSN 02023203780255054300101050000023202750255036900
+/?=I20
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 5478   Nombre         IINSN 02026201680285076800101050000026200240285011800
+/?=I20
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0003   Moneda         IDNSNA02029301680316022602101150000029300240316015400
+/V=C3605
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6400   Descripcion    ICNSN 02029302400316050600101150000000700070030013700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3152   Cant. Cheques  I NSN 02032401680347022602001000000032400240347015400
+/?=I21
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=I21
+/F=C3152=0
+/M=Error. Cantidad de cheques no puede ser 0.
+ NSSNN 3150   Importe        I NSN 02035501680378032302001100000035500240378015400
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C3150=0
+/M=Error. Importe no puede ser 0.
+KNNNNN 020386002404090141000100
+/T=¿ Procesa ?
+/F=0012700NNN000000000Arial                                   
+ N  NN 0960   Opcion S/N     IENSNK02038801680656032300101112000000700070030013700
+/V=S
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN M 00000000000000000000100
+/F=A(C960="N")
+/A=I200
+/M=Esta operación no será procesada. ¿Continúa?
+TN  NN 1009TProcesa Deposito                        M9511 00
+*N  NN Si presiona aceptar, cargo variable para que operacion llamadora interprete como No Terminar.
+*N  NN Si presiona cancelar, variable no queda cargada 
+ NNNNN 0176   No Terminar    INNSNK00000701520030020202101100000000700070030013700
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3548   IdInvocaTopaz  INNSNA00000701520030030202101100000000700070030013700
+/V=C3548.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=A(C3153="A")
+/M=Este registro ya fue procesado por otro cajero.
+ NNNNN 3153   Estado         INNSNK00000701520030020200101100000000700070030013700
+/?=I200
+/V=A
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3153   Estado         INNSNK00000701520030020200101100000000700070030013700
+/?=!I200
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ** Carga los datos que necesita la operación a llamar
+ NNNNN 1984   Moneda         INNSNA00000701520030020202101100000000700070030013700
+/?=I200
+/V=C3605.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0902   Código Cliente INNNNA00004502030068031802001100000004500880068018800
+/?=I200Y!I20
+/V=C002.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0001   Sucursal       INNNNA00002401460044023002101100000002400340044012300
+/?=I200Y!I20
+/V=C3507.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0007   Producto       INNNNA00005201460072023002101100000005200340072012300
+/?=I200Y!I20
+/V=C3147.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0005   Cuenta         INNSNA00000701520030020202101100000000700070030013700
+/?=I200Y!I20
+/V=C3148.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0003   Moneda         INNNNA00007701460097023002101100000007700340097012300
+/?=I200Y!I20
+/V=C3149.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0006   Referencia     INNSNA00000701520030020202101100000000700070030013700
+/?=I200Y!I20
+/V=C3604.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0008   Ordinal        INNSNA00000701520030020202101100000000700070030013700
+/?=I200Y!I20
+/V=C3508.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0033   Total Depósito INNSNA02028702360310037602101100000028700570310017100
+/?=I200
+/V=C3150.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Inicializo variables
+ NSSNN 0254   Tarjeta        INNSNF00000701520030045200101100000000700070030013700
+/?=I200
+/V=""
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0537   Tipo doc       INNSNF00000701520030045200101100000000700070030013700
+/?=I200
+/V=""
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0622   Documento      INNSNF00000701520030045200101100000000700070030013700
+/?=I200
+/V=""
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0350   Nombre         INNSNF00000701520030045200101100000000700070030013700
+/?=I200
+/V=""
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0066   Cant.Cheques   INNSNK02032401680347022602001000000032400240347015400
+/?=I200
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Cargo variables para llamada
+ NSSNN 0254   Tarjeta        INNSNA00000701520030045200101100000000700070030013700
+/?=I200YI20
+/V=C4521.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0537   Tipo doc       INNSNA00000701520030045200101100000000700070030013700
+/?=I200YI20
+/V=C5398.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0622   Documento      INNSNA00000701520030045200101100000000700070030013700
+/?=I200YI20
+/V=C5471.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0350   Nombre         INNSNA00000701520030045200101100000000700070030013700
+/?=I200YI20
+/V=C5478.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0066   Cant.Cheques   INNSNA02032401680347022602001000000032400240347015400
+/?=I200YI21
+/V=C3152.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0336   Alfa 35        INNSNK00000701520030030200101100000000700070030013700
+/?=I200
+/V=BUZON
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ** Llama operación asociada
+DN  NN 0000ON00
+/?=I200
+/FC3154.1
+DN  NN 3053Ov00
+/?=!I200
+*#I20#Pago Tarjeta
+*#I21#Pago con cheques
+*#I200#No procesa el registro

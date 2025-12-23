@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Referencias Comerciales" language="groovy" pageWidth="576" pageHeight="842" columnWidth="536" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.6105100000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="23"/>
+	<parameter name="idReferencia" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT idpersonaOri, Establecimiento,Direccion,Telefono,isnull(Fecha, CONVERT(DATETIME, '2999-01-01', 111))Fecha,Monto,TipoProducto,isnull(Moneda,'N/A') Moneda FROM
+(SELECT idpersonaOri ,C2787 Establecimiento, C2775 Direccion,C2776 Telefono, C2778 Fecha, C8424,
+	   C2780 Monto,
+	   CASE  C2779
+		WHEN 'A' THEN 'Ahorro'
+		WHEN 'B' THEN 'Corriente'
+		WHEN 'C' THEN 'Credito'
+		WHEN 'G' THEN 'Carta de Garantia'
+		ELSE 'Inversiones' END AS TipoProducto  FROM CL_REFERENCIAS where C2773='C') r
+
+		LEFT JOIN (SELECT c6399,c6400 Moneda FROM CO_MONEDAS ) m  ON r.C8424 = m.C6399 RIGHT JOIN (SELECT $P{idReferencia} AS numero) b ON r.IDPERSONAORI =b.numero
+]]>
+	</queryString>
+	<field name="idpersonaOri" class="java.math.BigDecimal"/>
+	<field name="Establecimiento" class="java.lang.String"/>
+	<field name="Direccion" class="java.lang.String"/>
+	<field name="Telefono" class="java.lang.String"/>
+	<field name="Fecha" class="java.sql.Timestamp"/>
+	<field name="Monto" class="java.math.BigDecimal"/>
+	<field name="TipoProducto" class="java.lang.String"/>
+	<field name="Moneda" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="26" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="1" width="533" height="24"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="4" y="4" width="158" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos del Referente:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="120" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="2" width="533" height="115"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="14" y="4" width="98" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Establecimineto:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="65" width="108" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tipo transacción:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="54" y="35" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Teléfono:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="54" y="78" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Monto: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="54" y="19" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="54" y="93" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Moneda: ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="4" width="405" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Establecimiento}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="19" width="405" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Direccion}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="35" width="405" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Telefono}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="50" width="405" height="20">
+					<printWhenExpression><![CDATA[$F{idpersonaOri} > 0]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{Fecha}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="65" width="405" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TipoProducto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="78" width="405" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Monto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="115" y="93" width="405" height="20">
+					<printWhenExpression><![CDATA[$F{idpersonaOri} > 0]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Moneda}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="54" y="50" width="58" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

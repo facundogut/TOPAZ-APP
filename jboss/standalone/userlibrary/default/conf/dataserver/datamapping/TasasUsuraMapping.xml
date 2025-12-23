@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by Home (Home) -->
+<map>
+	<query>
+		<class-name>tasas.objectsdomain.QueryCodigoActividadCIIU</class-name>
+		<query-name>query.QueryCodigoActividadCIIU</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT CASE C.CATEG_TASAS
+			         WHEN 1 THEN
+			          'PM'
+			         WHEN 2 THEN
+			          'PM'
+			         WHEN 3 THEN
+			          'GM'
+			         WHEN 4 THEN
+			          'GM'
+			         WHEN 0 THEN
+			          'F'
+			       END AS TIPO_CLIENTE,
+			       A.MODALIDAD,
+			       CASE C.SEGMENTOCLIENTE
+			         WHEN 71 THEN
+			          'S'
+			         ELSE
+			          'N'
+			       END AS SEGMENTOCLIENTE
+			  FROM CLI_CLIENTES C
+			  LEFT JOIN CLI_COD_ACT_CIIU A on A.CODACTCIIU = ?
+			 WHERE A.TZ_LOCK = 0
+			   AND C.TZ_LOCK = 0
+   			  AND C.CODIGOCLIENTE = ?
+		</sentence>
+		<attribute>
+			<attribute-name>tipoCliente</attribute-name>
+			<column-name>TIPO_CLIENTE</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>modalidad</attribute-name>
+			<column-name>MODALIDAD</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>segmentoCliente</attribute-name>
+			<column-name>SEGMENTOCLIENTE</column-name>
+			<column-type>String</column-type>
+		</attribute>		
+	</query>
+	<class>
+		<class-name>tasas.objectsdomain.TasasUsura</class-name>
+		<entity-name>core.vo_TasasUsura</entity-name>
+		<table-name>CRE_TASAS_USURA</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>tz_lock</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaVigencia</attribute-name>
+			<column-name>FECHA_VIGENCIA</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>tipoCliente</attribute-name>
+			<column-name>TIPO_CLIENTE</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>destino</attribute-name>
+			<column-name>DESTINO</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>MONEDA</column-name>
+			<key>primary</key>
+		</attribute>	
+		<attribute>
+			<attribute-name>parametroPlazo</attribute-name>
+			<column-name>PARAMETRO_PLAZO</column-name>
+			<key>primary</key>
+		</attribute>	
+		<attribute>
+			<attribute-name>parametroCapital</attribute-name>
+			<column-name>PARAMETRO_CAPITAL</column-name>
+			<key>primary</key>
+		</attribute>	
+		<attribute>
+			<attribute-name>segmentoEmpleado</attribute-name>
+			<column-name>SEGMENTO_EMPLEADO</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>paramCapitalConsumo</attribute-name>
+			<column-name>PARAM_CAPITAL_CONSUMO</column-name>
+			<key>primary</key>
+		</attribute>	
+		<attribute>
+			<attribute-name>tasa</attribute-name>
+			<column-name>TASA</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>tasaMora</attribute-name>
+			<column-name>TASA_MORA</column-name>
+		</attribute>
+	</class>
+
+</map>

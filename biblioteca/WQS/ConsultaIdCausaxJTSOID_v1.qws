@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/depjudicial/getCausaByCuenta/{JTS_OID}</uri>
+    <serviceDescription>ConsultaIdCausaxJTS_OID</serviceDescription>
+    <title>ConsultaIdCausaxJTS_OID</title>
+    <querys>
+        <query id="1" name="query" type="MULTIPLE">
+            <sql>SELECT c.NRO_CAUSA as idCausa FROM 
+DJ_CAUSA_CUENTA c (nolock) INNER JOIN SALDOS s (nolock) ON c.JTS_OID_CUENTA=?
+AND c.JTS_OID_CUENTA=s.JTS_OID
+WHERE ((c.TZ_LOCK &lt; 300000000000000 OR c.TZ_LOCK &gt;= 400000000000000) AND (c.TZ_LOCK &lt; 100000000000000 OR c.TZ_LOCK &gt;= 200000000000000))</sql>
+            <input>
+                <inParameter description="" type="INTEGER">JTS_OID</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="ingresoso">
+                    <outParameter description="" type="LONG">
+                        <queryname>idCausa</queryname>
+                        <servicename>idCausa</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

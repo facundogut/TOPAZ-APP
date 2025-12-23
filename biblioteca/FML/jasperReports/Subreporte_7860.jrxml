@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2023-10-13T17:10:19 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Subreporte_7860" pageWidth="680" pageHeight="800" columnWidth="680" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="035a27c8-bc17-4014-b01f-f40ce1d1e491">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="CLIENTE" class="java.lang.Double"/>
+	<parameter name="TIPO" class="java.lang.String"/>
+	<parameter name="DESTINO" class="java.lang.String"/>
+	<parameter name="EXTRAORDINARIO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT m.C6401, c.TIPODOC, c.NUMERODOC, c.NOMBRECLIENTE,p.C6251 as desc_producto, p.C6250 as producto,  v.*
+FROM VW_CRE_DOCUMENTOS_DESC_O_AL_COBRO v
+INNER JOIN MONEDAS m ON v.moneda = m.C6399 AND m.TZ_LOCK = 0
+INNER JOIN VW_CLI_X_DOC c ON v.cliente = c.CODIGOCLIENTE
+INNER JOIN SALDOS s WITH(NOLOCK)  ON s.jts_oid=v.jts_oid
+INNER JOIN PRODUCTOS p WITH(NOLOCK) ON p.C6250=producto
+LEFT JOIN CRE_FAMILIAS fam WITH(NOLOCK) ON fam.FAMILIAPROD=p.C6283
+LEFT JOIN CRE_TIPOS_RIESGOS ri WITH(NOLOCK) ON ri.CODIGO_RIESGO=fam.RIESGO
+WHERE (v.cliente = $P{CLIENTE} or $P{CLIENTE} = 0) and
+(v.destino = $P{DESTINO} or $P{DESTINO} = 'TODOS') and
+(v.tipo = $P{TIPO} or $P{TIPO} = 'TODOS')  and
+(ISNULL(ri.EXTRAORDINARIO,'N')=$P{EXTRAORDINARIO} )
+ORDER BY v.documento, v.cliente, v.destino, v.tipo, v.fecha_documento desc]]>
+	</queryString>
+	<field name="C6401" class="java.lang.String"/>
+	<field name="TIPODOC" class="java.lang.String"/>
+	<field name="NUMERODOC" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="desc_producto" class="java.lang.String"/>
+	<field name="producto" class="java.math.BigDecimal"/>
+	<field name="tipo" class="java.lang.String"/>
+	<field name="cliente" class="java.lang.Double"/>
+	<field name="destino" class="java.lang.String"/>
+	<field name="tipo_documento" class="java.lang.String"/>
+	<field name="documento_librador" class="java.lang.String"/>
+	<field name="documento" class="java.lang.String"/>
+	<field name="moneda" class="java.math.BigDecimal"/>
+	<field name="importe" class="java.math.BigDecimal"/>
+	<field name="fecha_documento" class="java.sql.Timestamp"/>
+	<field name="fecha_vencimiento" class="java.sql.Timestamp"/>
+	<field name="jts_oid_cta_vista" class="java.math.BigDecimal"/>
+	<field name="banco_girado" class="java.math.BigDecimal"/>
+	<field name="sucursal_banco_girado" class="java.math.BigDecimal"/>
+	<field name="numerico_cuenta_giradora" class="java.math.BigDecimal"/>
+	<field name="numero" class="java.lang.String"/>
+	<field name="jts_oid" class="java.math.BigDecimal"/>
+	<field name="NOMBRE_CHEQUE" class="java.lang.String"/>
+	<group name="Group1">
+		<groupExpression><![CDATA[$F{numero}+$F{numerico_cuenta_giradora}]]></groupExpression>
+		<groupHeader>
+			<band height="32">
+				<textField>
+					<reportElement x="0" y="1" width="99" height="26" uuid="1ee082cf-f86c-4e78-8050-44afb9df49ad">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{sucursal_banco_girado}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="99" y="1" width="101" height="26" uuid="cdc42d87-4fc5-44df-abd5-12f85dc573e1">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{banco_girado}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="200" y="1" width="100" height="26" uuid="512f13b8-7de0-4d42-9010-31526cfb379c">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{numerico_cuenta_giradora}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="400" y="1" width="104" height="26" uuid="ad2c5426-a006-4d30-9619-8518920205c4">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="504" y="1" width="96" height="26" uuid="9e46949e-14e6-4f98-8c44-dd4ffd130fcc"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{numero}]]></textFieldExpression>
+				</textField>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="600" y="1" width="80" height="26" uuid="8cb7f7e8-d89b-4fba-b056-6a30e845ca05">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{fecha_vencimiento}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="300" y="1" width="100" height="26" uuid="6ab344b3-54b0-484c-9cc6-6cb2267f327f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$F{C6401}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="30">
+			<staticText>
+				<reportElement x="0" y="0" width="99" height="30" uuid="23f7611a-d4e3-4fed-8778-38168178d4d0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sucursal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="99" y="0" width="101" height="30" uuid="e64517e2-fd9c-4c4b-a0ed-e1294251c000"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Banco]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="0" width="100" height="30" uuid="19da0713-5de7-4bfe-8fbe-3b97f76a6ed5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="300" y="0" width="100" height="30" uuid="1c5007c7-9239-40c3-ab43-afbb719357a4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="400" y="0" width="104" height="30" uuid="00ed50cd-0204-466a-8b2c-f30208caa11e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="504" y="0" width="96" height="30" uuid="2fd8b258-7d76-4787-98ee-c8d2f72c2547"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro Cheque]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="600" y="0" width="80" height="30" uuid="1e6658f3-709e-47c7-a0d1-1f5318ff8bef">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vencimiento]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+</jasperReport>

@@ -1,0 +1,133 @@
+﻿EXECUTE('
+ALTER PROCEDURE SP_RECHAZO_REVERSA_DEBITOS_DIRECTOS
+	@P_ID_PROCESO FLOAT(53), /* Identificador de proceso */
+	@P_DT_PROCESO DATETIME,	/* Fecha de proceso */
+	@P_SUCURSAL NUMERIC(5), /* Sucursal para donde se buscará las ordenes recibidas (-1=Todas) */
+	@P_FECHA_VTO DATETIME, /* Fecha de vencimiento de órdenes a rechazar o reversar */
+	@P_FUNCIONALIDAD VARCHAR(1), /* R: Rechazo, P: Reversa del Rechazo */
+	@P_ASIENTO NUMERIC(10), /* Nro. de asiento de la operación que llama el SP */
+	@P_SUC_ASIENTO NUMERIC(10), /* Sucursal de asiento de la operación que llama el SP */
+	@P_RET_PROCESO FLOAT(53) OUTPUT, /* Estado de ejecucion del PL/SQL(1:Correcto, 2: Error) */
+	@P_CANTIDAD NUMERIC(12) OUTPUT,
+	@P_MSG_PROCESO VARCHAR(6) OUTPUT
+
+AS 
+BEGIN
+
+	DECLARE
+		@FECHA_ESTADO DATETIME,
+		@MOTIVO_RECHAZO NUMERIC(3)
+
+	DECLARE @TMPSaldosSucursal AS TABLE (
+			JTS_OID NUMERIC (10, 0)
+		)
+	
+	SELECT @FECHA_ESTADO = FECHAPROCESO FROM PARAMETROS WITH (nolock)
+	SET @MOTIVO_RECHAZO = 45 --PARAMETRIZADO EN SNP_MOTIVOS_RECHAZO
+
+	BEGIN TRY
+
+		INSERT INTO @TMPSaldosSucursal
+			SELECT
+				JTS_OID
+			FROM SALDOS WITH (nolock)
+			WHERE
+				(SUCURSAL = @P_SUCURSAL OR @P_SUCURSAL = -1)
+				AND ((TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000) 
+					AND (TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)
+				)
+
+		IF @P_FUNCIONALIDAD = ''R'' 
+		BEGIN
+
+			SELECT @P_CANTIDAD = count(*) FROM SNP_DEBITOS
+			WHERE 
+				ESTADO = ''PP''
+				AND FECHA_VTO = @P_FECHA_VTO
+				AND SALDO_JTS_OID IN (SELECT JTS_OID FROM @TMPSaldosSucursal)
+				AND TZ_LOCK = 0;
+
+			UPDATE SNP_DEBITOS
+			SET ESTADO = ''RC'',
+				FECHA_ESTADO = @FECHA_ESTADO,
+				MOTIVO_RECHAZO = @MOTIVO_RECHAZO,
+				NUMERO_ASIENTO = @P_ASIENTO,
+				SUCURSAL_ASIENTO = @P_SUC_ASIENTO,
+				FECHA_ASIENTO = @P_DT_PROCESO
+			WHERE 
+				ESTADO = ''PP''
+				AND FECHA_VTO = @P_FECHA_VTO
+				AND SALDO_JTS_OID IN (SELECT JTS_OID FROM @TMPSaldosSucursal)
+				AND TZ_LOCK = 0;
+
+			SET @P_MSG_PROCESO =''A''
+
+		END
+
+		IF @P_FUNCIONALIDAD = ''P'' 
+		BEGIN
+
+			SELECT @P_CANTIDAD = count(*) FROM SNP_DEBITOS
+			WHERE 
+				ESTADO = ''RC'' 
+				AND SALDO_JTS_OID IN (SELECT JTS_OID FROM @TMPSaldosSucursal)
+				AND FECHA_VTO = @P_FECHA_VTO
+				AND MOTIVO_RECHAZO = @MOTIVO_RECHAZO
+				AND TZ_LOCK = 0;
+
+			UPDATE SNP_DEBITOS
+			SET ESTADO = ''PP'',
+				FECHA_ESTADO = NULL,
+				MOTIVO_RECHAZO = NULL,
+				NUMERO_ASIENTO = NULL,
+				SUCURSAL_ASIENTO = NULL,
+				FECHA_ASIENTO = NULL
+			WHERE 
+				ESTADO = ''RC'' 
+				AND SALDO_JTS_OID IN (SELECT JTS_OID FROM @TMPSaldosSucursal)
+				AND FECHA_VTO = @P_FECHA_VTO
+				AND MOTIVO_RECHAZO = @MOTIVO_RECHAZO
+				AND TZ_LOCK = 0;
+			
+			SET @P_MSG_PROCESO =''B''
+
+		END
+
+		SET @P_RET_PROCESO = 1
+
+	END TRY
+
+	BEGIN CATCH
+		DECLARE
+			@errornumber int
+		SET @errornumber = ERROR_NUMBER()
+		DECLARE
+			@errormessage nvarchar(4000)
+		SET @errormessage = ERROR_MESSAGE()
+		BEGIN
+			SET @P_RET_PROCESO = ERROR_NUMBER()
+			IF @P_FUNCIONALIDAD = ''R''
+				BEGIN
+					SET @P_MSG_PROCESO = ''Error en rechazo de débitos directos por sucursal''
+				END
+			ELSE
+				BEGIN
+					SET @P_MSG_PROCESO = ''Error en reversa de rechazo de débitos directos por sucursal''
+				END
+
+			DECLARE
+				@PKG_CONSTANTES$C_LOG_TIPO_ERROR varchar(30)
+			SET @PKG_CONSTANTES$C_LOG_TIPO_ERROR = ''E''
+			EXECUTE dbo.PKG_LOG_PROCESO$PROC_INS_LOG_PROCESO 
+				@P_ID_PROCESO = @P_ID_PROCESO, 
+				@P_FCH_PROCESO = @P_DT_PROCESO, 
+				@P_NOM_PACKAGE = ''SP_RECHAZO_REVERSA_DEBITOS_DIRECTOS'', 
+				@P_COD_ERROR = @P_RET_PROCESO, 
+				@P_MSG_ERROR = @P_MSG_PROCESO, 
+				@P_TIPO_ERROR = @PKG_CONSTANTES$C_LOG_TIPO_ERROR
+		END
+	END CATCH
+
+END
+')
+

@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.ajusteporinflacion.objectsdomain.CuentaNoMonetaria</class-name>
+        <query-name>query.vo_cuentasNoMonetarias</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT c1730 as rubro_contable, 
+				c1604 as saldo_actual, 
+				s.moneda as moneda, 
+				jts_oid as cuenta_jts_oid,
+				aj.rubro_destino as rubro_ajuste, 
+				aj.rubro_patrimonial as rubro_patrimonial,
+				s.sucursal,
+				s.ajusteinflacion 
+				FROM saldos s, co_ajuste_x_inflacion aj
+				WHERE s.c1730 = aj.rubro_origen 
+				AND aj.tz_lock = 0 AND
+				    s.moneda = aj.moneda
+				AND (s.c1604 &lt;&gt;  0 OR s.ajusteinflacion &lt;&gt; 0) 
+
+		</sentence>
+        <attribute>
+            <attribute-name>rubro_contable</attribute-name>
+            <column-name>rubro_contable</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldo_actual</attribute-name>
+            <column-name>saldo_actual</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>moneda</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cuenta_jts_oid</attribute-name>
+            <column-name>cuenta_jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro_ajuste</attribute-name>
+            <column-name>rubro_ajuste</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro_patrimonial</attribute-name>
+            <column-name>rubro_patrimonial</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ajuste_anterior</attribute-name>
+            <column-name>ajuste_anterior</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.ajusteporinflacion.objectsdomain.IndiceMensual</class-name>
+        <entity-name>core.vo_indiceMensual</entity-name>
+        <table-name>CO_INDICE_ACTUALIZACION</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>anio</attribute-name>
+            <column-name>ANIO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>mes</attribute-name>
+            <column-name>MES</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>indice</attribute-name>
+            <column-name>INDICE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo_Indice</attribute-name>
+            <column-name>TIPO_INDICE</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.automaticprocess.ajusteporinflacion.objectsdomain.HistoricoAjuste</class-name>
+        <entity-name>core.vo_HistoricoAjustes</entity-name>
+        <table-name>co_his_ajuste_x_inflacion</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>SALDO_JTS_OID</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHA</attribute-name>
+            <column-name>FECHA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO</attribute-name>
+            <column-name>SALDO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>INDICE_ACTUAL</attribute-name>
+            <column-name>INDICE_ACTUAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>INDICE_ANTERIOR</attribute-name>
+            <column-name>INDICE_ANTERIOR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>DIFERENCIA_INDICES</attribute-name>
+            <column-name>DIFERENCIA_INDICES</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>ULTIMA_FECHA_AJUSTE</attribute-name>
+            <column-name>ULTIMA_FECHA_AJUSTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>MONTO_AJUSTE</attribute-name>
+            <column-name>MONTO_AJUSTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>MONETARIO</attribute-name>
+            <column-name>MONETARIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_MN</attribute-name>
+            <column-name>SALDO_MN</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.ajusteporinflacion.objectsdomain.HistoricoAjuste</class-name>
+        <query-name>query.HistoricoAjusteXInflacion</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT FECHA, SALDO_JTS_OID FROM CO_HIS_AJUSTE_X_INFLACION WHERE FECHA = ?
+		</sentence>
+        <attribute>
+            <attribute-name>FECHA</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_JTS_OID</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.ajusteporinflacion.objectsdomain.CuentaCalculoInfl</class-name>
+        <query-name>query.vo_cuentasCalculoInfl</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT
+				S.RUBROCONTABLE AS rubro_contable,
+				S.SALDO_AJUSTADO AS saldo_actual,
+				S.MONEDA AS moneda,
+				S.SALDOS_JTS_OID AS cuenta_jts_oid,
+				AJ.RUBRO_DESTINO AS rubro_ajuste,
+				AJ.RUBRO_PATRIMONIAL as rubro_patrimonial,
+				S.SUCURSAL AS sucursal,
+				AJ.MONETARIO,
+				M.C6403 AS TIPOMONEDA,
+				H.TIPO_CAMBIO_OFICIAL AS TIPO_CAMBIO
+			FROM GRL_SALDOS_DIARIOS AS S
+			INNER JOIN PLANCTAS AS P ON
+				P.C6326 = S.RUBROCONTABLE
+				AND P.C6304 NOT IN (4,5,6,7) -- no se toman contingencias ni cuentas de orden
+				AND P.TZ_LOCK = 0
+			INNER JOIN MONEDAS AS M ON
+				M.C6399 = S.MONEDA
+				AND M.C6403 = 'N' -- AND  aj.RUBRO_ORIGEN = aj.RUBRO_DESTINO
+				AND M.TZ_LOCK = 0
+			LEFT JOIN CO_AJUSTE_X_INFLACION AS AJ ON
+				AJ.RUBRO_ORIGEN = S.RUBROCONTABLE
+				AND AJ.MONEDA = CASE WHEN M.C6403 = 'N' THEN 'N' ELSE 'E' END
+				AND AJ.TZ_LOCK = 0
+			LEFT JOIN HISTORICOTIPOSCAMBIO AS H ON
+				H.FECHA_COTIZACION = S.FECHA
+				AND H.MONEDA = S.MONEDA
+				AND H.TZ_LOCK = 0
+			WHERE
+				S.FECHA = ? -- Corresponde ultimo dia habil del mes anterior a la fecha de proceso.
+				AND S.SALDO_AJUSTADO &lt;&gt; 0
+				AND S.RUBROCONTABLE &lt;&gt; (SELECT DISTINCT C6433 FROM MONEDAS WHERE TZ_LOCK = 0)
+				AND S.RUBROCONTABLE &lt;&gt; (SELECT DISTINCT C6435 FROM MONEDAS WHERE TZ_LOCK=0)
+				AND S.TZ_LOCK = 0
+
+			UNION ALL
+
+			SELECT
+				S.RUBROCONTABLE AS rubro_contable,
+				S.SALDO_AJUSTADO AS saldo_actual,
+				S.MONEDA AS moneda,
+				S.SALDOS_JTS_OID AS cuenta_jts_oid,
+				AJ.RUBRO_DESTINO AS rubro_ajuste,
+				AJ.RUBRO_PATRIMONIAL as rubro_patrimonial,
+				S.SUCURSAL AS sucursal,
+				AJ.MONETARIO,
+				M.C6403 AS TIPOMONEDA,
+				H.TIPO_CAMBIO_OFICIAL AS TIPO_CAMBIO
+			FROM GRL_SALDOS_DIARIOS AS S
+			INNER JOIN PLANCTAS AS P ON
+				P.C6326 = S.RUBROCONTABLE
+				AND P.C6304 NOT IN (4,5,6,7) -- no se toman contingencias ni cuentas de orden
+				AND P.TZ_LOCK = 0
+			INNER JOIN MONEDAS AS M ON
+				M.C6399 = S.MONEDA
+				AND M.C6403 &lt;&gt; 'N' -- AND  aj.RUBRO_ORIGEN &lt;&gt; aj.RUBRO_DESTINO
+				AND M.TZ_LOCK = 0
+			LEFT JOIN CO_AJUSTE_X_INFLACION AS AJ ON
+				AJ.RUBRO_ORIGEN = S.RUBROCONTABLE
+				AND AJ.MONEDA = CASE WHEN M.C6403 = 'N' THEN 'N' ELSE 'E' END
+				AND AJ.TZ_LOCK = 0
+			LEFT JOIN HISTORICOTIPOSCAMBIO AS H ON
+				H.FECHA_COTIZACION = S.FECHA
+				AND H.MONEDA = S.MONEDA
+				AND H.TZ_LOCK = 0
+			WHERE
+				S.FECHA = ? -- Corresponde ultimo dia habil del mes anterior a la fecha de proceso.
+				AND S.SALDO_AJUSTADO &lt;&gt; 0
+				AND S.RUBROCONTABLE &lt;&gt; (SELECT DISTINCT C6433 FROM MONEDAS WHERE TZ_LOCK = 0)
+				AND S.RUBROCONTABLE &lt;&gt; (SELECT DISTINCT C6435 FROM MONEDAS WHERE TZ_LOCK=0)
+				AND S.TZ_LOCK = 0
+		</sentence>
+        <attribute>
+            <attribute-name>rubro_contable</attribute-name>
+            <column-name>rubro_contable</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldo_actual</attribute-name>
+            <column-name>saldo_actual</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>moneda</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cuenta_jts_oid</attribute-name>
+            <column-name>cuenta_jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro_ajuste</attribute-name>
+            <column-name>rubro_ajuste</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro_patrimonial</attribute-name>
+            <column-name>rubro_patrimonial</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monetario</attribute-name>
+            <column-name>MONETARIO</column-name>
+            <column-type>varchar</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoMoneda</attribute-name>
+            <column-name>TIPOMONEDA</column-name>
+            <column-type>varchar</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoCambio</attribute-name>
+            <column-name>TIPO_CAMBIO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.ajusteporinflacion.objectsdomain.CuentaContabilizoAjuste</class-name>
+        <query-name>query.vo_contabilizoNoMonetarias</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT rubrocontable AS rubro_contable,
+		                       (SELECT c6399 FROM MONEDAS WHERE C6403='N' AND TZ_LOCK=0) as moneda,
+		                       haj.SALDO_JTS_OID AS cuenta_jts_oid,
+		                       haj.SALDO AS SALDO_AJUSTADO,
+		                       aj.rubro_destino as rubro_ajuste,
+		                       aj.rubro_patrimonial as rubro_patrimonial,
+		                       s.sucursal,
+		                       haj.MONETARIO,
+		                       haj.MONTO_AJUSTE,
+		                       p.C6304 AS GRUPO_BALANCE
+		            FROM (select * FROM GRL_SALDOS_DIARIOS WHERE FECHA = ? ) AS s
+		            INNER JOIN MONEDAS M 
+		                                ON S.MONEDA = M.C6399
+		            INNER JOIN PLANCTAS P ON s.rubrocontable=c6326
+		            INNER JOIN  CO_AJUSTE_X_INFLACION aj ON s.RUBROCONTABLE=AJ.RUBRO_ORIGEN
+		            INNER JOIN CO_HIS_AJUSTE_X_INFLACION haj ON haj.SALDO_JTS_OID=S.SALDOS_JTS_OID AND haj.FECHA = ?
+		            WHERE
+		                aj.tz_lock = 0 AND P.TZ_LOCK=0   
+		                AND aj.MONEDA = 'N' AND M.C6403='N'
+		                AND haj.MONETARIO = 'N'
+		                AND M.TZ_LOCK=0
+		            UNION
+		            SELECT rubrocontable AS rubro_contable,
+		                       (SELECT c6399 FROM MONEDAS WHERE C6403='N' AND TZ_LOCK=0) as moneda,
+		                       haj.SALDO_JTS_OID AS cuenta_jts_oid,
+		                       haj.SALDO AS SALDO_AJUSTADO,
+		                       aj.rubro_destino as rubro_ajuste,
+		                       aj.rubro_patrimonial as rubro_patrimonial,
+		                       s.sucursal,
+		                       haj.MONETARIO,
+		                       haj.MONTO_AJUSTE,
+		                       p.C6304 AS GRUPO_BALANCE
+		            FROM (select * FROM GRL_SALDOS_DIARIOS WHERE FECHA = ? ) AS s
+		            INNER JOIN MONEDAS M 
+		                                ON S.MONEDA = M.C6399
+		            INNER JOIN PLANCTAS P ON s.rubrocontable=c6326
+		            INNER JOIN  CO_AJUSTE_X_INFLACION aj ON s.RUBROCONTABLE=AJ.RUBRO_ORIGEN
+		            INNER JOIN CO_HIS_AJUSTE_X_INFLACION haj ON haj.SALDO_JTS_OID=S.SALDOS_JTS_OID AND haj.FECHA = ?
+		            WHERE
+		                aj.tz_lock = 0 AND P.TZ_LOCK=0 AND
+		                aj.MONEDA = 'E' AND M.C6403 &lt;&gt; 'N'
+		                AND haj.MONETARIO = 'N'
+		                AND M.TZ_LOCK=0
+		            ORDER BY C6304, rubrocontable
+				</sentence>
+        <attribute>
+            <attribute-name>rubroContable</attribute-name>
+            <column-name>rubro_contable</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>moneda</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cuentaJtsOid</attribute-name>
+            <column-name>cuenta_jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAjustado</attribute-name>
+            <column-name>SALDO_AJUSTADO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroAjuste</attribute-name>
+            <column-name>rubro_ajuste</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroPatrimonial</attribute-name>
+            <column-name>rubro_patrimonial</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monetario</attribute-name>
+            <column-name>MONETARIO</column-name>
+            <column-type>varchar</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoAjuste</attribute-name>
+            <column-name>MONTO_AJUSTE</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>grupoBalance</attribute-name>
+            <column-name>GRUPO_BALANCE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

@@ -1,0 +1,823 @@
+VERSION:055_5
+TN  NN 1006TConsulta de Existencia de Producto      C00651 00
+VNNNNN 010002000802080770SSSD000000000000000000000000000000000000000
+/T=Ingreso de Producto
+/C=192192192
+KNNNNN 010010001301080740000101
+/T=MODIFICACION DE PRODUCTOS
+/F=0012700NNN000000000Arial                                   
+ NSSNS 06250   Nro. Producto                                     I NNN 010042016100650205021011000000042003500650147000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:55:50JBENTAN
+ NNNNN 06251   Descripción                                       INNNN 01-01901260001051100101150000-019000000010112000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=No existe el producto a Modificar !!!
+ NSSNS 06251   Descripción                                       I NNN 010042034500650730001011000000042025500650332000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:55:50JBENTAN
+CNNNNN ME00000000000000000000100
+/?=(C6251=' ')O(F(LEN,F(RTRIM,C6251))=0)
+/M=Ha ingresado la descripción en blanco !!!!
+*$2022-01-25 16:31:19JBENTANCOU
+ NSSNS 06252   Tipo Producto                                     IINNN 010070016100930383001011500000070003500930147000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:55:50JBENTAN
+CNNNNN   00000000000000000000100
+/F=C6252=1
+/P=I32
+CNNNNN   00000000000000000000100
+/F=C6252=2OC6252=3
+/P=I33
+CNNNNN   00000000000000000000100
+/F=C6252=4
+/P=I34
+CNNNNN   00000000000000000000100
+/F=C6252=5OC6252=6OC6252=7OC6252=8
+/P=I35
+*$2016-08-19 09:23:46DANIELM
+CN  NN  a00000000000000000000100
+*$2021-01-18 16:03:48JBENTAN
+TN  NN 1009TModificación de Producto Contable       M00651 00
+/?=I32
+*$2021-01-18 15:59:54JBENTAN
+VNNNNN 030056000803570770SSSD000000000000000000000000000000000000000
+/T=Modificación de un Producto Contable
+/C=192192192
+CNNNNN  w00000000000000000000100
+/R=F
+KN  NN 030012002502840740000101
+*$2022-02-02 17:53:43JBENTANCOU
+ NNNNN 06250   Nro. Producto                                     INNNNA000030016300500207020011000000030003700500149000
+/V=C6250.1
+/F=0013700NNN255255255Arial                                   
+/f=0013700NNN255255255Arial                                   
+*$2022-02-03 08:43:24JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=1=0
+/F=C6250>0
+/M=Error - Opcion NO Válida
+ NNNNN 06251   Descripción                                       INNNNA000030016300500548000011000000030003700500149000
+/V=C6251.1
+/F=0013700NNN255255255Arial                                   
+/f=0013700NNN255255255Arial                                   
+*$2022-02-03 08:43:29JBENTANCOU
+ NNNNN 06252   Tipo Producto                                     INNNNA000030016300500174020011000000030003700500149000
+/V=C6252.1
+/F=0013700NNN255255255Arial                                   
+/f=0013700NNN255255255Arial                                   
+*$2022-02-03 08:43:33JBENTANCOU
+ NSSNS 06269   Historia                                          I NNN 030036015001260312000011110000036003900560138000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+ NNNNN 06261   Calculo Interes                                   INNNNK000016015001070312000011000000016003900360138000
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06271   Rubro operativo                                   I NSNA030036055000590693021011000000036043500560534000
+/?=C6250>0
+/V=C6271.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-03 08:46:51JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=C6250>0
+/F=C6271=0
+/M=Error - Dato ingresado con valor = 0
+ NNNNN 00661   Descriptor PlanCtas                               INNSNK000007015200300202021011000000007000700300137000
+/?=C6250>0
+/V=63
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-03 08:42:08JBENTANCOU
+ NNNNN 00910   Condición                                         INNSNF000007015200300452001011000000007000700300137000
+/?=C6250>0
+/V="C6340="+C6271.0+" AND ((TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000) AND (TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-03 08:42:11JBENTANCOU
+ NNNNN 00662   Cantidad de Filas                                 INNSNF000007015200300202021011000000007000700300137000
+/?=C6250>0
+/V=F(CANTIDAD,C661,C910) 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-03 08:42:15JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=C6250>0
+/F=C662=0
+/M=Rubro operativo inexistente en Plan de Cuentas
+*$2022-02-03 08:42:18JBENTANCOU
+ NSSNS 06272   Tipo de Bloqueo                                   I NNNK030068015000910312021011000000068003900880138000
+/V=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C6272#1YC6272#2
+/M=Error - Dato ingresado debe ser 1 o 2
+*$2016-11-08 17:08:52TOP
+ NSSNS 06279   Moneda                                            I NNN 030070055001570712000011120000070043500900534000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+ NSSNS 06283   Familia                                           I NSN 030100015001230293021011000000100003901200138000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+ NSSNS 06826   Clase                                             IENNN 030132015001550190001011000000112003901320138000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+ NSSNS 06826   Clase                                             IINSNF030132021701550383001011500000132003901550142000
+/V=C6826.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+ NSSNS 06274   En Garantía ?                                     I NNN 030104055001830712001011120000104043501240534000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+ NSSNS 05440   Tipo de persona                                   I NNN 030164015003600312001011120000164003901840138000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+ NSSNS 08168   Evalúa Deuda                                      I NSN 030138055003320712001011110000138043501580534000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+ NSSNS 06800   Producto                                          I NNN 030196015003940413001011110000196003902160138000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+ NSSNS 08285   Periodicidad de emisión Resumen                   I NSN 030243024003410404001011110000243003902660240000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:54:28JBENTANCOU
+TN  NN 1009TModificación de Producto Cuenta Vista   M00651 00
+/?=I33
+*$2021-01-18 16:00:08JBENTAN
+VNNNNN 020098000604130801NNND000000000000000000000000000000000000000
+/T=Modificación de Producto de Cuenta Vista
+/C=192192192
+*$2020-08-06 12:00:39LURRUTTY
+KN  NN 020015001903270766000101
+*$2020-08-06 12:00:46LURRUTTY
+CNNNNN  w00000000000000000000100
+/R=F
+*$2020-08-03 18:11:58JBENTAN
+ NNNNN 06250   Nro. Producto                                     INNNNA020013016500330209021011000000013003900330151000
+/V=C6250.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06251   Descripción                                       INNNNA020013016500330550001011000000013003900330151000
+/V=C6251.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06252   Tipo Producto                                     INNNNA020013016500330176021011000000013003900330151000
+/V=C6252.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06253   Tipo de Tasa                                      I NNN 020052014501750358001011110000052003500750140000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+CNNNNN   00000000000000000000100
+/F=(C6253='N')O(C6253='E')
+/P=I90
+ NNNNN 06254   Días Calc.Ints                                    INNNNF000062018400850227001011000000062005800850170000
+/?=I90
+/V=" "
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06255   Divisor Fijo                                      I NNNK020085014502110358021010110000085003501080140000
+/?=I90YC6255=0
+/V=365
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NSSNS 06255   Divisor Fijo                                      I NNN 020085014502110358021010110000085003501080140000
+/?=I90YC6255#0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+CNNNNN ME00000000000000000000100
+/?=I90
+/F=C6255=000
+/M=Error - Opcion NO Válida
+ NNNNN 06259   Tipo Calc.Canc.                                   INNNNK000126018401490227001011000000126005801490170000
+/V= 
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06261   Cálculo Interes                                   INNNNK000158018401810227001011000000158005801810170000
+/V= 
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06271   Rubro operativo                                   I NNNA020118014501410339021011000000118003501410140000
+/V=C6271.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+CNNNNN ME00000000000000000000100
+/F=C6271=0
+/M=Error - Dato ingresado con valor = 0
+ NNNNN 00661   Descriptor PlanCtas                               INNSNK000007015200300202021011000000007000700300137000
+/V=63
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:50:09JBENTANCOU
+ NNNNN 00910   Condición                                         INNSNF000007015200300452001011000000007000700300137000
+/V="C6340="+C6271.0+" AND ((TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000) AND (TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:50:09JBENTANCOU
+ NNNNN 00662   Cantidad de Filas                                 INNSNF000007015200300202021011000000007000700300137000
+/V=F(CANTIDAD,C661,C910) 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:50:09JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C662=0
+/M=Rubro operativo inexistente en Plan de Cuentas
+*$2022-02-02 17:50:09JBENTANCOU
+ NSSNS 06272   Tipo de Bloqueo                                   IINNNK020151014501740358001011500000151003501740140000
+/V=2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NNNNN 06279   Moneda                                            INNNN 020168018402350397001011110000170005801930170000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06273   Nivel Cliente                                     I NNN 020184014502670358001011110000184003502070140000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NSSNS 06826   Código BCRA                                       IENNN 020217014502400183021011000000217003502400140000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NSSNS 06826   Código BCRA                                       IINSNF020217020602400357001011500000217003502400126000
+/V=C6826.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NSSNS 06800   Producto                                          I NNN 020250014503330358001011110000250003502730140000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NSSNS 39998   Tipo Cta. Vista                                   I NSN 020283014503820386001011110000283003503060140000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NNNNN 06825   Grupo                                             INNNN 020025051000480723001011000000025040000480505000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-08-03 18:05:39JBENTAN
+ NSSNS 06274   En Garantía?                                      I NNN 020052054501350758001011110000052039200750497000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NSSNS 05440   Tipo de persona                                   I NNN 020085054501680758001011110000085039201080497000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NSSNS 08168   Evalúa Deuda                                      I NSN 020118054502010758001011110000118039201410497000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NSSNS 60409   Plazo de entrega Resumen                          I NSN 020184054502070758021011000000184039202070548000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+ NSSNS 08285   Periodicidad de emisión Resumen                   I NSN 020218059003010758001011110000218039202410585000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:56:56JBENTAN
+TN  NN 1009TModificación de Producto Plazo Fijo     M00651 00
+/?=I34
+*$2021-01-18 16:00:24JBENTAN
+VNNNNN 040095000404040816SSSD000000000000000000000000000000000000000
+/T=Modificación de un Producto de Plazo Fijo
+/C=192192192
+*$2020-08-06 12:13:12LURRUTTY
+CNNNNN  w00000000000000000000100
+/R=F
+KNNNNN 040005001203320790000101
+*$2022-11-24 17:56:18JBENTANCOU
+ NNNNN 06250   Nro. Producto                                     INNNNA000019014900390193020011000000019002300390135000
+/V=C6250.1
+/F=0013700NNN255255255Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 06251   Descripción                                       INNNNA000019014900390534000011000000019002300390135000
+/V=C6251.1
+/F=0013700NNN255255255Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 06252   Tipo Producto                                     INNNNA000019014900390160020011000000019002300390135000
+/V=C6252.1
+/F=0013700NNN255255255Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NSSNS 06253   Tipo de Tasa                                      I NNN 040026015001390375001011110000029003500490137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-25 09:28:47JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=(C6253='N')O(C6253='E')
+/P=I90
+ NSSNS 06254   Días Calc.Ints                                    I NNN 040053015001830375001010110000056003500760137000
+/?=I90
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-25 09:28:50JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=I90
+/F=C6254=' '
+/M=Error - Opcion NO Válida
+ NSSNS 06255   Divisor Fijo                                      I NNN 040080015002170375021010110000083003501030137000
+/?=I90
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-25 09:28:53JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=I90
+/F=C6255=000
+/M=Error - Opcion NO Válida
+ NNNNN 06256   Correr Vto.                                       INNNNK000108014601280177000011000000108002001280132000
+/V=P
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06259   Tipo Calc.Canc.                                   I NNN 040107015002230375001011110000110003401300136000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-25 09:28:57JBENTANCOU
+ NNNNN 06805   Período cuota                                     IINNNK040134015001570375001011500000137003401570136000
+/?=A(C6259.0#"P")
+/V=F
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-30 17:28:35JBENTANCOU
+ NNNNN 06805   Período cuota                                     IENNN 040134015001570375001010110000107003501300137000
+/?=A(C6259.0="P")
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-30 17:28:40JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=C6805.1#C6805.0
+/P=I40
+/M=Período Cuota modificada difiere de la original
+*$2022-11-30 17:06:59JBENTANCOU
+ NNNNN 00661   Descriptor de Saldos                              INNSNK000007015200300202021011000000007000700300137000
+/?=I40
+/V=21
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-30 17:11:14JBENTANCOU
+ NNNNN 00910   Condición                                         INNSNF000007015200300452001011000000007000700300137000
+/?=I40
+/V="C1785=4 AND PRODUCTO="+C6250.0+" AND C1604>0 AND ((TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000) AND (TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-30 17:28:26JBENTANCOU
+ NNNNN 00662   Cantidad de Filas                                 INNSNF000007015200300202021011000000007000700300137000
+/?=I40
+/V=F(CANTIDAD,C661,C910) 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-30 17:25:36JBENTANCOU
+ NNNNN 09103   Mensaje                                           INNSNK000007015200300452001011000000007000700300137000
+/?=(I40)Y(C662.0>0)
+/V=No es posible modificar el Período de Cuota, ya que aún existen Depósitos activos para este producto.
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-30 17:22:03JBENTANCOU
+CNNNNN ME00000000000000000000110
+/?=(I40)Y(C662.0>0)
+/M=C9103.0
+*$2022-11-30 17:22:18JBENTANCOU
+ NNNNN 06257   Respetar Vto.                                     IINNNK040161015001840375001011500000164003401840136000
+/?=A(C6805="F")
+/V=F
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-25 09:29:02JBENTANCOU
+ NNNNN 06257   Respetar Vto.                                     IENNN 040161015001840375000010110000137003501570137000
+/?=A(C6805="V")
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-29 11:52:46EPINATO
+ NNNNN 09103   Mensaje                                           INNSNK000007015200300452001011000000007000700300137000
+/?=A(C6805="V")YA(C6257="F")
+/V=Producto no puede quedar con vencimiento Fecha Fija cuando el Período de Cuota es Variable.
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-21 09:44:53JBENTANCOU
+CNNNNN ME00000000000000000000110
+/?=A(C6805="V")YA(C6257="F")
+/M=C9103.0
+*$2022-11-18 09:25:38JBENTANCOU
+ NNNNN 06258   Cobro Intereses                                   INNNNK000170014601900177000011000000170002001900132000
+/?=I90
+/V= 
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06260   Pago Intereses                                    I NNN 040190015003090375001010110000192003502120137000
+/?=I90
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:35:44JBENTANCOU
+ NSSNS 06261   Cálculo Interes                                   I NNN 040026055501350758001010110000029041100490513000
+/?=I90
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:34:35JBENTANCOU
+ NSSNS 06267   Contabilización                                   I NNN 040053055501610758000011120000056041100760513000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:34:41JBENTANCOU
+ NSSNS 06269   Historia                                          I NNN 040080055502130758000011120000083041101030513000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:34:41JBENTANCOU
+ NSSNS 06271   Rubro operativo                                   I NNN 040107055501300739020011000000110041101300513000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:34:41JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C6271=0
+/M=Error - Dato ingresado con valor = 0
+ NNNNN 00661   Descriptor PlanCtas                               INNSNK000007015200300202021011000000007000700300137000
+/V=63
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:50:14JBENTANCOU
+ NNNNN 00910   Condición                                         INNSNF000007015200300452001011000000007000700300137000
+/V="C6340="+C6271.0+" AND ((TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000) AND (TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:50:14JBENTANCOU
+ NNNNN 00662   Cantidad de Filas                                 INNSNF000007015200300202021011000000007000700300137000
+/V=F(CANTIDAD,C661,C910) 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:50:14JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C662=0
+/M=Rubro operativo inexistente en Plan de Cuentas
+*$2022-02-02 17:50:14JBENTANCOU
+ NSSNS 06272   Tipo de Bloqueo                                   IINNNK040134055501570758021011500000137041101570513000
+/V=3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:34:41JBENTANCOU
+ NNNNN 06279   Moneda                                            INNNN 000150049902210697000011120000150037301730485000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06270   Algoritmo Pago                                    I NNN 040161055502910758000011110000164041101840513000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:34:41JBENTANCOU
+ NSSNS 06287   Algoritm.Bonif.                                   I NNNK040188055502110758001011110000191041102110513000
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:34:41JBENTANCOU
+ NSSNS 06273   Nivel Cliente                                     I NNN 040218015003310375001011110000221003502410137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:35:38JBENTANCOU
+ NSSNS 06826   Código BCRA                                       IENNN 040246015002690194001011000000242003402620136000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:33:45JBENTANCOU
+ NSSNS 06826   Código BCRA                                       IINSNF040246021802690375001011500000249003402690137000
+/V=C6826.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:36:06JBENTANCOU
+ NSSNS 06274   En Garantía ?                                     I NNN 040215055502880758001011110000218041102380513000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:34:41JBENTANCOU
+ NSSNS 05440   Tipo de persona                                   I NNN 040274015004730375001011110000277003502970137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:35:36JBENTANCOU
+ NSSNS 06800   Producto                                          I NNN 040302015005010375001011110000305003503250137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-18 09:35:36JBENTANCOU
+TN  NN 1009TModif. de Préstamos Descuentos o ValoresM00651 00
+/?=I35
+*$2021-01-18 16:01:32JBENTAN
+VNNNNN 050001000104990924SSSD000000000000000000000000000000000000000
+/T=Modificación de un Producto de Prestamos o Descuentos o Valores
+/C=192192192
+*$2020-08-06 12:20:22LURRUTTY
+CNNNNN  w00000000000000000000100
+/R=F
+KNNNNN 050000000804320899000101
+*$2020-08-06 12:20:26LURRUTTY
+ NNNNN 06250   Nro. Producto                                     INNNNA000019015100420195021011000000019002500420137000
+/V=C6250.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06251   Descripción                                       INNNNA000019034500420730001011000000019023000420342000
+/V=C6251.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06252   Tipo Producto                                     INNNNA000045015100680355021011000000045002500680137000
+/V=C6252.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06253   Tipo de Tasa                                      I NNN 050016014001280335001011110000016001800390130000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+CNNNNN   00000000000000000000100
+/F=C6253#' '
+/P=I90
+ NSSNS 06254   Días Calc.Ints                                    I NNN 050042014001630335001010110000042001800650130000
+/?=I90
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+CNNNNN ME00000000000000000000100
+/?=I90
+/F=C6254=' '
+/M=Error - Opcion NO Válida
+ NSSNS 06255   Divisor Fijo                                      I NNN 050068014001840335021010110000068001800910130000
+/?=I90
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+CNNNNN ME00000000000000000000100
+/?=I90
+/F=C6255=000
+/M=Error - Opcion NO Válida
+ NNNNN 06256   Correr Vto.                                       INNNNK050078014400980188000011000000078001800980130000
+/V=P
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06257   Respetar Vto.                                     INNNNK050099014401190188000011000000099001801190130000
+/V=O
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06258   Cobro Intereses                                   I NNN 050094014002350335001010110000094001801170130000
+/?=I90
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06259   Tipo Calc.Canc.                                   I NNN 050120014002450335001011110000120001801430130000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06260   Pago Intereses                                    I NNN 050146014002620335001010110000146001801690130000
+/?=I90
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06261   Cálculo Interes                                   I NNN 050172014002710335001010110000172001801950130000
+/?=I90
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06262   Cálculo de Mora                                   I NNN 050198014003260335001010110000198001802210130000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06264   Dias Grac.Mora                                    I NNN 050224014003300335021011110000224001802470130000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06265   Bonificación                                      I NNN 050250014003560335001011110000250001802730130000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06267   Contabilización                                   I NNN 050276014003850335001011110000276001802990130000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06269   Historia                                          I NNN 050302014004080335001011110000302001803250130000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06271   Rubro operativo                                   I NNN 050328014003510316021011000000328001803510130000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+CNNNNN ME00000000000000000000100
+/F=C6271=0
+/M=Error - Dato ingresado con valor = 0
+ NNNNN 00661   Descriptor PlanCtas                               INNSNK000007015200300202021011000000007000700300137000
+/V=63
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:50:18JBENTANCOU
+ NNNNN 00910   Condición                                         INNSNF000007015200300452001011000000007000700300137000
+/V="C6340="+C6271.0+" AND ((TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000) AND (TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:50:18JBENTANCOU
+ NNNNN 00662   Cantidad de Filas                                 INNSNF000007015200300202021011000000007000700300137000
+/V=F(CANTIDAD,C661,C910) 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-02-02 17:50:18JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C662=0
+/M=Rubro operativo inexistente en Plan de Cuentas
+*$2022-02-02 17:50:18JBENTANCOU
+ NSSNS 06272   Tipo de Bloqueo                                   IINNNK050354014003770335021011500000354001803770130000
+/V=3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NNNNN 06279   Moneda                                            INNNN 000180052602030721001011110000180039801990510000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06270   Algoritmo Pago                                    I NNN 050380014004780450000011110000380001804030130000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06287   Algoritm.Bonif.                                   I NNN 050406014005120450001011110000406001804290130000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06273   Nivel Cliente                                     I NNN 050016066001310855001011110000016046200390536000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-01-18 15:58:42JBENTAN
+ NSSNS 06283   Familia                                           I NNN 050042066000650836001011000000042046200650536000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:45JBENTAN
+ NSSNS 06801   Oper. Cancelac.                                   I SNN 050068066000910704020011000000068046200910574000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:33JBENTAN
+ NSSNS 06825   Grupo                                             INNNN 050094066001170717001011000000094046201170574000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:07JBENTAN
+ NSSNS 06826   Clase                                             IENNN 050094066001170717001011000000120046201430574000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 06826   Clase                                             IINSNF050094074701170892001011500000094046201170565000
+/V=C6826.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:43JBENTAN
+ NSSNS 08168   Evalua Deuda                                      I NSN 050120066003140855001011110000120046201430574000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 06800   Producto                                          I NNN 050146066003420875001011110000146046201690574000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 06824   Codigo IVA                                        I NNN 050172066001950736001011000000172046201950574000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 03361   Pago Parcial                                      I NNN 050198066003370855001011110000198046202210574000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 06274   En Garantía ?                                     I NNN 050224066003300855001011110000224046202470574000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 05440   Tipo de persona                                   I NNN 050250066004460855001011110000250046202730574000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 02767   Tipo Garantía                                     I SNN 050276066002990716001011000000276046202990574000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 02768   Subtipo Garant.                                   I SNN 050302066003250716001010000000302046203250574000
+/?=C2767#0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 02939   Cuotas no Bonif                                   I NSN 050328066003510795020010000000328046203510552000
+/?=(C6252=5)O(C6252=8)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 08285   Periodicidad de emisión Resumen                   I NSN 050354066004510818001011110000354046203770655000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+ NSSNS 01566   Tipo Recuperac.                                   I NSN 050380066005790770020010110000380046204030559000
+/?=(C6252=5)O(C6252=8)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-02-05 15:22:53JBENTAN
+TN  NN 1006TContinúa Modificando Productos??        C00001 00
+VNNNNN 060333029301700274NNND000000000000000000000000000000000000000
+/T=Continúa Modificación
+/C=192192192
+KNNNNN 060008000800900257000101
+/F=0012700NNN000000000Arial                                   
+KNNNNN 060026002300460257000100
+/T=Continúa modificando Productos ?
+/F=0013700NNN000000000Arial                                   
+ NNNNN 00964   Opción (S/N)                                      I NNNK060055004900750214000011300000040007800600190000
+/V=N
+/f=0013700NNN000000000Arial                                   
+CNNNNN  I00000000000000000000100
+/?=C964='S'
+/R=1
+*#I33#Producto Cuenta Vista
+*#I32#Producto Contabilidad
+*#I40#Período Cuota modificada difiere de la original
+*#I35#Producto de Activas
+*#I34#Producto DPF
+*#I90#Tipo de Tasa Nominal o Efectiva

@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/getCastigoCredito/{PAGINA}/{CANTXPAG}/{FECHADESDE}/{FECHAHASTA}</uri>
+    <serviceDescription>Consultar "Castigo de Crédito" de Personas</serviceDescription>
+    <title>Consultar "Castigo de Crédito" de Personas</title>
+    <querys>
+        <query id="1" name="PAGINADO" type="SIMPLE">
+            <sql>
+DECLARE 
+  @pagina  AS INT = ?,
+  @largopagina AS INT =?,
+  @fechaDesde AS VARCHAR(10)=?,
+  @fechaHasta AS VARCHAR(10)=?,
+  
+  @cantReg AS INT,	
+  @TotalRegistros INT = 0,
+  @resto INT = 0,
+  @primerRegistroPag INT = 0,
+  @ultimoRegistroPag INT =0,
+  @fechaDesdeV AS DATE,
+  @fechaHastaV AS DATE;
+  
+  SET @fechaDesdeV  = CONVERT (date, (CASE WHEN 0=@fechaDesde THEN '18000101' ELSE @fechaDesde END), 103);
+  SET @fechaHastaV  = CONVERT (date, (CASE WHEN 0=@fechaHasta THEN '29000101' ELSE @fechaHasta END), 103);
+
+  SET @TotalRegistros = ( 	SELECT COUNT (CP.NUMERODOC)
+							FROM CRE_CAB_CASTIGOCARTERA CAB (NOLOCK)
+							JOIN CRE_DET_CASTIGOCARTERA DET (NOLOCK) ON CAB.NUMERO_LISTA = DET.NUMERO_LISTA
+							JOIN VW_CLIENTES_PERSONAS CP (NOLOCK) ON DET.CLIENTE=CP.CODIGOCLIENTE AND CP.TITULARIDAD='T'
+							JOIN SALDOS S (NOLOCK) ON S.C1803=DET.CLIENTE AND S.C1651=' ' AND S.C1785=5 AND S.C1728='C' AND S.C1604&lt;&gt;0
+							WHERE	CAB.ESTADO='C'
+--AND 	CAB.FECHA_ALTA BETWEEN (CASE WHEN 0=@fechaDesdeV THEN '18000101' ELSE @fechaDesdeV END) AND (CASE WHEN 0=@fechaHastaV THEN '29000101' ELSE @fechaHastaV END)
+							AND CAB.FECHA_ALTA = (	SELECT MAX(CAB1.FECHA_ALTA) 
+													FROM CRE_CAB_CASTIGOCARTERA CAB1 (NOLOCK) 
+													JOIN CRE_DET_CASTIGOCARTERA DET1 (NOLOCK) ON CAB1.NUMERO_LISTA = DET1.NUMERO_LISTA AND DET1.CLIENTE=DET.CLIENTE
+						    						WHERE CAB1.NUMERO_LISTA=CAB.NUMERO_LISTA 
+						    						AND CAB1.FECHA_ALTA BETWEEN  @fechaDesdeV AND @fechaHastaV 
+						 						  )
+
+						) 
+  SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina)
+  SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1
+  SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina)
+  
+  IF (@resto &lt; 0)
+  	BEGIN
+  		SET @resto = 0
+  	END 
+  IF (@ultimoRegistroPag &gt;@TotalRegistros )
+  	BEGIN
+  	    SET @ultimoRegistroPag=@TotalRegistros
+  	END 
+  
+
+
+IF(@TotalRegistros &gt; 0)
+BEGIN
+	SELECT 	ROW_NUMBER() OVER(ORDER BY CUIT) AS ORDEN, 
+			FECHA_DESDE,
+			FECHA_HASTA,
+			FECHA_ASIENTO,
+			FECHA_PASE,
+			CUIT,
+			paginaActual,
+			cantidadPaginas,
+			registroPorPag,
+			totalRegistros,
+			primerRegistroPag,
+			ultimoRegistroPag,
+			siguientesRegistros
+	
+	FROM
+	(SELECT 
+		CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET, @fechaDesdeV), 127) 			AS FECHA_DESDE,
+		CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET, @fechaHastaV), 127)  			AS FECHA_HASTA,
+		CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET,  CAB.FECHA_CONFIRMACION), 127)  		AS FECHA_ASIENTO,
+		CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET,CAB.FECHA_ALTA), 127)  AS FECHA_PASE,
+		CP.NUMERODOC 																AS CUIT,
+		@pagina 																	AS paginaActual, 
+		(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,
+		@largopagina 																AS registroPorPag,
+		@TotalRegistros 														  	AS totalRegistros,
+		@primerRegistroPag 													  		AS primerRegistroPag,
+		@ultimoRegistroPag 													  		AS ultimoRegistroPag,
+		@resto 																	  	AS siguientesRegistros
+   	FROM CRE_CAB_CASTIGOCARTERA CAB (NOLOCK)
+	JOIN CRE_DET_CASTIGOCARTERA DET (NOLOCK) ON CAB.NUMERO_LISTA = DET.NUMERO_LISTA
+	JOIN VW_CLIENTES_PERSONAS CP (NOLOCK) ON DET.CLIENTE=CP.CODIGOCLIENTE AND CP.TITULARIDAD='T'
+	JOIN SALDOS S (NOLOCK) ON S.C1803=DET.CLIENTE AND S.C1651=' ' AND S.C1785=5 AND S.C1728='C' AND S.C1604&lt;&gt;0
+	WHERE	CAB.ESTADO='C'
+	--AND 	CAB.FECHA_ALTA BETWEEN  @fechaDesdeV AND @fechaHastaV 
+	AND 	CAB.FECHA_ALTA = (	SELECT MAX(CAB1.FECHA_ALTA) 
+								FROM CRE_CAB_CASTIGOCARTERA CAB1 (NOLOCK) 
+								JOIN CRE_DET_CASTIGOCARTERA DET1 (NOLOCK) ON CAB1.NUMERO_LISTA = DET1.NUMERO_LISTA AND DET1.CLIENTE=DET.CLIENTE
+								WHERE CAB1.NUMERO_LISTA=CAB.NUMERO_LISTA 
+								AND CAB1.FECHA_ALTA BETWEEN @fechaDesdeV AND @fechaHastaV 
+							 )
+	) DATOS 
+	ORDER BY ORDEN
+	OFFSET ((@pagina - 1) * @largopagina) ROWS 
+	
+	FETCH NEXT @largopagina ROWS ONLY;
+END
+ELSE
+BEGIN	
+	SELECT 	1 AS ORDEN, 
+			
+
+			@fechaDesdeV  AS FECHA_DESDE,
+			@fechaHastaV AS FECHA_HASTA,
+			CONVERT (date, '11111111', 103)  AS FECHA_ASIENTO,
+		    CONVERT (date, '11111111', 103)  AS FECHA_PASE,
+			0 AS CUIT,
+		    0 AS paginaActual,
+			0 AS cantidadPaginas,
+			0 AS registroPorPag,
+			0 AS totalRegistros,
+			0 AS primerRegistroPag,
+			0 AS ultimoRegistroPag,
+			0 AS siguientesRegistros
+END</sql>
+            <input>
+                <inParameter description="" type="INTEGER">PAGINA</inParameter>
+                <inParameter description="" type="INTEGER">CANTXPAG</inParameter>
+                <inParameter description="" type="STRING">FECHADESDE</inParameter>
+                <inParameter description="" type="STRING">FECHAHASTA</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="RESPUESTA" type="MULTIPLE">
+            <sql>
+DECLARE 
+  @pagina  AS INT = ?,
+  @largopagina AS INT =?,
+  @fechaDesde AS VARCHAR(10)=?,
+  @fechaHasta AS VARCHAR(10)=?,
+	
+  @TotalRegistros INT = 0,
+  @resto INT = 0,
+  @primerRegistroPag INT = 0,
+  @ultimoRegistroPag INT =0,
+  @fechaDesdeV AS DATE,
+  @fechaHastaV AS DATE;
+  
+  SET @fechaDesdeV  = CONVERT (date, (CASE WHEN 0=@fechaDesde THEN '18000101' ELSE @fechaDesde END), 103);
+  SET @fechaHastaV  = CONVERT (date, (CASE WHEN 0=@fechaHasta THEN '29000101' ELSE @fechaHasta END), 103);
+
+  SET @TotalRegistros = ( 	SELECT COUNT ( CP.NUMERODOC)
+							FROM CRE_CAB_CASTIGOCARTERA CAB (NOLOCK)
+							JOIN CRE_DET_CASTIGOCARTERA DET (NOLOCK) ON CAB.NUMERO_LISTA = DET.NUMERO_LISTA
+							JOIN VW_CLIENTES_PERSONAS CP (NOLOCK) ON DET.CLIENTE=CP.CODIGOCLIENTE AND CP.TITULARIDAD='T'
+							JOIN SALDOS S (NOLOCK) ON S.C1803=DET.CLIENTE AND S.C1651=' ' AND S.C1785=5 AND S.C1728='C' AND S.C1604&lt;&gt;0
+							WHERE	CAB.ESTADO='C'
+							--AND 	CAB.FECHA_ALTA BETWEEN (CASE WHEN 0=@fechaDesdeV THEN '18000101' ELSE @fechaDesdeV END) AND (CASE WHEN 0=@fechaHastaV THEN '29000101' ELSE @fechaHastaV END)
+							AND CAB.FECHA_ALTA = (	SELECT MAX(CAB1.FECHA_ALTA) 
+													FROM CRE_CAB_CASTIGOCARTERA CAB1 (NOLOCK) 
+													JOIN CRE_DET_CASTIGOCARTERA DET1 (NOLOCK) ON CAB1.NUMERO_LISTA = DET1.NUMERO_LISTA AND DET1.CLIENTE=DET.CLIENTE
+						    						WHERE CAB1.NUMERO_LISTA=CAB.NUMERO_LISTA 
+						    						AND CAB1.FECHA_ALTA BETWEEN  @fechaDesdeV AND @fechaHastaV 
+						 						 )
+
+						) 
+  SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina)
+  SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1
+  SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina)
+  
+  IF (@resto &lt; 0)
+  	BEGIN
+  		SET @resto = 0
+  	END 
+  IF (@ultimoRegistroPag &gt;@TotalRegistros )
+  	BEGIN
+  	    SET @ultimoRegistroPag=@TotalRegistros
+  	END 
+  
+
+
+SELECT 	ROW_NUMBER() OVER(ORDER BY CUIT) AS ORDEN, 
+		FECHA_DESDE,
+		FECHA_HASTA,
+		FECHA_ASIENTO,
+		FECHA_PASE,
+		CUIT,
+		ACCION,
+		paginaActual,
+		cantidadPaginas,
+		registroPorPag,
+		totalRegistros,
+		primerRegistroPag,
+		ultimoRegistroPag,
+		siguientesRegistros
+FROM
+(SELECT 
+	CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET, @fechaDesdeV), 127) 			AS FECHA_DESDE,
+	CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET, @fechaHastaV), 127)  			AS FECHA_HASTA,
+	CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET, CAB.FECHA_CONFIRMACION), 127)  		AS FECHA_ASIENTO,
+	CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET,CAB.FECHA_ALTA), 127)  AS FECHA_PASE,
+	CP.NUMERODOC 																AS CUIT,
+	det.estado																				as ACCION,
+	@pagina 																	AS paginaActual, 
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,
+	@largopagina 																AS registroPorPag,
+	@TotalRegistros 														  	AS totalRegistros,
+	@primerRegistroPag 													  		AS primerRegistroPag,
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,
+	@resto 																	  	AS siguientesRegistros
+	FROM CRE_CAB_CASTIGOCARTERA CAB (NOLOCK)
+	JOIN CRE_DET_CASTIGOCARTERA DET (NOLOCK) ON CAB.NUMERO_LISTA = DET.NUMERO_LISTA
+	JOIN VW_CLIENTES_PERSONAS CP (NOLOCK) ON DET.CLIENTE=CP.CODIGOCLIENTE AND CP.TITULARIDAD='T'
+	JOIN SALDOS S (NOLOCK) ON S.C1803=DET.CLIENTE AND S.C1651=' ' AND S.C1785=5 AND S.C1728='C' AND S.C1604&lt;&gt;0
+	WHERE	CAB.ESTADO='C'
+
+
+--AND 	CAB.FECHA_ALTA BETWEEN  @fechaDesdeV AND @fechaHastaV 
+	AND 	CAB.FECHA_ALTA = (	SELECT MAX(CAB1.FECHA_ALTA) 
+								FROM CRE_CAB_CASTIGOCARTERA CAB1 (NOLOCK) 
+								JOIN CRE_DET_CASTIGOCARTERA DET1 (NOLOCK) ON CAB1.NUMERO_LISTA = DET1.NUMERO_LISTA AND DET1.CLIENTE=DET.CLIENTE
+								WHERE CAB1.NUMERO_LISTA=CAB.NUMERO_LISTA 
+								AND CAB1.FECHA_ALTA BETWEEN @fechaDesdeV AND @fechaHastaV 
+						 		)
+) DATOS 
+ORDER BY ORDEN
+OFFSET ((@pagina - 1) * @largopagina) ROWS 
+FETCH NEXT @largopagina ROWS ONLY;</sql>
+            <input>
+                <inParameter description="" type="INTEGER">PAGINA</inParameter>
+                <inParameter description="" type="INTEGER">CANTXPAG</inParameter>
+                <inParameter description="" type="STRING">FECHADESDE</inParameter>
+                <inParameter description="" type="STRING">FECHAHASTA</inParameter>
+            </input>
+            <output>
+                <level groupby="FECHA_DESDE,FECHA_HASTA" name="respuesta">
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_DESDE</queryname>
+                        <servicename>fechaDesde</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_HASTA</queryname>
+                        <servicename>fechaHasta</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="clientes">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ORDEN</queryname>
+                        <servicename>orden</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>CUIT</queryname>
+                        <servicename>cuit</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_ASIENTO</queryname>
+                        <servicename>fechaAsiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_PASE</queryname>
+                        <servicename>fechaPase</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ACCION</queryname>
+                        <servicename>accion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

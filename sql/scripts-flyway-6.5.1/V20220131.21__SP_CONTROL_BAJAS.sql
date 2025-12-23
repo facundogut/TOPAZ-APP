@@ -1,0 +1,79 @@
+﻿EXECUTE('
+
+ALTER PROCEDURE [dbo].[SP_CONTROL_BAJAS] 
+	@campoIN AS VARCHAR(20), 
+	@valor AS VARCHAR(20), 
+	@resultado AS NUMERIC(10,0) OUTPUT, 
+	@tablaOUT AS VARCHAR(30) OUTPUT
+AS
+BEGIN
+	
+	--DECLARO Y SETEO VARIABLES NECESARIAS--
+	DECLARE @NombreCampo AS VARCHAR (30);
+	DECLARE @ConsultaSQL NVARCHAR(500);	
+	SET @resultado = 0;
+	
+	---DECLARO Y SETEO VARIABLE AUXILIAR----
+	DECLARE @tabla NUMERIC(5,0) = 0;
+	SET @tabla = (SELECT 
+				 	TABLA 
+				  FROM DICCIONARIO WITH (nolock) 
+					WHERE 
+						NUMERODECAMPO= @campoIN
+						AND TABLA <> 0
+				  );
+	
+	----------TABLA AUXILIAR------------	
+	DECLARE @TMPTablasEnUso TABLE(
+		NRO_TABLA NUMERIC (5, 0),
+		NOMBRE_CAMPO VARCHAR (30),		
+		NOMBRE_TABLA VARCHAR (60)
+	);
+	
+	------CARGO LA TABLA TEMPORAL-------
+	INSERT INTO
+		@TMPTablasEnUso
+	SELECT 
+		DI.TABLA,
+		DI.CAMPO,
+		DE.NOMBREFISICO
+	FROM DICCIONARIO AS DI WITH (nolock)
+	INNER JOIN DESCRIPTORES AS DE WITH (nolock) ON
+		DE.IDENTIFICACION = DI.TABLA
+	WHERE
+		DI.TABLA NOT IN (
+			0,
+			@tabla
+			) 
+		AND (DI.TABLADEAYUDA IN ( 
+			SELECT 
+				NUMERODEAYUDA 
+			FROM AYUDAS WITH (nolock) 
+			WHERE 
+				NUMERODEARCHIVO = @tabla
+			)
+		OR DI.TABLADEVALIDACION IN (@tabla)
+		);
+	
+	--RECORRO LA TABLA BUSCANDO RESULTADOS DONDE EL VALOR COINCIDA CON EL CAMPO--
+	WHILE EXISTS (SELECT * FROM @TMPTablasEnUso) AND @resultado = 0
+		BEGIN
+			SELECT
+				TOP 1
+				@NombreCampo=NOMBRE_CAMPO,
+				@tablaOUT=NOMBRE_TABLA,
+				@ConsultaSQL = ''SELECT @resultado=count(*) FROM ''+NOMBRE_TABLA+  
+									'' WHERE TZ_LOCK=0 AND ''+NOMBRE_CAMPO+''=''''''+@valor+'''''';''	
+			FROM @TMPTablasEnUso
+			ORDER BY 
+				NRO_TABLA
+			
+			EXEC sp_executesql @ConsultaSQL,
+		   		N''@resultado int OUTPUT'',
+				@resultado = @resultado OUTPUT
+			
+			DELETE FROM @TMPTablasEnUso WHERE NOMBRE_CAMPO=@NombreCampo AND NOMBRE_TABLA=@tablaOUT
+		END		
+END
+')
+

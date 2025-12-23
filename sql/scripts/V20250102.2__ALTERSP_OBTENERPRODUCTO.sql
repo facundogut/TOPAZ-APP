@@ -1,0 +1,63 @@
+﻿EXECUTE('
+
+ALTER PROCEDURE SP_OBTENER_PRODUCTO_PRESTAMOS_POS
+    @TASA NUMERIC(11, 7),
+    @RESULTADO NUMERIC(5) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @PRODUCTO NUMERIC(5);
+
+    -- CTE para obtener la tasa base más reciente
+    WITH CTE_TASA_BASE AS (
+        SELECT
+            TIPOTASABASE,
+            MAX(VIGENCIADESDE) AS VIGENCIADESDE
+        FROM TASASBASE WITH (NOLOCK)
+        WHERE TZ_LOCK = 0
+        GROUP BY TIPOTASABASE
+    ),
+    -- CTE para obtener los puntos máximos por producto y moneda
+    CTE_TASAS_MAXIMAS AS (
+        SELECT
+            PRODUCTO,
+            MONEDA,
+            MAX(PUNTOS) AS PUNTOS
+        FROM TASAS WITH (NOLOCK)
+        WHERE TZ_LOCK = 0
+        GROUP BY PRODUCTO, MONEDA
+    )
+    SELECT 
+        @PRODUCTO = pr.PRODUCTO
+    FROM CRE_PRODUCTOSCANALDIGITAL pr WITH (NOLOCK)
+    INNER JOIN PRODUCTOS prod WITH (NOLOCK) 
+        ON prod.C6250 = pr.PRODUCTO
+    INNER JOIN TOPESPRODUCTO tp WITH (NOLOCK) 
+        ON tp.CODPRODUCTO = prod.C6250
+    INNER JOIN CTE_TASA_BASE tb 
+        ON tb.TIPOTASABASE = tp.TIPO_TASA_BASE
+    INNER JOIN TASASBASE tb1 WITH (NOLOCK)
+        ON tb1.TIPOTASABASE = tb.TIPOTASABASE 
+        AND tb1.VIGENCIADESDE = tb.VIGENCIADESDE 
+        AND tb1.TZ_LOCK = 0
+    INNER JOIN CTE_TASAS_MAXIMAS t 
+        ON t.PRODUCTO = prod.C6250 
+        AND t.MONEDA = tp.MONEDA
+    WHERE 
+        pr.CANAL = ''PR'' AND pr.HABILITADO=''S''
+        -- AND pr.CANT_MAX_CUOTAS > 1
+        AND ROUND((t.PUNTOS+tb1.TASA_CONVERTIDA),1)= @TASA
+	GROUP BY pr.PRODUCTO;
+
+    -- Manejo de resultados
+    IF @PRODUCTO IS NOT NULL
+    BEGIN
+        SET @RESULTADO = @PRODUCTO;
+    END
+    ELSE
+    BEGIN
+        SET @RESULTADO = 0;
+    END
+END
+')

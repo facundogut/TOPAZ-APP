@@ -1,0 +1,266 @@
+service CONSULTAPRODUCTOSEGUNDONIVEL;
+description "Consulta de Productos de Segundo Nivel";
+
+action: SQLQuery TIPOPRODUCTO(
+	Sucursal:	numeric,
+	ProductoTopaz:	string,
+	Cuenta :	numeric,
+	Moneda :	numeric,
+	Operacion :	numeric,
+	Ordinal :	numeric,
+	NodoCliente :	string,
+	TicketSesion:	numeric,
+	InfoOrigen:	string,
+	ModoAutentica:	string,
+	CodCanal:	string,
+	Origen:		string,
+	NroDepOrigen:	numeric,
+	NroTransaccion:	numeric,
+	IdAutentica:	string,
+	TipoProceso:	string,
+	IdInvocaTopaz:	string
+) : [
+	STIPOPRODUCTO :string,
+	CODERROR :	string
+] { 	
+	properties 
+	{
+		("statement", "SELECT '0' AS CODERROR, retorno_prodprimernivel(?) as STIPOPRODUCTO FROM dual"),
+
+		("0", "ProductoTopaz")
+	};
+	
+	action:	OperationQuery DATOSVALORESALCOBRO(
+		
+		
+		          
+		          
+		          ) : [
+		
+		
+				
+		C9653 : string as ProdDescTopaz,
+		C9649  : numeric as Cuenta,
+		C9648  : numeric as Sucursal,
+		C9724 : numeric as Paquete,
+		C9650 : numeric as Moneda,
+		C9723 : string as Estado,
+		C9715 : float as SaldosPendiente,
+		C9717 : string as Afectado,
+		C9716 : string as Disponible,
+		C9718 : float as SaldoTotal,
+		C9727 : float as MontoAcordado
+				
+				
+				
+		]{ 
+	  			
+	  	condition { "STIPOPRODUCTO == \"1\""};
+		properties {
+				("operationNumber", "9961"),
+				("transaction", "6")
+			
+	                    }
+	      };              
+	
+	action:	OperationQuery DATOSCTACTE() : [
+		
+		C9653 : string as ProdDescTopaz,
+		C9649  : numeric as Cuenta,
+		C9648  : numeric as Sucursal,
+		C9724 : numeric as Paquete,
+		C9655 : string as ProdAsociados,
+		C9720  : string as FormaEnvEstCta,
+		C9721 : string as DirEstCta,
+		C9650 : numeric as Moneda,
+		C9719 : string as AcuerdSobregiro,
+		C9723 : string as Estado,
+		C9715 : float as SaldosPendiente,
+		C9717 : string as Afectado,
+		C9716 : string as Disponible,
+		C9718 : float as SaldoTotal,
+		C9722 : string as Chequera,
+		C9727 : float as MontoAcordado
+		
+	] {
+		condition { "STIPOPRODUCTO == \"2\""  };
+				properties {
+				("operationNumber", "9961"),
+				("transaction", "7")
+					
+			}
+			
+		};
+		
+	action:	OperationQuery DATOSCA() : [
+		
+		C9653 : string as ProdDescTopaz,
+		C9649  : numeric as Cuenta,
+		C9648  : numeric as Sucursal,
+		C9724 : numeric as Paquete,
+		C9655 : string as ProdAsociados,
+		C9720  : string as FormaEnvEstCta,
+		C9721 : string as DirEstCta,
+		C9650 : numeric as Moneda,
+		C9719 : string as AcuerdSobregiro,
+		C9723 : string as Estado,
+		C9715 : float as SaldosPendiente,
+		C9717 : string as Afectado,
+		C9716 : string as Disponible,
+		C9718 : float as SaldoTotal,
+		C9722 : string as Chequera,
+		C9727 : float as MontoAcordado
+		
+		] {
+		
+		    condition { "STIPOPRODUCTO == \"3\"" };
+		    properties {
+		 	         ("operationNumber", "9961"),
+			         ("transaction", "7")
+							
+			       }
+					
+	                  };
+		   		
+	action:	OperationQuery DATOSDPF() : [
+		   		
+		C9653 : string as ProdDescTopaz,
+		C9726  : string as ClienteRol,
+		C9649 : numeric as Cuenta,
+		C9652 : numeric as Operacion,
+		C9727 : float as Capital,
+		C9650 : numeric as Moneda,
+		C9728 : numeric as Plazo,
+		C9748 : float as TasaInteres,
+		C9730 : numeric as Oficial,
+		C9724 : numeric as Paquete ,
+		C9731 : date as FechaVto,
+		C9732 : numeric as CuentaVista,
+		C9720  : string as FormaEnvEstCta,
+		C9721 : string as DirEstCta,
+		C9735 : string as IntsAlVto,
+		C9723 : string as Estado,
+		C9733 : float as CapitalInt,
+		C9734: date as ProximoVto
+		   		
+		] {
+		   		
+		    condition { "STIPOPRODUCTO == \"4\""  };
+		    properties {
+	 	                ("operationNumber", "9961"),
+		   	         ("transaction", "8")
+		   							
+		   	       }
+		   	
+                   };
+		  		   		
+	action:	OperationQuery DATOSPRESTAMOS() : [
+		  		   		
+		C9653 : string as ProdDescTopaz,
+		C9726  : string as ClienteRol,
+		C9727 : float as Capital,
+		C9650 : numeric as Moneda,
+		C9728 : numeric as Plazo,
+		C9716 : float as Importe,
+		C9731 : date as FechaVto,
+		C9737 : string as FormaPagoInt,
+		C9748 : float as TasaInteres,
+		C9737 : string as FormaCobro ,
+		C9739 : string as TipoAmortiza ,
+		C9724 : numeric as CantCuotas ,
+		C9736 : numeric as MontoCuota ,
+		C9724 : numeric as Paquete ,
+		C9734: date as ProximoVto
+		  		   		
+		] {
+		  		   		
+		    condition { "STIPOPRODUCTO == \"5\""  };
+		    properties {
+		               ("operationNumber", "9961"),
+		  	         ("transaction", "9")
+		  		   							
+		      }
+		  		   					
+		  		   	                           
+		  		   	
+                    };	   		  		   		
+	action:	OperationQuery DATOSTARJETASCREDITO() : [
+		   		  		   		
+		 
+		 C9726  : string as ClienteRol,
+		 C9746 : float as LimiteCredito,
+		 C9743 : numeric as NroCuenta,
+		 C9732 : numeric as CtaVista,
+		 C9721 : string as DirEnvio,
+		 C9723 : string as EstadoCta,
+		 C9730 : numeric as Cierre,
+		 C532: numeric as PgrPtos,
+		 C9718: numeric as PagoPeso,
+		 C9718: numeric as PagoDolar,
+		 C9718: numeric as PagoMin,
+		 C3047: date as UltPago,
+		 C8490: numeric as CompDisp,
+		 C8491: numeric as CompUltPeso,
+		 C8493: numeric as CompUltDolar,
+		 C8495: numeric as CuotaUltPeso,
+		 C8496: numeric as CuotaUltDolar,
+		 C8497: numeric as AdelUltPeso,
+		 C8498: numeric as AdelUltDolar,
+		 C9744: date as FechaVto
+		   		  		   		
+		  ] {
+		   		  		   		
+	            condition { "STIPOPRODUCTO == \"TJC\"" };
+		    properties {
+                               ("operationNumber", "9961"),
+		   	         ("transaction", "10")
+		   		  		   							
+		   		      }
+		   		  		   					
+		};
+		   		  		   		
+	action:	OperationQuery DATOSTARJETASDEBITO() : [
+		   		  		   		
+		 
+		 C9726  : string as ClienteRol,
+		 C9746 : float as LimiteCredito,
+		 C9743 : numeric as Cuenta,
+		 C9650 : numeric as Moneda,
+		 C9732 : numeric as Cuentavista,
+		 C9721 : string as DirEstCta,
+		 C9723 : string as Estado,
+		 C9744: date as FechaVto
+		   		  		   		
+		  ] {
+		   		  		   		
+	            condition { "STIPOPRODUCTO == \"TJD\"" };
+		    properties {
+                               ("operationNumber", "9961"),
+		   	         ("transaction", "10")
+		   		  		   							
+		   		      }
+		   		  		   					
+		};
+		   		  		   		
+	action:	OperationQuery DEBITOS() : [
+		   		  		   		
+		 
+		 C9731  : date as FechaAlta,
+		 C9723 : string as CreDeb,
+		 C9721 : string as Concepto,
+		 C9732 : numeric as CtaVista
+		 
+		   		  		   		
+		  ] {
+		   		  		   		
+	            condition { "STIPOPRODUCTO == \"DEB\"" };
+		    properties {
+                               ("operationNumber", "9961"),
+		   	         ("transaction", "11")
+		   		  		   							
+		   		      }
+		   		  	   		  		   		  		   	                           
+		   		  		   	
+                   }
+} 
+

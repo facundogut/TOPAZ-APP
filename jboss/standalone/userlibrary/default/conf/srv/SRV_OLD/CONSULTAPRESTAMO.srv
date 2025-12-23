@@ -1,0 +1,82 @@
+service CONSULTAPRESTAMO;
+description "Consulta de Prestamo";
+
+action:OperationQuery ejecutarOperacion
+(
+
+OperacionAcr: numeric,
+TipoProceso: string,
+NodoCliente: string,
+TicketSesion: numeric,
+InfoOrigen: string,
+ModoAutentica: string,
+CodCanal: string,
+Origen: string,
+NroDepOrigen: numeric,
+NroTransaccion: numeric,
+IdAutentica: string,
+IdInvocaTopaz: string
+        
+): [
+	C4898: string as CodError,
+	C702: numeric as Cuota,
+	C4192: float as SaldoCapital,
+	C9209: numeric as CuotasPagas,
+	C487: numeric as TotalCuotas,
+	C700: float as CapitalOriginal,
+	C2615: numeric as SJTSOID,
+	C891: numeric as Sucursal,
+	C2389: numeric as Producto,
+	C1980: numeric as Cuenta,
+	C3793: numeric as Operacion,
+	C661: numeric as Moneda,
+	C3649: date as FechaVto,
+	C3794: date as FechaProxVto
+	
+	
+	
+
+] {
+
+	properties
+	{
+		("operationNumber", "9975")
+	
+		};
+
+ 
+
+    	action: SQLQuery CONSULTASALDO(): [ 
+	    		 	SJTSOID: numeric
+	    			
+	    		]  {
+	    	    
+	    	    properties 
+	    			{ 
+	    			("statement", "SELECT jts_oid as  SJTSOID From Saldos where operacion=? and C1785=5 AND (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999)"), 
+	     			("0", "OperacionAcr")
+	    			
+	    			
+	    			
+	    
+                        };
+                        
+    	action: SQLQuery CONSULTAPAGOS(): [ 
+    		 	XML_TAG: string as XML_TAG,
+    			FECHA_PAGO: string as Fecha,
+    			MONTO: float as Monto
+    			
+    		]  {
+    	    
+    	    properties 
+    			{ 
+    			("statement", "SELECT * FROM (SELECT 'Movimiento' as XML_TAG, TO_CHAR(fechavalor, 'dd/mm/yyyy') as FECHA_PAGO,  (capitalpagado + interespagado + morapagada +impuestopagado) as MONTO from bs_historia_plazo where saldos_jts_oid=? and capitalpagado>0 AND (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999) order by fechaprocesomov desc) WHERE ROWNUM Between 1 and 10"), 
+     			("0", "SJTSOID")
+    			
+    			
+    			
+    
+                        }
+                   }
+    }
+  }  

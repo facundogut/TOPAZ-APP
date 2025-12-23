@@ -1,0 +1,31 @@
+﻿/****** Object:  StoredProcedure [dbo].[SP_DJ_BUSCO_JUEZ_SECRETARIO]    Script Date: 02/06/2021 17:51:38 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[SP_DJ_BUSCO_JUEZ_SECRETARIO] 
+@pNroCausa NUMERIC(12), 
+@pNroPersonaJ NUMERIC(12) OUT, 
+@pNroPersonaS NUMERIC(12) OUT
+AS
+BEGIN
+	DECLARE
+	@vNroPersonaJ NUMERIC(12),
+	@vNroPersonaS NUMERIC(12)
+	
+	SELECT @vNroPersonaJ = IC.ID_PERSONA 
+	FROM DJ_INTEGRANTES_CAUSAS IC WITH (NOLOCK)
+	WHERE IC.NRO_CAUSA = @pNroCausa 
+		AND IC.ACTOR = 'JUZ' 
+		AND IC.TZ_LOCK = 0;
+	
+	SELECT @vNroPersonaS = IC.ID_PERSONA 
+	FROM DJ_INTEGRANTES_CAUSAS IC  WITH (NOLOCK)
+	WHERE IC.NRO_CAUSA = @pNroCausa 
+		AND IC.ACTOR = 'SEJ' 
+		AND IC.TZ_LOCK = 0;
+	
+	SET @pNroPersonaJ = @vNroPersonaJ;
+	SET @pNroPersonaS = @vNroPersonaS;
+	
+END

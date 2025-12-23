@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>cajaSeguridad/{CUIT}</uri>
+    <serviceDescription>Contratos de Cajas de Seguridad</serviceDescription>
+    <title>Contratos de Cajas de Seguridad</title>
+    <querys>
+        <query id="1" name="Qrty_CajasSeguridad" type="MULTIPLE">
+            <sql>DECLARE @CUIT NUMERIC(11)= ?
+
+SELECT A.CODIGO AS IdContrato 
+FROM COF_COFRES_CONTRATOS A 
+JOIN VW_COFRES_CONTRATOS t ON t.CODIGO_CONTRATO = A.CODIGO
+WHERE T.NUMERODOCUMENTO=@CUIT
+AND A.ESTADO = 'A' AND A.TZ_LOCK = 0
+</sql>
+            <input>
+                <inParameter description="" type="LONG">CUIT</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="CajasSeguridad">
+                    <outParameter description="Id Contrato" type="INTEGER">
+                        <queryname>IdContrato</queryname>
+                        <servicename>IdContrato</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="vacio" type="SIMPLE">
+            <sql>select '' as PlazosFijos from parametros with(nolock) where 1 = 0</sql>
+            <input/>
+            <output>
+                <level groupby="" name="vacio">
+                    <outParameter description="" type="STRING">
+                        <queryname>PlazosFijos</queryname>
+                        <servicename>PlazosFijos</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

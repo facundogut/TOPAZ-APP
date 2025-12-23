@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-06-26T09:15:08 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ErrorAgenciero" pageWidth="842" pageHeight="1190" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" isIgnorePagination="true" uuid="6cd35cce-22e1-45b6-bcae-c1811be4e110">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<parameter name="TOPAZ_FECHA_SISTEMA" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_HORA_ACTUAL" class="java.sql.Time" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.sql.Time(new java.util.Date().getTime())]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_INICIALES_USUARIO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HAOH"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="ARCHIVO" class="java.lang.String"/>
+	<parameter name="NRO_SORTEO" class="java.lang.String"/>
+	<parameter name="FECHA" class="java.lang.String">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="TICKET" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT R.NRO_REGISTRO,R.NRO_SORTEO_NOCTURNO,RIGHT(concat(replicate('0', 4),R.AGENCIA),4) AS AGENCIA,Lista_Cod_Err, 
+CONVERT(VARCHAR(10),P.FECHAPROCESO,20) AS FECHA, CONVERT(VARCHAR(10),getdate(),108) AS HORA,
+(SELECT count(*) from REC_Agencieros R WHERE R.ID_TICKET=$P{TICKET}) AS TotalReg,
+(SELECT count(*) from REC_Agencieros R WHERE R.ID_TICKET=$P{TICKET} AND ESTADO='F') AS TotalRec,
+(SELECT count(*) from REC_Agencieros R WHERE R.ID_TICKET=$P{TICKET} AND ESTADO='H') AS TotalVal,
+(SELECT Sum(importe_liquido) from REC_Agencieros R WHERE R.ID_TICKET=$P{TICKET}) AS TotalImpLiq
+FROM REC_Agencieros R, PARAMETROS P 
+ WHERE R.ID_TICKET=$P{TICKET} AND ESTADO='F';]]>
+	</queryString>
+	<field name="NRO_REGISTRO" class="java.math.BigDecimal"/>
+	<field name="NRO_SORTEO_NOCTURNO" class="java.math.BigDecimal"/>
+	<field name="AGENCIA" class="java.lang.String"/>
+	<field name="Lista_Cod_Err" class="java.lang.String"/>
+	<field name="FECHA" class="java.lang.String"/>
+	<field name="HORA" class="java.lang.String"/>
+	<field name="TotalReg" class="java.lang.Integer"/>
+	<field name="TotalRec" class="java.lang.Integer"/>
+	<field name="TotalVal" class="java.lang.Integer"/>
+	<field name="TotalImpLiq" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="143" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="580" height="130" uuid="a651720f-1920-4efc-9870-79e2466fb920"/>
+				<text><![CDATA[                               NUEVO BANCO DEL CHACO S.A.
+                        RESULTADO DEL PROCESO DE BASES RECIBIDAS
+Ente: Loteria Chaqueña - Debitos en Caja de Ahorro/Cta Corriente
+
+Archivo          : 
+
+Fecha de proceso   :  
+
+Hora de proceso    : 
+
+
+       ***** DETALLE DE REGISTROS RECHAZADOS Y MOTIVOS DE RECHAZO *****]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="60" width="100" height="20" uuid="1a98f228-3d88-4063-addb-4a0b7adc169c"/>
+				<textFieldExpression><![CDATA[$P{ARCHIVO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="85" width="100" height="20" uuid="89023d70-b788-49c8-8738-29473b9643e6"/>
+				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="110" width="100" height="15" uuid="1a9182b7-9334-4234-9892-481e51e1710d"/>
+				<textFieldExpression><![CDATA[$F{HORA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="32" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="26" width="800" height="1" uuid="99389ce2-b1dc-4c30-971e-028d0d9ed09c"/>
+			</line>
+			<staticText>
+				<reportElement x="100" y="0" width="80" height="20" uuid="b40bc37a-0cb1-4101-a60d-2f8b66368fe0"/>
+				<text><![CDATA[Nro Sorteo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="-1" width="80" height="20" uuid="54e103c5-c413-41ff-9383-e3bf5f2c2271"/>
+				<text><![CDATA[Nro Agencia]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="0" width="90" height="18" uuid="690e4ba8-3b3b-4123-9315-75985adf9c7d"/>
+				<text><![CDATA[Codigo de error]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="0" width="80" height="20" uuid="0301c78f-4025-4d19-b00c-d3de615c8418"/>
+				<text><![CDATA[Nro Reg]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="100" y="0" width="90" height="17" uuid="24192239-4826-477d-b502-60106c53ff94"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NRO_SORTEO_NOCTURNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="80" height="17" uuid="3520b84a-f46e-48cd-b796-1eee3cecd468"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{AGENCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="0" width="90" height="17" uuid="ebc5cd1b-f278-4c48-ba43-361eb461205e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Lista_Cod_Err}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="0" width="80" height="17" uuid="77d1d529-f6bb-4ed7-990c-0474eb9237cd"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NRO_REGISTRO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="360" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="140" width="510" height="220" uuid="5cc8bd98-8404-414c-9a65-49793ee4344e"/>
+				<text><![CDATA[Tabla de códigos de error
+ _______________________________________________________________________________
+|Codigo|Descripcion
+|------|------------------------------------------------------------------------
+| 001  | Tipo de cuenta incorrecto, o cuenta no definida.
+| 002  | Sucursal inexistente.
+| 003  | Numero de cuenta inexistente.
+| 004  | Cuenta dada de baja.
+| 005  | Cuenta Bloqueada.
+| 006  | Fecha inválida.
+| 007  | Numero de sorteo igual a cero.
+| 008  | Numero de agencia igual a cero.
+| 009  | Importe invalido.
+| 010  | Tipo de Movimiento Invalido.
+| 011  | Registro ya procesado.
+| 012  | Error de Impacto en Cuenta.
+--------------------------------------------------------------------------------]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="9" width="100" height="30" uuid="7c9d7797-e7e2-458d-ae6f-76ac60f84b73"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Registros aceptados:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="40" width="100" height="30" uuid="9116d5d6-6b9a-4e1a-9c5f-bc107310e788"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Registros rechazados:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="80" width="120" height="20" uuid="f40ef09d-8305-4b74-b2d5-7ff1b44e543d"/>
+				<text><![CDATA[Total Reg. Procesados:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="110" width="100" height="20" uuid="efc20351-7ae5-4337-93fd-c317ff97694c"/>
+				<textElement verticalAlignment="Top"/>
+				<text><![CDATA[Monto Total:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="80" width="100" height="30" uuid="2adfe261-1e54-42e9-81a8-0064daf5cc58"/>
+				<textFieldExpression><![CDATA[$F{TotalReg}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="50" width="100" height="30" uuid="641f0a84-d5bf-46f6-b640-be20f1578d52"/>
+				<textFieldExpression><![CDATA[$F{TotalRec}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="20" width="100" height="30" uuid="fb1b30d3-a4b0-4ba4-a91c-488fe266e16d"/>
+				<textFieldExpression><![CDATA[$F{TotalVal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="110" width="100" height="30" uuid="d4441fd9-e659-4e76-ad23-37cfa01fef73"/>
+				<textFieldExpression><![CDATA[$F{TotalImpLiq}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+	<noData>
+		<band height="46">
+			<staticText>
+				<reportElement x="80" y="20" width="600" height="20" uuid="eb956bd4-afd2-42de-8ea5-b6a84fb1094a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No hay datos que satisfagan el reporte]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

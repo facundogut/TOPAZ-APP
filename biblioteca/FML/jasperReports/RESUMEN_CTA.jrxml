@@ -1,0 +1,1116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2025-05-13T12:31:48 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ResumenCuenta" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="575" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" whenResourceMissingType="Key" uuid="34fdccd9-b21b-4e09-841b-40ed455ef73f">
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="pJTSOID" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[JTSOID del saldo]]></parameterDescription>
+	</parameter>
+	<parameter name="pPeriodicidad" class="java.lang.String">
+		<parameterDescription><![CDATA[Periodicidad]]></parameterDescription>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[WITH CONT_LINEAS AS (
+	SELECT
+		MAX(DE.IDDET)+1 AS TOTAL_LINEAS,
+		DE.PERIODO,
+		DE.JTSOID
+	FROM GRL_DET_ENVIO_ESTCTA AS DE WITH (nolock)
+	WHERE
+		DE.PERIODO = $P{pPeriodicidad}
+		AND DE.JTSOID = $P{pJTSOID}
+	GROUP BY
+		DE.PERIODO,
+		DE.JTSOID
+)
+
+SELECT
+	CL.TOTAL_LINEAS,
+	CE.FECHAEMISION,
+	CE.NOMBRESUCURSAL,
+	CE.FECHADESDE,
+	CE.FECHAHASTA,
+	CE.TIPOCUENTA,
+	CE.CUENTA,
+	CE.MONEDA,
+	CE.RESUMENEN,
+	CE.CUITCUIL,
+	CE.CBU,
+	CE.SALDOINI,
+	CE.NOMBRECLIENTE,
+	CE.DOCUMENTOTIT,
+	CE.CALLE,
+	CE.NUMPUERTA,
+	CE.APARTAMENTO,
+	CE.PISO,
+	CE.CIUDADLOCALIDAD,
+	CE.CANTTITULARES,
+	DE.CONCEPTO,
+	DE.ASIENTO,
+	DE.IMPORTEDEBITO,
+	DE.SALDOCALCLINEA,
+	DE.SALDOACTUAL,
+	DE.DESCTRANSACCION,
+	DE.INFOEXTENDIDA,
+	DE.CODMOVIMIENTO,
+	CE.TIPOPRODUCTO,
+	DE.IMPORTECREDITO,
+	DE.FECHAMOV,
+	DE.FECHAVALOR,
+	DE.FECHA_REAL_MOV,
+	CE.NOMBRETIT2,
+	CE.PROVINCIA,
+	CE.DOCUMENTOTIT2,
+	CE.CODIGOPOSTAL,
+	CE.NOMBRETIT3,
+	CE.DOCUMENTOTIT3,
+	CE.NOMBRETIT,
+	CE.BARRIO,
+	DE.SALDOAFECHA,
+	DE.TIPOMOV,
+	DE.SALDOACTUAL,
+	DE_FINAL.SALDOCALCLINEA AS SALDOFINAL,
+	DE_FINAL.SIRCREB,
+	DE_FINAL.IIBB_CORRIENTES,
+	OP.DESCRIPCION AS DESC_PRODUCTO,
+	CC.FECHA_CANCELACION,
+	M.C6440,
+	S.MONEDA AS CODMONEDA,
+	H.TIPO_CAMBIO_OFICIAL AS COTOFICIAL,
+	CE.JTSOID
+FROM GRL_CAB_ENVIO_ESTCTA AS CE WITH (nolock)
+INNER JOIN GRL_DET_ENVIO_ESTCTA AS DE WITH (nolock) ON
+	DE.IDCAB = CE.IDCAB
+	AND DE.PERIODO = CE.PERIODO
+	AND DE.JTSOID = CE.JTSOID
+INNER JOIN CONT_LINEAS AS CL ON
+	CL.PERIODO = CE.PERIODO
+	AND CL.JTSOID = CE.JTSOID
+INNER JOIN SALDOS AS S WITH (nolock) ON
+	S.JTS_OID = CE.JTSOID
+	AND ((S.TZ_LOCK < 100000000000000 OR S.TZ_LOCK >= 200000000000000)
+		AND (S.TZ_LOCK < 300000000000000 OR S.TZ_LOCK >= 400000000000000)
+	)
+INNER JOIN PRODUCTOS AS P WITH (nolock) ON
+	P.C6250 = S.PRODUCTO
+	AND ((P.TZ_LOCK < 100000000000000 OR P.TZ_LOCK >= 200000000000000)
+		AND (P.TZ_LOCK < 300000000000000 OR P.TZ_LOCK >= 400000000000000)
+	)
+INNER JOIN OPCIONES AS OP WITH (nolock) ON
+	OP.NUMERODECAMPO = 6826
+	AND OP.IDIOMA = 'E'
+	AND OP.OPCIONINTERNA = P.C6826
+INNER JOIN MONEDAS AS M WITH (nolock) ON
+	M.C6399 = S.MONEDA
+	AND ((M.TZ_LOCK < 100000000000000 OR M.TZ_LOCK >= 200000000000000)
+		AND (M.TZ_LOCK < 300000000000000 OR M.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN GRL_DET_ENVIO_ESTCTA AS DE_FINAL WITH (nolock) ON
+	DE_FINAL.IDCAB = CE.IDCAB
+	AND DE_FINAL.PERIODO = CE.PERIODO
+	AND DE_FINAL.JTSOID = CE.JTSOID
+	AND DE_FINAL.TIPOMOV = 'F'
+	AND DE_FINAL.IDDET = (	SELECT TOP 1 IDDET
+							FROM GRL_DET_ENVIO_ESTCTA WITH (nolock)
+							WHERE
+								IDCAB = DE_FINAL.IDCAB
+								AND PERIODO = DE_FINAL.PERIODO
+								AND JTSOID = DE_FINAL.JTSOID
+								AND TIPOMOV = DE_FINAL.TIPOMOV
+							ORDER BY IDDET DESC
+						)
+LEFT JOIN CV_CANCELACION_CUENTAS AS CC WITH (nolock) ON
+	CC.SALDO_JTS_OID = S.JTS_OID
+	AND CC.ESTADO = 'F'
+	AND ((CC.TZ_LOCK < 100000000000000 OR CC.TZ_LOCK >= 200000000000000)
+		AND (CC.TZ_LOCK < 300000000000000 OR CC.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN HISTORICOTIPOSCAMBIO AS H WITH (nolock) ON
+	((H.TZ_LOCK < 100000000000000 OR H.TZ_LOCK >= 200000000000000)
+		AND (H.TZ_LOCK < 300000000000000 OR H.TZ_LOCK >= 400000000000000)
+	)
+	AND H.MONEDA = M.C6399
+	AND H.FECHA_COTIZACION = (	SELECT TOP 1 FECHA_COTIZACION 
+								FROM HISTORICOTIPOSCAMBIO WITH (nolock)
+								WHERE
+									MONEDA = H.MONEDA
+									AND FECHA_COTIZACION <= (SELECT FECHAPROCESO FROM PARAMETROS WITH (nolock))
+									AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)
+										AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000)
+									)
+								ORDER BY FECHA_COTIZACION DESC
+							)
+	AND H.CODIGO_TIPO_CAMBIO = (	SELECT TOP 1 CODIGO_TIPO_CAMBIO
+									FROM HISTORICOTIPOSCAMBIO WITH (nolock)
+									WHERE
+										MONEDA = H.MONEDA
+										AND FECHA_COTIZACION = H.FECHA_COTIZACION
+										AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)
+											AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000)
+										)
+									ORDER BY CODIGO_TIPO_CAMBIO
+							)
+WHERE
+	CE.PERIODO = $P{pPeriodicidad}
+	AND CE.JTSOID = $P{pJTSOID}
+ORDER BY
+	DE.FECHA_REAL_MOV,
+	DE.FECHAMOV,
+	DE.HORA_MOV,
+	DE.IDDET]]>
+	</queryString>
+	<field name="TOTAL_LINEAS" class="java.math.BigDecimal"/>
+	<field name="FECHAEMISION" class="java.sql.Timestamp"/>
+	<field name="NOMBRESUCURSAL" class="java.lang.String"/>
+	<field name="FECHADESDE" class="java.sql.Timestamp"/>
+	<field name="FECHAHASTA" class="java.sql.Timestamp"/>
+	<field name="TIPOCUENTA" class="java.lang.String"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="MONEDA" class="java.lang.String"/>
+	<field name="RESUMENEN" class="java.lang.String"/>
+	<field name="CUITCUIL" class="java.lang.String"/>
+	<field name="CBU" class="java.lang.String"/>
+	<field name="SALDOINI" class="java.math.BigDecimal"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="DOCUMENTOTIT" class="java.lang.String"/>
+	<field name="CALLE" class="java.lang.String"/>
+	<field name="NUMPUERTA" class="java.lang.String"/>
+	<field name="APARTAMENTO" class="java.lang.String"/>
+	<field name="PISO" class="java.math.BigDecimal"/>
+	<field name="CIUDADLOCALIDAD" class="java.lang.String"/>
+	<field name="CANTTITULARES" class="java.math.BigDecimal"/>
+	<field name="CONCEPTO" class="java.lang.String"/>
+	<field name="ASIENTO" class="java.math.BigDecimal"/>
+	<field name="IMPORTEDEBITO" class="java.math.BigDecimal"/>
+	<field name="SALDOCALCLINEA" class="java.math.BigDecimal"/>
+	<field name="SALDOACTUAL" class="java.math.BigDecimal"/>
+	<field name="DESCTRANSACCION" class="java.lang.String"/>
+	<field name="INFOEXTENDIDA" class="java.lang.String"/>
+	<field name="CODMOVIMIENTO" class="java.math.BigDecimal"/>
+	<field name="TIPOPRODUCTO" class="java.math.BigDecimal"/>
+	<field name="IMPORTECREDITO" class="java.math.BigDecimal"/>
+	<field name="FECHAMOV" class="java.sql.Timestamp"/>
+	<field name="FECHAVALOR" class="java.sql.Timestamp"/>
+	<field name="FECHA_REAL_MOV" class="java.sql.Timestamp"/>
+	<field name="NOMBRETIT2" class="java.lang.String"/>
+	<field name="PROVINCIA" class="java.lang.String"/>
+	<field name="DOCUMENTOTIT2" class="java.lang.String"/>
+	<field name="CODIGOPOSTAL" class="java.lang.String"/>
+	<field name="NOMBRETIT3" class="java.lang.String"/>
+	<field name="DOCUMENTOTIT3" class="java.lang.String"/>
+	<field name="NOMBRETIT" class="java.lang.String"/>
+	<field name="BARRIO" class="java.lang.String"/>
+	<field name="SALDOAFECHA" class="java.math.BigDecimal"/>
+	<field name="TIPOMOV" class="java.lang.String"/>
+	<field name="COLUMN_44" class="java.math.BigDecimal"/>
+	<field name="SALDOFINAL" class="java.math.BigDecimal"/>
+	<field name="SIRCREB" class="java.math.BigDecimal"/>
+	<field name="IIBB_CORRIENTES" class="java.math.BigDecimal"/>
+	<field name="DESC_PRODUCTO" class="java.lang.String"/>
+	<field name="FECHA_CANCELACION" class="java.sql.Timestamp"/>
+	<field name="C6440" class="java.math.BigDecimal"/>
+	<field name="CODMONEDA" class="java.math.BigDecimal"/>
+	<field name="COTOFICIAL" class="java.math.BigDecimal"/>
+	<field name="JTSOID" class="java.math.BigDecimal"/>
+	<variable name="Page+1" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$V{PAGE_NUMBER}+1]]></variableExpression>
+	</variable>
+	<variable name="saldotot" class="java.lang.Integer">
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="SaldoPhoja" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[SUM($F{IMPORTECREDITO},$F{IMPORTEDEBITO}.negate())]]></variableExpression>
+	</variable>
+	<variable name="saldopesos" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{SALDOFINAL}.multiply($V{CotMonsinR})]]></variableExpression>
+	</variable>
+	<variable name="cotizado" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{IMPORTEDEBITO}.multiply($V{CotMonsinR}).add($F{IMPORTECREDITO}.multiply($V{CotMonsinR}))]]></variableExpression>
+	</variable>
+	<variable name="redondeo" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{cotizado}.setScale(2,java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="RedondeoF" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{saldopesos}.setScale(2,java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="CotMoneda" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{COTOFICIAL} == null ? $F{C6440} : $F{COTOFICIAL}.setScale(2,java.math.RoundingMode.HALF_UP)]]></variableExpression>
+	</variable>
+	<variable name="CotMonsinR" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{COTOFICIAL} == null ? $F{C6440} : $F{COTOFICIAL}]]></variableExpression>
+	</variable>
+	<group name="Grupo Unico" footerPosition="ForceAtBottom">
+		<groupExpression><![CDATA[$F{JTSOID}]]></groupExpression>
+		<groupFooter>
+			<band height="70" splitType="Prevent">
+				<staticText>
+					<reportElement x="256" y="0" width="100" height="12" uuid="743c577f-143a-437e-af15-24f8aff9f781">
+						<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() != 999 && $F{CODMONEDA}.intValue() != 988)]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Saldo a FECHA:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="245" y="0" width="111" height="12" isRemoveLineWhenBlank="true" uuid="c09c5903-20cb-497a-9c7d-7855770c2b25">
+						<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() == 999 || $F{CODMONEDA}.intValue() == 988)]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Saldo U.V.A. a FECHA:]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="356" y="0" width="100" height="12" uuid="2fecdb54-25b4-4b40-a320-f69ac5f3c1b8"/>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{FECHAHASTA}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00#">
+					<reportElement x="456" y="0" width="99" height="12" uuid="decc659c-d086-42cf-82dc-97c907ac80fd"/>
+					<textElement textAlignment="Right">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{SALDOFINAL}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement isPrintRepeatedValues="false" x="248" y="12" width="72" height="12" isRemoveLineWhenBlank="true" uuid="568743c4-8dbf-4e51-8d86-9d5eba1162b6">
+						<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() == 999 || $F{CODMONEDA}.intValue() == 988)]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Valor U.V.A.:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement x="320" y="12" width="71" height="12" isRemoveLineWhenBlank="true" uuid="063ce28b-a897-4300-8d40-09b8d0e52d47">
+						<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() == 999 || $F{CODMONEDA}.intValue() == 988)]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{CotMoneda}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement isPrintRepeatedValues="false" x="391" y="12" width="88" height="12" isRemoveLineWhenBlank="true" uuid="dc066135-20cc-4068-b4ca-4c822ffc8902">
+						<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() == 999 || $F{CODMONEDA}.intValue() == 988)]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[Saldo en PESOS:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00#" isBlankWhenNull="true">
+					<reportElement x="479" y="12" width="76" height="12" isRemoveLineWhenBlank="true" uuid="1fb3d29c-758b-49ca-9b1d-ae65bb911041">
+						<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() == 999 || $F{CODMONEDA}.intValue() == 988)]]></printWhenExpression>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{RedondeoF}]]></textFieldExpression>
+				</textField>
+				<subreport>
+					<reportElement stretchType="RelativeToBandHeight" x="0" y="24" width="555" height="12" uuid="555faac0-7e8a-4ba4-98d2-57c5eedd3ed7">
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<subreportParameter name="JTS_OID">
+						<subreportParameterExpression><![CDATA[$P{pJTSOID}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="FECHA_DESDE">
+						<subreportParameterExpression><![CDATA[$F{FECHADESDE}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="FECHA_HASTA">
+						<subreportParameterExpression><![CDATA[$F{FECHAHASTA}]]></subreportParameterExpression>
+					</subreportParameter>
+					<subreportParameter name="PERIODICIDAD">
+						<subreportParameterExpression><![CDATA[$P{pPeriodicidad}]]></subreportParameterExpression>
+					</subreportParameter>
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "RESUMEN_Subreport1.jasper"]]></subreportExpression>
+				</subreport>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="40" width="245" height="12" uuid="ec8f3ee7-bfcd-4329-aa91-19d7a58a2c25">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[-Régimen Recaudación SIRCREB - Importe Total Debitado:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;(-#,##0.00)">
+					<reportElement positionType="Float" x="245" y="40" width="75" height="12" uuid="32024351-1d42-4ad4-bc42-4bcc7a21e305">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["$ " + new DecimalFormat("#,##0.00").format($F{SIRCREB})]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="57" width="245" height="12" uuid="6d3fd297-a887-41f7-9667-b7a5a1e79ade">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<text><![CDATA[-Régimen de Percepciones Bancarias DGR Corrientes:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;(-#,##0.00)">
+					<reportElement positionType="Float" x="245" y="57" width="75" height="12" uuid="c534ed94-f584-4549-a977-405b18db2c29">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression><![CDATA["$ " + new DecimalFormat("#,##0.00").format($F{IIBB_CORRIENTES})]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="274" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="3" width="260" height="46" uuid="f7f8b6f7-afbb-4882-9c9c-bad60d76af63"/>
+				<text><![CDATA[N U E V O   B A N C O   D E L   C H A C O   S .  A .     Casa Central: Guemes 102-Resistencia-Chaco-Argentina
+C.U.I.T. 30-67015779-9  - Responsable Inscripto]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="49" width="566" height="1" uuid="1fefe623-bdbe-4b0c-9583-fd31825c9bf9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="293" y="68" width="106" height="16" uuid="26d643df-c58d-4cb6-972c-c2e407c9e0ab"/>
+				<text><![CDATA[Fecha de Emisión:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="53" width="106" height="16" uuid="21abe9cc-debc-49ab-8201-ba070a9877bb">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Hoja N°:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="399" y="53" width="167" height="16" uuid="1a47aa21-5177-4ac5-a4ae-ca6179bea58a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="293" y="85" width="106" height="16" uuid="1db0ea5e-c565-4719-8270-c45fab58d67d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Sucursal ...............:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="102" width="106" height="16" uuid="ef8ffca0-1e5b-46bc-9af0-e0e6f952222e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Fecha Desde ........:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="119" width="106" height="16" uuid="ebe975a8-fca5-4637-8fdf-ec18d4026aa9">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Fecha Hasta .........:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="136" width="106" height="16" uuid="0f559fcb-3ee4-435d-ab56-394b85587957">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Tipo de cuenta .....:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="153" width="106" height="16" uuid="b950b8ba-bb61-4946-a440-e693c5ec3dcd">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Nro de Cuenta ......:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="169" width="106" height="16" uuid="2bf96661-171e-40bf-bfed-4bc7591e7b45">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Moneda ................:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="184" width="106" height="16" uuid="1f599bee-3a86-4442-b728-055fd6888625">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Resumen en.........:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="200" width="106" height="16" uuid="32a429b4-9b47-413e-9996-8e3862bcafef">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[CUIT / CUIL .........:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="216" width="106" height="16" uuid="cd2b736e-2214-4712-a40b-8f58039cfd1d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[C.B.U. ..................:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="293" y="232" width="106" height="16" uuid="ca08faaf-8bf7-4483-b736-3f9cc66e29fd">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == 1)]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Saldo Inicial..........:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="188" width="125" height="16" uuid="10e38065-f0c7-42c4-b167-fafb3f504179">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Cantidad de titulares .......:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="399" y="69" width="167" height="16" uuid="7b006236-4a43-4001-9159-a088f7893dbd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{FECHAEMISION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="85" width="167" height="16" uuid="faa22314-5d84-489a-9e01-615879c8450f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRESUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement positionType="FixRelativeToBottom" x="399" y="102" width="167" height="16" uuid="47c9f301-4bab-4748-a7ce-563855c86c6e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{FECHADESDE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="399" y="119" width="167" height="16" uuid="c7daf53b-10a2-4cbf-8fdd-486c53b028a8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{FECHAHASTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="399" y="153" width="167" height="16" uuid="62270331-1dec-466e-b44b-96e1a195af95">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="169" width="167" height="16" uuid="fcff01b6-945c-46a4-b537-785310c12a86">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="185" width="167" height="16" uuid="8e5d31f7-157f-4e65-8595-0d4fbfaf7f3c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{RESUMENEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="200" width="167" height="16" uuid="024deb52-3e98-4736-8420-d98d9dd55246">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{CUITCUIL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="399" y="232" width="156" height="16" uuid="259f3368-7e19-4391-9fdd-c44e2d56bb4d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() == 1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[($F{SALDOINI} == null ? 0 : $F{SALDOINI})]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="125" y="188" width="100" height="16" uuid="3bef51a6-756c-43b8-8e11-a34d975b8713">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CANTTITULARES} == null ? 0 : $F{CANTTITULARES}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="81" width="276" height="16" uuid="a06ee1a0-85a9-4ea1-99d8-20236966df81">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRECLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="40" y="98" width="236" height="16" isRemoveLineWhenBlank="true" uuid="bc7e8fd3-7689-44d2-b36b-9ad713d69b8f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CALLE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="41" y="114" width="58" height="16" isRemoveLineWhenBlank="true" uuid="8a078a67-7bc5-4ee3-8639-537bd04bc2cf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{NUMPUERTA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="" x="0" y="146" width="276" height="16" isRemoveLineWhenBlank="true" uuid="2150e4f4-03cf-4cfc-808e-ab55f48f5d73">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CIUDADLOCALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="196" y="210" width="86" height="16" uuid="fa21a801-e66a-498d-8609-795222279156">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DOCUMENTOTIT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="210" width="196" height="16" uuid="72c513dc-588e-4350-a7bf-821e7e4e3e78">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRETIT} == null ? "La cuenta no tiene apoderados" : $F{NOMBRETIT}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="230" width="196" height="16" isRemoveLineWhenBlank="true" uuid="288532b4-e1f0-42c3-9177-883b822651f5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRETIT2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="196" y="230" width="86" height="16" isRemoveLineWhenBlank="true" uuid="ec06e8b6-bf6f-40ab-a6f9-2ea3133e70ea">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DOCUMENTOTIT2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="250" width="196" height="16" isRemoveLineWhenBlank="true" uuid="aa3dd7e1-63a9-49d2-9e2b-3e29f1d3bc5e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRETIT3}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="196" y="250" width="86" height="16" isRemoveLineWhenBlank="true" uuid="3b8c4a37-22d0-46f5-bca3-e2eee3abdb4b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DOCUMENTOTIT3}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="114" width="40" height="16" uuid="8d9af8ed-e65e-4a43-a45a-fbf2b89af24c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Puerta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="105" y="114" width="27" height="16" uuid="b1a9845a-2cea-457c-b688-fb2bb1deb75c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Piso:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="132" y="114" width="43" height="16" isRemoveLineWhenBlank="true" uuid="403ac194-5fb1-44dc-8137-aa497e43ad9b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{PISO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="182" y="114" width="40" height="16" uuid="16d3c99a-e1df-4161-8af8-77fb2c6d8fd8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Dpto.:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="224" y="114" width="52" height="16" isRemoveLineWhenBlank="true" uuid="9235e88c-8bbb-45f3-b8f6-9b590d1e8afe">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{APARTAMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="130" width="77" height="16" uuid="724dfd99-c0c0-4672-989c-6c8b4bb17dbd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Código postal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="296" y="256" width="150" height="16" uuid="396d76e4-4807-4e2f-82e2-48425c87e7b8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() != 1)]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Transporte HOJA ANTERIOR :]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="399" y="215" width="167" height="16" uuid="0b831505-a6fb-4a1b-9927-c4ad355a57d4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{CBU}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="446" y="256" width="109" height="16" uuid="8220e7b8-171c-45b6-94cc-15f2324fa10f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($V{PAGE_NUMBER}.intValue() != 1)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[SUM($V{SaldoPhoja}, $F{SALDOINI})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="55" width="120" height="16" uuid="09a966f4-9f46-48bd-954b-43c6e481c429">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{FECHA_CANCELACION} != null)]]></printWhenExpression>
+				</reportElement>
+				<text><![CDATA[Cuenta cerrada en  fecha:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement key="" x="77" y="130" width="98" height="16" isRemoveLineWhenBlank="true" uuid="ed6ce2a9-c64d-41ac-9556-b0897b4f148a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CODIGOPOSTAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement key="" x="0" y="162" width="276" height="16" isRemoveLineWhenBlank="true" uuid="dd05df48-38f9-415a-92b8-b097e8ae423a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{PROVINCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="399" y="136" width="167" height="16" uuid="53c61c91-e9dc-475d-8bb1-46765aa21dea">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DESC_PRODUCTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="98" width="40" height="16" uuid="1e6e011c-55ca-47a6-a5c9-f315af25390c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Calle:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="120" y="55" width="102" height="16" uuid="91527871-f69a-473b-b92b-03d0383bf6aa"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{FECHA_CANCELACION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="20" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="123af4ac-94ad-44b5-9217-e0590b2fab24">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" uuid="f8b00936-6fd8-4f7f-a34d-31ed14318f17">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="3" width="70" height="16" uuid="b667d3f9-2429-4116-a2e9-160f8b15c923">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="70" y="3" width="177" height="16" uuid="c5017fa5-08a0-40be-8cc0-6417a0d6d8dd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DETALLE DEL MOVIMIENTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="247" y="3" width="83" height="16" uuid="3b3f5df3-326a-4886-8aa4-3b3b4b3c9552">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[COMPROBANTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="3" width="73" height="16" uuid="205f3002-35b0-46e9-8145-cb4c535fe264">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[DÉBITO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="403" y="3" width="73" height="16" uuid="ba8a6cf7-cb7a-44e4-8c5d-81d1bc4d08b3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CRÉDITO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="476" y="3" width="79" height="16" uuid="1c7b3300-4589-4797-9d47-c015f15554ec">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[SALDO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Immediate">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="330" y="0" width="73" height="13" isRemoveLineWhenBlank="true" uuid="f420ebe7-40c7-4481-a153-6532458a882d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IMPORTEDEBITO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="476" y="0" width="79" height="13" isRemoveLineWhenBlank="true" uuid="4b111334-259f-4d1b-9c3a-864c5a6f4a30">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDOCALCLINEA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="403" y="0" width="73" height="13" isRemoveLineWhenBlank="true" uuid="fc44d297-1ced-4009-ac2c-b513dfde2ea8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IMPORTECREDITO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="247" y="0" width="83" height="13" isRemoveLineWhenBlank="true" uuid="497b428f-657b-4c97-9d9c-5a5101bd29d6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ASIENTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="0" y="0" width="70" height="13" isRemoveLineWhenBlank="true" uuid="09afc2e5-d733-4a0b-bca3-3ffa4e9475a2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA_REAL_MOV}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="70" y="0" width="177" height="13" isRemoveLineWhenBlank="true" uuid="3de869ce-6ecf-4843-825d-d5a07eaade7f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCTRANSACCION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" isPrintRepeatedValues="false" x="0" y="26" width="555" height="14" isRemoveLineWhenBlank="true" uuid="08a41d60-6442-4f4d-8010-b2031911a366">
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+					<paragraph leftIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INFOEXTENDIDA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="0" y="13" width="109" height="13" isRemoveLineWhenBlank="true" uuid="a4302d54-6f80-41a0-abcc-edb0191b1f00">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() == 999 || $F{CODMONEDA}.intValue() == 988) && new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Importe en pesos:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement isPrintRepeatedValues="false" x="199" y="13" width="85" height="13" isRemoveLineWhenBlank="true" uuid="5a989caa-6907-44f4-88c4-9d7cc315a1ad">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() == 999 || $F{CODMONEDA}.intValue() == 988) && new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Valor de U.V.A.:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#">
+				<reportElement x="109" y="13" width="90" height="13" uuid="7418bac8-5d64-4c4a-ade8-3119c98e778d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() == 999 || $F{CODMONEDA}.intValue() == 988) && new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{redondeo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="284" y="13" width="100" height="13" uuid="2f6e105c-b3e2-4219-95d0-bd44699b375b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{CODMONEDA}.intValue() == 999 || $F{CODMONEDA}.intValue() == 988) && new Boolean($F{TIPOMOV}.equalsIgnoreCase("M"))]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{CotMoneda}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="150">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="1" width="154" height="14" uuid="52baff65-7d68-4e04-bf4c-38d47cb0c879"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Continúa en hoja siguiente  Nº]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="154" y="1" width="56" height="14" uuid="31421462-54a5-4aba-9d2c-b6d17835a17f"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER} + 1]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="1" width="80" height="14" uuid="3b4555bc-fb27-44d8-8a73-24155746ba99">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Saldo a FECHA:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement positionType="FixRelativeToBottom" x="340" y="1" width="80" height="14" uuid="540a7f5e-7f3f-453c-a6f0-4add02cdc41a"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHAHASTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="446" y="1" width="109" height="14" uuid="6eace640-25f5-4043-a3c2-70406718d6bc">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[SUM($V{SaldoPhoja}, $F{SALDOINI})]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="17" width="554" height="1" uuid="056e9749-a758-4dc3-b0ab-cb3d94907906">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="18" width="554" height="32" uuid="17f11cd6-3bbb-49d2-9ad2-76dbe4ab7fc4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[- Los depósitos en pesos y en moneda extranjera cuentan con la garantía de hasta $ 25.000.000. En las operaciones a nombre de dos o más personas, la garantía se prorrateará entre sus titulares. En ningún caso, el total de la garantía por persona y por depósito podrá exceder de $ 25.000.000, cualquiera sea el número de  cuentas y/o depósitos. Ley 24.485, Decreto 540/95 y modificatorios y Com. "A" 2337 y sus modificatorias y complementarias. Se encuentran excluidos los captados a tasas superiores a la de referencia conforme a los límites establecidos   por el Banco Central, los adquiridos por endoso y los efectuados por personas vinculadas a la entidad financiera.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="50" width="554" height="8" uuid="eb88172d-9bb0-4c97-badf-11d0f13b091e"/>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<text><![CDATA[- Consumidor final, IVA no resp. y exento no pueden computar crédito fiscal IVA (R.G. AFIP 1415).- ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="58" width="554" height="16" uuid="7812c68f-1c18-4ea4-a2a4-8b1390d3f9e7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[- Se presumirá conformidad con el movimiento registrado en el banco si dentro de los 60 días corridos de vencido el respectivo período no se ha presentado en la entidad financiera la formulación de un reclamo.-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="74" width="554" height="8" isRemoveLineWhenBlank="true" uuid="d2553cec-372b-44b0-8495-e206303c4df0">
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOPRODUCTO}.intValue()==3)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[El movimiento marcado con  *  no fue incluido en el resumen anterior.- ]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="82" width="554" height="1" uuid="366c4d30-9e61-4a15-9ec8-320ab985c85e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="83" width="554" height="16" uuid="0d720807-dcda-41c8-ab82-3bc60879504b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Usted puede consultar el "Régimen de Transparencia" elaborado por el Banco Central sobre la base de la informa-ción proporcionada por los sujetos obligados a fin de comparar los costos y características de los productosy servicios financieros ingresando a : http://www.bcra.gob.ar/BCRAyVos/Regimen_de_transparencia.asp
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="99" width="554" height="16" uuid="9766538d-cd1e-4b40-83df-62a50a481c58">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Usted puede solicitar la "Caja de ahorros" en pesos con las prestaciones previstas en el punto 1.8 de las normas sobre "Depósitos de ahorro,cuenta sueldo y especiales", las cuales serán gratuitas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="115" width="554" height="35" uuid="c6fd12ca-a160-4cfa-87f3-329cce049faf">
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOPRODUCTO}.intValue()==3)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Los consumos en dólares de sus tarjetas de crédito podrán ser cancelados en esa moneda extranjera o en pesos, siendo aplicable como máximo en este caso el tipo de cambio vendedor (aplicable para operaciones efectuadas por ventanilla o a través de medios electrónicos, según corresponda) del momento de cancelación -o día hábil inmediato anterior cuando el pago se efectúe un día inhábil-.
+Si hubiera pactado el débito automático del resumen de la tarjeta, aplicará el tipo de cambio vendedor para operaciones efectuadas a través de medios electrónicos de pago del cierre del mismo día hábil del pago.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<lastPageFooter>
+		<band height="140" splitType="Immediate">
+			<line>
+				<reportElement positionType="Float" x="1" y="5" width="556" height="1" uuid="beff4d31-f827-4ebb-801e-9f51e60e0782">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="6" width="554" height="32" uuid="e533a061-a3fc-4855-be14-cb9a4a5009d4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[-Los depósitos en pesos y en moneda extranjera cuentan con la garantía de hasta $ 25.000.000. En las operaciones a nombre de dos o más personas, la garantía se prorrateará entre sus titulares. En ningún caso, el total de la garantía por persona y por depósito podrá exceder de $ 25.000.000, cualquiera sea el número de  cuentas y/o depósitos. Ley 24.485, Decreto 540/95 y modificatorios y Com. "A" 2337 y sus modificatorias y complementarias. Se encuentran excluidos los captados a tasas superiores a la de referencia conforme a los límites establecidos   por el Banco Central, los adquiridos por endoso y los efectuados por personas vinculadas a la entidad financiera.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="38" width="554" height="8" uuid="e44c43a7-9b80-4fa3-8589-f2c0dcc72838"/>
+				<textElement>
+					<font fontName="SansSerif" size="6"/>
+				</textElement>
+				<text><![CDATA[- Consumidor final, IVA no resp. y exento no pueden computar crédito fiscal IVA (R.G. AFIP 1415).- ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="46" width="554" height="16" uuid="b67d83a0-d52b-4368-99ea-2c570df8b8ec">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[-Se presumirá conformidad con el movimiento registrado en el banco si dentro de los 60 días corridos de vencido el respectivo período no se ha presentado en la entidad financiera la formulación de un reclamo.-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="62" width="554" height="8" isRemoveLineWhenBlank="true" uuid="4b4d1220-8913-4350-87c4-f3365aaacdf6">
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOPRODUCTO}.intValue()==3)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[El movimiento marcado con  *  no fue incluido en el resumen anterior.-]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="71" width="554" height="1" uuid="834bbda9-5028-4cc9-92a2-4f80669779f0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="71" width="554" height="16" uuid="8e1b3030-14c3-445e-b633-92e1559cb417"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Usted puede consultar el "Régimen de Transparencia" elaborado por el Banco Central sobre la base de la informa-ción proporcionada por los sujetos obligados a fin de comparar los costos y características de los productosy servicios financieros ingresando a : http://www.bcra.gob.ar/BCRAyVos/Regimen_de_transparencia.asp
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="87" width="554" height="16" uuid="b995a93c-f252-4c8e-99d8-b5e91a76e7c7"/>
+				<textElement>
+					<font size="6"/>
+					<paragraph lineSpacing="AtLeast"/>
+				</textElement>
+				<text><![CDATA[Usted puede solicitar la "Caja de ahorros" en pesos con las prestaciones previstas en el punto 1.8 de las normas sobre "Depósitos de ahorro,cuenta sueldo y especiales", las cuales serán gratuitas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToBandHeight" x="3" y="103" width="554" height="37" uuid="c8d2e5b7-c5c8-4985-bc7c-eed7338c5449">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<printWhenExpression><![CDATA[new Boolean($F{TIPOPRODUCTO}.intValue()==3)]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Los consumos en dólares de sus tarjetas de crédito podrán ser cancelados en esa moneda extranjera o en pesos, siendo aplicable como máximo en este caso el tipo de cambio vendedor (aplicable para operaciones efectuadas por ventanilla o a través de medios electrónicos, según corresponda) del momento de cancelación -o día hábil inmediato anterior cuando el pago se efectúe un día inhábil-.
+Si hubiera pactado el débito automático del resumen de la tarjeta, aplicará el tipo de cambio vendedor para operaciones efectuadas a través de medios electrónicos de pago del cierre del mismo día hábil del pago.]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
+	<noData>
+		<band height="39">
+			<staticText>
+				<reportElement x="140" y="5" width="300" height="30" uuid="6ccad1ae-116b-4e8d-8f6a-e20da639688d"/>
+				<textElement>
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No tiene movimientos en esta cuenta]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

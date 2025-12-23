@@ -1,0 +1,21 @@
+service CuentaVistaCargosAutomaticos; 
+description "Srv CargosAutomaticos"; 
+
+action:	SQLQuery Entity ( 
+ IDSALDO: string
+): [ 
+   	DESCRIPCION: string,
+	PRESTAMO: string,
+	MONEDA: string,
+   	IMPORTE_CUOTA: string   
+]
+{ 
+  	properties { 
+  	("statement", "SELECT 'PagoPrestamo' AS Descripcion,CUENTA AS Prestamo,TO_CHAR(C1612,'9999G999G999G999G999D99') AS Importe_Cuota, m.C6401 AS MONEDA FROM SALDOS s  JOIN MONEDAS m ON m.C6399 = s.MONEDA WHERE s.C1785=5 AND s.C1604<0 AND s.TZ_LOCK NOT BETWEEN 300000000000000 AND 399999999999999 AND s.C1665 = ? "),
+	("0", "IDSALDO")	
+	}
+}
+
+
+
+

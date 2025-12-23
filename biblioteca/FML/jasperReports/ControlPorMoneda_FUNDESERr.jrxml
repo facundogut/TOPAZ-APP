@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ControlPorMoneda" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="Moneda">
+		<parameter name="CodMoneda" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[Select C6400 as dm from CO_monedas where C6399=$P{CodMoneda}]]>
+		</queryString>
+		<field name="dm" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="FECHA_PROCESO" class="java.util.Date"/>
+	<parameter name="TOPAZ_INICIALES_USUARIO" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[	SELECT SUM(SALDO_AL_CORTE) AS SALDO_AL_CORTE,
+		   SUM(SALDO_AJUSTADO) AS SALDO_AJUSTADO,
+		   CODIGOMONEDA,
+		  CONTROL
+		  FROM (SELECT SUM(G.SALDO_AL_CORTE) AS SALDO_AL_CORTE,
+				SUM(G.SALDO_AJUSTADO) AS SALDO_AJUSTADO,
+				S.MONEDA AS CODIGOMONEDA,
+				CASE
+				WHEN P.C6304 IN (6, 7) THEN
+				3
+				ELSE
+				CASE
+				WHEN P.C6304 IN (4, 5) THEN
+				2
+				ELSE
+				3
+				END END AS CONTROL
+			    FROM CO_PLANCTAS P
+					 INNER JOIN SALDOS_DIARIOS G ON G.RUBROCONTABLE = P.C6326
+					   AND G.FECHA = $P{FECHA_PROCESO} AND (P.tz_lock < 300000000000000 OR P.tz_lock >= 400000000000000)
+AND (P.tz_lock < 100000000000000 OR P.tz_lock >= 200000000000000) AND (G.tz_lock < 300000000000000 OR G.tz_lock >= 400000000000000)
+AND (G.tz_lock < 100000000000000 OR G.tz_lock >= 200000000000000)
+					 INNER JOIN SALDOS S ON S.JTS_OID = G.SALDO_JTS_OID AND (s.tz_lock < 300000000000000 OR s.tz_lock >= 400000000000000)
+AND (s.tz_lock < 100000000000000 OR s.tz_lock >= 200000000000000)
+					 GROUP BY P.C6304, S.MONEDA) T
+				 GROUP BY CONTROL, CODIGOMONEDA
+				 ORDER BY CONTROL, CODIGOMONEDA]]>
+	</queryString>
+	<field name="SALDO_AL_CORTE" class="java.math.BigDecimal"/>
+	<field name="SALDO_AJUSTADO" class="java.math.BigDecimal"/>
+	<field name="CODIGOMONEDA" class="java.math.BigDecimal"/>
+	<field name="CONTROL" class="java.lang.Integer"/>
+	<group name="TIPOREPORTE" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{CONTROL}]]></groupExpression>
+		<groupHeader>
+			<band height="144">
+				<staticText>
+					<reportElement x="152" y="72" width="236" height="20" printWhenGroupChanges="TIPOREPORTE">
+						<printWhenExpression><![CDATA[$F{CONTROL} == 1]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CONTROL CUENTAS BALANCE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="435" y="12" width="41" height="20"/>
+					<textElement/>
+					<text><![CDATA[FECHA:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="440" y="32" width="41" height="20"/>
+					<textElement/>
+					<text><![CDATA[HORA:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="424" y="52" width="54" height="20"/>
+					<textElement/>
+					<text><![CDATA[USUARIO:]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="481" y="12" width="65" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<textField pattern="h.mm.ss a">
+					<reportElement x="481" y="32" width="65" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="152" y="72" width="236" height="20">
+						<printWhenExpression><![CDATA[$F{CONTROL} == 2]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CONTROL CUENTAS CONTINGENCIAS]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="152" y="72" width="236" height="20">
+						<printWhenExpression><![CDATA[$F{CONTROL} == 3]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Center">
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CONTROL CUENTAS DE ORDEN]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="13" y="97" width="97" height="20"/>
+					<textElement/>
+					<text><![CDATA[FECHA PROCESO:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="39" y="123" width="55" height="20"/>
+					<textElement/>
+					<text><![CDATA[MONEDA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="117" y="124" width="100" height="20"/>
+					<textElement/>
+					<text><![CDATA[DESCRIPCION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="299" y="123" width="100" height="20"/>
+					<textElement/>
+					<text><![CDATA[SALDO AL CORTE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="432" y="123" width="100" height="20"/>
+					<textElement/>
+					<text><![CDATA[SALDO AJUSTADO]]></text>
+				</staticText>
+				<line>
+					<reportElement x="5" y="139" width="538" height="1"/>
+				</line>
+				<textField>
+					<reportElement x="399" y="77" width="80" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.lang.String"><![CDATA["Pagina "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Report">
+					<reportElement x="485" y="77" width="68" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="481" y="52" width="65" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{TOPAZ_INICIALES_USUARIO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="117" y="97" width="100" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.util.Date"><![CDATA[$P{FECHA_PROCESO}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="285" y="0" width="103" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{SALDO_AL_CORTE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="419" y="0" width="100" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{SALDO_AJUSTADO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="24" y="0" width="55" height="15"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{CODIGOMONEDA}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table" style="table" x="94" y="0" width="181" height="15"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Moneda">
+						<datasetParameter name="CodMoneda">
+							<datasetParameterExpression><![CDATA[$F{CODIGOMONEDA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="359">
+						<jr:detailCell style="table_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="359" height="20"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{dm}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+	<noData>
+		<band height="273">
+			<staticText>
+				<reportElement x="425" y="30" width="41" height="20"/>
+				<textElement/>
+				<text><![CDATA[HORA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="143" y="166" width="259" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NO HAY DATOS PARA PROCESAR]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="466" y="10" width="65" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="420" y="10" width="41" height="20"/>
+				<textElement/>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="181" y="50" width="179" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTROL POR MONEDA]]></text>
+			</staticText>
+			<textField pattern="h.mm.ss a">
+				<reportElement x="466" y="30" width="65" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</noData>
+</jasperReport>

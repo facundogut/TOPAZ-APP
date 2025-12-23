@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2021-04-15T11:59:56 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="8858_Subreport2" pageWidth="370" pageHeight="842" columnWidth="370" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="5e864534-cf0e-42a8-9842-3d9cd3db0ded">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="NRO_CONYUGE" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT 
+P.APELLIDOPATERNO,
+P.PRIMERNOMBRE,
+P.SEGUNDONOMBRE,
+D.TIPODOCUMENTO,
+D.NUMERODOCUMENTO,
+P.FECHANACIMIENTO,
+A.NOMBREPAIS,
+P.NACIONALIDAD
+FROM
+CLI_PERSONASFISICAS AS P
+INNER JOIN CLI_DOCUMENTOSPFPJ AS D ON P.NUMEROPERSONAFISICA = D.NUMEROPERSONAFJ AND D.TZ_LOCK = 0
+LEFT JOIN CLI_PAISES AS A ON P.PAISNACIMIENTO = A.CODIGOPAIS AND A.TZ_LOCK = 0
+WHERE P.TZ_LOCK = 0  AND P.NUMEROPERSONAFISICA = $P{NRO_CONYUGE}]]>
+	</queryString>
+	<field name="APELLIDOPATERNO" class="java.lang.String"/>
+	<field name="PRIMERNOMBRE" class="java.lang.String"/>
+	<field name="SEGUNDONOMBRE" class="java.lang.String"/>
+	<field name="TIPODOCUMENTO" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="FECHANACIMIENTO" class="java.sql.Timestamp"/>
+	<field name="NOMBREPAIS" class="java.lang.String"/>
+	<field name="NACIONALIDAD" class="java.lang.String"/>
+	<detail>
+		<band height="15">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="90" height="15" uuid="07f270c3-e094-4895-a825-e0d15c89638d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Nombre Cónyuge:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="90" y="0" width="280" height="15" uuid="143cc5b2-3bd9-4633-9a7b-f57cf8986059">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APELLIDOPATERNO} + " " + $F{PRIMERNOMBRE} + " " + $F{SEGUNDONOMBRE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,59 @@
+service LISTARSWIFT; 
+description "Query para ordenes de pago recibidas del exterior o de plaza "; 
+
+
+
+	action: SQLQuery HAYREGISTROS(
+				
+			Cliente:    numeric,
+			FechaDesde  :    date<"YYYY-MM-DD">,
+			FechaHasta  :    date<"YYYY-MM-DD">,
+			CantMaxima:    numeric
+			
+
+  ):[
+			SCODERROR: numeric
+      
+	]{
+      properties {
+        ("statement", "select fn_itf_listarMT103( ?, ?, ?, ?) as SCODERROR  from dual"),
+        ("0", "Cliente"),
+        ("1", "FechaDesde"), 
+        ("2", "FechaHasta"), 
+        ("3", "CantMaxima") 
+        
+             };
+      
+                 
+          action:SQLQuery DATOSORDNENATES() : [
+            
+            XML_TAG: 		string,
+            NUMERO:	   	numeric as IdSwift,
+            FECHA:	   	date as Fecha,
+            MONEDA:        	string as Moneda,
+            IMPORTE:       	float as Importe,
+            ORDENANTE:     	string as Ordenante,
+            CUENTABENEFICIARIO:	string as CuentaBeneficiario, 
+            BENEFICIARIO:    	string as Beneficiario
+            
+          ]{
+			
+            condition{"SCODERROR == 0"};
+            
+            properties 	{
+              ("statement", "select * from (SELECT  'Swift' as XML_TAG, op_numero as Numero, fecha_confirmacion as Fecha, op_moneda as Moneda,op_importe as Importe, ord_nombre as Ordenante, bef_cuenta as CuentaBeneficiario,BEF_NOMBRE as Beneficiario FROM ordenespago WHERE OP_ORIGEN in ('E','L') AND OP_TIPO ='R' AND op_estado='C' AND(ordenespago.Tz_lock < 310000000000000  OR ordenespago.Tz_lock > 339999999999999)AND bef_nrocli=? AND  fecha_confirmacion  >=?  AND fecha_confirmacion  <=?  UNION select 'Swift' as XML_TAG, op_numero as Numero,fecha_confirmacion as Fecha, op_moneda as Moneda,op_importe as Importe,ord_nombre  as Ordenante,bef_cuenta as CuentaBeneficiario,BEF_NOMBRE as Beneficiario from ordenespago where op_origen in ('L') and  Op_tipo='E' AND op_estado='I' AND (ordenespago.Tz_lock < 310000000000000  OR ordenespago.Tz_lock > 339999999999999) AND ord_nrocli=? AND  fecha_confirmacion  >=?  AND fecha_confirmacion  <=? UNION select 'Swift' as XML_TAG, op_numero as Numero, fecha_confirmacion as Fecha, op_moneda as Moneda, op_importe as Importe,ord_nombre  as Ordenante,bef_cuenta as CuentaBeneficiario,BEF_NOMBRE as Beneficiario from ordenespago where op_origen in ('E') and  Op_tipo='E' AND op_estado='C' AND (ordenespago.Tz_lock < 310000000000000  OR ordenespago.Tz_lock > 339999999999999) AND ord_nrocli=? AND  fecha_confirmacion  >=?  AND fecha_confirmacion  <=? ) WHERE ROWNUM BETWEEN 1 AND ? ORDER BY fecha") ,
+              ("0", "Cliente"), 
+              ("1", "FechaDesde"), 
+              ("2", "FechaHasta"), 
+              ("3", "Cliente"), 
+              ("4", "FechaDesde"), 
+              ("5", "FechaHasta"), 
+              ("6", "Cliente"), 
+	      ("7", "FechaDesde"), 
+	      ("8", "FechaHasta"), 
+	      ("9", "CantMaxima") 
+              
+            }
+            
+        }
+  }

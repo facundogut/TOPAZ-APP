@@ -1,0 +1,15 @@
+EXECUTE('
+delete ESQUEMACONTABLE where campo in (58494,58495) and linea in (37,38,39,40) and rubro in (400001,
+400011,
+400012,
+400020,
+3117540000,390000)
+')
+  
+EXECUTE('
+delete ESQUEMACAMPO where linea in (37,38,39,40) and rubro in (400001,
+400011,
+400012,
+400020,
+3117540000,390000)
+')

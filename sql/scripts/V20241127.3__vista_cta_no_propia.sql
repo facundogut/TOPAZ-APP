@@ -1,0 +1,62 @@
+
+
+EXECUTE('
+CREATE OR ALTER VIEW [dbo].[VW_CUENTAS_DPF_SIN_VTA_PROPIA]
+(
+								CUENTA,
+								NOMBRE,
+								PRODUCTO,
+								DESCRIPCION,
+								MONEDA,
+								SUCURSAL,
+								OPERACION,
+								ORDINAL,
+								CLIENTE,
+								JTS_OID,
+								BLOQUEO,
+								CANCELACION,
+								CONTRACUENTA	) AS
+SELECT 
+    S.CUENTA, 
+    C.NOMBRECLIENTE, 
+    S.PRODUCTO, 
+    P.C6251, 
+    S.MONEDA, 
+    S.SUCURSAL, 
+    S.OPERACION, 
+    S.ORDINAL, 
+    S.C1803, 
+    S.JTS_OID,
+    CASE WHEN S.C1679 = ''1'' THEN ''Si'' ELSE ''No'' END AS BLOQUEO,
+    S.C1651,
+    S.C1665
+FROM 
+    SALDOS AS S WITH (NOLOCK)
+INNER JOIN 
+    PRODUCTOS AS P WITH (NOLOCK) 
+    ON S.PRODUCTO = P.C6250 
+    AND P.TZ_LOCK = 0 
+INNER JOIN 
+    CLI_CLIENTES C WITH (NOLOCK) 
+    ON C.CODIGOCLIENTE = S.C1803 
+    AND C.TZ_LOCK = 0 
+WHERE 
+    S.TZ_LOCK = 0 
+    AND S.C1785 = 4 
+    AND (S.C1604 != 0 
+        OR S.C1734 = ''U'' 
+        OR S.C1734 = ''T'')
+   
+    AND NOT EXISTS (
+        SELECT 1
+        FROM SALDOS AS S2 WITH (NOLOCK)
+        WHERE 
+            S.C1665 = S2.JTS_OID
+            AND S.C1803 = S2.C1803 
+            AND S2.TZ_LOCK = 0
+    );
+')
+
+
+
+

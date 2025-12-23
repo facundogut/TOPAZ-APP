@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.afectaciongarantia.objectsdomain.VOSaldoAfectacionGtia</class-name>
+        <query-name>query.AfectacionGarantia</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT S.JTS_OID AS SAL_JTSOID, 
+						       S.C1785 AS PRODUCTO, 
+						       S.MONEDA AS MONEDA, 
+						       CASE WHEN S.C1785 = 1 THEN S.C1726 * -1 
+						            ELSE S.C1604
+						            END AS IMPSAL,
+						            S.C1609 AS INTCON, 
+						            S.C1610 AS INTREAL, 
+						            S.C1893 AS INTBON, 
+						            S.C1627 AS FVTO,
+						            S.C1621 AS FVAL,
+						            S.FECHA_SOBREGIRO AS FSOBREG, 
+						            S.IVA_FINANCIADO AS IVAFIN, 
+						            S.IVA_PERCEPCION_FINANCIADO AS IVAPERFIN, 
+						            S.C1652
+						FROM SALDOS S
+						     LEFT JOIN PLANCTAS P ON S.C1730 = P.C6326 
+						                          AND P.PREVISIONA &gt; 0
+						     INNER JOIN PRODUCTOS R ON S.PRODUCTO=R.C6250
+						     LEFT JOIN CRE_GARANTIACREDITO GC ON S.JTS_OID = GC.JTSOID_SALDO 
+						                                      AND GC.DESVINCULADO = 'N' 
+						                                      AND GC.TZ_LOCK = 0
+						WHERE S.TZ_LOCK = 0 
+						AND R.TZ_LOCK=0 
+						AND ((S.C1785 IN(2, 5, 6) AND S.C1604 &lt; 0) OR (S.C1785=1 AND R.C6800='T' AND S.C1726 &gt; 0))
+						AND ((S.C1785 &lt;&gt; 2 AND GC.NUM_GARANTIA IS NOT NULL) OR (S.C1785 = 2))
+						GROUP BY S.JTS_OID, 
+						         S.C1785, 
+						         S.MONEDA, 
+						         S.C1604, 
+						         S.C1726, 
+						         S.C1609, 
+						         S.C1610, 
+						         S.C1893, 
+						         S.C1627, 
+						         S.C1621, 
+						         S.FECHA_SOBREGIRO, 
+						         S.IVA_FINANCIADO, 
+						         S.IVA_PERCEPCION_FINANCIADO, 
+						         S.C1652
+						ORDER BY S.C1621 ASC, ABS(S.C1604) DESC
+					</sentence>
+        <attribute>
+            <attribute-name>saldoJTSOID</attribute-name>
+            <column-name>SAL_JTSOID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoProducto</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeSaldo</attribute-name>
+            <column-name>IMPSAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>intContabilizados</attribute-name>
+            <column-name>INTCON</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>intRealizados</attribute-name>
+            <column-name>INTREAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>intBonificAdelanto</attribute-name>
+            <column-name>INTBON</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FVTO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FVAL</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSobregiro</attribute-name>
+            <column-name>FSOBREG</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ivaFinanciado</attribute-name>
+            <column-name>IVAFIN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ivaPercepcionFinanciado</attribute-name>
+            <column-name>IVAPERFIN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasAtrasoTC</attribute-name>
+            <column-name>C1652</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.afectaciongarantia.objectsdomain.VOGarantiaSaldo</class-name>
+        <query-name>query.GarantiaSaldo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT GC.NUM_GARANTIA NUMGTIA, GR.MONEDA_GARANTIA MONG, GR.IMPORTECONTRACTUAL IMPC, GR.FECHA_INICIO FCHAINI, GR.FCHVTO_GARANTIA FCHAVTO, TG.TIPO_BCRA TIPO, 
+				CG.PORCENTAJEAFECTACION_1_ANIO PORANIO, CG.PORCENTAJEAFECTACION POR
+				FROM CRE_GARANTIACREDITO GC, CRE_GARANTIASRECIBIDAS GR, CRE_TIPOSGARANTIAS TG, CRE_CLASGARANTIAS CG
+				WHERE GC.JTSOID_SALDO = ? AND 
+				GC.DESVINCULADO = 'N' AND GC.TZ_LOCK = 0
+				AND GC.NUM_GARANTIA = GR.NUM_GARANTIA AND GR.TZ_LOCK = 0
+				AND GR.FCHVTO_GARANTIA &gt;= ? 
+				AND TG.TIPO_GARANTIA = GR.TIPOGARANTIA AND CG.PAIS_GARANTIA = GR.PAIS_GARANTIA AND CG.COD_SUBCLA_GARANTIA = GR.COD_SUBCLAGARANTIA
+				AND CG.TIPOGARANTIA = GR.TIPOGARANTIA AND CG.SUBTIPOGTIA = GR.SUBTIPOGARANTIA
+				ORDER BY TG.TIPO_BCRA DESC, GR.FECHA_INICIO ASC, GR.IMPORTECONTRACTUAL DESC
+			</sentence>
+        <attribute>
+            <attribute-name>numeroGarantia</attribute-name>
+            <column-name>NUMGTIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monedaGarantia</attribute-name>
+            <column-name>MONG</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeContractual</attribute-name>
+            <column-name>IMPC</column-name>
+            <column-type>decimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaInicio</attribute-name>
+            <column-name>FCHAINI</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVtoGarantia</attribute-name>
+            <column-name>FCHAVTO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoGarantiaBCRA</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>porcAfectacionUnAnio</attribute-name>
+            <column-name>PORANIO</column-name>
+            <column-type>decimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>porcAfectacion</attribute-name>
+            <column-name>POR</column-name>
+            <column-type>decimal</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.afectaciongarantia.objectsdomain.VOAcuerdoCC</class-name>
+        <query-name>query.AcuerdoCC</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT V.NRO_AUTORIZACION NROAUT, V.IMPORTE_CONSUMIDO IMPORTE FROM VTA_SOBREGIROS V
+				INNER JOIN (SELECT vt1.NRO_ACUERDO, max(vt1.FECHADESDE) AS FECHADESDE
+							FROM VTA_TASAS_SOBREGIROS vt1 GROUP BY vt1.NRO_ACUERDO) vt2 
+				ON vt2.NRO_ACUERDO=V.NRO_AUTORIZACION   
+				INNER JOIN VTA_TASAS_SOBREGIROS vt ON vt.NRO_ACUERDO=vt2.NRO_ACUERDO AND vt.FECHADESDE=vt2.FECHADESDE
+				WHERE V.ESTADO = 1 AND V.JTS_OID_SALDO = ?
+				AND V.VALOR_VIGENCIA &lt;= ? AND V.FECHA_VENCIMIENTO &gt;= ?
+				ORDER BY vt.TASA, v.VALOR_VIGENCIA
+			</sentence>
+        <attribute>
+            <attribute-name>numeroAcuerdo</attribute-name>
+            <column-name>NROAUT</column-name>
+            <column-type>decimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoAcuerdo</attribute-name>
+            <column-name>IMPORTE</column-name>
+            <column-type>decimal</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.afectaciongarantia.objectsdomain.VOHistoricoDeudaGarantias</class-name>
+        <entity-name>vo.HistoricoDeudaGarantias</entity-name>
+        <table-name>CRE_HISTORICO_DEUDA_GARANTIAS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>saldoJTS_OID</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoAsistencia</attribute-name>
+            <column-name>TIPO_ASISTENCIA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA_PROCESO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroGarantia</attribute-name>
+            <column-name>NRO_GARANTIA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>deudaTotal</attribute-name>
+            <column-name>DEUDA_TOTAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>capital</attribute-name>
+            <column-name>CAPITAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>interes</attribute-name>
+            <column-name>INTERES</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>IVAfinanciado</attribute-name>
+            <column-name>IVA_FINANCIADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>IVApercepcionFinanciado</attribute-name>
+            <column-name>IVA_PERCEPCION_FINANCIADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>accesorios</attribute-name>
+            <column-name>ACCESORIOS</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>montoGarantizado</attribute-name>
+            <column-name>MONTO_GARANTIZADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>montoGarantizadoMG</attribute-name>
+            <column-name>MONTO_GARANTIZADO_MG</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importeContractual</attribute-name>
+            <column-name>IMPORTE_CONTRACTUAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoBCRA</attribute-name>
+            <column-name>TIPO_BCRA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>porcentajeAfectacion</attribute-name>
+            <column-name>PORCENTAJE_AFECTACION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>afectacionGarantia</attribute-name>
+            <column-name>AFECTACION_GARANTIA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>porcentajePrevision</attribute-name>
+            <column-name>PORCENTAJE_PREVISION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>prevision</attribute-name>
+            <column-name>PREVISION</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.afectaciongarantia.objectsdomain.VOSaldoAfectacionGtia</class-name>
+        <query-name>query.HistoricoDeudaGarantias</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT SALDO_JTS_OID, TIPO_ASISTENCIA, FECHA_PROCESO, NRO_GARANTIA FROM CRE_HISTORICO_DEUDA_GARANTIAS WHERE FECHA_PROCESO = (select fechaproceso from parametros)
+			</sentence>
+        <attribute>
+            <attribute-name>saldoJTS_OID</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoAsistencia</attribute-name>
+            <column-name>TIPO_ASISTENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA_PROCESO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroGarantia</attribute-name>
+            <column-name>NRO_GARANTIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.afectaciongarantia.objectsdomain.VOAccesorios</class-name>
+        <query-name>query.Accesorios</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT sum(GC.SALDO_GASTO) MONTO FROM PLANPAGOS PP
+				LEFT JOIN GASTOS_POR_CUOTA GC ON PP.SALDO_JTS_OID = GC.SALDOS_JTS_OID AND PP.C2300 = GC.NUMERO_CUOTA
+				WHERE GC.SALDOS_JTS_OID = ? AND PP.C2302 &lt; ?
+				AND PP.TZ_LOCK = 0 AND GC.TZ_LOCK = 0
+			</sentence>
+        <attribute>
+            <attribute-name>accesorios</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.afectaciongarantia.objectsdomain.PrestamoSinGarantia</class-name>
+        <query-name>query.afectacionPrestamosSinGarantia</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT S.JTS_OID, 
+				       S.C1785 AS ASISTENCIA,
+				       CASE WHEN S.C1785 = 1 THEN S.C1726 * -1 
+				            ELSE S.C1604 
+				            END CAPITAL,
+				       S.C1609 AS INTERESDEVENGADO,
+				       S.C1610 AS INTERESPAGADO,
+				       S.C1893 AS INTERESBONIFICADO,
+				       S.IVA_FINANCIADO AS IVAFINANCIADO,
+				       S.IVA_PERCEPCION_FINANCIADO AS IVAPERCEPCIONFINANCIADO
+				FROM SALDOS S 
+		     		INNER JOIN PRODUCTOS P ON S.PRODUCTO=P.C6250
+		     		LEFT JOIN CRE_GARANTIACREDITO C ON C.DESVINCULADO='N' 
+		               		and C.tz_lock = 0 
+		               		AND S.JTS_OID = C.JTSOID_SALDO
+				WHERE S.TZ_LOCK=0 
+				AND P.TZ_LOCK=0 
+				AND ((S.C1785 IN (5,6) AND S.C1604 &lt; 0 AND S.C1728 &lt;&gt; 'C') OR (S.C1785 = 1 AND C6800= 'T' AND S.C1726 &gt; 0)) 
+				AND C.JTSOID_SALDO IS NULL 
+			</sentence>
+        <attribute>
+            <attribute-name>jtsoid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>asistencia</attribute-name>
+            <column-name>ASISTENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>capital</attribute-name>
+            <column-name>CAPITAL</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>interesDevengado</attribute-name>
+            <column-name>INTERESDEVENGADO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>interesPagado</attribute-name>
+            <column-name>INTERESPAGADO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>interesBonificado</attribute-name>
+            <column-name>INTERESBONIFICADO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ivaFinanciado</attribute-name>
+            <column-name>IVAFINANCIADO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ivaPercepcionFinanciado</attribute-name>
+            <column-name>IVAPERCEPCIONFINANCIADO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+    </query>
+</map>

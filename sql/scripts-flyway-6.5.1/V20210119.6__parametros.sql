@@ -1,0 +1,5 @@
+﻿EXECUTE('
+INSERT INTO PERMISOS
+(NUMERO, DESCRIPCION, TIPO)
+VALUES(114, ''Permisos seguridad'', ''P'');
+');

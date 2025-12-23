@@ -1,0 +1,29 @@
+service CONSULTAESTADOTRAMITE; 
+description "Consulta estado de tramite de un proceso CRM"; 
+
+action:	SQLQuery CONSULTAESTADOTRAMITE ( 
+	IdMovCrm: numeric,
+	NodoCliente: string,
+	TicketSesion: numeric,
+	InfoOrigen: string,
+	ModoAutentica: string,
+	CodCanal: string,
+	Origen: string,
+	NroDepOrigen: numeric,
+	NroTransaccion: numeric,
+	IdAutentica: string,
+	TipoProceso: string,
+	IdInvocaTopaz: string
+	
+): [ 
+ 	ESTADO: string as Estado,
+ 	CODERROR: string as CodError,
+ 	MOTIVO_RECHAZO: string as Motivo_Rechazo
+]
+{ 
+  	properties { 
+  	("statement", "SELECT (SELECT o.descripcion FROM opciones o WHERE o.numerodecampo=8750 AND o.idioma='E' AND to_char(ESTADOTOPAZ) = o.opcioninterna)  as ESTADO, 0 as CODERROR,MOTIVO_RECHAZO FROM ITF_TOPAZCRM WHERE IDMOVCRM=?"),
+	("0", "IdMovCrm")
+	
+	}
+}

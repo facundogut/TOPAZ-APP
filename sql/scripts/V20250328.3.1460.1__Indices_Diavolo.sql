@@ -1,0 +1,9 @@
+execute('
+drop index if exists IX_INFO_E_DIAVOLO on dbo.VTA_TRANSFERENCIAS;
+drop index if exists IX_INFO_E_DIAVOLO on dbo.ITF_MEP_IMPACTO_SOPORTE;
+');
+
+execute('
+create nonclustered index IX_INFO_E_DIAVOLO on dbo.VTA_TRANSFERENCIAS (NUMERO_ASIENTO,FECHA_ASIENTO,SUCURSAL_ASIENTO);
+create nonclustered index IX_INFO_E_DIAVOLO on dbo.ITF_MEP_IMPACTO_SOPORTE (ASIENTO_FECHA,ASIENTO_SUCURSAL,ASIENTO_NUMERO);
+');

@@ -1,0 +1,778 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-12-11T15:12:46 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="1642_Subreport3" language="groovy" pageWidth="802" pageHeight="842" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="802" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="9bb4479d-4f6b-4b25-b0df-39e7cf8a2b72">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="PRODUCTO" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="SUCURSAL" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="FECHA_COMPENSACION" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="MONEDA" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="TOPAZ_INICIALES_USUARIO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HAOH"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_TITULO1" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Título cargado en la tabla parámetros]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Institución TOP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_HORA_ACTUAL" class="java.sql.Time" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.sql.Time(new java.util.Date().getTime())]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FECHA_HORA_SISTEMA" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT A.* FROM (
+
+SELECT
+	CR.SUCURSAL,
+	U.NOMBRESUCURSAL,
+	CC.FECHA_VALOR AS FECHA_COMPENSACION,
+	CR.MONEDA,
+	M.C6400 AS DESC_MONEDA,
+	CR.CUENTA,
+	CR.NUMERO_CHEQUE,
+	CR.NUMERO_SERIE,
+	CR.IMPORTE_CHEQUE,
+	CASE CR.MONEDA
+		WHEN 2 THEN 
+			(REVERSE(SUBSTRING(REVERSE(CC.TRACKNUMBER),12,4)) - 500)
+		ELSE 
+			(REVERSE(SUBSTRING(REVERSE(CC.TRACKNUMBER),12,4)))
+	END AS BANCO_DEPOSITANTE,
+	B.NOMBRE AS NOMBRE_BANCO_DEP,
+	CR.ESTADO_DEVOLUCION,
+	CASE
+		WHEN CR.ESTADO_DEVOLUCION IN (1,2,3) THEN 'RECHAZADO'
+		ELSE 'ACEPTADO'
+	END AS ESTADO_DEV_DESC,
+	CR.ASIENTO_POSTING,
+	TC.DESCRIPCION,
+	CASE
+		WHEN CR.ESTADO_DEVOLUCION IN (1,2,3) THEN CR.CODIGO_CAUSAL_DEVOLUCION 
+		ELSE 0
+	END AS CODIGO_CAUSAL_DEVOLUCION
+FROM
+	CLE_CHEQUES_CLEARING_RECIBIDO AS CR WITH (nolock)
+INNER JOIN CLE_CHEQUES_CLEARING AS CC WITH (nolock) ON
+	CR.NUMERO_CHEQUE = CC.NUMERO_CHEQUE
+	AND CR.NUMERO_SERIE = CC.SERIE_CHEQUE
+	AND CR.SUCURSAL = CC.NUMERO_DEPENDENCIA
+	AND CR.CUENTA = CC.CUENTA
+	AND CR.MONEDA = CC.MONEDA
+	AND CR.CAMARA_COMPENSADORA = CC.CAMARA_COMPENSADORA
+	AND CR.FECHA = CC.FECHA_VALOR
+	AND CC.ESTADO = 1
+	AND ((CC.TZ_LOCK < 100000000000000 OR CC.TZ_LOCK >= 200000000000000)
+		AND (CC.TZ_LOCK < 300000000000000 OR CC.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN CLE_TIPO_CAUSAL AS TC WITH (nolock) ON
+	TC.CODIGO_DE_CAUSAL = (	SELECT TOP 1 CODIGO_DE_CAUSAL
+							FROM CLE_TIPO_CAUSAL
+							WHERE CODIGO_DE_CAUSAL = CR.CODIGO_CAUSAL_DEVOLUCION
+								AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)
+									AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000)
+								)
+						)
+	AND ((TC.TZ_LOCK < 100000000000000 OR TC.TZ_LOCK >= 200000000000000)
+		AND (TC.TZ_LOCK < 300000000000000 OR TC.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN MONEDAS AS M WITH (nolock) ON 
+	M.C6399 = CR.MONEDA
+	AND ((M.TZ_LOCK < 100000000000000 OR M.TZ_LOCK >= 200000000000000)
+		AND (M.TZ_LOCK < 300000000000000 OR M.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN PRODUCTOS AS P WITH (nolock) ON
+	P.C6250 = CR.PRODUCTO
+	AND ((P.TZ_LOCK < 100000000000000 OR P.TZ_LOCK >= 200000000000000)
+		AND (P.TZ_LOCK < 300000000000000 OR P.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN SUCURSALES AS U WITH (nolock) ON
+	U.SUCURSAL = CR.SUCURSAL
+	AND ((U.TZ_LOCK < 100000000000000 OR U.TZ_LOCK >= 200000000000000)
+		AND (U.TZ_LOCK < 300000000000000 OR U.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN CLI_BANCOSPLAZA AS B WITH (nolock) ON
+	B.CODIGOBC =
+		CASE CR.MONEDA
+			WHEN 2 THEN 
+				(REVERSE(SUBSTRING(REVERSE(CC.TRACKNUMBER),12,4)) - 500)
+			ELSE 
+				(REVERSE(SUBSTRING(REVERSE(CC.TRACKNUMBER),12,4)))
+		END
+	AND B.SUCURSAL = 0
+	AND ((B.TZ_LOCK < 100000000000000 OR B.TZ_LOCK >= 200000000000000)
+		AND (B.TZ_LOCK < 300000000000000 OR B.TZ_LOCK >= 400000000000000)
+	)
+WHERE
+	CR.CAMARA_COMPENSADORA = 1
+	AND ((CR.TZ_LOCK < 100000000000000 OR CR.TZ_LOCK >= 200000000000000)
+		AND (CR.TZ_LOCK < 300000000000000 OR CR.TZ_LOCK >= 400000000000000)
+	)
+
+UNION ALL
+
+SELECT
+	CAST(RIGHT(CR.ENTIDAD_DEBITAR, 4) AS NUMERIC (5)) AS SUCURSAL,
+	U.NOMBRESUCURSAL,
+	CR.FECHA_VENCIMIENTO AS FECHA_COMPENSACION,
+	CASE LEFT(ISNULL(INFO_ADICIONAL, 0), 1) 
+		WHEN 1 THEN 2
+		ELSE 1
+	END AS MONEDA,
+	M.C6400 AS DESC_MONEDA,
+	CR.CUENTA_DEBITAR AS CUENTA,
+	CR.NRO_CHEQUE AS NUMERO_CHEQUE,
+	'' AS NUMERO_SERIE,
+	CR.IMPORTE AS IMPORTE_CHEQUE,
+	CASE M.C6399
+		WHEN 2 THEN 
+			(REVERSE(SUBSTRING(REVERSE(CR.TRACE_NUMBER),12,4)) - 500)
+		ELSE 
+			(REVERSE(SUBSTRING(REVERSE(CR.TRACE_NUMBER),12,4)))
+	END AS BANCO_DEPOSITANTE,
+	B.NOMBRE AS NOMBRE_BANCO_DEP,
+	2 AS ESTADO_DEVOLUCION,
+	'RECHAZADO' AS ESTADO_DEV_DESC,
+	0 AS ASIENTO_POSTING,
+	ISNULL(TC.DESCRIPCION, '') AS DESCRIPCION_DEVOLUCION,
+	TC.CODIGO_DE_CAUSAL AS CODIGO_CAUSAL_DEVOLUCION
+FROM ITF_COELSA_CHEQUES_RECHAZO AS CR WITH (nolock)
+LEFT JOIN SUCURSALES AS U WITH (nolock) ON
+	U.SUCURSAL = CAST(RIGHT(CR.ENTIDAD_DEBITAR, 4) AS NUMERIC (5))
+	AND ((U.TZ_LOCK < 100000000000000 OR U.TZ_LOCK >= 200000000000000)
+		AND (U.TZ_LOCK < 300000000000000 OR U.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN MONEDAS AS M WITH (nolock) ON 
+	M.C6399 = (	CASE LEFT(ISNULL(INFO_ADICIONAL, 0), 1) 
+					WHEN 1 THEN 2
+					ELSE 1
+				END
+	)
+	AND ((M.TZ_LOCK < 100000000000000 OR M.TZ_LOCK >= 200000000000000)
+		AND (M.TZ_LOCK < 300000000000000 OR M.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN CLE_TIPO_CAUSAL AS TC WITH (nolock) ON
+	TC.CODIGO_DE_CAUSAL = (	SELECT TOP 1 CODIGO_DE_CAUSAL
+							FROM CLE_TIPO_CAUSAL
+							WHERE CODIGO_NACHA = CR.COD_RECHAZO
+								AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)
+									AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000)
+								)
+						)
+	AND ((TC.TZ_LOCK < 100000000000000 OR TC.TZ_LOCK >= 200000000000000)
+		AND (TC.TZ_LOCK < 300000000000000 OR TC.TZ_LOCK >= 400000000000000)
+	)
+LEFT JOIN CLI_BANCOSPLAZA AS B WITH (nolock) ON
+	B.CODIGOBC =
+		CASE M.C6399
+			WHEN 2 THEN 
+				(REVERSE(SUBSTRING(REVERSE(CR.TRACE_NUMBER),12,4)) - 500)
+			ELSE 
+				(REVERSE(SUBSTRING(REVERSE(CR.TRACE_NUMBER),12,4)))
+		END
+	AND B.SUCURSAL = 0
+	AND ((B.TZ_LOCK < 100000000000000 OR B.TZ_LOCK >= 200000000000000)
+		AND (B.TZ_LOCK < 300000000000000 OR B.TZ_LOCK >= 400000000000000)
+	)
+WHERE
+	CR.TIPO = 'C'
+
+) AS A
+WHERE 
+	A.FECHA_COMPENSACION = $P{FECHA_COMPENSACION}
+	AND (A.SUCURSAL = $P{SUCURSAL} OR $P{SUCURSAL}= -1)
+	AND A.MONEDA = $P{MONEDA}
+ORDER BY
+	A.MONEDA,
+	A.CUENTA,
+	A.NUMERO_CHEQUE]]>
+	</queryString>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="NOMBRESUCURSAL" class="java.lang.String"/>
+	<field name="FECHA_COMPENSACION" class="java.sql.Timestamp"/>
+	<field name="MONEDA" class="java.math.BigDecimal"/>
+	<field name="DESC_MONEDA" class="java.lang.String"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="NUMERO_CHEQUE" class="java.math.BigDecimal"/>
+	<field name="NUMERO_SERIE" class="java.lang.String"/>
+	<field name="IMPORTE_CHEQUE" class="java.math.BigDecimal"/>
+	<field name="BANCO_DEPOSITANTE" class="java.lang.Integer"/>
+	<field name="NOMBRE_BANCO_DEP" class="java.lang.String"/>
+	<field name="ESTADO_DEVOLUCION" class="java.math.BigDecimal"/>
+	<field name="ESTADO_DEV_DESC" class="java.lang.String"/>
+	<field name="ASIENTO_POSTING" class="java.math.BigDecimal"/>
+	<field name="DESCRIPCION" class="java.lang.String"/>
+	<field name="CODIGO_CAUSAL_DEVOLUCION" class="java.math.BigDecimal"/>
+	<variable name="TotalRechazadoCheque" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ESTADO_DEV_DESC}.equalsIgnoreCase("RECHAZADO") ? $F{IMPORTE_CHEQUE} : 0]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="CantidadEnviadoCheque" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{NUMERO_CHEQUE}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="CantidadAceptadoCheque" class="java.lang.Integer">
+		<variableExpression><![CDATA[$F{ESTADO_DEV_DESC}.equalsIgnoreCase("ACEPTADO") ? $V{CantidadAceptadoCheque} + 1 : $V{CantidadAceptadoCheque}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="CantidadRechazadoCheque" class="java.lang.Integer">
+		<variableExpression><![CDATA[$F{ESTADO_DEV_DESC}.equalsIgnoreCase("RECHAZADO") ? $V{CantidadRechazadoCheque} + 1 : $V{CantidadRechazadoCheque}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="TotalEnviadolCheque" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{IMPORTE_CHEQUE}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="TotalAceptadoCheque" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ESTADO_DEV_DESC}.equalsIgnoreCase("ACEPTADO") ? $F{IMPORTE_CHEQUE} : 0]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="700" height="16" uuid="9f734585-17f6-4e2d-b759-6500fbec133b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto Compensable: Cheques]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="20" splitType="Stretch">
+			<staticText>
+				<reportElement x="500" y="0" width="200" height="16" uuid="ad49f6d5-2b71-44eb-bc9c-20f326e52249">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[Descripción código rechazo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="0" width="60" height="16" uuid="a11affeb-8555-475e-ad0c-a794cf9b6a44"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cód. Rechazo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="0" width="60" height="16" uuid="9338ec94-77de-4dd8-8781-2509163eab04"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. Cheque]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="90" height="16" uuid="e52f5438-f188-4190-8a2b-5b9f52f04a95"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe Cheque]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="0" width="50" height="16" uuid="18d8fb79-cd67-44e6-8844-72ebf22be671"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Banco dep.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="0" width="180" height="16" uuid="bccbaeef-8cf4-4dcd-b77a-767676bd9f1c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[Nombre banco depositario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="60" height="16" uuid="3f50384b-b7f9-402b-b769-1a6bf9f084c8"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. Cuenta]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="-4" width="60" height="11" uuid="8fca606c-0afa-480e-91cb-51656d3f5ac8"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.text.DecimalFormat("#").format($F{CUENTA})]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="60" y="-4" width="60" height="11" uuid="d5d46dfc-1df4-45bf-994b-9537b38d4850"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERO_CHEQUE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="210" y="-4" width="50" height="11" uuid="e39e485c-9322-4bfe-98b6-82f07bf7d620">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BANCO_DEPOSITANTE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="260" y="-4" width="180" height="11" uuid="29969032-d945-4fe7-b8fa-f64814dcdd1b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+					<paragraph lineSpacing="Single" leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_BANCO_DEP}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="440" y="-4" width="60" height="11" uuid="c9e9da80-8a3a-48c5-9391-aaccb3a7137a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CODIGO_CAUSAL_DEVOLUCION} == 0 ? "" : $F{CODIGO_CAUSAL_DEVOLUCION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="500" y="-4" width="150" height="11" uuid="cbc71b63-bbc2-4d7d-86bf-2759bc0ba146">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left">
+					<font fontName="SansSerif" size="8"/>
+					<paragraph lineSpacing="Single" leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CODIGO_CAUSAL_DEVOLUCION} == 0 ? "" : $F{DESCRIPCION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="120" y="-4" width="90" height="11" uuid="d10a7770-18aa-4251-936d-ab077def9e8b"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+					<paragraph lineSpacing="Single" rightIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IMPORTE_CHEQUE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="120" y="0" width="130" height="14" uuid="0b1e887c-9c77-4300-9504-840a419a1417">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalRechazadoCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="28" width="120" height="14" uuid="f6613a89-8d67-445e-92f6-8645c028453a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="25"/>
+				</textElement>
+				<text><![CDATA[Total recibido:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="120" y="28" width="130" height="14" uuid="38cd6f4d-e5ed-4ee7-9864-e386e2222c9a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<paragraph rightIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalEnviadolCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="14" width="120" height="14" uuid="c70d98dc-708c-4c97-a824-d6d8ea61a41d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="25"/>
+				</textElement>
+				<text><![CDATA[Total Aceptado:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="120" height="14" uuid="1de1296f-2633-410b-bdc1-03652966dd41">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="25"/>
+				</textElement>
+				<text><![CDATA[Total Rechazado:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="120" y="14" width="130" height="14" uuid="33d1e42f-0124-4f26-aea4-23b28f43d3ed">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalAceptadoCheque}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="440" y="0" width="60" height="14" uuid="ec17f8ae-ebf7-42c1-8603-9ee6bb43815d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CantidadRechazadoCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="0" width="180" height="14" uuid="75281731-4bfc-4f3c-b179-3e33ccb34eeb">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="55"/>
+				</textElement>
+				<text><![CDATA[Cantidad Rechazado:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="28" width="180" height="14" uuid="8829d00b-54e0-46f2-94d3-f9b75dc10059">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="55"/>
+				</textElement>
+				<text><![CDATA[Cantidad recibida:]]></text>
+			</staticText>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="440" y="28" width="60" height="14" uuid="83f06479-b87e-4364-aa2c-78f3f28cd849"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CantidadEnviadoCheque}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="440" y="14" width="60" height="14" uuid="3fc3e781-80fc-472d-a1a2-2fe2d62cb628">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CantidadAceptadoCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="14" width="180" height="14" uuid="ca21fe72-8ffd-4a2d-acea-02cd9a8e0c55">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="55"/>
+				</textElement>
+				<text><![CDATA[Cantidad Aceptado:]]></text>
+			</staticText>
+		</band>
+	</summary>
+	<noData>
+		<band height="104">
+			<staticText>
+				<reportElement x="0" y="0" width="700" height="16" uuid="db9229c6-b1b7-4aad-ae53-085159768c20">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto Compensable: Cheques]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="60" height="16" uuid="14f0fe58-c6ca-4488-89a0-df267fb8aa3b"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. Cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="16" width="60" height="16" uuid="5696c1d0-2227-4cb3-ac97-79cf78571346"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nro. Cheque]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="16" width="90" height="16" uuid="f9e97cba-ba91-4cc5-a3f3-2eb88f25e6de"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe Cheque]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="16" width="50" height="16" uuid="e82ae72c-4dee-46fd-b124-663c8dae3686"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Banco dep.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="260" y="16" width="180" height="16" uuid="9c9578bd-d3a7-4443-ae8c-1b802e222f38">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[Nombre banco depositario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="440" y="16" width="60" height="16" uuid="f9b1c19e-027a-4ff7-9a2d-bef8aaa9bb5b"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cód. Rechazo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="16" width="200" height="16" uuid="0af6aed3-992e-4d3b-8384-c4f61a946461">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[Descripción código rechazo]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="120" y="45" width="130" height="14" uuid="2812960a-2436-4bfd-8a99-a6059cd62480">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalRechazadoCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="45" width="120" height="14" uuid="002156c6-4156-4c86-a6cc-df883d84a6ef">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="25"/>
+				</textElement>
+				<text><![CDATA[Total Rechazado:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="59" width="120" height="14" uuid="c2951a77-529d-4696-a2ed-beb44beb9b9c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="25"/>
+				</textElement>
+				<text><![CDATA[Total Aceptado:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="120" y="59" width="130" height="14" uuid="051c2804-9937-4772-90ab-2666cac781bc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalAceptadoCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="73" width="120" height="14" uuid="9330beba-5336-4686-ab14-4f87d561b579">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="25"/>
+				</textElement>
+				<text><![CDATA[Total recibido:]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="120" y="73" width="130" height="14" uuid="8c0d53f2-5313-4f22-804b-7bc1298ca0b4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="DejaVu Sans" size="8" isBold="true"/>
+					<paragraph rightIndent="15"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalEnviadolCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="45" width="180" height="14" uuid="9114e9c4-5d7b-4229-aa05-faa995c72a04">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="55"/>
+				</textElement>
+				<text><![CDATA[Cantidad Rechazado:]]></text>
+			</staticText>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="440" y="45" width="60" height="14" uuid="d2888e53-1acb-4cf8-ac7f-03a14af480bd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CantidadRechazadoCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="59" width="180" height="14" uuid="9b8c608d-d9db-41f3-a71d-f16985c3a05b">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="55"/>
+				</textElement>
+				<text><![CDATA[Cantidad Aceptado:]]></text>
+			</staticText>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="440" y="59" width="60" height="14" uuid="3e26017e-b69a-4ce1-8d78-a10b25eb3d1a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CantidadAceptadoCheque}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="260" y="73" width="180" height="14" uuid="346883a8-d9ad-499f-a2b7-7b737d5f3a3f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph leftIndent="55"/>
+				</textElement>
+				<text><![CDATA[Cantidad recibida:]]></text>
+			</staticText>
+			<textField pattern="#,##0" isBlankWhenNull="true">
+				<reportElement x="440" y="73" width="60" height="14" uuid="96070390-8aad-4af3-b40b-3aeafceaca96"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{CantidadEnviadoCheque}]]></textFieldExpression>
+			</textField>
+		</band>
+	</noData>
+</jasperReport>

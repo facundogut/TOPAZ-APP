@@ -1,0 +1,163 @@
+{
+	"page":{
+		"attributes":[
+			{
+				"label" : "ID SALDO",
+				"key" : "IDSALDO"
+			}
+		],
+		
+		"frames":[
+			{
+				"id":"datosDPF",
+				"title":"Datos de DPF",
+				"icon":"client.png",
+				"type":"Form",
+				"input":{
+					"type":"service",
+					"service":"DatosDPF",
+					"parameters":["IDSALDO"]
+				},
+                "formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Producto",
+	                            "key":"PRODUCTO"
+	                        },
+	                        {  
+	                            "label":"Nro Cuenta",
+	                            "key":"NROCUENTA"
+	                        },
+	                        {  
+	                            "label":"Sucursal",
+	                            "key":"SUCURSAL"
+	                        },
+	                        {  
+	                            "label":"Moneda",
+	                            "key":"MONEDA"
+	                        }
+                        ],                        
+                    	[
+	                        {  
+	                            "label":"Saldo Original",
+	                            "key":"SALDOORIGINAL"
+	                        },
+	                        {  
+	                            "label":"Saldo Actual",
+	                            "key":"SALDOACTUAL"
+	                        },
+	                        {  
+	                            "label":"Fecha Apertura",
+	                            "key":"FECHAAPERTURA"
+	                        },
+	                        {  
+	                            "label":"Fecha Vencimiento",
+	                            "key":"FECHAVENCIMIENTO"
+	                        },
+	                        {  
+	                            "label":"Plazo",
+	                            "key":"PLAZO"
+	                        },
+	                        {  
+	                            "label":"Ultimo Mov",
+	                            "key":"ULTIMOMOV"
+	                        }
+                        ],                        
+                    	[	                        
+	                        {  
+	                            "label":"Cuenta Abono",
+	                            "key":"CUENTAABONO"
+	                        },
+	                        {  
+	                            "label":"Tasa %",
+	                            "key":"TASA"
+	                        },
+	                        {  
+	                            "label":"Estado",
+	                            "key":"ESTADO"
+	                        },
+							{  
+	                            "label":"Idsaldo",
+	                            "key":"IDSALDO",
+								"hidden":"true"
+	                        }
+                        ]
+                    ]
+                }
+			},
+			{
+				"id":"movimientos",
+				"title":"Movimientos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"MovimientosHistoriaPlazo",
+					"parameters":["IDSALDO"]
+				},
+				"links":[
+					{
+						"name":"Datos Movimiento",
+						"to":"datosMovimientos",
+						"parameters":["ASIENTO","FECHAPROCESO","SUCURSAL"]
+					}
+				],				
+				"gridProperties":{
+					"pageLength": "20",
+					"columns":[
+						{
+							"header":"F.Proceso",
+							"value":"FECHAPROCESO"
+						},
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL",
+							"hidden":true
+						},						
+						{
+							"header":"Sucursal",
+							"value":"SUCURSALDESC"
+						},
+						{
+							"header":"Asiento",
+							"value":"ASIENTO"
+						},
+						{
+							"header":"F.Valor",
+							"value":"FECHAVALOR"
+						},
+						{
+							"header":"Capital Pagado",
+							"value":"CAPITALPAGADO"
+						},
+						{
+							"header":"Interes Pagado",
+							"value":"INTERESPAGADO"
+						},
+						{
+							"header":"Mora Pagada",
+							"value":"MORAPAGADA"
+						},
+						{
+							"header":"Compensat. Mora",
+							"value":"ICMORA_PAGADO"
+						},						
+						{
+							"header":"Cargo",
+							"value":"IMPORTE_GASTO"
+						},
+						{
+							"header":"Total Pagado",
+							"value":"TOTALPAGADO"
+						},
+						{
+							"header":"Evento",
+							"value":"EVENTO"
+						}
+					]
+				}
+			}
+		]
+	}
+}

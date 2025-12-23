@@ -1,0 +1,87 @@
+VERSION:055_5
+ NSSNN 00339   CUIT                                              INNNNL000047019400700344001011000000047004900700179000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 10:15:29TOP
+ NNNNN 05012   NOMBRE                                            INNNNL000090019501130495001011000000090005001130180000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 10:15:29TOP
+ NNNNN 05042   COD_RETORNO                                       INNNNK000133019501560245021011000000133005001560180000
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 09:49:18TOP
+*N  NN Verifico si interface esta prendida y dia de vigencia de datos
+*$2021-07-13 09:49:55TOP
+ NNNNN 04620   Código param.                                     INNSNK000007015200300202021011000000007000700300137000
+/V=65
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 09:56:38TOP
+ NNNNN 04621   Descripcion                                       INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 09:51:01TOP
+ NNNNN 04624   Dias inmovil                                      INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 09:51:01TOP
+ NNNNN 04622   Utilizado                                         INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 09:57:43TOP
+CNNNNN   00000000000000000000100
+/F=A(C4622="S")
+/P=I300
+*$2021-07-13 09:58:45TOP
+CNNNNN A 00000000000000000000100
+/?=!I300
+/M=Consulta a NOSIS no esta Operable,Se veran Datos Historicos
+*$2021-07-13 10:23:24TOP
+*N  NN Si la interface esta activa, valido si la persona ya tiene consultas en nosis para validar vigencia
+*$2021-07-13 10:03:00TOP
+ NNNNN 00401   Vigencia                                          INNSNK000031053500540585021010000000031039000540520000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 10:18:20TOP
+ NNNNN 43759   Descriptor                                        INNSNK000007015200300202021010000000007000700300137000
+/?=I300
+/V=842
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-30 09:38:44TOP
+ NNNNN 43760   where                                             INNSNF000007015200300452001010000000007000700300137000
+/?=I300
+/V="TZ_LOCK= 0 AND  CUIT='"+C339+"' AND (fecha_proceso + " + C4624 +")>=(SELECT fechaproceso FROM PARAMETROS) "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 10:15:20TOP
+ NNNNN 00401   Cantidad                                          INNSNF000031053500540585021010000000031039000540520000
+/?=I300
+/V=F(CANTIDAD,C43759,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 10:11:46TOP
+*N  NN Si los datos no son vigentes para el parametro llamo a nosis
+*$2021-07-13 10:16:59TOP
+CNNNNN A 00000000000000000000100
+/?=C401=0
+/M=Datos No vigentes para NOSIS, se envia consulta
+*$2021-07-13 10:48:49TOP
+CNNNNN  K00000000000000000000100
+/?=C401=0
+/R=numeroTransformacionJob=22;crearTicket=true;CUIT=C339,RAZONSOCIAL=C5012;C5042=COD_RETORNO;
+*$2021-07-13 10:48:26TOP
+ NNNNN 05042   COD_RETORNO                                       INNNN 000133019501560245021011000000133005001560180000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-13 09:49:09TOP
+CNNNNN A 00000000000000000000110
+/?=C5042#0
+/M="Error al Invocar a NOSIS para el Documento: "+ C339
+*$2021-07-29 16:22:47TOP
+*#I300#intereface nosis activa

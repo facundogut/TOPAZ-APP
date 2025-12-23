@@ -1,0 +1,980 @@
+VERSION:051
+TN  NN 1006TConsulta Box                            C2600 00
+ N  NN 0023   Caja/Diario    INNSNK00000701520030020200101100000000700070030013700
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0053   Numero de Caja INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0978   macadress      INNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8153   MacAddress     INNSNA00000701520030045200101100000000700070030013700
+/V=C978
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1473   Nro.Box        INNSN 00000701520030020202101100000000700070030013700
+/?=C9509#0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I190
+VNNNNN 030005000502280800NNND000000000000000000000000000000000000001
+/T=A T E N C I O N
+/?=I190
+/C=192192192
+KNNNNN 030007000701350774000101
+/?=I190
+/F=0012400NNN000000000Arial                                   
+KNNNNN 030033001500530768010100
+/?=I190
+/T=ESTA MÁQUINA NO TIENE UN BOX ASOCIADO.
+/F=0012700NNN000000000Arial                                   
+KNNNNN 030067000701350774010101
+/?=I190
+/T=Número de box / sector de monitor para la máquina
+/F=0012700NNN000000000Arial                                   
+ NNNNN 9698   Nro Box        I NSN 03009702900120034000101100000009702100120028200
+/?=I190
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1473   Sector         I NSN 03009705050120055500101100000009704250120049700
+/?=I190
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+DN  NN 3032OS01
+/?=I190
+CNNNNN  E00000000000000000000100
+/?=I190
+/F=C6632=0
+ NNNNN 0091   Texto          INNSN 00000701520030030200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9698   Nro.Box        INNSNA00000701520030020202101100000000700070030013700
+/V=C9698.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1980   Sector         INNSNA00010004550226066001001100000008004950103061300
+/V=C1473.1
+/F=0120700NNN000000000Arial                                   
+/f=0015700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* PLATAFORMA DE CAJAS                                                                   21-Abril-09       */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* 3 Opciones :                                                                                                                */
+*N  NN /* Operacion COMUN          :  C3186 > 0 Y C3141='P'endiente.                                    */
+*N  NN /* Operacion LIBRE             :  C3186 = 0 Y C3142 = 0.                                                 */
+*N  NN /* Operacion CONFIRMAR  :  C3186 = 0 Y C3142 > 0 Y C3141='P'endiente.               */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* C3141 = Estado de la Transacción.A=Atendido, C=Cancelado, P=Pendiente.
+*N  NN /* C3142 = Nro.de Asiento     TOPAZ a CONFIRMAR.
+*N  NN /* C3186 = Nro.de Operación TOPAZ a EJECUTAR.
+*N  NN /* C0511 > 0  ----> Queda Nro. Llamado PENDIENTE!!!
+*N  NN /* C0437 = Manejo del Nro.de LLamado.
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* SI el NUMERO A ATENDER se envía al ESTADO DEVUELTO: Debe ser llamado digitando el NUMERO  */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* next:                                          ---> 1 (Para Atender)
+*N  NN /*  call:           1 (Para Atender)     ---> 2 (En Atencion)
+*N  NN /*  call2:         4 (Devuelto)            ---> 2 (En Atencion)
+*N  NN /*  giveBack:  2 (En Atencion)       ---> 4 (Devuelto)
+*N  NN /*  giveBack2:2 (En Atencion)       ---> 1 (Para Atender)
+*N  NN /*  finish:        2 (En Atencion)       ---> 3 (Atendido)
+*N  NN /* cancel:       2 (En Atencion)        ---> 5 (Cancelado)
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+TN  NN 1006TInicio Operación PPal de Caja           C0000 00
+ NNNNN 0835   Nro. de ClienteINNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ N  NN 0336   Alfa 35        INNSNK00000701520030030200101100000000700070030013700
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ N  NN 0437   Numerico de 6  INNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+VNNNNN 01-004004205070703SSSD000010000000000000000000000000000000000
+/T=Operativa principal de caja
+/C=192192192
+KNNNNN 010006000804350687000101
+/F=0013700NNN000000000Arial                                   
+KNNNNN 010065001000670686000102
+/F=0013700NNN000000000Arial                                   
+KNNNNN 010069044102430443000103
+/F=0012700NNN000000000Arial                                   
+KNNNNN 010017044100650443000103
+/F=0012700NNN000000000Arial                                   
+CNNNNN  w00000000000000000000100
+/R=5348
+CNNNNN  w01007606400101067611100
+/P=I180
+/R=F
+/T==>
+ NNNNN 9528   Linea Comando  INNSNK00000701520030045200101100000000700070030013700
+/?=I180
+/V=TZPCAPT.EXE /O 3031
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  M00000000000000000000100
+/?=I180
+CNNNNN  P00000000000000000000100
+/?=I180
+ NSSNN 0978   macadress      INNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3324   MacAddress     INNSNA00000701520030045200101100000000700070030013700
+/V=C978
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0461   NUMERO DE BOX  IDNSNA01010004550226066001001050000008004950103061300
+/V=C9698.1
+/F=0120700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+KNNNNN 010080007001000335010000
+/T=PRÓXIMO NÚMERO A ATENDER
+/F=0013700NNN000000000Arial                                   
+ NSSNN 9502   Sucursal Sist. INNSN 00360434343624361402001100000360434343624355300
+ NNNNN 0053   Numero de Caja IDNSNA01003106150054065001101150000003104950054061800
+/V=C053.1
+/C=255255255
+/F=0015700NNN000000000Arial                                   
+/f=0015700NNN000000000Arial                                   
+*N  NN *************************************************************************************
+*N  NN *************************************************************************************
+*N  NN !!!!! Cambio el valor para que el numerador de caja tome el nro de box, no la caja del usuario
+*N  NN *************************************************************************************
+*N  NN *************************************************************************************
+ NNNNN 9540   Numero de Caja INNSNA00000701520030020202101100000000700070030013700
+/V=C461
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1980   Monitor        IDNSNA01003100950054013001101150000003100300054008900
+/V=C1980.1
+/C=255255255
+/F=0015700NNN000000000Arial                                   
+/f=0015700NNN000000000Arial                                   
+ NNNNN 5347   Sector         INNSNA00000701520030030202101100000000700070030013700
+/V=C1980
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 5348   Descripcion    ICNSN 01003101350054042901101150000003100300054015300
+/C=255255255
+/F=0015700NNN000000000Arial                                   
+/f=0015700NNN000000000Arial                                   
+ NNNNN 0437   Atiende Número0INNSNL01000503020028039101101000000000501590028028900
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 0432   Operacion      INNSNL01000503020028039101101000000000501590028028900
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN De acuerdo al método que se desee invocar del servicio de numeradores, son los parámetros tanto de entrada como de salida:
+*N  NN call: Para un sector y una sucursal retorna el siguiente numerador pendiente de atención. Se deja el numerador retornado en estado "En Atencion".
+*N  NN parámetros de entrada:
+*N  NN * sector
+*N  NN * sucursal
+*N  NN En caso de que se desee llamar a un número en particular, lo debe digitar
+KN  NN 010253013103620462000101
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+ NNNNN 0437   Atiende Número I NSNL01027603160299040501101000000027601730299030300
+/?=!(C0437>0)
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 0437   Atiende Número IDNSNL01027603160299040501101050000027601730299030300
+/?=(C0437>0)
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+KNNNNN 010308017403280373000100
+/T=Digite número en particular ó
+/F=0011400NNN000000000Arial                                   
+KNNNNN 010334017403540373000100
+/T=Cero para llamar al Numerador General
+/F=0011400NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* LLamado a un Numero en Particular Call2   */
+*N  NN /* Valida que el Numero Exista                        */
+*N  NN /* El Cajero ingresó el Número, NO SE ENVIA al MONITOR!!!
+CNNNNN  S00000000000000000000100
+/?=C0437#0
+/P=I200
+/M=call2
+/R=topsystems:service=NumeradoresCaja, call2, C0437.2 I, C1980 I, C9502 I, C9540 I,C9500 I, C0343 O
+ NNNNN 0885   Numero a AtendeINNSNA00000701520030020202101100000000700070030013700
+/?=C0437#0
+/V=C0437
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* I199 = Nro. Inexsitente, lo utilizo para hacer ESC
+CNNNNN M 00000000000000000000100
+/?=C0437#0
+/F=C0343=0
+/P=I199
+/M=Número Inexistente !!!
+ NSSNN 0437   Numerico de 6  INNSNK00000701520030030202101100000000700070030013700
+/?=I199
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  E00000000000000000000100
+/?=I199
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Si no digito ningún número hago Call para solicitar uno */
+CNNNNN  S00000000000000000000100
+/?=C0437=0
+/R=topsystems:service=NumeradoresCaja, call, C1980 I, C9502 I, C9540 I,C0885 O
+CNNNNN   00000000000000000000100
+/?=C0437=0
+/M=Se Ejecuto CALL
+ NNNNN 0437   Atiende Número ICNSNA01027603160299040501101000000026901510292028100
+/?=C0437=0
+/V=C0885
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Si no retorna ninguno, significa que no hay más números para atender
+CNNNNN  S00000000000000000000100
+/?=C0437=-1
+/M=call2
+/R=topsystems:service=NumeradoresCaja, call2, C0437.2 I, C1980 I, C9502 I, C9540 I,C9500 I, C0343 O
+ NNNNN 0437   Atiende Número ICNSNA01027603160299040501101000000026901510292028100
+/?=C0437=-1
+/V=C0885
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN /* -------------------------------------------------------------------------------- */
+*N  NN /* GM 26-Feb-09                                                                                     */
+*N  NN /* Se daba la situación que si la Tabla estaba Vacía                               */
+*N  NN /* Devolvía el Mensaje No hay números pendientes de Atendeción      */
+*N  NN /* Por lo cual hacemos "next" en lugar de mostrar el mensaje anterior */
+*N  NN /* -------------------------------------------------------------------------------- */
+CNNNNN  S00000000000000000000100
+/F=C0885=-1
+/M=call2
+/R=topsystems:service=NumeradoresCaja, call2, C0437.2 I, C1980 I, C9502 I, C9540 I,C9500 I, C0343 O
+CNNNNN ME00000000000000000000100
+/F=C0885=-1
+/M=No hay numeros pendientes de atencion
+ NSSNN 0885   Numerador      ICNSN 01010000160226041601001150000010401330124025200
+/F=0120700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+ NNNNN 1932   Sucursal       INNSNA00000701520030020202101100000000700070030013700
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1930   Nro. de Caja   INNSNA00000701520030020202101100000000700070030013700
+/V=C053.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1931   Descripción    INNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* Controlamos que el MONITOR se encuentre FUNCIONANDO   */
+*N  NN /* SI ESTA FUNCIONANDO enviamos MENSAJES al MONITOR     */
+*N  NN /* C8690 = 1       FUNCIONAN LOS MONITORES                          */
+*N  NN /* C8690 = 0 NO FUNCIONAN LOS MONITORES                          */
+ NNNNN 5347   Sector         INNSNA00000701520030030202101100000000700070030013700
+/V=C1473.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8690   Estado Monitor INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Si el Numero a Atender es Distinto al Anterior, debo Publicarlo en el Monitor
+ NNNNN 0460   Cuotas         INNSNA00000701520030020202101100000000700070030013700
+/?=C0437#C0432YC0885#-1
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0053   Numero de Caja INNSNA00000701520030020202101100000000700070030013700
+/?=C0437#C0432YC0885#-1
+/V=C053.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* I200 SI, El Cajero ingresó el Número, NO SE ENVIA al MONITOR!!!
+HNNNNN 000NS0020000000000001
+/?=(C8690=1YC0437#C0432YC0885#-1) Y !(I200)
+/D=1
+ NSSNN 0091   Numerador      INNSN 01037604270407050901001100000037903390399040900
+/?=C0437#C0432YC0885#-1
+/F=0013700NNN000000000Arial                                   
+CNNNNN M 00000000000000000000100
+/?=C0437#C0432YC0885#-1
+/F=1=2YC0091=0
+/M=Error de Comunicaciones !!!
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+KNNNNN 010245001302470682000102
+/F=0011400NNN000000000Arial                                   
+KNNNNN 010250001102520013000003
+/F=0011400NNN000000000Arial                                   
+CNNNNN  w00000000000000000000100
+/?=(C0885>0)
+/R=F
+KNNNNN 010366001904150585000001
+/?=(C0885>0)
+ NNNNN 2781   Opciones       I NSNK01038200500405053300101030000000700070030013700
+/?=(C0885>0)
+/V=A
+/F=0013700NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+VNNNNN 020228000203160800SSSD000000000000000000000000000000000000000
+/T=Transacciones a procesar
+/?=A(C2781="A")
+/C=192192192
+KNNNNN 020007000702320781000101
+/?=A(C2781="A")
+/F=0012400NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030045200101100000000700070030013700
+/?=A(C2781="A")
+/V="ESTADO = 'P' AND SUCURSALDEP="+C9502+" AND NUMERADOR = "+C885.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9694   Ayuda Sol.Caja IESSN 02002400170219077102101160000000700070030013700
+/?=A(C2781="A")
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TLlamada a la macro                      C0000 00
+ NNNNN 1980   Cuenta         INNSNA00000701520030030202101100000000700070030013700
+/V=C1980.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Por Volver a Llamar :   Devuelvo el Nro. y Llamo al Próximo                  */
+CNNNNN  S00000000000000000000100
+/F=A(C2781="B")
+/M=giveBack
+/R=topsystems:service=NumeradoresCaja, giveBack, C0885.2 I, C1980 I, C9502 I, C9500 I, C0343 O
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Por Volver a Llamar :   Cancelo el Nro. y Llamo al Próximo                  */
+CNNNNN  S00000000000000000000100
+/F=A(C2781="C")
+/M=Cancela el Número de LLamado.
+/R=topsystems:service=NumeradoresCaja, cancel, C0885.2 I, C1980.2 I, C9502.2 I, C9500 I, C0343 O
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Control de Finalización del Servicio                                                                            */
+CNNNNN ME00000000000000000000100
+/F=(A(C2781="B")OA(C2781="C"))YC0343=0
+/M=Error inesperado. Reintente
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Si Vuelve a LLamar o Cancelan, voy a TTR1                                        */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* También Cereo el Nro. de LLamado                                                                           */
+ NNNNN 0437   Atiende Número INNSNK00000701520030020202101100000000700070030013700
+/?=A(C2781="B")OA(C2781="C")
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ---------------------------------- */
+CNNNNN  I00000000000000000000100
+/?=A(C2781="B")OA(C2781="C")
+/R=2
+TN  NN 1008TConsulta Sec. Generica                  S9541 00
+/O=C8463 ASC
+/F=(C3979=C885.2) and C3130=C9502 and C3141="P"
+ NNNNN 3979   Numerador      INNNNA00000701330027024300001100000000700070027012600
+/V=C0885.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 3186   Operacion TopazINNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3141   Estado         INNNN 00000701330027024300001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 3645   IdInvocaTopaz  INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=1
+/P=I100
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I110
+/M=No hay Más Registros !!!
+ NNNNN 0260   Coeficiente    INNSNA00000701520030030202101100000000700070030013700
+/?=I100
+/V=C2206
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/A=I202
+TN  NN 1006TAsignaciones de Campos                  C0000 00
+/?=I100 Y A(C3141="P") Y A(C3186.4#"0")
+*N  NN Campos que se cargan para ser parametros de ingreso en la operación llamada cuando la Cuenta es Mayor a Cero.
+*N  NN /* C3134>0
+ NNNNN 0001   Sucursal       INNSNA00000701520030020202101100000000700070030013700
+/?=C3134.4>0
+/V=C3980.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0007   Producto       INNSNA00000701520030020202101100000000700070030013700
+/?=C3134.4>0
+/V=C3132.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0002   Cliente        INNSNA00000701520030020202101100000000700070030013700
+/?=C3133.4#0
+/V=C3133.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0902   Codigo Cliente INNSNA00000701520030020202101100000000700070030013700
+/?=C3133.4#0
+/V=C3133.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0005   Cuenta         INNSNA00000701520030020202101100000000700070030013700
+/?=C3134.4>0
+/V=C3134.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0003   Moneda         INNSNA00000701520030020202101100000000700070030013700
+/V=C3135.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0006   Referencia     INNSNA00000701520030020202101100000000700070030013700
+/?=C3134.4>0
+/V=C3136.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0008   Ordinal        INNSNA00000701520030020202101100000000700070030013700
+/?=C3134.4>0
+/V=C3137.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0254   Tarjeta        INNSNA00000701520030045200101100000000700070030013700
+/V=C3978.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1984   Moneda         INNSNA00000701520030020202101100000000700070030013700
+/V=C2208.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0033   Importe        INNSNA00000701520030020202101100000000700070030013700
+/V=C2207.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0066   Cantidad ChequeINNNNA00000701330027024300001100000000700070027012600
+/V=C3140.4
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 0556   Compra/Venta   INNNNA00000701330027024300001100000000700070027012600
+/V=C2629.4
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ N  NN 3133   Cliente        INNSNA00000701520030020202101100000000700070030013700
+/V=C3133.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6632   ResultOperSinc INNSNK00000701520030020202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3131   Nro Pool       INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9707   Tipo Convenio  INNSN 00000701520027020200001100010000700070027013700
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 9706   Tipo Convenio  INNSN 00000701520027020200001100010000700070027013700
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 9708   Tipo Convenio  INNSN 00000701520027020200001100010000700070027013700
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+TN  NN 1006TTratam.Operac. COMUNES Y LIBRES         C0000 00
+/?=I100 Y A(C3141="P") Y C3142.4=0
+ NNNNN 1980   Cuenta         INNSNA00000701520030030202101100000000700070030013700
+/V=C1980.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Operacion COMUN          :  C3186 > 0 Y C3141='P' Y C3142=0                                */
+*N  NN /*                                           NroOper>0 Y Estado=P Y Asiento=0                              */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Tratamos las operaciones que vienen desde el Automatismo
+*N  NN /* C6632 = 0 - Finalizó con ERROR el LLAMADO A LA OPERACION SUBORDINADA
+*N  NN /* C0343 = 0 - ERROR al actualizar los NUMERADORESCAJAASIGNADOS
+DN  NN 0000OS01
+/?=F(VAL,C3186.4)>0
+/FC3186.4
+CNNNNN M 00000000000000000000100
+/?=F(VAL,C3186.4)>0
+/F=C6632=0YC0343=0
+/M=Operación Cancelada o Error de comunicaciones !!!
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Operacion LIBRE             :  C3186 = 0 Y C3142 = 0.                                                 */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN Esta transacción es para atención libre que significa que el cajero utiliza las operaciones del modulo de caja.
+*N  NN Este numero de atencion fue generado con la operacion 3250 sin especificar asiento
+*N  NN Los Campos 3186 y 3142 deben ser igual a CERO. 
+VNNNNN 080131025002210307NNND000020000000000000000000000000000000001
+/T=Atención
+/?=F(VAL,C3186.4)=0
+/C=192192192
+KNNNNN 080001000701040285000001
+/?=F(VAL,C3186.4)=0
+/F=0021700NNN000000000Arial                                   
+KNNNNN 080045003700740244010000
+/?=F(VAL,C3186.4)=0
+/T=ATENCIÓN LIBRE
+/F=0021700NNN000000000Arial                                   
+ NNNNN 0664   Nro. Operación I NSN 08011501910138024102101100000011500460138017600
+/?=F(VAL,C3186.4)=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+DN  NN 0000OS01
+/?=F(VAL,C3186.4)=0
+/FC0664
+CNNNNN M 00000000000000000000100
+/?=F(VAL,C3186.4)=0
+/F=C6632=0YC0343=0
+/M=Operación Cancelada o Error de comunicaciones !!!
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN          /* TRATAMIENTO GENERAL PARA LAS DOS POSIBILIDADES                  */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+VNNNNN 050317011001380536SSSD000000000000000000000000000000000000001
+/T=Que acción va a realizar
+/?=C6632=0
+/C=192192192
+KNNNNN 050010000600580522000101
+/?=C6632=0
+KNNNNN 050317000803650543000101
+/?=C6632=0
+ NNNNN 8149   Opciones       I NSNK05002801050051046400101130000000700070030013700
+/?=C6632=0
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 050028012300480256000100
+/?=C6632=0
+/T=Volver a llamar
+/F=0013700NNN000000000Arial                                   
+KNNNNN 050028040900480505000100
+/?=C6632=0
+/T=Cancelar
+/F=0013700NNN000000000Arial                                   
+CNNNNN  S00000000000000000000100
+/?=1=2 Y C6632=0
+/F=A(C8149="C")
+/M=giveBack2
+/R=topsystems:service=NumeradoresCaja, giveBack2, C0885.2 I, C1980 I, C9502 I, C9500 I, C0343 O
+*N  NN /* ----------------------------------------- */
+*N  NN /* CANCELA el Numero de llamado?   */
+*N  NN /* ----------------------------------------- */
+CNNNNN  S00000000000000000000100
+/?=C6632=0
+/F=A(C8149="R")
+/M=Cancela el Número de LLamado.
+/R=topsystems:service=NumeradoresCaja, cancel, C0885.2 I, C1980 I, C9502 I, C9500 I, C0343 O
+*N  NN /* ----------------------------------------- */
+*N  NN /* Se Devuelve el Nro.                        */
+*N  NN /* ----------------------------------------- */
+CNNNNN  S00000000000000000000100
+/?=C6632=0
+/F=A(C8149="C")
+/M=giveBack
+/R=topsystems:service=NumeradoresCaja, giveBack, C0885.2 I, C1980 I, C9502 I, C9500 I, C0343 O
+CNNNNN   00000000000000000000100
+/F=C6632=0Y(A(C8149="C"))
+/P=I201
+/M=CANCELO LA OPER SUB. Y VOLVER A LLAMAR
+CNNNNN   00000000000000000000100
+/F=C6632=0Y(A(C8149="R"))
+/P=I202
+/M=CANCELO LA OPER SUB. Y NO VOLVER A LLAMAR
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Sumo al Contador 511 pq Queda Pendiente y no debo hacer FINISH                       */
+*N  NN /* También Cereo el Nro. de LLamado                                                                            */
+ NSSNN 0511   NroLlamadoPend.INNSNF00000701520030020202101100000000700070030013700
+/?=A(C8149="C")
+/V=C0511+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0437   Atiende Número INNSNK00000701520030020202101100000000700070030013700
+/?=A(C8149="C")
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* C6632=1 - Finalizó CORRECTAMENTE !!! el LLAMADO A LA OPERACION SUBORDINADA
+CNNNNN M 00000000000000000000100
+/F=C6632=1YC0343=0Y1=2
+/M=Finalizó Correctamente !!!
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+TN  NN 1009TModificacion REG.como CANCELADO         M9541 00
+/?=I100Y(I201OI202)
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Las siguiente transacciones permiten enviar Movimientos al final de la tabla            */
+*N  NN /* Modificacion REG.como CANCELADO                                                                         */
+*N  NN /* Lee la Totalidad de los Registros                                                                                */
+*N  NN /* Lee la Totalidad de los Registros                                                                                */
+*N  NN /* Itera =====> 7                                                                                                       */
+*N  NN /* Alta en SER_SOLICITUDES_CAJA                                                                              */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+ NNNNN 3645   IdInvocaTopaz  INNSNA00000701520030030202101100000000700070030013700
+/V=C3645.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3141   EstadoCANCELADAINNNNK00000701330027024300001100000000700070027012600
+/?=I201
+/V=C
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 3141   EstadoCANCELADAINNNNK00000701330027024300001100000000700070027012600
+/?=I202
+/V=C
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 3129   TicketSesion   INNSNA00000701520030030202101100000000700070030013700
+/V=C3129.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3130   Sucursal       INNSNA00000701520030030202101100000000700070030013700
+/V=C3130.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3979   Numerador      INNSNA00000701520030030202101100000000700070030013700
+/V=C3979.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TLee el mayor Registro                   S9541 00
+/?=I100YI201
+/O=C3645 DESC
+ NNNNN 3138   Importe Orig   INNSN 00000701520030030202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* Campo 198 = Guardo el valor mayor de la lectura secuencial del C3645 (IDINVOCATOPAZ)
+ NNNNN 3141   Estado         INNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0198   Nro.Documento  INNSNA00000701520030030202101100000000700070030013700
+/V=C3645
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TItera =====> 7                          C0001 00
+/?=1=0YI100YI210
+CNNNNN  I00000000000000000000100
+/R=8
+TN  NN 1001TAlta en SER_SOLICITUDES_CAJA            A9541 00
+/?=I100YI201
+ NNNNN 3645   IdInvocaTopaz  INNSNF00000701520030030202101100000000700070030013700
+/V=C0198.8+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3129   TicketSesion   INNSNA00000701520030030202101100000000700070030013700
+/V=C3129.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3130   Sucursal       INNSNA00000701520030030202101100000000700070030013700
+/V=C3130.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* ------------------------- */
+*N  NN /* Aquí se incrementa : NROPOOL y IDINVOCATOPAZ para que pase al final */
+ NNNNN 3131   Nro Pool       INNSNF00000701520030030202101100000000700070030013700
+/V=C3645
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* ------------------------- */
+ NNNNN 3979   Numerador      INNSNA00000701520030030202101100000000700070030013700
+/V=C3979.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3132   Producto       INNSNA00000701520030030202101100000000700070030013700
+/V=C3132.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3133   Cliente        INNSNA00000701520030030202101100000000700070030013700
+/V=C3133.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3134   Cuenta         INNSNA00000701520030030202101100000000700070030013700
+/V=C3134.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3135   Moneda         INNSNA00000701520030030202101100000000700070030013700
+/V=C3135.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3136   Operacion      INNSNA00000701520030030202101100000000700070030013700
+/V=C3136.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3137   Ordinal        INNSNA00000701520030030202101100000000700070030013700
+/V=C3137.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3138   Importe Orig   INNSNA00000701520030030202101100000000700070030013700
+/V=C3138.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3139   Importe Orig   INNSNA00000701520030030202101100000000700070030013700
+/V=C3139.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3140   CantidadChequesINNSNA00000701520030030202101100000000700070030013700
+/V=C3140.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3141   Estado         INNSNK00000701520030030202101100000000700070030013700
+/V=P
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3142   Asiento        INNSNA00000701520030030202101100000000700070030013700
+/V=C3142.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3143   Asiento        INNSNA00000701520030030202101100000000700070030013700
+/V=C3143.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3185   Número de Caja INNSNA00000701520030030202101100000000700070030013700
+/V=C3185.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3186   Operacion TopazINNSNA00000701520030030202101100000000700070030013700
+/V=C3186.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3187   Asiento        INNSNA00000701520030030202101100000000700070030013700
+/V=C3187.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3978   NroTarjeta     INNSNA00000701520030030202101100000000700070030013700
+/V=C3978.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3979   NroTarjeta     INNSNA00000701520030030202101100000000700070030013700
+/V=C3979.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3980   Sucursal       INNSNA00000701520030030202101100000000700070030013700
+/V=C3980.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9690   Tipo Doc.      INNSNA00000701520030030202101100000000700070030013700
+/V=C9690.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9691   Nro Doc.       INNSNA00000701520030030202101100000000700070030013700
+/V=C9691.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 5477   NombrePersona  INNSNA00000701520030030202101100000000700070030013700
+/V=C5477.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2206   Cotizacion     INNSNA00000701520030030202101100000000700070030013700
+/V=C2206.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2207   Monto Ing      INNSNA00000701520030030202101100000000700070030013700
+/V=C2207.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2208   Moneda Ing     INNSNA00000701520030030202101100000000700070030013700
+/V=C2208.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2629   CompraVenta    INNSNA00000701520030030202101100000000700070030013700
+/V=C2629.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3067   Importe Dest   INNSNA00000701520030030202101100000000700070030013700
+/V=C3067.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9693   Cant. Opers.   INNSNA00000701520030030202101100000000700070030013700
+/V=C9693.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8463   Nro.OperBuz    INNSNA00000701520030030202101100000000700070030013700
+/V=C8463.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9707   Tipo Convenio  INNSNA00000701520030030202101100000000700070030013700
+/V=C9707.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3980   Sucursal       INNSNA00000701520030030202101100000000700070030013700
+/V=C3980.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7546   Cant. Cuotas   INNSNA00000701520030030202101100000000700070030013700
+/V=C7546.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9706   Servicio Ref   INNSNA00000701520030030202101100000000700070030013700
+/V=C9706.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9708   Id. Convenio   INNSNA00000701520030030202101100000000700070030013700
+/V=C9708.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TOperación a CONFIRMAR                   C0001 00
+/?=I100 Y A(C3141="P") Y F(VAL,C3186.4)=0 Y C3142.4>0
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Operacion CONFIRMAR  :  C3186 = 0 Y C3142 > 0 Y C3141='P'endiente.               */
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN Esta transacción es para cuando se va a confirmar un asiento.
+*N  NN Se necesita el numero de asiento a confirmar. Este número fue cargado con la operacion 3250.
+*N  NN El campo 3186=0 Y 3142 almacena el numero de asiento.
+*N  NN /* PARA LA CONFIRMACION NO CONTROLAMOS COMO FINALIZÓ EL CAJERO
+*N  NN /* SI TERMINCO CON LA CONFIRMACION DEL ASIENTO O CANCELO.
+VNNNNN 060135025101800304NNND000020000000000000000000000000000000001
+/T=Confirmación
+/C=192192192
+KN  NN 060007000701430290000101
+ NNNNN 0613   Asiento:       IDNSNA06003501360058023501101150020003500340058012100
+/V=C3142.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9500   Fecha Sistema  INNSN 00000701520030030200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9502   Sucursal Sist. INNSN 00000701520030030200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  w06007500840101022411100
+/R=F
+/T=CONFIRMACION
+CNNNNN   00000000000000000000100
+/P=I120
+/M=Entre Ind. para Cambiar ESTADO
+CNNNNN  B00000000000000000000101
+/R=SHOW,C0613,C9500,C9502
+/T=CONFIRMACION
+TN  NN 1009TActualizo Estado de Finalizacion        M9541 00
+/?=1=0YI100 Y A(C3141="P") Y C6632=1
+ NNNNN 3645   IdInvocaTopaz  INNSNA00000701520030020202101100000000700070030013700
+/?=I201
+/V=C3645.10
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3645   IdInvocaTopaz  INNSNA00000701520030020202101100000000700070030013700
+/?=!I201
+/V=C3645.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3141   EstadoCANCELADOINNNNK00000701330027024300001100000000700070027012600
+/?=C6632=0YA(C8149="R")
+/V=C
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 3141   EstadoPENDIENTEINNNNK00000701330027024300001100000000700070027012600
+/?=C6632=0YA(C8149="C")
+/V=P
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 3141   EstadoATENDIDO INNNNK00000701330027024300001100000000700070027012600
+/?=C6632=1
+/V=A
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 3141   EstadoATENDIDO INNNNK00000701330027024300001100000000700070027012600
+/?=I120
+/V=A
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN  I00000000000000000000100
+/F=I110
+/R=14
+TN  NN 1006TIteración a la transacción 3 o 13       C0000 00
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* C0511 > 0  ----> Queda Nro. Llamado PENDIENTE!!!
+*N  NN /* C0511 = 0  ----> Finalize con este NumLLamado !!!
+CNNNNN  I00000000000000000000100
+/F=!I100Y(A(C3141#"P"))
+/R=4
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Finalizo el Numerador porque Termine con el Numero llamado y 
+*N  NN /* no hay Cancelaciones ni  Volver a llamar.
+ NNNNN 0198   Nro.Documento  INNSNK00000701520030030202101100000000700070030013700
+/?=I110YC0511=0
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  S00000000000000000000100
+/F=I110YC0511=0
+/M=Finalizó Correctamente !!!
+/R=topsystems:service=NumeradoresCaja, finish, C0885.2 I, C1980.2 I, C9502.2 I, C9500.2 I, C0343 O
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Si es el Final del Numero, CEREO el contador de Cancelacion/Devolucion
+*N  NN /* También Cereo el Nro. de LLamado                                                                          */
+ NNNNN 0511   NroLlamadoPend.INNSNK00000701520030020202101100000000700070030013700
+/?=I110YC0511>0
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0437   Atiende Número INNSNK00000701520030020202101100000000700070030013700
+/?=I110
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+CNNNNN  I00000000000000000000100
+/F=!I110
+/M=No Termine con el Numerador
+/R=4
+CNNNNN M 00000000000000000000100
+/F=I110Y1=2
+/M=FIN por I110
+CNNNNN  I00000000000000000000100
+/F=I110
+/R=14
+TN  NN 1006TFin de operacion PPal de caja           C0000 00
+ NNNNN 0028   Concepto       INNNNF00000701330027024300001100000000700070027012600
+/V="PPal de Caja Nro:"+C885.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*N  NN /* -------------------------------- -----------------------------  ----------------------------------  */
+*N  NN /* Manejo del C0437, para saber si llamo al mismo número o no.                                  */
+*N  NN /* También Cereo el Nro. de LLamado                                                                           */
+ NNNNN 0432   Operacion      INNSNA00000701520030020202101100000000700070030013700
+/V=C0437
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0437   Atiende Número INNSNK00000701520030020202101100000000700070030013700
+/?=F(VAL,C3186.4)=0
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0437   Numerico de 6  INNSNA00000701520030020202101100000000700070030013700
+/?=I100YC6632=1
+/V=C0885.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0437   Numerico de 6  INNSNK00000701520030020202101100000000700070030013700
+/?=I100YC6632=0
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0437   Numerico de 6  INNSNK00000701520030020202101100000000700070030013700
+/?=I110
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+DN  NN 3000Ov00
+*#I190#No existe box
+*#I180#Llamar mantenimiento de box
+*#I120#Entre Ind. para Cambiar ESTADO
+*#I110#No hay Más Registros en el SET
+*#I100#Llama a la Sub-Operacion
+*#I210#Hay más registros !!!
+*#I211#NO Hay más registros !!!
+*#I212#ES EL MISMO NUMERADOR
+*#I201#CANCELO LA OPER SUB. Y VOLVER A LLAMAR
+*#I202#CANCELO EL REGISTRO

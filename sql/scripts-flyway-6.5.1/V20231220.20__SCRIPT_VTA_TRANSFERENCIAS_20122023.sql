@@ -1,0 +1,4 @@
+﻿EXECUTE('
+ALTER TABLE VTA_TRANSFERENCIAS
+ADD Operatoria_BCRA varchar(3);
+')

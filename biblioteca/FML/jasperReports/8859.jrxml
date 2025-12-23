@@ -1,0 +1,3915 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2021-04-16T10:59:02 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Solic. Apertura de Cta. Cte. Especial" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1c65ef63-631f-4e96-a309-1de2082501cd">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="JTS_OID" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[JTS OID:]]></parameterDescription>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+S.JTS_OID,
+S.C1803 AS CLIENTE,
+S.C1620 AS FECHA_APERTURA,
+M.C6401 AS MONEDA,
+S.SUCURSAL,
+SU.NOMBRESUCURSAL,
+S.CUENTA,
+P.C6251 AS PRODUCTO,
+C.NOMBRECLIENTE,
+CASE
+	WHEN EXISTS (SELECT * FROM PYF_APODERADOS WHERE ID_ENTIDAD = S.JTS_OID AND MONTO_MAX_INDIV <> 0) THEN 'INDISTINTA'
+	ELSE 'CONJUNTA'
+END AS MODALIDAD_CUENTA,
+PJ.FECHACONSTITUCION,
+CO.DESCRIPCION AS ACTIVIDAD,
+CO.CODIGO_ACT_AFIP AS COD_ACTIVIDAD,
+SE.DESCRIPCION AS RAMO_ACTIVIDAD,
+PJ.NUMERO AS NRO_INSCRIPCION,
+PJ.FOLIO AS FOLIO_INSCRIPCION,
+DO.TIPODOCUMENTO,
+DO.NUMERODOCUMENTO,
+OG.DECLARACION_USO,
+O.DESCRIPCION AS ORIGEN_FONDOS,
+CONCAT(D.CALLE , ' ' + CONVERT(VARCHAR ,D.NUMERO) , ', ' + L.DESCRIPCION_DIM3) AS DIRECCION,
+E.EMAIL,
+D.ID AS ID_PERSONA
+FROM SALDOS AS S
+INNER JOIN CLI_CLIENTES AS C ON S.C1803 = C.CODIGOCLIENTE AND C.TZ_LOCK = 0
+LEFT JOIN MONEDAS AS M ON S.MONEDA = M.C6399 AND M.TZ_LOCK = 0
+LEFT JOIN SUCURSALES AS SU ON S.SUCURSAL = SU.SUCURSAL AND SU.TZ_LOCK = 0
+LEFT JOIN PRODUCTOS AS P ON S.PRODUCTO = P.C6250 AND P.TZ_LOCK = 0
+LEFT JOIN OPCIONES AS OP ON P.C6826 = OP.OPCIONDEPANTALLA AND OP.NUMERODECAMPO = 6826 AND OP.IDIOMA = 'E'
+LEFT JOIN CLI_CLIENTEPERSONA AS CP ON C.CODIGOCLIENTE = CP.CODIGOCLIENTE AND TITULARIDAD = 'T' AND CP.TZ_LOCK = 0
+LEFT JOIN CLI_PERSONASJURIDICAS AS PJ ON CP.NUMEROPERSONA = PJ.NUMEROPERSONAJURIDICA AND PJ.TZ_LOCK = 0
+LEFT JOIN CLI_ACTIVIDAD_ECONOMICA AS A ON PJ.NUMEROPERSONAJURIDICA = A.CODIGO_PERSONA_CLIENTE AND A.TZ_LOCK = 0
+LEFT JOIN CLI_Cod_Act_AFIP AS CO ON A.CODIGO_ACTIVIDAD = CO.CODIGO_ACT_AFIP AND CO.TZ_LOCK = 0
+LEFT JOIN CLI_SECCION AS SE ON CO.CODIGO_SECCION = SE.CODIGO_SECCION AND SE.TZ_LOCK =0
+LEFT JOIN CLI_DOCUMENTOSPFPJ AS DO ON PJ.NUMEROPERSONAJURIDICA = DO.NUMEROPERSONAFJ AND DO.TZ_LOCK = 0
+LEFT JOIN CLI_DECLARACION_USO AS OG ON S.JTS_OID = OG.SALDOS_JTS_OID AND OG.TIPO_DATO = 'O' AND OG.TZ_LOCK = 0
+LEFT JOIN OPCIONES AS O ON OG.ORIGEN_FONDOS = O.OPCIONINTERNA AND O.NUMERODECAMPO = 34020 AND O.IDIOMA = 'E'
+LEFT JOIN CLI_DIRECCIONES AS D ON CP.NUMEROPERSONA = D.ID AND D.TIPODIRECCION = 'E' AND D.TZ_LOCK = 0
+LEFT JOIN CLI_EMAILS AS E ON D.ID = E.ID AND E.TIPO IN ('PE', 'LE') AND E.TZ_LOCK = 0
+AND E.ORDINAL = (SELECT MIN(ORDINAL) FROM CLI_EMAILS WHERE ID = E.ID AND TIPO = E.TIPO AND TZ_LOCK = 0)
+LEFT JOIN CLI_LOCALIDADES AS L ON D.PAIS = L.CODIGOPAIS AND D.PROVINCIA = L.DIM1
+AND D.DEPARTAMENTO = L.DIM2 AND D.LOCALIDAD = L.DIM3 AND L.TZ_LOCK = 0 AND L.TZ_LOCK = 0
+WHERE S.TZ_LOCK = 0 AND S.JTS_OID = $P{JTS_OID}]]>
+	</queryString>
+	<field name="JTS_OID" class="java.math.BigDecimal"/>
+	<field name="CLIENTE" class="java.math.BigDecimal"/>
+	<field name="FECHA_APERTURA" class="java.sql.Timestamp"/>
+	<field name="MONEDA" class="java.lang.String"/>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="NOMBRESUCURSAL" class="java.lang.String"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="PRODUCTO" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="MODALIDAD_CUENTA" class="java.lang.String"/>
+	<field name="FECHACONSTITUCION" class="java.sql.Timestamp"/>
+	<field name="ACTIVIDAD" class="java.lang.String"/>
+	<field name="COD_ACTIVIDAD" class="java.lang.String"/>
+	<field name="RAMO_ACTIVIDAD" class="java.lang.String"/>
+	<field name="NRO_INSCRIPCION" class="java.math.BigDecimal"/>
+	<field name="FOLIO_INSCRIPCION" class="java.lang.String"/>
+	<field name="TIPODOCUMENTO" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="DECLARACION_USO" class="java.lang.String"/>
+	<field name="ORIGEN_FONDOS" class="java.lang.String"/>
+	<field name="DIRECCION" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="ID_PERSONA" class="java.math.BigDecimal"/>
+	<pageHeader>
+		<band height="65">
+			<image>
+				<reportElement x="-20" y="-20" width="595" height="84" uuid="c80cf0b9-3082-4ca9-9cf9-87a35b2784a8"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logolargo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="235" y="0" width="320" height="30" uuid="57c2e73e-7aee-4356-ba92-6f4a8d2aafd1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph rightIndent="20"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD  DE APERTURA DE CUENTA CORRIENTE ESPECIAL PARA PERSONAS JURIDICAS
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="30" width="35" height="15" uuid="dae7846d-3317-4dac-be41-d3b8cff928b5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="415" y="30" width="65" height="15" uuid="58a8585f-7b51-4fb0-9c40-ceaa081670da">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHA_APERTURA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="480" y="30" width="50" height="15" uuid="818aeb11-2fc3-414b-b72a-96512702f95c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<text><![CDATA[Moneda:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="530" y="30" width="25" height="15" uuid="52d5235d-0d96-4e2f-a173-73d28f7b7ab4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MONEDA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="525" splitType="Stretch">
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<staticText>
+				<reportElement x="80" y="0" width="55" height="15" uuid="7ab739a7-4db1-4c39-935c-2630fc8b0a6f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="135" y="0" width="145" height="15" uuid="3abce547-2dac-46dd-85e7-d8347272fabb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRESUCURSAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="0" width="205" height="15" uuid="2caab46e-7511-4791-b949-40a019674f18">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cta. Cte. especial p/Personas Jurídicas Nº:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="485" y="0" width="70" height="15" uuid="0f9a77a9-090a-46d9-8d01-ab087aa7ac90">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="25" width="80" height="15" uuid="aef95be4-6cf2-49a5-933f-fe29c5fecb72">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Denominación:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="80" y="25" width="375" height="15" uuid="330d3bf2-2a2b-4b8e-89df-ee1aa8b5ae6d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRODUCTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="455" y="25" width="100" height="15" uuid="27bedbbb-c686-4b3b-9a6b-eb89640d8110">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Orden:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="455" y="40" width="100" height="15" uuid="f28d0add-2b3f-4ec4-9968-f6ccc54180b8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MODALIDAD_CUENTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="40" width="80" height="15" uuid="2e4acc38-a6fb-4ef8-8510-c383dfb51c48">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[TITULAR:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="80" y="40" width="375" height="15" uuid="cc9d9461-23e1-40c4-8335-15c2b1b47e07">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRECLIENTE}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="55" width="555" height="30" uuid="9de4f6e5-e684-465c-94d2-549d8c42add9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="ID_PERSONA">
+					<subreportParameterExpression><![CDATA[$F{ID_PERSONA}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8859_Subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<frame>
+				<reportElement positionType="Float" x="0" y="85" width="555" height="105" uuid="ee0c9c39-bdb9-4666-a1c4-80240568c389"/>
+				<staticText>
+					<reportElement x="0" y="0" width="555" height="15" uuid="e2f87254-a951-461d-b7d3-fc8130327609">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[DETALLE DE SUCURSALES Y/O AGENCIAS DE LA PERSONA JURIDICA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="15" width="40" height="15" uuid="203ba42c-8358-42ff-9f63-94786b7fbb52">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Nº]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="15" width="80" height="15" uuid="289501b5-6684-4cd5-a15b-39936a1f3ec7">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Localidad]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="120" y="15" width="130" height="15" uuid="57f81b18-cb1c-4ef5-9a1c-78e526e26fb3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Calle]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="250" y="15" width="50" height="15" uuid="2fb288aa-073d-42a3-a050-821af8e75efd">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Nº]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="15" width="90" height="15" uuid="e921f4f2-e351-4d97-b25a-d9108c7e0278">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Provincia]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="15" width="70" height="15" uuid="3e2dccd9-8db3-4997-b549-051d5d89ff61">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[C.P.]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="460" y="15" width="95" height="15" uuid="106bfefc-5fad-440d-a643-ffb691e949f3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[Teléfono]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="30" width="40" height="15" uuid="2a211975-1df9-4889-b710-5309c1b7fdc1">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[1]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="30" width="80" height="15" uuid="eceb8dfd-27cd-43e3-88e8-2e180943ba0a">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="120" y="30" width="130" height="15" uuid="7ddbc5dc-4fe7-475d-a2d4-383611959ef8">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="250" y="30" width="50" height="15" uuid="9b6d3d01-c794-40a3-a55d-ffb87eb48922">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="30" width="90" height="15" uuid="0ee05ae4-fa90-4fc4-b819-319d27b5c1f6">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="30" width="70" height="15" uuid="0fb0e1bf-ea68-4984-9cce-540b97dde436">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="460" y="30" width="95" height="15" uuid="793e8990-02d1-4296-8dab-e139d13dd9c3">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="45" width="40" height="15" uuid="4f29827c-119e-49a2-b170-259a9be9e49b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[2]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="45" width="80" height="15" uuid="59d5bf12-7565-4585-85b8-c483ee2dcb09">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="120" y="45" width="130" height="15" uuid="8f963017-e369-413e-bbef-11f5762f9117">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="250" y="45" width="50" height="15" uuid="89ff8a78-f94d-453b-820f-7707df0ee01d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="45" width="90" height="15" uuid="c5ebb5f8-04a3-4474-985a-3ba5181b5d57">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="45" width="70" height="15" uuid="0249e2ee-ba11-43df-bf43-e05826253df1">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="460" y="45" width="95" height="15" uuid="733e97f8-c2ae-4468-9842-80adc781b928">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="60" width="40" height="15" uuid="233058d7-8185-42d9-a6ce-da383a4ad31e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[3]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="60" width="80" height="15" uuid="77247d96-4217-40bc-8d45-591182eaa23c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="120" y="60" width="130" height="15" uuid="e10dfec8-f154-4305-bda1-765dfd43ebdf">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="250" y="60" width="50" height="15" uuid="de311c54-8bd9-4aba-afb1-36686084f6ee">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="60" width="90" height="15" uuid="dd1b9fc0-6bb5-4067-a25b-2b56b9a81727">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="60" width="70" height="15" uuid="8c9c526c-35f4-473d-8497-e79cf65b3e9b">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="460" y="60" width="95" height="15" uuid="ad0cbba0-0c9e-41b4-9b77-fa99424f56a8">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="75" width="40" height="15" uuid="619fb29f-5e16-40e5-9eff-66eb555ce572">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[4]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="75" width="80" height="15" uuid="f9958437-9167-4bec-8458-dce75aa2fa01">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="120" y="75" width="130" height="15" uuid="b18c2318-db38-4003-a017-7f94342ec07e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="250" y="75" width="50" height="15" uuid="d0e8695f-0886-49d8-98ac-e37a6b34fcb0">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="75" width="90" height="15" uuid="f9bd184c-b416-49bd-81c0-1987fd9460aa">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="75" width="70" height="15" uuid="4e4f9b43-add7-454f-b12b-7a5e99221523">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="460" y="75" width="95" height="15" uuid="c2104d10-c366-483f-8024-11954ceac288">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="90" width="40" height="15" uuid="456ab275-5927-459f-9bba-55b9bb0c8f94">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[5]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="40" y="90" width="80" height="15" uuid="5a76c0d6-4917-4a79-8cab-a00f1b1b8fcd">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="120" y="90" width="130" height="15" uuid="4d0d06e1-1d2d-4adb-a27b-3e932d6feafe">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="250" y="90" width="50" height="15" uuid="74695f5b-7698-4797-ad16-8b942a05d96a">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="0" rightIndent="3"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="300" y="90" width="90" height="15" uuid="a3b48bb6-a579-4f9b-9d1a-1eb30521f69a">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="390" y="90" width="70" height="15" uuid="9484db83-f088-4514-9c14-d52dad849ea7">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="460" y="90" width="95" height="15" uuid="05904de5-3115-4228-8959-fb459eea099c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="3" rightIndent="0"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="190" width="160" height="30" uuid="4d0f02b0-0a85-4b28-b265-bb110ab16e03">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Esta firma se rige por contrato y/o estatuto firmado el:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="220" width="160" height="30" uuid="8922195b-c761-4cf0-95de-db5a94043782">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHACONSTITUCION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="160" y="190" width="160" height="40" uuid="d3708a08-1e47-4c1e-bda8-d2368f6020ac">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Inscripto en el Registro Público de Comercio/Dirección de Personas Jurídicas el:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="320" y="190" width="95" height="25" uuid="9c5c1c17-1957-4204-8b17-94215e21d7dc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Actividad Principal:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="320" y="215" width="95" height="35" uuid="8fefec05-d542-4553-bd97-c17f8665cf0c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ACTIVIDAD}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="415" y="190" width="70" height="30" uuid="f76391df-0626-475f-925c-8af10c338b66">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Código de Actividad:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="415" y="220" width="70" height="30" uuid="433af549-0513-44d0-83e8-ba3ea7e0d01c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COD_ACTIVIDAD}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="485" y="190" width="70" height="25" uuid="69f291f4-dd6c-4ac0-ba18-00b6830e3d9a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Ramo:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="485" y="215" width="70" height="35" uuid="2f151e67-ba0c-43f3-8ae2-3d0b79594844">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RAMO_ACTIVIDAD}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="250" width="60" height="15" uuid="70a74e04-35d8-402b-afb3-23ff8bfc3472">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Bajo el Nro:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="60" y="250" width="100" height="15" uuid="2f286c9d-be98-4d16-a16b-3cd265f92ad6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NRO_INSCRIPCION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="160" y="250" width="35" height="15" uuid="9e108fca-7377-4071-b290-df4e0380bfb0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Folio:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="195" y="250" width="360" height="15" uuid="26cb056a-6652-443f-b9db-f4d0e4dd0d80">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FOLIO_INSCRIPCION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="265" width="95" height="15" uuid="a298a542-f84b-445a-8e29-ef26c8780a96">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[OBJETO SOCIAL:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="95" y="265" width="460" height="15" uuid="46722482-45e4-41c6-b021-05e03e775336">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="280" width="285" height="15" uuid="305d1f43-07a0-47b4-94ec-bfc9bdad6332">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Condición ante la AFIP o motivos por el que no está inscripto:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="285" y="280" width="270" height="15" uuid="9a85f16d-afd5-41dd-8eb3-da15e4d2529b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="295" width="50" height="15" uuid="dbbd4a82-6781-4969-b231-ef4df7693d14">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPODOCUMENTO} + ":"]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="50" y="295" width="505" height="15" uuid="075fdccd-aa14-46ee-b8e7-98fa745d9d9d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="310" width="130" height="15" uuid="9b33dc18-380d-4ce3-a197-4eeeae69b86a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Esta solicitud se funda en:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="130" y="310" width="425" height="15" uuid="99b47442-734d-4b0c-986f-6b7843162762">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="325" width="275" height="15" uuid="4b7107f6-2c89-47b5-ab90-b11b0088ba42">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Banco/s que tengo/tenemos vinculación:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="0" y="340" width="275" height="30" uuid="eaa40318-a3ed-4acd-a021-3366857f5772">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="275" y="325" width="280" height="15" uuid="63f9e5a3-1c6f-47d8-baa1-350c21874ad6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Opero/Operamos en crédito con los siguientes Bancos:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="275" y="340" width="280" height="30" uuid="398fb61f-8a49-4af6-829e-b0cd5e51dc58">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="370" width="555" height="15" uuid="abbb1633-5e24-48f8-a4e9-cf17dd0c1fc8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Podrán solicitarse referencias personales, morales y comerciales a las siguientes personas:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="385" width="555" height="15" uuid="ab43cfa7-657b-4738-8805-09c3da57eb63">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[(en lo posible las mismas deberán ser clientes del Banco)]]></text>
+			</staticText>
+			<frame>
+				<reportElement positionType="Float" x="0" y="400" width="555" height="60" uuid="f2f140b5-17c5-42f5-87f1-21424ec66ba6"/>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="0" width="205" height="15" uuid="c04c31fd-26ed-4dbc-98f6-9365d4ebb84c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[NOMBRE Y APELLIDO/RAZÓN SOCIAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="205" y="0" width="130" height="15" uuid="2de18bb8-580a-46e4-8a68-f07fa75cce96">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[DOMICILIO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="335" y="0" width="120" height="15" uuid="7ad36f64-c244-4c86-b9ab-554b32589100">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="10" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[VINCULADO AL BANCO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="455" y="0" width="100" height="15" uuid="c8aab90d-5c4f-4b85-a100-347be9213583">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[TELÉFONO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="15" width="205" height="15" uuid="aacb3a5d-d96d-4efc-acf0-1df0e9104c5a">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="205" y="15" width="130" height="15" uuid="9c951b90-2468-405d-bb6c-07a3681e409f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="335" y="15" width="120" height="15" uuid="a8a33ee6-3cb4-41cf-9d84-eb8e6cafa58f">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="455" y="15" width="100" height="15" uuid="2ffa4e7e-b7a6-4072-9223-9dd5787ad91c">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="30" width="205" height="15" uuid="3103fe82-7c59-4fd2-ba6e-4eb3541c5126">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="205" y="30" width="130" height="15" uuid="e11909b4-be29-46bb-a2cc-0bc6bc2031ba">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="335" y="30" width="120" height="15" uuid="f4544ac8-74ad-4bdb-a369-023df4e72248">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="455" y="30" width="100" height="15" uuid="f2ad480d-457d-4503-a527-e724ed19a41e">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="0" y="45" width="205" height="15" uuid="b402b111-59c5-4a30-9751-a3a1f5647261">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="205" y="45" width="130" height="15" uuid="cc9c4f39-a670-4f54-aff5-2467b3a9fbe4">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="335" y="45" width="120" height="15" uuid="30f08d36-911c-4591-b13a-1656d4a22430">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<staticText>
+					<reportElement positionType="Float" x="455" y="45" width="100" height="15" uuid="634700e5-de87-439b-a686-652abc748990">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+						<paragraph leftIndent="5"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+			</frame>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="460" width="270" height="15" uuid="5384927e-96d2-4171-8c7d-0e2402a15634">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[VOLUMEN ESTIMADO DE OPERATORIA MENSUAL:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="270" y="460" width="285" height="15" uuid="bc5947b0-6529-493e-971c-38c40258b16d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="475" width="100" height="15" uuid="00d4ecf6-355b-4f03-a67d-b4641f32b49d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Fuente de los fondos:]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="100" y="475" width="160" height="15" uuid="2d2bf55a-5e23-457e-bd6f-d7e48fb00ed9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ORIGEN_FONDOS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="260" y="475" width="295" height="15" uuid="94f76179-fbc0-4283-8ca8-ca873cd3b16c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DECLARACION_USO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="490" width="220" height="15" uuid="1c903333-3992-457f-86cf-b9645cb1b077">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[ENVIA TRANSFERENCIAS AL EXTERIOR?]]></text>
+			</staticText>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="220" y="490" width="335" height="15" uuid="0b307cf4-1936-4438-b2f7-5f6c098485c7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="505" width="555" height="15" uuid="d6556498-cd32-4cfb-974d-9257b0c6830a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Completando esta solicitud acompañamos nuestro último balance y/o manifestación de bienes.]]></text>
+			</staticText>
+		</band>
+		<band height="510">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="150" uuid="3ba54fd2-75fe-4fab-9388-22c00943d116">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="CODIGO_CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8865_Subeport_Firmas.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="150" width="555" height="180" uuid="08d40939-bce1-41d5-b108-7e3525475030">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[“Por la presente se informa al Cliente:
+a) Que los datos personales aquí brindados serán utilizados por el Nuevo Banco del Chaco S.A. (Banco) para la identificación del Cliente en su operatoria con el Banco y el análisis de la presente solicitud. Podrán ser enviados a organismos de control y judiciales legalmente facultados para el acceso a los mismos.
+b) Que los datos integrarán la base de datos de clientes de titularidad de Nuevo Banco del Chaco S.A., con domicilio en Güemes N° 102, Resistencia, Chaco.
+c) Que el suministro de los datos resulta necesario y obligatorio a los efectos mencionados precedentemente, siendo susceptible de ser rechazada la presente solicitud en caso de no proporcionarse los mismos o si éstos fueran inexactos.
+d) Que el Cliente es responsable de la exactitud de los datos suministrados.
+e) Que el Cliente posee la facultad de solicitar acceso, actualización, rectificación y/o supresión de sus datos personales conforme lo dispuesto por la ley 25.326.  
+f)  La Agencia de Acceso a la Información Pública, en su carácter de Órgano de Control de la ley 25.326, tiene la atribución de atender las denuncias y reclamos que interpongan quienes resulten afectados en sus derechos por incumplimiento de las normas vigentes en materia de protección de datos personales.”]]></text>
+			</staticText>
+			<frame>
+				<reportElement positionType="Float" x="0" y="330" width="555" height="85" uuid="dba9f8fe-98a5-4a48-bbb1-a3018e710407">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<staticText>
+					<reportElement positionType="Float" x="20" y="15" width="160" height="15" uuid="c5170e81-ab92-4e30-90aa-cf7def09d5d1">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="0.0"/>
+						<leftPen lineWidth="0.0"/>
+						<bottomPen lineWidth="0.0"/>
+						<rightPen lineWidth="0.0"/>
+					</box>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="true"/>
+						<paragraph leftIndent="0"/>
+					</textElement>
+					<text><![CDATA[INTERVENCIÓN DEL BANCO]]></text>
+				</staticText>
+				<line>
+					<reportElement positionType="Float" x="390" y="50" width="140" height="1" uuid="a32e8bf0-877f-4cd3-934b-f373e5529140">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+				</line>
+				<staticText>
+					<reportElement positionType="Float" x="400" y="50" width="120" height="15" uuid="2909dab9-4f9b-462a-9552-fcbf65e087ed">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Firma y Sello]]></text>
+				</staticText>
+			</frame>
+			<break>
+				<reportElement positionType="Float" x="0" y="420" width="451" height="1" uuid="86a59c77-b49f-4ffc-852e-1aa30f6451f8"/>
+			</break>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="425" width="555" height="15" uuid="859905ac-c3e5-4e7a-b020-a21776136af1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[REPRESENTANTES LEGALES Y/O CONVENCIONALES]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="440" width="555" height="65" uuid="6f5be553-4eae-4f67-9f4a-9c2162f647b9"/>
+				<subreportParameter name="JTS_OID">
+					<subreportParameterExpression><![CDATA[$F{JTS_OID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8857_Subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement positionType="Float" x="0" y="509" width="451" height="1" uuid="34cffce2-2d34-4412-ac8a-31e9c85033ad"/>
+			</break>
+		</band>
+		<band height="687">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="13" width="555" height="15" uuid="1307003b-8d4d-4dce-a2aa-60f0a602f2b9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD DE APERTURA DE CUENTA CORRIENTE ESPECIAL PARA PERSONAS JURIDICAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="28" width="205" height="15" uuid="d32bebe1-8cb8-4cb3-8e71-d3b2cd45b2c4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El/los que suscribe/n (CLIENTE), solicita/n al NUEVO BANCO DEL CHACO S.A. (BANCO), CUIT 30-67015779-9, con domicilio legal en calle Güemes 102 de la ciudad de Resistencia, la apertura de una Cuenta Corriente Especial para]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="205" y="28" width="205" height="15" uuid="244d71b0-8f3a-4d9a-a103-a7c26cd970d1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="3"/>
+				</textElement>
+				<text><![CDATA[NUEVO BANCO DEL CHACO S.A. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="390" y="28" width="165" height="15" uuid="311a1707-8c2e-40d2-8b1a-4be60687abff">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[(BANCO), CUIT 30-67015779-9, con]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="43" width="555" height="15" uuid="48c9d323-e923-4457-93fb-40fc482cdcb0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[con domicilio legal en calle Güemes 102 de la ciudad de Resistencia, la apertura de una Cuenta Corriente Especial para Personas Jurídicas (CUENTA) en la Sucursal	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="60" width="210" height="15" uuid="007f2b35-1a15-4f6e-a61f-0743a88a82a9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Personas Jurídicas (CUENTA) en la Sucursal	]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="210" y="60" width="25" height="15" uuid="ee461943-66aa-4214-b20f-8570ffff8847"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph lineSpacing="Fixed" leftIndent="0" rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="235" y="60" width="320" height="15" uuid="76419b03-99d7-495b-b771-ccaa9fa549a5"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRESUCURSAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="75" width="555" height="40" uuid="a0b807a2-0ec7-4175-8d73-55a7a2ccefc0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE toma en este acto conocimiento de las Condiciones Generales (CONDICIONES) que integran y rigen la presente Solicitud de Cuenta Corriente Especial para Personas Jurídicas (SOLICITUD) y presta su entera conformidad con las mismas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="115" width="555" height="40" uuid="8928f587-b0ab-45c4-ba8c-a3c6ab7736f7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Las CONDICIONES integran el CONTRATO DE CUENTA CORRIENTE ESPECIAL PARA PERSONAS JURIDICAS (CONTRATO) que se entenderá celebrado en caso de aceptación de la SOLICITUD por el BANCO. Toda excepción a las mismas deberá ser expresamente establecida por escrito entre las partes.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="155" width="555" height="15" uuid="9eec54d6-0335-4766-b5e4-d5d92e64e911">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[CLIENTE.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="170" width="555" height="30" uuid="d4658e0f-14b5-4fc0-8496-cd752a5df0f7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Las personas intervinientes bajo la denominación común de CLIENTE asumen responsabilidad solidaria frente a todos los efectos de la SOLICITUD y el CONTRATO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="200" width="555" height="15" uuid="c80f0dee-9ea4-4ce6-ae2f-6bda56e5bf55">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[CONDICIONES GENERALES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="215" width="555" height="90" uuid="ee81758a-773b-46e7-a960-09313d384e08">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Integran las CONDICIONES: esta SOLICITUD, los Anexos firmados por el CLIENTE que se agreguen al tiempo de la firma o posteriormente, y otras comunicaciones o presentaciones que el CLIENTE realice por escrito, en las que informe datos, especifique servicios bancarios o solicite nuevos servicios vinculados a su CUENTA, como así también las comunicaciones remitidas por el BANCO al domicilio constituido por el CLIENTE.
+Las CONDICIONES regirán la relación entre el BANCO y el CLIENTE derivada de la CUENTA, supletoriamente se aplicarán las leyes nacionales y resoluciones del Banco Central de la República Argentina - B.C.R.A. - y/u otra autoridad competente, presentes o futuras, que regulen los servicios bancarios y la actividad financiera o monetaria.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="305" width="555" height="15" uuid="d0856f96-fae2-488c-a6cd-71e41011df78">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[TITULARES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="320" width="555" height="15" uuid="fb1c7630-ed1b-49de-bb80-5acf8dc6964c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Podrán ser titulares de la CUENTA personas jurídicas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="335" width="555" height="15" uuid="4c5a5b6a-ff12-404c-b0a9-fd12a271536e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[DATOS E IDENTIFICACIÓN DEL CLIENTE.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="350" width="555" height="90" uuid="c182bd69-f732-42e3-9fa8-febc26855a75">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Los datos informados en la SOLICITUD serán considerados por el BANCO para la apertura de la CUENTA, por lo que el CLIENTE se obliga a comunicar cualquier alteración relativa a los mismos. Asimismo se compromete a permitir que el BANCO por intermedio de los funcionarios que designe verifique la realidad y vigencia de la información suministrada, mediante solicitud de informes y consultas a las bases de datos pertinentes.
+EL BANCO podrá exigir para la realización de cada una de las operaciones la identificación del CLIENTE por los medios que al efecto establezca. Los controles podrán intensificarse conforme monto y tipo de las transacciones, a criterio del BANCO.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="440" width="555" height="15" uuid="bb136a9c-0abe-4dfd-bcbe-3f1710dcf924">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[CONTRATOS Y PODERES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="455" width="555" height="115" uuid="58bc16f6-86bd-4f5a-a1e4-0f616f9df96a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE se compromete a presentar al BANCO testimonio de los contratos sociales, estatutos, actas de designación y renovación de autoridades y demás documentación que acredite, a satisfacción del BANCO, la representación legal de personas jurídicas, como así también los poderes que se otorguen para operar con el BANCO, la modificación de los mismos y su revocación.
+Asimismo deberá comunicar por escrito al BANCO la cesación de mandato de representantes legales y la extinción o modificación de los poderes otorgados.
+La notificación de las modificaciones a los instrumentos antes mencionados producirá efecto desde el acuse de recibo por escrito por parte del BANCO, que se considera desligado de toda responsabilidad que resulte directa o indirectamente por documentación incompleta o deficiente.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="570" width="555" height="15" uuid="d8ec744a-fd55-43ca-bc86-6281fddb1710">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[TITULARIDAD DE LA CUENTA. DISPOSICIÓN DE LOS FONDOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="585" width="555" height="15" uuid="6db4c079-a8b7-4d70-b173-0a1057c9b856">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El funcionamiento  de la CUENTA queda sometido a las siguientes cláusulas:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="600" width="430" height="15" uuid="955765a8-81c0-4f1f-97e3-9d707627953f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[a) CUENTA a nombre  de dos o más personas y orden recíproca o indistinta de ellas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="400" y="600" width="155" height="15" uuid="cdcc4e52-6e07-431c-b471-c4c5e40f9921">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Cualquiera de los titulares puede]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="615" width="555" height="30" uuid="92441ab1-8877-45e7-bc81-483bee08d40f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[retirar la totalidad de los fondos existentes en la CUENTA, aun en caso de fallecimiento o incapacidad de alguno de los titulares, salvo orden judicial en contrario.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="645" width="350" height="15" uuid="02166e7a-ed6a-4438-b98f-e10c91c0de68">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[b) CUENTA a nombre y a la orden conjunta de dos o más personas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="325" y="645" width="230" height="15" uuid="9e4207b1-bbf4-4d2e-a45a-ee0fb5040631">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Los depósitos sólo pueden ser retirados con la firma]]></text>
+			</staticText>
+		</band>
+		<band height="687">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="10" width="555" height="40" uuid="426073b8-666c-4577-b679-921d3f6a635d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[de todos los titulares. En el supuesto de fallecimiento o incapacidad de cualquiera de los titulares el BANCO procederá al cierre de la CUENTA, quedando los fondos a disposición de quienes se encuentren suficientemente legitimados al efecto por resolución emanada del Juez que intervenga en el proceso sucesorio y/o de interdicción.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="50" width="500" height="15" uuid="2cc6e827-cbee-4858-9fbf-322e8902adaa">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[c) CUENTA a nombre de una o más personas y a la orden de otra o de otras, recíproca o conjunta.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="465" y="50" width="90" height="15" uuid="f18d071a-b570-42ad-bc64-95fc83afc61a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Los depósitos sólo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="65" width="555" height="80" uuid="16f641c5-fe88-495f-bb31-59719cd00a50">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[pueden ser retirados por las personas a cuya orden esté la CUENTA, aplicándose lo establecido en los apartados a) y b) anteriores, según el caso. En caso de fallecimiento o incapacidad de alguna de ellas, tratándose de una CUENTA a orden conjunta, el/los titulares deberán nombrar a una persona en su reemplazo; caso contrario se hará entrega de los depósitos al titular. En caso de fallecimiento o incapacidad del titular el BANCO procederá al cierre de la CUENTA, quedando los fondos a disposición de quienes se encuentren suficientemente legitimados al efecto por resolución emanada del Juez que intervenga en el proceso sucesorio  y/o de interdicción.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="150" width="555" height="15" uuid="9b279c48-27be-4b38-bbae-8b7e2e39e510">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[TITULARIDAD DE LA CUENTA. DISPOSICIÓN DE LOS FONDOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="165" width="555" height="55" uuid="927985e5-343a-4e6c-932a-7f010a407df0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[1. El BANCO podrá establecer montos mínimos de depósitos en la CUENTA.
+2. El BANCO solo admitirá el depósito de cheques luego de transcurridos seis (6) meses desde la apertura de la CUENTA y previa autorización de la Gerencia de la Sucursal. Los cheques deberán estar extendidos a la orden del CLIENTE o con último endoso a favor del Cliente.
+3. El sello del cajero certifica únicamente la recepción del efectivo y/o valores en la fecha que exprese el sello por él colocado.
+4. Los cheques depositados -girados contra otros Bancos- se acreditarán al ser cobrados por intermedio de la cámara electrónica de compensación; el BANCO queda autorizado para debitar el importe de aquellos cheques que por cualquier motivo pudieran haber sido acreditados con anterioridad. La expresión Nota de Crédito en el caso de depósitos de cheques u otros valores queda condicionada al efectivo cobro de los mismos.
+5. En su caso, los cheques librados contra entidades de otras plazas, deberán depositarse con constancia de pago de los impuestos correspondientes de acuerdo con las leyes nacionales y provinciales en vigencia.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="220" width="555" height="105" uuid="fd8bacd8-1b2b-4eb7-9fc7-7c7e955cd49f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[3. El sello del cajero certifica únicamente la recepción del efectivo y/o valores en la fecha que exprese el sello por él colocado.
+4. Los cheques depositados -girados contra otros Bancos- se acreditarán al ser cobrados por intermedio de la cámara electrónica de compensación; el BANCO queda autorizado para debitar el importe de aquellos cheques que por cualquier motivo pudieran haber sido acreditados con anterioridad. La expresión Nota de Crédito en el caso de depósitos de cheques u otros valores queda condicionada al efectivo cobro de los mismos.
+5. En su caso, los cheques librados contra entidades de otras plazas, deberán depositarse con constancia de pago de los impuestos correspondientes de acuerdo con las leyes nacionales y provinciales en vigencia.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="330" width="555" height="15" uuid="222aa95a-9233-4e0e-8bb2-1ac0fb645303">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[EXTRACCIONES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="345" width="555" height="140" uuid="bdb9f625-8fcc-4aca-841d-3ff338a75827">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[1. Podrán efectuarse extracciones de fondos por ventanilla; a través de cajeros automáticos y operaciones realizadas a través de terminales en puntos de venta; mediante transferencias - inclusive electrónicas -, a través de Internet, en cuyo caso será comprobante de la operación su registro en el resumen periódico, y/u otros medios que al efecto autorice el BANCO.
+2. Podrán contemplarse los débitos por la venta de "cheques de mostrador" y "cheques de pago financiero" emitidos por la entidad y de "cheques Cancelatorios".
+3. Las extracciones de fondos sólo podrán ser realizadas por las personas a cuya orden se encontrare la CUENTA y en la forma en que dicha orden lo establezca.
+4. Las extracciones de dinero en efectivo se encuentran sujetas a las restricciones que al efecto establezca el B.C.R.A. y/o el BANCO y/u otras autoridades por motivos de seguridad y/o en el marco de las medidas tendientes a evitar el lavado de dinero y otras actividades ilícitas.
+5. Los movimientos -cualquiera sea su naturaleza- no podrán generar saldo deudor.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="490" width="555" height="15" uuid="79fb6e6f-04ec-4e83-b1c2-f8b3395d4e74">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[AUTORIZACIÓN DE DÉBITOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="505" width="135" height="15" uuid="260de7d5-801c-426a-ab64-c16f8fa10429">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[1. Servicios del BANCO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="120" y="505" width="435" height="15" uuid="b8bcddcc-8383-46cd-bd7c-09fb74a2e7df">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El Cliente autoriza al BANCO a debitar de la CUENTA, previa conversión de la moneda pactada]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="520" width="555" height="80" uuid="4828eae5-597a-48ef-aa76-e6c39cf3d61c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[si correspondiere, las sumas necesarias para cancelar gastos y comisiones respecto de los servicios que genera el funcionamiento de la cuenta los que, con sus respectivos valores, se encuentran detallados en el Anexo I del presente denominado Autorización Comisiones y Gastos XX/XXXX, que integra este contrato. Asimismo autoriza se debiten conceptos que correspondan a operaciones celebradas por el CLIENTE con el BANCO – a modo enunciativo: cuotas de préstamos, saldos deudores en cuentas corrientes bancarias abiertas a nombre del CLIENTE como titular o co-titular, comisiones por servicios, gastos, tasas e impuestos – por el valor que se convenga o legalmente corresponda en cada caso.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="600" width="260" height="15" uuid="891b8872-3cc1-408c-950f-9f468ce16d88">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[2.- Servicios de cobranza por cuenta de terceros.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="235" y="600" width="320" height="15" uuid="5a1c8446-343d-43df-a651-c1918c4834de">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE autoriza expresamente al BANCO, a debitar de la]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="615" width="555" height="27" uuid="cf9162b3-57f8-4c1f-99eb-72e2a02584ee">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[CUENTA y transferir a terceros las sumas concertadas directamente con el BANCO o a través de dichos terceros (débitos automáticos o directos).]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="642" width="555" height="40" uuid="fe8c7dc4-189d-4499-88a1-4b9273878253">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[En este último caso el BANCO podrá realizar los débitos una vez notificado por la empresa o ente acreedor, quedando en poder de éstos la respectiva autorización. Asimismo autoriza al BANCO a debitar las comisiones correspondientes a los servicios de débito automático y directo, cuyo valor surge de planilla anexa a la presente.]]></text>
+			</staticText>
+		</band>
+		<band height="687">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="10" width="220" height="15" uuid="dcbe0531-3433-410a-a959-9731cacd03bf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[2.1.- Suspensión y reversión de débitos.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="190" y="10" width="365" height="15" uuid="94f04c35-3879-49a5-88e5-5732d8c98aa8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE podrá ordenar la suspensión de un débito automático o directo hasta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="25" width="555" height="65" uuid="3864594d-27be-4420-a65a-b34276a9e755">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[el día hábil anterior -inclusive- a la fecha de vencimiento. Asimismo podrán revertir débitos por el total de cada operación, mediante requerimiento expreso al BANCO dentro de los 30 días corridos contados desde la fecha del débito. La devolución será efectuada dentro de las 72 horas hábiles siguientes a la fecha en que la entidad reciba la instrucción del cliente, siempre que la empresa originante del débito y solo en los casos en que el importe de la reversión solicitada supere los $ 750, no se oponga a la reversión por haberse hecho efectiva la diferencia de facturación en forma directa.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="90" width="130" height="15" uuid="10409680-ac83-45f2-8d09-4760d2fd6343">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[3.- Otros conceptos.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="95" y="90" width="460" height="15" uuid="262a9952-5ae4-4e9c-a2fb-20bfb5beb48c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Asimismo el CLIENTE autoriza a debitar de la CUENTA los costos de servicios anexos y/o vinculados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="105" width="555" height="40" uuid="160a0adb-f8df-47a9-a570-4ed045961ae3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[a la operatoria de la misma cuyos valores se notifican en planilla anexa, como así también los impuestos que pudieran gravar los movimientos de la CUENTA. Las comisiones y gastos serán debitados de la CUENTA el último día hábil de cada mes y/o a la fecha de prestación de cada servicio anexo.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="150" width="555" height="15" uuid="8e84f8eb-be8f-4a6f-8731-872b0454ee8b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[INTERESES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="165" width="555" height="15" uuid="fbfc9b38-873f-4b3d-9ad2-6e19e45ccca7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[No podrán reconocerse intereses sobre los saldos de depósitos en estas cuentas.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="185" width="555" height="15" uuid="3bf1fdac-458e-49ab-ab24-eab36de854e4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[SALDOS EXTRACTOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="200" width="555" height="105" uuid="17100ccc-2be4-4626-943f-1700a0f0982c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El estado de cuenta será remitido al domicilio denunciado por el CLIENTE y/o a la dirección de correo electrónico que se indican en esta solicitud, salvo que éste manifieste por escrito que procederá a su retiro directamente de las oficinas del BANCO, a cuyo efecto podrá autorizar a un tercero.
+Los movimientos registrados se presumirán aceptados por el CLIENTE en caso de falta de oposición a los mismos formulado dentro de los sesenta (60)  días corridos de vencido el respectivo período.
+Los pedidos especiales de entrega de resúmenes de cuenta tendrán un costo adicional, según surge de los anexos a la presente. El estado de cuenta será remitido al domicilio denunciado por el CLIENTE, salvo que éste manifieste por escrito que procederá a su retiro directamente de las oficinas del BANCO, a cuyo efecto podrá autorizar a un tercero.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="310" width="555" height="15" uuid="fe2013e1-8189-4091-83c7-f5937dc21f03">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[OPERACIONES POR VENTANILLA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="325" width="555" height="40" uuid="8bc84e45-1ea5-4a38-b61c-f554052175d7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE podrá realizar cualquier tipo de operaciones bancarias en cualquiera de las cajas habilitadas en las Sucursales del BANCO, sin perjuicio de las restricciones operativas que pudieran existir, y sin costo alguno, salvo en los casos en que rijan comisiones establecidas específicamente por el BCRA.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="370" width="555" height="15" uuid="3b200b22-badd-4abc-a446-b6fcc40ec84b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[COMISIÓNES Y GASTOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="385" width="555" height="80" uuid="a3b3c2ba-ea5e-4f33-888a-e7963a5c403a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[1. El CLIENTE abonará las comisiones y gastos por los conceptos e importes que se detallan en el Anexo I del presente contrato y que forma parte del mismo. El cliente por la presente se notifica  y acepta las comisiones vigentes aplicables al presente contrato.
+2. Modificación de los valores: Los valores de los gastos y/o comisiones determinados en el Anexo I del presente contrato podrán sufrir modificaciones, previa comunicación al CLIENTE mediante el procedimiento previsto en la cláusula “Modificaciones en las condiciones pactadas”. La falta de objeciones  implicará tácita aceptación de las modificaciones.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="470" width="555" height="15" uuid="76efae29-5c21-48ff-82ea-241b90cacf6f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[REVOCACIÓN POR EL CLIENTE.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="485" width="555" height="65" uuid="b607b5b7-d186-48b7-b595-09f9266bc2da">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE podrá revocar la aceptación del producto o servicio dentro del plazo de diez (10) días hábiles contados a partir de haber recibido el contrato suscripto por el BANCO y/o de la disponibilidad efectiva del servicio, lo que suceda último, mediante notificación fehaciente al BANCO, sin que ello genere costo ni responsabilidad alguna para el CLIENTE en la medida que NO haya hecho uso de los servicios contratados. En caso de prestación de servicios, el Banco cobrará los gastos y comisiones previstas en el presente contrato, proporcionados al tiempo de utilización del servicio.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="555" width="555" height="15" uuid="c2e4efc2-e1d8-47e6-bd47-d9827aae742d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[EXTINCIÓN DEL CONTRATO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="571" width="555" height="105" uuid="f74786d8-c825-48c0-a615-7ce39314f872">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El presente contrato se extinguirá y se procederá al cierre de la CUENTA por:
+i) A solicitud del CLIENTE: mediante presentación en el BANCO y retiro total del saldo.
+ii) Por decisión del BANCO: a) previa notificación al CLIENTE mediante pieza certificada con una anticipación no inferior a treinta (30) días corridos a la fecha de cierre y traslado de los fondos inmovilizados; b) en los casos de cuentas que registren saldos inferiores a 50 veces el valor de la pieza postal certificada denominada “carta certificada plus” (servicio básico de hasta 150 gramos) de Correo Argentino S.A., previo aviso efectuado mediante una publicación de carácter general, por una vez, en dos órganos periodísticos de circulación en las localidades en las que se hallan ubicadas las sucursales de radicación de la cuenta.”]]></text>
+			</staticText>
+		</band>
+		<band height="687">
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="100" uuid="dec2721e-5829-48ac-b103-56242bcb87e0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[iii) La circunstancia de no haber registrado la CUENTA, movimientos -depósitos o extracciones - realizados por el CLIENTE- o no registrar saldo, en ambos casos por ciento ochenta (180) días corridos. En este caso el cierre de la cuenta y el traslado de los fondos a saldos inmovilizados- sujetos a los costos establecidos con carácter general por el BANCO- será comunicado al CLIENTE mediante pieza postal certificada o, en su caso, mediante resumen o extracto correspondiente a la CUENTA o a otros productos que éste tenga en el BANCO, con una anticipación no inferior a treinta (30) días corridos a la fecha de cierre, pudiendo el CLIENTE durante ese plazo, optar por mantener la CUENTA, manifestando dicha decisión por escrito.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="100" width="555" height="15" uuid="0a89dee8-7908-4f54-893f-cf6992ec28f3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[MONEDA EXTRANJERA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="115" width="555" height="105" uuid="85e76e68-c155-4793-bca0-f7a56a1e255d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[1. En el caso de una CUENTA en Dólares Estadounidenses u otra moneda extranjera, todos los movimientos que la misma registre se realizaran en la moneda pactada, a la cotización tipo vendedor del Banco Nación Argentina vigente al día hábil inmediato anterior, sin centavos o fracción de la misma, aceptando el CLIENTE que los reintegros se realicen en moneda de curso legal en caso de no existir cambio en la moneda pactada.
+2. Las comisiones y gastos inherentes al funcionamiento serán abonados por el CLIENTE en la moneda de la CUENTA.
+3. Para el pago de cualquier impuesto que pudiera gravar la operatoria de la CUENTA, a fin de determinar la base imponible, la suma gravada se convertirá a moneda de curso legal a la cotización tipo vendedor del Banco Nación Argentina vigente al día hábil inmediato anterior a la fecha de configuración del hecho imponible.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="220" width="555" height="15" uuid="19a1b600-4980-4c6b-83de-a5cae7203d79">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[MEDIDAS CAUTELARES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="235" width="555" height="90" uuid="33fd478f-2a5d-43c9-a99b-a28fdec18f24">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[La traba de cualquier medida cautelar que afecte el normal funcionamiento de la CUENTA y/o la disponibilidad de los fondos, recaerá sobre la totalidad de la CUENTA, afectando en su caso el 100% de los fondos depositados, aún en el supuesto de CUENTA abierta a nombre de dos o más titulares -sea a la orden conjunta y/o indistinta de los mismos-; salvo expresa instrucción judicial en contrario. Los cotitulares deberán dirimir toda cuestión ligada al alcance de la medida judicial por ante los tribunales emitentes de la orden.
+En especial la traba de medidas cautelares implicará la automática resolución de los contratos de apertura de crédito, sin necesidad de comunicación o aviso previo.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="325" width="555" height="15" uuid="c3a23b4b-590c-4269-9ccd-c7a38182266f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[MODIFICACIONES EN LAS CONDICIONES PACTADAS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="340" width="555" height="40" uuid="f0cafc0c-dceb-49bd-9963-59d41559539b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El BANCO podrá modificar las condiciones pactadas, incorporar nuevos conceptos en calidad de comisiones y/o cargos y/o gastos, como así también reducir sus prestaciones, de acuerdo al procedimiento que resulte aplicable conforme normativa vigente del Banco Central de la República Argentina sobre Protección a los Usuarios de Servicios Financieros.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="380" width="555" height="15" uuid="6398ab61-b4c6-4c14-b9aa-05601523edb6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[IMPUESTOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="395" width="555" height="30" uuid="a1dde0f6-5282-4925-a4fc-237437a87d07">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Todos los impuestos presentes o futuros que graven la celebración del contrato de la cuenta corriente especial para personas jurídicas bancarias estarán a cargo del CLIENTE, los que podrán ser debitados de la CUENTA.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="425" width="555" height="15" uuid="c3b5c1c1-607c-4288-bb43-4e907d72ca95">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[GARANTÍA DE LOS DEPÓSITOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="440" width="555" height="80" uuid="48150568-5eaf-42ee-b884-6985fac34d3d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Los depósitos en pesos y en moneda extranjera cuentan con la garantía de hasta $ 1.500.000. En las operaciones a nombre de dos o más personas, la garantía se prorrateará entre sus titulares. En ningún caso, el total de la garantía por persona y por depósito podrá exceder de $ 1.500.000, cualquiera sea el número de cuentas y/o depósitos. Ley 24.485, Decreto N° 540/95 y modificatorios y Com. “A” 2337 y sus modificatorias y complementarias. Se encuentran excluidos los captados a tasas superiores a la de referencia conforme a los límites establecidos por el Banco Central, los adquiridos por endoso y los efectuados por personas vinculadas a la entidad financiera.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="520" width="555" height="15" uuid="26e8411c-369d-435e-bf78-a31698b12bc3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[DOMICILIO. COMUNICACIONES DEL BANCO AL CLIENTE. NOTIFICACIONES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="535" width="205" height="15" uuid="a667531f-7a1c-4b8b-80f7-b4bf3a055fc3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE constituye domicilio especial en]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="205" y="535" width="350" height="14" uuid="abf07da7-c9ed-46ee-a7a3-3be352a71b68"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="205" y="549" width="350" height="1" uuid="3cfa4853-62db-46ec-9038-72d9a1a91d31">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="550" width="555" height="15" uuid="5f0a09d8-9d23-4bc4-b540-9376f0503e0b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[el que será válido a todos los efectos salvo que se notifique por medio fehaciente su modificación.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="565" width="555" height="55" uuid="4e3fa686-207c-41d6-b62b-10d916c6e639">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El CLIENTE acepta como medio de comunicación fehaciente a los fines del presente contrato, el envío por el Banco de un correo electrónico a la dirección que a continuación y en forma manuscrita el mismo inserta, obligándose a consultar diariamente la misma. Las comunicaciones así remitidas se considerarán realizadas en la fecha de su emisión.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="620" width="220" height="15" uuid="7f54a623-9188-4b91-bda3-d668c174a132">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[Dirección de correo electrónico del Cliente:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="210" y="620" width="345" height="14" uuid="968781d8-9f08-4c34-b61a-73fa631e55ad"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMAIL}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="205" y="634" width="350" height="1" uuid="9954d9be-b12e-4506-b361-deb3f3d87f41">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="635" width="555" height="15" uuid="31172a57-c3d1-4dbe-8795-4f75b63a8d69">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[JURISDICCIÓN.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="650" width="555" height="30" uuid="3efe4401-a636-44c1-a532-b46baab5cfa7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El Usuario acepta someterse a la jurisdicción de los tribunales ordinarios con competencia en el lugar del domicilio real antes declarado.]]></text>
+			</staticText>
+		</band>
+		<band height="687">
+			<subreport>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="155" uuid="0df141f5-b7c1-4b54-9910-dd3dc86e6dc0">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="CODIGO_CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8865_Subeport_Firmas.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="155" width="555" height="15" uuid="76c7fa1f-0051-40f5-84d9-2012fdceeae6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[TITULARIDAD DE LA CUENTA. ORDEN DE DISPOSICIÓN DE LOS FONDOS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="170" width="555" height="15" uuid="f8224d01-72f8-435d-838d-dc84fdaaece1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[El funcionamiento de la CUENTA queda sometido a las siguientes cláusulas:]]></text>
+			</staticText>
+			<frame>
+				<reportElement positionType="Float" x="0" y="185" width="555" height="130" uuid="1c06dc42-aed7-4c82-8e30-97786bd71a95">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<frame>
+					<reportElement positionType="Float" x="320" y="0" width="235" height="130" uuid="1cf68d64-2803-4799-b345-beeaa49188e9">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					</reportElement>
+					<box>
+						<topPen lineWidth="1.0"/>
+						<leftPen lineWidth="1.0"/>
+						<bottomPen lineWidth="1.0"/>
+						<rightPen lineWidth="1.0"/>
+					</box>
+					<staticText>
+						<reportElement positionType="Float" x="0" y="1" width="235" height="19" uuid="b721d4a3-9b12-4cd1-aea0-a3d0a3b508ca">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						</reportElement>
+						<box>
+							<topPen lineWidth="0.0"/>
+							<leftPen lineWidth="0.0"/>
+							<bottomPen lineWidth="0.0"/>
+							<rightPen lineWidth="0.0"/>
+						</box>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Times New Roman" size="11" isBold="false"/>
+							<paragraph leftIndent="0"/>
+						</textElement>
+						<text><![CDATA[Doy/damos Conformidad a esta Opción:]]></text>
+					</staticText>
+					<line>
+						<reportElement positionType="Float" x="40" y="39" width="160" height="1" uuid="9b61ef09-2b06-457b-8156-e0d94b78224f">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						</reportElement>
+					</line>
+					<staticText>
+						<reportElement positionType="Float" x="50" y="40" width="140" height="15" uuid="22eb1993-d2cf-4f4f-9ca4-2465e245bdbf">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						</reportElement>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Times New Roman" size="11" isBold="false"/>
+						</textElement>
+						<text><![CDATA[Firma y Aclaración (Titular 1)]]></text>
+					</staticText>
+					<line>
+						<reportElement positionType="Float" x="40" y="74" width="160" height="1" uuid="2517a492-165a-452f-888c-78a09b420964">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						</reportElement>
+					</line>
+					<staticText>
+						<reportElement positionType="Float" x="50" y="75" width="140" height="15" uuid="8bee026c-c558-4e82-bcaa-4be21c3169e1">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						</reportElement>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Times New Roman" size="11" isBold="false"/>
+						</textElement>
+						<text><![CDATA[Firma y Aclaración (Titular 2)]]></text>
+					</staticText>
+					<line>
+						<reportElement positionType="Float" x="40" y="109" width="160" height="1" uuid="fb069c6f-0356-4dae-8f50-ad0761ec75c4">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						</reportElement>
+					</line>
+					<staticText>
+						<reportElement positionType="Float" x="50" y="110" width="140" height="15" uuid="67c516f8-13db-46be-86d9-0719a0efd0e4">
+							<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+							<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						</reportElement>
+						<textElement textAlignment="Center" verticalAlignment="Middle">
+							<font fontName="Times New Roman" size="11" isBold="false"/>
+						</textElement>
+						<text><![CDATA[Firma y Aclaración (Titular 2)]]></text>
+					</staticText>
+				</frame>
+				<textField>
+					<reportElement positionType="Float" x="0" y="0" width="320" height="130" uuid="28fc7d91-fc91-4322-bac4-033c6e7b58dd">
+						<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="Times New Roman" size="11"/>
+						<paragraph leftIndent="2"/>
+					</textElement>
+					<textFieldExpression><![CDATA[($F{MODALIDAD_CUENTA}) == "Individual" ? "a)CUENTA a nombre de dos o más personas y orden recíproca o indistinta de ellas. Cualquiera de los titulares puede retirar la totalidad de los fondos existentes en la CUENTA, aun en caso de fallecimiento o incapacidad de alguno de los titulares, salvo orden judicial en contrario." : ($F{MODALIDAD_CUENTA}) == "Conjunta" ? "b) CUENTA a nombre y a la orden conjunta de dos o más personas. Los depósitos sólo pueden ser retirados con la firma de todos los titulares. En el supuesto de fallecimiento o incapacidad de cualquiera de los titulares el BANCO procederá al cierre de la CUENTA, quedando los fondos a disposición de quienes se encuentren suficientemente legitimados al efecto por resolución emanada del Juez que intervenga en el proceso sucesorio y/o de interdicción." : 
+"c) CUENTA a nombre de una o más personas y a la orden de otra o de otras, recíproca o conjunta. Los depósitos sólo pueden ser retirados por las personas a cuya orden esté la CUENTA, aplicándose lo establecido en los apartados a) y b) anteriores, según el caso. En caso de fallecimiento o incapacidad de alguna de ellas, tratándose de una CUENTA a la orden conjunta, el/los titulares deberán nombrar a una persona en su reemplazo; caso contrario se hará entrega de los depósitos al titular."]]></textFieldExpression>
+				</textField>
+			</frame>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="315" width="555" height="40" uuid="01969fe0-93b0-43cb-bf67-ac77bcd8c3ef">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[En caso de fallecimiento o incapacidad del titular el BANCO procederá al cierre de la CUENTA, quedando los fondos a disposición de quienes se encuentren suficientemente legitimados al efecto por resolución emanada del Juez que intervenga en el proceso sucesorio y/o de interdicción.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="360" width="555" height="15" uuid="20ffa739-eeb9-4674-811e-a97280f38429">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[RECIBO.  NOTIFICACIONES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="375" width="555" height="140" uuid="a76280cf-97e7-4711-905b-06d27c892000">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[1. Por la presente dejo/dejamos constancia de la recepción de una copia de la presente y de su respectivo Anexo I Autorización de Comisiones y Gastos XX/XXXX en el que se determinan los gastos y comisiones aplicables por los servicios vinculados a la apertura y funcionamiento de la CUENTA, ambos bajo acuse de recibo del BANCO. Asimismo dejo/dejamos constancia por la presente, acusando recibo, de la recepción de una copia de: i) la Normativa aplicable a Cuenta Corriente Especial para Personas Juridicas, según Texto Ordenado de las Normas sobre Depósitos Especiales-Cuenta Corriente Especial para Personas Juridicas, ii) Las recomendaciones para el uso de cajeros automáticos, iii) De la Declaración Jurada sobre la condición de Personas Jurídicas Expuestas Políticamente.
+2. Me/nos NOTIFICO/NOTIFICAMOS de que se encuentra a mi/nuestra disposición en el Banco y las normas relativas al seguro de garantía de depósitos, Ley 24.485, del Decreto 540/95 (texto actualizado) y de la Comunicación “A” 2337, sus modificatorias y complementarias, las que también podrán ser consultadas a través de “Internet” en la dirección 
+www.bcra.gov.ar.-]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="515" width="555" height="165" uuid="3fd18524-23c4-4128-92d0-ea2c4a990e71">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="CODIGO_CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8865_Subeport_Firmas.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="230">
+			<staticText>
+				<reportElement positionType="Float" x="2" y="5" width="555" height="55" uuid="4133135b-40b7-4dad-979f-0a5916b8618f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="0.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="0"/>
+				</textElement>
+				<text><![CDATA[3. Me/nos NOTIFICO/NOTIFICAMOS en este acto que en caso de ser aprobada por el BANCO la solicitud de apertura de Cuenta Corriente Especial para Personas Jurídicas se encontrará puesta a mi/nuestra disposición en la Sucursal donde se presento dicha Solicitud, dentro de los diez (10) días hábiles de la aprobación o de la disponibilidad efectiva del producto o servicio, lo que suceda último, el contrato con la firma de los funcionarios autorizados por el Banco”.]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="60" width="555" height="165" uuid="0285f442-1e90-4b89-967a-3a5b4eca3900">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="CODIGO_CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8865_Subeport_Firmas.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="34" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="362" y="10" width="80" height="20" uuid="f77957d6-b16c-4274-960c-c54d1fcc4f10"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DEP 250]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="450" y="10" width="60" height="20" uuid="e2264b79-bfb3-44c5-b913-0e2f2614e2a9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PAG. " + $V{PAGE_NUMBER} + "  /"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="510" y="10" width="20" height="20" uuid="3676cd5f-8d94-461f-b93a-b5a5474d756c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="120">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image>
+				<reportElement x="-20" y="0" width="595" height="84" uuid="9a61b192-3e7c-4ad1-9261-143113d1fdf7"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logolargo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="20" width="345" height="30" uuid="81122fac-80cd-4a4d-b786-0086445d9b01">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph rightIndent="30"/>
+				</textElement>
+				<text><![CDATA[SOLICITUD  DE APERTURA DE CUENTA CORRIENTE ESPECIAL PARA PERSONAS JURIDICAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="555" height="20" uuid="ffc69376-7d74-4a11-82ec-ca176a8d60be">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No hay datos para procesar]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.control.SaldoLockImpl</class-name>
+        <entity-name>core.vo_GrlBloqueos</entity-name>
+        <table-name>GRL_BLOQUEOS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoBloqueo</attribute-name>
+            <column-name>COD_BLOQUEO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinalBloqueo</attribute-name>
+            <column-name>ORDINAL_BLOQUEO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVigencia</attribute-name>
+            <column-name>FECHA_VIGENCIA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>manejaVencimiento</attribute-name>
+            <column-name>MANEJA_VENCIMIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>DESCRIPCION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>usuarioIngreso</attribute-name>
+            <column-name>USUARIO_INGRESO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaGrabada</attribute-name>
+            <column-name>FECHA_GRABADA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>usuarioModificacion</attribute-name>
+            <column-name>USUARIO_MODIFICACION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaModificacion</attribute-name>
+            <column-name>FECHA_MODIFICACION</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.control.SaldoLockImpl</class-name>
+        <query-name>query.BloqueoDebito</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT  gcb.COD_BLOQUEO, ACCIONES_DEBITO ACCION, gcb.DESCRIPCION, gcb.EXCEPCIONES FROM
+	                grl_cod_bloqueos gcb, 
+	                grl_bloqueos gb WHERE
+					gcb.COD_BLOQUEO = gb.COD_BLOQUEO AND 
+					gb.SALDO_JTS_OID = ? AND
+					gb.ESTADO = 1 AND 
+					(gb.FECHA_VIGENCIA &lt;= ? AND
+					(gb.FECHA_VENCIMIENTO &gt;= ? OR
+					gb.MANEJA_VENCIMIENTO = 0)) AND 
+					gb.TZ_LOCK = 0 AND
+					gcb.TZ_LOCK = 0
+					ORDER BY gcb.ACCIONES_DEBITO DESC
+				</sentence>
+        <attribute>
+            <attribute-name>codigoBloqueo</attribute-name>
+            <column-name>COD_BLOQUEO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>accion</attribute-name>
+            <column-name>ACCION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>DESCRIPCION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>excepciones</attribute-name>
+            <column-name>EXCEPCIONES</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.control.SaldoLockImpl</class-name>
+        <query-name>query.BloqueoCredito</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT  gcb.COD_BLOQUEO, ACCIONES_CREDITO ACCION,gcb.descripcion, gcb.excepciones  FROM 
+					grl_cod_bloqueos gcb, 
+					grl_bloqueos gb WHERE
+					gcb.COD_BLOQUEO = gb.COD_BLOQUEO AND 
+					gb.SALDO_JTS_OID = ? AND
+					gb.ESTADO = 1 AND 
+					(gb.FECHA_VIGENCIA &lt;= ? AND
+					(gb.FECHA_VENCIMIENTO &gt;= ? OR
+					gb.MANEJA_VENCIMIENTO = 0)) AND 
+					gb.TZ_LOCK = 0 AND
+					gcb.TZ_LOCK = 0
+					ORDER BY gcb.ACCIONES_CREDITO DESC
+				</sentence>
+        <attribute>
+            <attribute-name>codigoBloqueo</attribute-name>
+            <column-name>COD_BLOQUEO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>accion</attribute-name>
+            <column-name>ACCION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>DESCRIPCION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>excepciones</attribute-name>
+            <column-name>EXCEPCIONES</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.control.SaldoLockImpl</class-name>
+        <query-name>query.BloqueoModificacion</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT gcb.COD_BLOQUEO, ACCIONES_MODIFICACION ACCION,gcb.descripcion FROM 
+					grl_cod_bloqueos gcb, 
+					grl_bloqueos gb WHERE
+					gcb.COD_BLOQUEO = gb.COD_BLOQUEO AND 
+					gb.SALDO_JTS_OID = ? AND
+					gb.ESTADO = 1 AND 
+					(gb.FECHA_VIGENCIA &lt;= ? AND
+					  (gb.FECHA_VENCIMIENTO &gt;= ? OR
+					gb.MANEJA_VENCIMIENTO = 0)) AND 
+					gb.TZ_LOCK = 0 AND
+					gcb.TZ_LOCK = 0
+					ORDER BY gcb.ACCIONES_MODIFICACION DESC
+				</sentence>
+        <attribute>
+            <attribute-name>codigoBloqueo</attribute-name>
+            <column-name>COD_BLOQUEO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>accion</attribute-name>
+            <column-name>ACCION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>DESCRIPCION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.activacionbloqueos.ActivacionBloqueos</class-name>
+        <query-name>query.ActivacionBloqueos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+	     			SELECT 
+	     			 gb.SALDO_JTS_OID,
+	     			 gb.COD_BLOQUEO,
+	     			 gb.ORDINAL_BLOQUEO,
+	     			 gb.FECHA_VIGENCIA,
+	     			 gb.FECHA_VENCIMIENTO, 
+	     	 		 gb.MANEJA_VENCIMIENTO,
+	     	 		 gb.ESTADO
+	     			 FROM GRL_BLOQUEOS gb
+	     			 WHERE 
+	     			 gb.ESTADO != 2 AND
+	     			 gb.TZ_LOCK = 0
+					 ORDER BY SALDO_JTS_OID
+	     		</sentence>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoBloqueo</attribute-name>
+            <column-name>COD_BLOQUEO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinalBloqueo</attribute-name>
+            <column-name>ORDINAL_BLOQUEO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVigencia</attribute-name>
+            <column-name>FECHA_VIGENCIA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>manejaVencimiento</attribute-name>
+            <column-name>MANEJA_VENCIMIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.control.SaldoLockImpl</class-name>
+        <query-name>query.ListaBloqueosDeUnSaldo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			     	SELECT 	gb.SALDO_JTS_OID,
+							gb.COD_BLOQUEO,
+			     			gb.ORDINAL_BLOQUEO,
+			     			gb.FECHA_VIGENCIA,
+			     			gb.FECHA_VENCIMIENTO, 
+			     	 		gb.MANEJA_VENCIMIENTO,
+							gb.DESCRIPCION,
+			     	 		gb.ESTADO,
+							gb.USUARIO_INGRESO,
+							gb.FECHA_GRABADA,
+							gb.USUARIO_MODIFICACION,
+							gb.FECHA_MODIFICACION
+					FROM    grl_cod_bloqueos gcb, 
+			                grl_bloqueos gb 
+			     	WHERE 
+							gcb.COD_BLOQUEO = gb.COD_BLOQUEO AND 
+							gb.SALDO_JTS_OID = ? AND
+							gb.ESTADO = 1 AND 
+							(gb.FECHA_VIGENCIA &lt;= ? AND
+							  (gb.FECHA_VENCIMIENTO &gt;= ? OR gb.MANEJA_VENCIMIENTO = 0)) AND 
+							gb.TZ_LOCK = 0 AND
+							gcb.TZ_LOCK = 0
+			     </sentence>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoBloqueo</attribute-name>
+            <column-name>COD_BLOQUEO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinalBloqueo</attribute-name>
+            <column-name>ORDINAL_BLOQUEO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVigencia</attribute-name>
+            <column-name>FECHA_VIGENCIA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>manejaVencimiento</attribute-name>
+            <column-name>MANEJA_VENCIMIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>DESCRIPCION</column-name>
+            <column-type>string</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>usuarioIngreso</attribute-name>
+            <column-name>USUARIO_INGRESO</column-name>
+            <column-type>string</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechagrabada</attribute-name>
+            <column-name>FECHA_GRABADA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>usuarioModificacion</attribute-name>
+            <column-name>USUARIO_MODIFICACION</column-name>
+            <column-type>string</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaModificacion</attribute-name>
+            <column-name>FECHA_MODIFICACION</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.control.QueryObtUltOrdinalBloqueo</class-name>
+        <query-name>query.ObtUltOrdinalBloqueo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			     	SELECT MAX(ORDINAL_BLOQUEO) AS ULT_ORDINAL_BLOQUEO
+					FROM grl_bloqueos gb 
+			     	WHERE 
+						gb.SALDO_JTS_OID = ? AND
+						gb.COD_BLOQUEO = ?
+			     </sentence>
+        <attribute>
+            <attribute-name>ultOrdinalBloqueo</attribute-name>
+            <column-name>ULT_ORDINAL_BLOQUEO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.control.BloqueoExcepcion</class-name>
+        <entity-name>core.vo_BloqueoExcepcion</entity-name>
+        <table-name>GRL_BLOQUEOS_EXCEPCION</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>codigoTransaccion</attribute-name>
+            <column-name>CODIGO_TRANSACCION</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoBloqueo</attribute-name>
+            <column-name>COD_BLOQUEO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>DESCRIPCION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+    </class>
+</map>

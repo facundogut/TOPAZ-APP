@@ -1,0 +1,29 @@
+service DatosAsientosMovimientos; 
+description "Servicio Datos Asientos"; 
+
+action:	SQLQuery Entity ( 
+ ASIENTO: string,
+ FECHAPROCESO: string,
+ SUCURSAL: string
+): [ 
+   	FECHAPROCESO: string,
+	SUCURSAL: string,
+   	ASIENTO: string,
+   	OPERACION: string,
+	NOMBREOPERACION: string,
+	CONCEPTO: string,
+	USUARIOINGRESO: string	
+]
+{ 
+  	properties { 
+  	("statement", "SELECT  TO_CHAR(A.FECHAPROCESO,'DD/MM/YYYY') as FECHAPROCESO, A.SUCURSAL || '-' || s.DESCRIPCION AS SUCURSAL ,A.ASIENTO,A.OPERACION, O.NOMBRE as NOMBREOPERACION,A.DESCRIPCION AS CONCEPTO, A.INIUSR AS USUARIOINGRESO FROM ASIENTOS A join OPERACIONES O ON O.IDENTIFICACION=A.OPERACION JOIN SUCURSALESSC s ON s.SUCURSAL = a.SUCURSAL WHERE ASIENTO = ? AND A.FECHAPROCESO=to_date( ? ,'DD/MM/YYYY') AND A.SUCURSAL = ? "),
+	("0", "ASIENTO"),
+	("1", "FECHAPROCESO"),
+	("2", "SUCURSAL")
+	
+	}
+}
+
+
+
+

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/productos/tarjetaCredito/getCuenta/{idAdministradora}/{nroUsuario}</uri>
+    <serviceDescription>Consulta de Usuario Tarjeta Crédito x ID_ADMINISTRADORA y USUARIO</serviceDescription>
+    <title>ACTT005</title>
+    <querys>
+        <query id="1" name="query" type="SIMPLE">
+            <sql>SELECT TOP 1  u.USUARIO AS numero, u.NUM_TJC AS num_tjc,u.ADMINISTRADORA as ADMINISTRADORA,a.DESCRIPCION AS DESCRIPCION_ADMIN,&#13;
+(CASE WHEN s.FECHA_VTO IS NULL THEN '' ELSE  CONVERT(varchar,s.FECHA_VTO ,20)  end)AS fechaVencimiento,&#13;
+u.TIPO_PAGO AS tipoPagoId,&#13;
+(SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=43674 AND OPCIONINTERNA=u.TIPO_PAGO) AS tipoPagoDesc,&#13;
+u.LIMITE_CUOTAS AS limiteCuotas,&#13;
+u.LIMITE_COMPRA AS limiteCompra,&#13;
+ CONVERT(varchar,u.FECHA_ALTA_USU,20) AS fechaAlta,&#13;
+(CASE WHEN u.FECHA_BAJA_USU IS NULL THEN '' ELSE CONVERT(varchar,u.FECHA_BAJA_USU,20) END )AS fechaBaja,&#13;
+u.SUC_USUARIO AS cuentaSuc,&#13;
+u.CUENTA_COBRO  AS cuentaCobro,&#13;
+u.JTS_CUENTA_COBRO AS cuentaJTS,&#13;
+u.CLIENTE AS cliente,&#13;
+(CASE&#13;
+    WHEN u.TIPO_COBRO='01' THEN 'C'&#13;
+    WHEN u.TIPO_COBRO='02' THEN 'CA'&#13;
+    WHEN u.TIPO_COBRO='03' THEN 'CC'&#13;
+END) AS modulo,&#13;
+(SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=43687 AND IDIOMA='E' AND OPCIONINTERNA=u.TIPO_COBRO ) AS tipocobro,&#13;
+u.TIPO_COBRO AS idTipoCobro,&#13;
+u.ADMINISTRADORA,&#13;
+u.USUARIO&#13;
+FROM TJC_MAESTRO_USUARIO u (nolock)&#13;
+JOIN TJC_MAESTRO_ADMINISTRADORAS  a (nolock) ON u.ADMINISTRADORA=a.COD_ADMINISTRADORA&#13;
+LEFT JOIN TJC_SALDOS s (nolock) ON s.ADMINISTRADORA=u.ADMINISTRADORA AND s.USUARIO=u.USUARIO&#13;
+WHERE u.ADMINISTRADORA=CAST(? AS NUMERIC(2,0)) AND  u.USUARIO=CAST(? as NUMERIC(20,0))  AND u.TZ_LOCK=0 AND a.TZ_LOCK=0&#13;
+ORDER BY s.FECHA_VTO DESC&#13;
+&#13;
+&#13;
+</sql>
+            <input>
+                <inParameter description="Id de administradora" type="STRING">idAdministradora</inParameter>
+                <inParameter description="Nro Usuario" type="STRING">nroUsuario</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Usuario">
+                    <outParameter description="" type="LONG">
+                        <queryname>ADMINISTRADORA</queryname>
+                        <servicename>usuario.administradora.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCRIPCION_ADMIN</queryname>
+                        <servicename>usuario.administradora.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>numero</queryname>
+                        <servicename>usuario.numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>num_tjc</queryname>
+                        <servicename>nroTarjeta</servicename>
+                    </outParameter>
+                    <outParameter description="fechaVencimiento" type="STRING">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>tipoPagoId</queryname>
+                        <servicename>tipoPago.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tipoPagoDesc</queryname>
+                        <servicename>tipoPago.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>cuentaSuc</queryname>
+                        <servicename>cuentaCobro.sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>cuentaCobro</queryname>
+                        <servicename>cuentaCobro.cuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>modulo</queryname>
+                        <servicename>cuentaCobro.modulo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>cuentaJTS</queryname>
+                        <servicename>cuentaCobro.jts_oid</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>cliente</queryname>
+                        <servicename>idCliente</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>limiteCuotas</queryname>
+                        <servicename>limiteCuotas</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>limiteCompra</queryname>
+                        <servicename>limiteCompra</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaAlta</queryname>
+                        <servicename>fechaAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaBaja</queryname>
+                        <servicename>fechaBaja</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tipocobro</queryname>
+                        <servicename>tipoCobro.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>idTipoCobro</queryname>
+                        <servicename>tipoCobro.id</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

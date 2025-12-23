@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/tarjetaCredito/getByID/{idTarjeta}</uri>
+    <serviceDescription>Este servicio devuelve la informacion correspondiente a una tarjeta de debito. </serviceDescription>
+    <title>Tarjeta Debito</title>
+    <querys>
+        <query id="1" name="tarjetas" type="MULTIPLE">
+            <sql>			DECLARE @idTarjeta VARCHAR(20); 
+			SET @idTarjeta = ?
+
+			SELECT
+			TA.NUM_TJC AS tarjetaCompleta,
+			substring(convert(VARCHAR,TA.NUM_TJC),1,(CASE WHEN len(TA.NUM_TJC)&lt;=3 THEN len(TA.NUM_TJC) ELSE (len(TA.NUM_TJC) -3) END)) AS tajetaBase,
+			'T' AS idTitularidad,--POR REVISAR
+			'TITULAR' AS descripcionTitularidad,
+			(CASE WHEN TA.TZ_LOCK=0 THEN '1' END) AS IDEstado,
+			(CASE WHEN TA.TZ_LOCK=0 THEN 'Habilitada' ELSE 'deshabilitada' END) AS descripcionEstado,
+			concat(substring(convert(VARCHAR,(SELECT MAX(TS.PERIODO_DEUDA) 
+					FROM TJC_SALDOS TS WHERE TS.USUARIO=TA.USUARIO AND TS.ADMINISTRADORA=TA.ADMINISTRADORA)),5,2),
+					
+					(SELECT (CASE WHEN MAX(TS.PERIODO_DEUDA)&gt;0 THEN '/' ELSE '' END)
+					FROM TJC_SALDOS TS WHERE TS.USUARIO=TA.USUARIO AND TS.ADMINISTRADORA=TA.ADMINISTRADORA),
+					
+					substring(convert(VARCHAR,(SELECT MAX(TS.PERIODO_DEUDA) 
+					FROM TJC_SALDOS TS WHERE TS.USUARIO=TA.USUARIO AND TS.ADMINISTRADORA=TA.ADMINISTRADORA)),3,2)) AS vencimiento,
+			TA.ADMINISTRADORA AS idProducto,
+			(SELECT AD.DESCRIPCION FROM TJC_MAESTRO_ADMINISTRADORAS AD WHERE AD.COD_ADMINISTRADORA=TA.ADMINISTRADORA AND AD.TZ_LOCK=0) AS descripcionProducto,
+			TA.CLIENTE AS cliente,
+            TA.SUC_USUARIO AS sucursalUsuario
+			FROM TJC_MAESTRO_USUARIO TA
+			WHERE CAST(TA.NUM_TJC AS VARCHAR(20))=@idTarjeta
+
+			</sql>
+            <input>
+                <inParameter description="idTarjeta" type="STRING">idTarjeta</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="datos">
+                    <outParameter description="" type="STRING">
+                        <queryname>tarjetaCompleta</queryname>
+                        <servicename>tarjetaCompleta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tajetaBase</queryname>
+                        <servicename>tajetaBase</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>idTitularidad</queryname>
+                        <servicename>titularidad.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionTitularidad</queryname>
+                        <servicename>titularidad.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>idEstado</queryname>
+                        <servicename>estado.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionEstado</queryname>
+                        <servicename>estado.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>vencimiento</queryname>
+                        <servicename>vencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>idProducto</queryname>
+                        <servicename>producto.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionProducto</queryname>
+                        <servicename>producto.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Cliente</queryname>
+                        <servicename>Cliente</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>sucursalUsuario</queryname>
+                        <servicename>sucursalUsuario</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

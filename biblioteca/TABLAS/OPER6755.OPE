@@ -1,0 +1,98 @@
+VERSION:051
+TN  NN 1006TRecibe Estado Cliente                   C5410 00
+ NNNNN 7202   Solicitud      INNSNL00000701500027033000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7201   Cliente        INNSNL00000701500027033000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 7255   Estado ruteo   INNSNL00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 7205   Activ. excluidaINNSNL00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 7907   Supera topes   INNSNL00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 7894   Recupero       INNSNL00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0902   Codigo Cliente INNSNA00000701500027033000001100000000700070027012600
+/V=C7201
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Servicio Mayor Deudor
+ N  NN 0038   Importe        INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0003   Moneda         INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  S00000000000000000000100
+/R=jts:service=MayorDeudorService,mayordeudor, C0902 I, C0038 O, C0003 O
+ NSSNN 0038   Importe        INNSN 00013501470155027602101100000013500680155013000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0003   Moneda         INNSN 00021101470231027602101100000021100680231013000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ****************
+*N  NN ***************************************
+*N  NN *** Consulto Marcas
+CNNNNN   00000000000000000000100
+/F=C7894=2
+/P=I32
+ NSSNN 7230   Cod. actividad INNSNA00000701520030020200101100000000700070030013700
+/V=C7205
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 7232   Ruteo          INNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C7232="D")
+/P=I33
+CNNNNN   00000000000000000000100
+/F=A(C7232="N")
+/P=I34
+CNNNNN   00000000000000000000100
+/F=A(C7907="S")
+/P=I35
+*N  NN ***************************************
+TN  NN 1006TConsulta Generica                       C0001 00
+*N  NN *** Parámetro 1er Importe Minorista
+ NSSNN 4620   Código param.  INNSNK00021101470231027602101100000021100680231013000
+/V=105
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 4623   Importe        INNSN 00021101470231027602101100000021100680231013000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Generica                       C0001 00
+*N  NN *** Fin Parámetros de Monto
+ NSSNN 0057   Importe        INNSNA00021101470231027602101100000021100680231013000
+/V=C4623.-1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2274   Param.1 WFlow  INNSNK00000701520030020200101100000000700070030013700
+/?=(C38<C57)O(C38=C57)
+/V=MENOR_5000
+/P=RUTEO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2274   Param.1 WFlow  INNSNK00000701520030020200101100000000700070030013700
+/?=(C38>C57)OI33
+/V=MAYOR_5000
+/P=RUTEO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*#I32#Tiene marca de watch list
+*#I33#Marca para elevar a Directorio
+*#I34#Marca para nivel superior
+*#I35#Supera Topes

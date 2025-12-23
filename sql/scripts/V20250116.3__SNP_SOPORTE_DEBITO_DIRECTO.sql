@@ -1,0 +1,247 @@
+EXEC('
+	drop table if exists dbo.SNP_SOPORTE_DEBITO_DIRECTO;
+
+	CREATE TABLE dbo.SNP_SOPORTE_DEBITO_DIRECTO (
+    	ID BIGINT PRIMARY KEY IDENTITY(1,1) NOT NULL,
+		CONVENIO numeric(15,0) NOT NULL,
+		PERIODO numeric(6,0) NOT NULL,	
+		LOTE_ID varchar(30) COLLATE Modern_Spanish_CI_AS NOT NULL,
+		CUIT numeric(11,0) NOT NULL,
+		FECHA_RECEPCION datetime NOT NULL,
+		FECHA_RELOJ datetime NOT NULL,
+		CANAL varchar(1) COLLATE Modern_Spanish_CI_AS NOT NULL
+	);
+')
+
+EXECUTE('IF OBJECT_ID (''dbo.OrdenDebitoLote_bitacora'') IS NOT NULL
+	DROP TABLE dbo.OrdenDebitoLote_bitacora
+  
+CREATE TABLE dbo.OrdenDebitoLote_bitacora
+	(
+	id_bitacora               BIGINT IDENTITY NOT NULL,
+	fecha_proceso             DATETIME NOT NULL,
+	fecha_reloj               DATETIME NOT NULL,
+	id                        BIGINT NOT NULL,
+	idRegistro                BIGINT NULL,
+	codigoServicio            BIGINT NULL,
+	nombreServicio            VARCHAR (10) NULL,
+	tipoDocumento             VARCHAR (4) NULL,
+	numeroDocumento           BIGINT NULL,
+	cuit                      BIGINT NULL,
+	apellidoNombre            VARCHAR (30) NULL,
+	cbu                       VARCHAR (22) NULL,
+	codigoCliente             NUMERIC (15) NULL,
+	clientePagador            VARCHAR (22) NULL,
+	prestacion                VARCHAR (22) NULL,
+	convenio                  NUMERIC (15) NULL,
+	referenciaDebito          BIGINT NULL,
+	fechaPrimerVencimiento    DATETIME2 NULL,
+	importePrimerVencimiento  DECIMAL (15, 2) NULL,
+	fechaSegundoVencimiento   DATETIME2 NULL,
+	importeSegundoVencimiento DECIMAL (15, 2) NULL,
+	ESTADO                    VARCHAR (2) NULL,
+	TIPO_ORDEN                VARCHAR (6) NULL,
+	MONEDA                    NUMERIC (4) NULL,
+	idLote                    VARCHAR (50) NOT NULL,
+	codigoError               BIGINT NULL,
+	descripcionError          VARCHAR (255) NULL,
+	fechaDeCarga              DATETIME2 NULL,
+	PRIMARY KEY (id_bitacora))')
+
+EXEC('
+	DELETE FROM SNP_MSG_ORDENES;
+	DELETE FROM SNP_MSG_CABEZAL;
+	DELETE FROM OrdenDebitoLote_bitacora;
+')
+
+
+-- DICCIONARIO
+
+EXEC('
+    DELETE FROM dbo.DICCIONARIO WHERE NUMERODECAMPO BETWEEN 25584 AND 25595 OR NUMERODECAMPO = 25603;
+');
+
+EXEC('
+    INSERT INTO dbo.DICCIONARIO (NUMERODECAMPO,USODELCAMPO,REFERENCIA,DESCRIPCION,PROMPT,LARGO,TIPODECAMPO,DECIMALES,EDICION,CONTABILIZA,CONCEPTO,CALCULO,VALIDACION,TABLADEVALIDACION,TABLADEAYUDA,OPCIONES,TABLA,CAMPO,BASICO,MASCARA) VALUES
+        (25584,NULL,0,''Ayuda VW_SNP_MSG_LOTES_VALIDOS'',''Ayuda VW_SNP_MSG_LOTES_VALIDOS'',11,''N'',0,NULL,0,0,0,0,0,40,0,0,''C25584'',0,NULL),
+        (25585,NULL,0,''ID_ARCHIVO'',''ID_ARCHIVO'',30,''A'',0,NULL,0,0,0,0,0,0,0,40,''ID_ARCHIVO'',0,NULL),
+        (25586,NULL,0,''CUIT'',''CUIT'',11,''N'',0,NULL,0,0,0,0,0,0,0,40,''CUIT'',0,NULL),
+        (25587,NULL,0,''CONVENIO'',''CONVENIO'',15,''N'',0,NULL,0,0,0,0,0,0,0,40,''CONVENIO'',0,NULL),
+        (25588,NULL,0,''PRESTACION'',''PRESTACION'',10,''A'',0,NULL,0,0,0,0,0,0,0,40,''PRESTACION'',0,NULL),
+        (25589,NULL,0,''CANTIDAD_ORDENES'',''CANTIDAD_ORDENES'',15,''N'',0,NULL,0,0,0,0,0,0,0,40,''CANTIDAD_ORDENES'',0,NULL),
+        (25590,NULL,0,''IMPORTE'',''IMPORTE'',15,''N'',2,''I'',0,0,0,0,0,0,0,40,''IMPORTE'',0,NULL),
+        (25591,NULL,0,''FECHA_RECEPCION'',''FECHA_RECEPCION'',19,''A'',0,NULL,0,0,0,0,0,0,0,40,''FECHA_RECEPCION'',0,NULL),
+        (25592,NULL,0,''FECHA_RELOJ'',''FECHA_RELOJ'',19,''A'',0,NULL,0,0,0,0,0,0,0,40,''FECHA_RELOJ'',0,NULL),
+        (25593,NULL,0,''ESTADO'',''ESTADO'',2,''A'',0,NULL,0,0,0,0,0,0,0,40,''ESTADO'',0,NULL),
+        (25594,NULL,0,''NRO_ARCHIVO'',''NRO_ARCHIVO'',15,''N'',0,NULL,0,0,0,0,0,0,0,40,''NRO_ARCHIVO'',0,NULL),
+        (25595,NULL,0,''PERIODO'',''PERIODO'',6,''N'',0,NULL,0,0,0,0,0,0,0,40,''PERIODO'',0,NULL),
+		(25603,NULL,0,''CANAL'',''CANAL'',1,''A'',0,NULL,0,0,0,0,0,0,0,40,''CANAL'',0,NULL);
+');
+
+-- DESCRIPTOR
+
+EXEC('
+    DELETE FROM dbo.DESCRIPTORES WHERE IDENTIFICACION = 40;
+');
+
+EXEC('
+    INSERT INTO dbo.DESCRIPTORES (TITULO,IDENTIFICACION,TIPODEARCHIVO,DESCRIPCION,GRUPODELMAPA,NOMBREFISICO,TIPODEDBMS,LARGODELREGISTRO,INICIALIZACIONDELREGISTRO,BASE,SELECCION,ACEPTA_MOVS_DIFERIDO) VALUES
+        (930,40,NULL,''Vista Lotes Validos Ord. Deb.'',0,''VW_SNP_MSG_LOTES_VALIDOS'',''D'',NULL,NULL,''Top/Clientes'',NULL,''N'');
+');
+
+-- AYUDAS
+EXEC('
+    DELETE FROM dbo.AYUDAS WHERE NUMERODEARCHIVO = 40 OR NUMERODEAYUDA = 40;
+');
+
+EXEC('
+    INSERT INTO dbo.AYUDAS (NUMERODEARCHIVO,NUMERODEAYUDA,DESCRIPCION,FILTRO,MOSTRARTODOS,CAMPOS,CAMPOSVISTA,BASEVISTA,NOMBREVISTA,AYUDAGRANDE) VALUES
+		(40,40,''Lista de Lotes Validos OrdDeb'',NULL,0,''25586ROA;25595;25585R;25587;25588;25589;25590;25591;25592;25593;25603;25594R;'',NULL,NULL,NULL,0);
+');
+
+-- INDICES
+
+EXEC('
+    DELETE FROM dbo.INDICES WHERE NUMERODEARCHIVO = 40;
+');
+
+EXEC('
+    INSERT INTO dbo.INDICES (NUMERODEARCHIVO,NUMERODEINDICE,DESCRIPCION,CLAVESREPETIDAS,CAMPO1,CAMPO2,CAMPO3,CAMPO4,CAMPO5,CAMPO6,CAMPO7,CAMPO8,CAMPO9,CAMPO10,CAMPO11,CAMPO12,CAMPO13,CAMPO14,CAMPO15,CAMPO16,CAMPO17,CAMPO18,CAMPO19,CAMPO20) VALUES
+        (40,1,''VW_SNP_MSG_LOTES_VALIDOS PK'',0,25586,25585,25594,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL);
+');
+
+-- ITF_MASTER
+
+EXEC('
+	DELETE FROM ITF_MASTER WHERE ID = 25;
+');
+
+EXEC('
+	INSERT INTO ITF_MASTER (TZ_LOCK,ID,DESCRIPCION,OBJ_KETTLE,P0_MODO,P0_TIPO,P0_CAPTION,P0_CONSTANTE,P1_MODO,P1_TIPO,P1_CAPTION,P1_CONSTANTE,P2_MODO,P2_TIPO,P2_CAPTION,P2_CONSTANTE,P3_MODO,P3_TIPO,P3_CAPTION,P3_CONSTANTE,P4_MODO,P4_TIPO,P4_CAPTION,P4_CONSTANTE,P5_MODO,P5_TIPO,P5_CAPTION,P5_CONSTANTE,P6_MODO,P6_TIPO,P6_CAPTION,P6_CONSTANTE,P7_MODO,P7_TIPO,P7_CAPTION,P7_CONSTANTE,P8_MODO,P8_TIPO,P8_CONSTANTE,P8_CAPTION,P9_MODO,P9_TIPO,P9_CAPTION,P9_CONSTANTE,TIPO_OBJ,COMENTARIO,ID_REPORTE,MODO_EJECUCION,KETTLE_NAME) VALUES
+		(0,25,''Carga Soporte Ordenes Debito'',''PUNTO_ENTRADA_LOG_PA.kjb'',''P'',''S'',''Nombre Archivo'','''',''P'',''S'',''CUIT Empresa'','' '',''C'',''S'','' '',''B'',''P'',''S'',''CONVENIO'','' '',''P'',''S'',''Periodo (YYYY-MM)'','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '','' '',''J'',''Carga Soporte Debito Directo'',0,''O'',''ITF_DJP_ORDDEB.kjb'');
+');
+
+-- OPERACION
+
+EXEC('
+	DELETE FROM OPERACIONES WHERE IDENTIFICACION = 134;
+');
+
+EXEC('
+	INSERT INTO OPERACIONES (TITULO,IDENTIFICACION,NOMBRE,DESCRIPCION,MNEMOTECNICO,AUTORIZACION,FORMULARIOPRINCIPAL,PROXOPERACION,ESTADO,TZ_LOCK,COPIAS,SUBOPERACION,PERMITEBAJA,COMPORTAMIENTOENCIERRE,REQUIERECONTRASENA,PERMITECONCURRENTE,PERMITEESTADODIFERIDO,ICONO_TITULO,ESTILO) VALUES
+		(6800,134,''Anula Soporte Ord. Deb. Directo'',''Anula Soporte Ord. Deb. Directo'',''134'',''N'',0,0,''P'',0,NULL,0,''S'',''N'',''N'',''S'',''S'',NULL,NULL);
+');
+
+Execute('CREATE OR ALTER VIEW dbo.VW_SNP_MSG_LOTES_VALIDOS AS
+WITH LOTES_VALIDOS AS (
+    SELECT 
+        smc.CUIT_EO,
+        smc.ID_ARCHIVO,
+        smc.NRO_ARCHIVO,
+        smc.ESTADO,
+        CONVERT(NUMERIC(15,2),SUM(o.IMPORTE)) AS IMPORTE,
+        MAX(o.PRESTACION) AS PRESTACION, 
+        CONVERT(NUMERIC(15,0), SUM(CASE 
+                WHEN o.ESTADO = ''PP'' AND o.FECHA_VENCIMIENTO >= (p.FECHAPROCESO) THEN 1
+                ELSE 0
+            END)) AS validos,
+        COUNT(o.ESTADO) AS totales
+    FROM SNP_MSG_CABEZAL smc
+    INNER JOIN PARAMETROS p ON 1=1
+    LEFT JOIN SNP_MSG_ORDENES o ON smc.CUIT_EO = o.CUIT_EO AND smc.ID_ARCHIVO = o.ID_ARCHIVO AND smc.TZ_LOCK = 0
+    GROUP BY 
+        smc.CUIT_EO, smc.ID_ARCHIVO, smc.NRO_ARCHIVO, smc.ESTADO
+)
+SELECT 
+	l.ID_ARCHIVO,
+	s.CUIT,
+	s.CONVENIO,
+	l.PRESTACION,
+	l.validos AS CANTIDAD_ORDENES,
+	l.IMPORTE,
+	CONVERT(VARCHAR(19), FORMAT(s.FECHA_RECEPCION, ''yyyy-MM-dd HH:mm:ss'')) AS FECHA_RECEPCION,
+	CONVERT(VARCHAR(19), FORMAT(s.FECHA_RELOJ, ''yyyy-MM-dd HH:mm:ss'')) AS FECHA_RELOJ,
+	l.ESTADO,
+	l.NRO_ARCHIVO,
+    s.PERIODO,
+    s.CANAL
+FROM LOTES_VALIDOS l
+INNER JOIN SNP_SOPORTE_DEBITO_DIRECTO s ON s.CUIT = l.CUIT_EO AND s.LOTE_ID = l.ID_ARCHIVO
+WHERE validos = totales AND l.ESTADO = ''PP'';')
+
+
+EXEC('   
+    CREATE OR ALTER FUNCTION dbo.AgregarDiasHabiles(
+        @fechaInicio VARCHAR(99), 
+        @diasHabiles INT
+    )
+    RETURNS DATETIME
+    AS
+    BEGIN
+        DECLARE @fechaActual DATE = TRY_CONVERT(DATE, @fechaInicio, 120);
+        
+        IF @fechaActual IS NOT NULL
+        BEGIN
+            DECLARE @diasContados INT = 0;
+        
+            WHILE @diasContados < @diasHabiles
+            BEGIN
+                -- Avanzar al siguiente día
+                SET @fechaActual = DATEADD(DAY, 1, @fechaActual);
+        
+                -- Si el día actual es hábil, aumentar el contador de días hábiles
+                IF dbo.diaHabil(@fechaActual, ''A'')=@fechaActual
+                BEGIN
+                    SET @diasContados = @diasContados + 1;
+                END
+            END
+        END
+        RETURN @fechaActual;
+    END
+');
+
+EXEC('   
+    CREATE OR ALTER FUNCTION dbo.ReducirDiasHabiles(
+        @fechaInicio VARCHAR(99), 
+        @diasHabiles INT
+    )
+    RETURNS DATETIME
+    AS
+    BEGIN
+        DECLARE @fechaActual DATE = TRY_CONVERT(DATE, @fechaInicio, 120);
+    
+        IF @fechaActual IS NOT NULL
+        BEGIN
+            DECLARE @diasContados INT = 0;
+        
+            WHILE @diasContados < @diasHabiles
+            BEGIN
+                -- Avanzar al siguiente día
+                SET @fechaActual = DATEADD(DAY, -1, @fechaActual);
+        
+                -- Si el día actual es hábil, aumentar el contador de días hábiles
+                IF dbo.diaHabil(@fechaActual, ''D'')=@fechaActual
+                BEGIN
+                    SET @diasContados = @diasContados + 1;
+                END
+            END
+        END
+        RETURN @fechaActual;
+    END
+');
+
+
+Execute('DROP TABLE IF EXISTS dbo.ITF_BEE_COMISIONES_EXCEPCIONES;
+CREATE TABLE dbo.ITF_BEE_COMISIONES_EXCEPCIONES (
+	CUIT VARCHAR(11) NOT NULL PRIMARY KEY,
+	FECHA_DESDE DATETIME NOT NULL,
+	FECHA_HASTA DATETIME NOT NULL,
+	TZ_LOCK NUMERIC(15,0) NOT NULL DEFAULT 0
+);
+
+DELETE FROM PARAMETROSGENERALES WHERE CODIGO = 783;
+INSERT INTO PARAMETROSGENERALES (
+	CODIGO,	DESCRIPCION,IMPORTE
+) VALUES
+(783,	''BEE - Com. por Mto. de Serv.'',	1607.07)
+;')

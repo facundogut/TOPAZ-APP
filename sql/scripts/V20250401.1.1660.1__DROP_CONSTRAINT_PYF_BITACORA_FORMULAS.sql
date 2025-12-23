@@ -1,0 +1,17 @@
+EXECUTE('
+	DECLARE @ConstraintName NVARCHAR(128);
+	DECLARE @TableName NVARCHAR(128) = ''PYF_BITACORA_FORMULAS'';
+	DECLARE @SchemaName NVARCHAR(128) = ''dbo'';
+	 
+	SELECT @ConstraintName = CONSTRAINT_NAME
+	FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS
+	WHERE TABLE_NAME = @TableName
+	  AND TABLE_SCHEMA = @SchemaName;
+	 
+	IF @ConstraintName IS NOT NULL
+	BEGIN
+		DECLARE @DropSQL NVARCHAR(MAX) = ''ALTER TABLE '' + QUOTENAME(@SchemaName) + ''.'' + QUOTENAME(@TableName) +
+										 '' DROP CONSTRAINT '' + QUOTENAME(@ConstraintName);
+		EXEC sp_executesql @DropSQL;
+	END
+')

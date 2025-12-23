@@ -1,0 +1,791 @@
+{
+	"page":{
+		"attributes":[
+			{
+				"label" : "ID CLIENTE",
+				"key" : "IDCLIENTE"
+			},
+			{
+				"label" : "ID MONEDA",
+				"key" : "IDMONEDA"
+			},
+			{
+				"label" : "TIPO PRODUCTO",
+				"key" : "TIPOPRODNRO"
+			}
+		],
+		
+		"frames":[
+			{
+				"id":"listaAhorros",
+				"title":"Lista Cuentas Vista",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"CuentaVistaListaCajaAhorro",
+					"parameters":["IDCLIENTE","IDMONEDA","TIPOPRODNRO"]
+				},
+				"gridProperties":{
+					"pageLength": "4",				
+					"columns":[
+						{
+							"header":"Producto",
+							"value":"PRODUCTO"
+						},
+						{
+							"header":"Nombre Producto",
+							"value":"TIPOPRODUCTODESC"
+						},
+						{
+							"header":"Cuenta",
+							"value":"NRO_CUENTA"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"Saldo Actual",
+							"value":"SALDO_ACTUAL"
+						},
+						{
+							"header":"Saldo Disponible",
+							"value":"SALDO_DISPONIBLE"
+						},
+						{
+							"header":"Saldo Bloqueado",
+							"value":"SALDO_BLOQUEADO"
+						},
+						{
+							"header":"Saldo Contable",
+							"value":"SALDO_CONTABLE"
+						},
+						{
+							"header":"F.Apertura",
+							"value":"FECHA_APERTURA"
+						},
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						},
+						{
+							"header":"Saldo Id",
+							"value":"IDSALDO",
+							"hidden" : "true"
+						},
+						{
+							"header":"Tipo Cuenta",
+							"value":"TIPOCUENTA",
+							"hidden" : "true"
+						},
+						{
+							"header":"NROTIPOPRODUCTO",
+							"value":"NROTIPOPRODUCTO",
+							"hidden" : "true"
+						}
+					]
+				}
+			},
+			{
+				"id":"DatosCuentaVista",
+				"title":"Datos Cuenta Vista",
+				"icon":"documents.png",
+				"type":"Form",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"DatosCuentaVista",
+					"parameters":["IDSALDO"]
+				},	
+				"links":[
+					{
+						"name":"Datos Movimiento CuentaVista",
+						"to":"datosMovimientoCuentas",
+						"parameters":["IDSALDO"]
+					}
+				],				
+				"formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Sucursal",
+	                            "key":"SUCURSAL"
+	                        },
+	                        {  
+	                            "label":"Producto",
+	                            "key":"PRODUCTO"
+	                        },
+	                        {  
+	                            "label":"Fecha Apertura",
+	                            "key":"FECHAAPERTURA"
+	                        },
+	                        {  
+	                            "label":"Saldo",
+	                            "key":"SALDO"
+	                        },
+	                        {  
+	                            "label":"IDSaldo",
+	                            "key":"IDSALDO"
+	                        }
+                        ]                     
+                    ]
+                }
+			},
+			{
+				"id":"Retenciones",
+				"title":"Retenciones",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"RetencionesCuentasVistas",
+					"parameters":["IDSALDO"]
+				},							
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL",
+							"columnSpan":3
+						},
+						{
+							"header":"Fecha",
+							"value":"FECHA"
+						},
+						{
+							"header":"Hora",
+							"value":"HORA"
+						},
+						{
+							"header":"Usuario",
+							"value":"USUARIO"
+						},
+						{
+							"header":"Origen Importe",
+							"value":"ORIGENIMPORTE"
+						},
+						{
+							"header":"Importe Actual",
+							"value":"IMPORTEACTUAL"
+						},
+						{
+							"header":"Fecha Vigencia",
+							"value":"FECHAVIGENCIA"
+						},
+						{
+							"header":"Fecha Vencimiento",
+							"value":"FECHAVENCIMIENTO"
+						}
+					]
+				}
+			},
+			{
+				"id":"CargosAutomaticos",
+				"title":"Cargos Automaticos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"CuentaVistaCargosAutomaticos",
+					"parameters":["IDSALDO"]
+				},							
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Descripción",
+							"value":"DESCRIPCION"
+						},
+						{
+							"header":"Cuenta",
+							"value":"PRESTAMO"
+						},
+						{
+							"header":"Monto",
+							"value":"IMPORTE_CUOTA"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						}
+					]
+				}
+			},
+			{
+				"id":"movimientos",
+				"title":"Movimientos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"Movimientos10",
+					"parameters":["IDSALDO"]
+				},		
+				"links":[
+					{
+						"name":"Datos Movimiento",
+						"to":"datosMovimientos",
+						"parameters":["ASIENTO","FECHAPROCESO","SUCURSAL"]
+					}
+				],								
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"F.Proceso",
+							"value":"FECHAPROCESO"
+						},
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL"
+						},
+						{
+							"header":"Asiento",
+							"value":"ASIENTO"
+						},
+						{
+							"header":"F.Valor",
+							"value":"FECHAVALOR"
+						},
+						{
+							"header":"Débito / Crédito",
+							"value":"DEBITOCREDITO"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"Capital",
+							"value":"CAPITAL"
+						},
+						{
+							"header":"Usuario",
+							"value":"USUARIO"
+						},
+						{
+							"header":"Hora",
+							"value":"HORA"
+						},
+						{
+							"header":"Nro Operación",
+							"value":"NROOPERACION"
+						},
+						{
+							"header":"Descripcion",
+							"value":"NOMBREOPERACION"
+						}
+					]
+				}
+			},
+			{
+				"id":"CajasSeguridad",
+				"title":"Cajas de Seguridad",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"CajasSeguridad",
+					"parameters":["IDSALDO"]
+				},								
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Contrato",
+							"value":"CONTRATO"
+						},
+						{
+							"header":"Fecha Inicio",
+							"value":"FECHA_INICIO"
+						},
+						{
+							"header":"Fecha Vencimiento",
+							"value":"FECHA_VENCIMIENTO"
+						},
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL"
+						},
+						{
+							"header":"Largo (cm)",
+							"value":"MEDIDA_LARGO"
+						},
+						{
+							"header":"Ancho (cm)",
+							"value":"MEDIDA_ANCHO"
+						},
+						{
+							"header":"Alto (cm)",
+							"value":"MEDIDA_ALTO"
+						},
+						{
+							"header":"Último Pago",
+							"value":"ULTIMA_FECHA_PAGO"
+						},
+						{
+							"header":"Moneda Deuda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"Total Adeudado",
+							"value":"TOTAL_ADEUDADO"
+						}
+					]
+				}
+			},
+			{
+				"id":"Bloqueos",
+				"title":"Bloqueos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"BloqueosCuenta",
+					"parameters":["IDSALDO"]
+				},								
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Código Bloqueo",
+							"value":"CODIGO"
+						},
+						{
+							"header":"Descripción",
+							"value":"DESCRIPCION"
+						},
+						{
+							"header":"Fecha Bloqueo",
+							"value":"FECHA_ALTA"
+						},
+						{
+							"header":"Fecha Vencimiento",
+							"value":"FECHA_VENCIMIENTO"
+						},
+						{
+							"header":"Usuario",
+							"value":"USUARIO"
+						},
+						{
+							"header":"Mensaje Bloqueo",
+							"value":"MENSAJE"
+						}
+					]
+				}
+			},
+			{
+				"id":"Embargos",
+				"title":"Embargos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"EmbargosCuenta",
+					"parameters":["IDSALDO"]
+				},								
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Oficios Manuales",
+							"value":"OFICIOS_MANUALES"
+						},
+						{
+							"header":"Oficios Judiciales AFIO",
+							"value":"OFICIOS_JUDICIALES_AFIO"
+						},
+						{
+							"header":"Comunicación BCRA",
+							"value":"COMUNICACION_BCRA"
+						},
+						{
+							"header":"Nro Oficio",
+							"value":"NUMERO_OFICIO"
+						},
+						{
+							"header":"Carátula",
+							"value":"CARATULA"
+						},
+						{
+							"header":"Juzgado",
+							"value":"JUZGADO"
+						},
+						{
+							"header":"Monto",
+							"value":"MONTO"
+						},
+						{
+							"header":"Nro Expediente",
+							"value":"EXPEDIENTE"
+						}
+					]
+				}
+			},
+			{
+				"id":"ChequesenCustodia",
+				"title":"Cheques en Custodia",
+				"icon":"documents.png",
+				"type":"Grid",
+				"enabled":{
+					"condition" : "#NROTIPOPRODUCTO == '2'",
+					"parameters":["NROTIPOPRODUCTO"]
+				},
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"ChequesCustodia",
+					"parameters":["IDSALDO"]
+				},								
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Serie",
+							"value":"SERIE"
+						},
+						{
+							"header":"Nro Cheque",
+							"value":"NUMEROCHEQUE"
+						},
+						{
+							"header":"Banco Emisor",
+							"value":"BANCOEMISOR"
+						},
+						{
+							"header":"Sucursal Emisor",
+							"value":"SUCURSALEMISOR"
+						},
+						{
+							"header":"Cuenta Emisor",
+							"value":"CUENTAEMISOR"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"Importe",
+							"value":"IMPORTE"
+						},
+						{
+							"header":"Fecha Alta",
+							"value":"FECHAALTA"
+						},
+						{
+							"header":"Fecha Acreditación",
+							"value":"FECHA_ACREDITACION"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						}
+					]
+				}
+			},
+			{
+				"id":"SolicitudesChequeras",
+				"title":"Solicitudes Chequeras Pendientes",
+				"icon":"documents.png",
+				"type":"Grid",
+				"enabled":{
+					"condition" : "#NROTIPOPRODUCTO == '2'",
+					"parameters":["NROTIPOPRODUCTO"]
+				},
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"SolicitudesChequerasCuenta",
+					"parameters":["IDSALDO"]
+				},								
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Sucursal",
+							"value":"NOMBRESUCURSAL"
+						},
+						{
+							"header":"Nro Solicitud",
+							"value":"NroSolicitud"
+						},
+						{
+							"header":"Tipo Chequera",
+							"value":"TIPOCHEQUERA"
+						},
+						{
+							"header":"Fecha Ingreso",
+							"value":"FECHAINGRESADA"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						},
+						{
+							"header":"Fecha Estado",
+							"value":"FECHAESTADO"
+						},
+						{
+							"header":"Serie",
+							"value":"SERIE"
+						},
+						{
+							"header":"Tipo Chequera",
+							"value":"TIPOCHEQUERA"
+						},
+						{
+							"header":"Cant. Cheques",
+							"value":"CANTIDADCHEQUES"
+						},
+						{
+							"header":"Desde",
+							"value":"DESDE"
+						},
+						{
+							"header":"Hasta",
+							"value":"HASTA"
+						}
+						
+					]
+				}
+			},
+			{
+				"id":"Chequeras",
+				"title":"Chequeras",
+				"icon":"documents.png",
+				"type":"Grid",
+				"enabled":{
+					"condition" : "#NROTIPOPRODUCTO == '2'",
+					"parameters":["NROTIPOPRODUCTO"]
+				},
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"ChequerasCuenta",
+					"parameters":["IDSALDO"]
+				},								
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Serie",
+							"value":"SERIE"
+						},
+						{
+							"header":"Rango Desde",
+							"value":"DESDE"
+						},
+						{
+							"header":"Rango Hasta",
+							"value":"HASTA"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADOCHEQUERA"
+						},
+						{
+							"header":"Libreta",
+							"value":"TIPOLIBRETA"
+						},
+						{
+							"header":"Nro Solicitud",
+							"value":"NROSOLICITUD"
+						},
+						{
+							"header":"Fecha Solicitada por Cliente",
+							"value":"SOLICITADOPORCLIENTE"
+						},
+						{
+							"header":"Fecha Entregada al Cliente",
+							"value":"ENTREGADOALCLIENTE"
+						},
+						{
+							"header":"Cant. Cheques",
+							"value":"CANTIDADCHEQUES"
+						},
+						{
+							"header":"Cant. Usados",
+							"value":"USADOS"
+						},
+						{
+							"header":"Cant. Rechazados",
+							"value":"RECHAZADOS"
+						},
+						{
+							"header":"Cant. Orden no Pago",
+							"value":"ORDENNOPAGO"
+						},
+						{
+							"header":"Cant. Defectos Formales",
+							"value":"DEFECTOSFORMALES"
+						},
+						{
+							"header":"Cant. Pendientes Uso",
+							"value":"PENDIENTESDEUSO"
+						}
+						
+					]
+				}
+			},
+			{
+				"id":"ListadeAcuerdos",
+				"title":"Lista de Acuerdos/Excesos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"AcuerdosExcesos",
+					"parameters":["IDSALDO"]
+				},								
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Nro Autorización",
+							"value":"NRO_AUTORIZACION"
+						},
+						{
+							"header":"Tipo Autorización",
+							"value":"TIPO_AUTORIZACION"
+						},
+						{
+							"header":"Fecha Vencimiento",
+							"value":"FECHA_VENCIMIENTO"
+						},
+						{
+							"header":"Fecha Baja",
+							"value":"FECHA_BAJA"
+						},
+						{
+							"header":"Tasa Interés",
+							"value":"TASA_INTERES"
+						},
+						{
+							"header":"Importe",
+							"value":"IMPORTE"
+						},
+						{
+							"header":"Saldo Acuerdo",
+							"value":"SALDO_ACUERDO"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						}
+					]
+				}
+			},
+			{
+				"id":"GarantiasCuenta",
+				"title":"Garantias Cuenta",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"AcuerdosExcesosGarantias",
+					"parameters":["IDSALDO"]
+				},								
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Nro Garantía",
+							"value":"GARANTIA"
+						},
+						{
+							"header":"Sucursal",
+							"value":"NOMBRESUCURSAL"
+						},
+						{
+							"header":"Tipo Garantía",
+							"value":"TIPO_GARANTIA"
+						},
+						{
+							"header":"Subclass Garantía",
+							"value":"SUBCLASS_GARANTIA"
+						},
+						{
+							"header":"Descripción",
+							"value":"DESCRIPCION"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"Monto",
+							"value":"MONTO"
+						},
+						{
+							"header":"Fecha Vencimiento",
+							"value":"VENCIMIENTO"
+						},
+						{
+							"header":"Cobertura",
+							"value":"COBERTURA"
+						},
+						{
+							"header":"Cobertura Post-Año",
+							"value":"COBERTURA_POST_ANIO"
+						},
+						{
+							"header":"Tipo Doc Ordenante",
+							"value":"TIPO_DOC_ORDENANTE"
+						},
+						{
+							"header":"Nro Doc Ordenante",
+							"value":"NRO_DOC_ORDENANTE"
+						}
+					]
+				}
+			},
+			{
+				"id":"OperacionesPendientesDeCobro",
+				"title":"Operaciones Pendientes de Cobro",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaAhorros",
+					"service":"OperacionesPendientesDeCobro",
+					"parameters":["IDSALDO"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Producto",
+							"value":"PRODUCTO"
+						},
+						{
+							"header":"Fecha Movimiento",
+							"value":"FECHA_MOVIMIENTO"
+						},
+						{
+							"header":"Descripcion",
+							"value":"DESCRIPCION_MOVIMIENTO"
+						},
+						{
+							"header":"Importe Original",
+							"value":"IMPORTE_ORIGINAL"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"F.Inicial",
+							"value":"FECHA_ALTA_COBRO"
+						},
+						{
+							"header":"F.Vencimiento",
+							"value":"FECHA_CADUCIDAD_COBRO"
+						}
+					]
+				}
+			}
+		]
+	}
+}

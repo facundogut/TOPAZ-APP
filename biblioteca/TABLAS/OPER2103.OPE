@@ -1,0 +1,139 @@
+VERSION:055_5
+TN  NN 1006TModificación fecha próximo balance      C00001 00
+*$2023-08-04 12:00:55JBENTANCOU
+VNNNNN 010002000203000640SSSD000000000000000000000000000000000000000
+/T=Modificación fecha próximo balance
+/C=192192192
+*$2023-08-04 12:26:26JBENTANCOU
+*N  NN *** Control cantidad de registros, selección del primero ***
+*$2023-08-04 12:10:35JBENTANCOU
+ NNNNN 43759   Descriptor VW_CO_PARAMETROSCONTABLES              INNSNK000007015200300202021011000000007000700300137000
+/V=4967
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 12:09:04JBENTANCOU
+ NNNNN 43769   Número Campo Nro. Registro                        INNSNK000007015200300202021011000000007000700300137000
+/V=49703
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 12:10:11JBENTANCOU
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/V="1=1"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 12:09:06JBENTANCOU
+ NNNNN 43761   Cantidad de registros de parámetros               INNSNF000007015200300202021011000000007000700300137000
+/V=F(CANTIDAD,C43759,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 12:10:58JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C43761.0 = 0
+/M=Error - No se encontraron registros de parámetros contables
+*$2023-08-04 12:11:52JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C43761.0 > 1
+/M=Error - Hay más de un registro de parámetros contables
+*$2023-08-04 12:13:02JBENTANCOU
+ NNNNN 43761   Valor del Nro. de Registro de parámetros          INNSNF000007015200300202021011000000007000700300137000
+/V=F(MAXIMO,C43759,C43769,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 12:13:52JBENTANCOU
+*N  NN ***
+*$2023-08-04 12:07:06JBENTANCOU
+ NNNNN 49703   Nro. registro                                     INNSNA000007015200300202021011000000007000700300137000
+/V=C43761.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 12:14:16JBENTANCOU
+ NNNNN 49704   Fecha último balance                              IDNSN 010080025001030400011011500000083009401030247000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 12:25:40JBENTANCOU
+ NNNNN 49705   Fecha próximo balance                             INNSN 000007015200300302011011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 12:14:36JBENTANCOU
+ NNNNN 02618   Fecha próximo balance                             I NSNA010135025001580400011011000000138009401580247000
+/V=C49705.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 13:11:34JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=(C2618.0 < C49704.0)O(C2618.0 = C49704.0)
+/M=La fecha seleccionada debe ser mayor a la del último balance
+*$2023-08-04 13:14:24JBENTANCOU
+ NNNNN 33800   Parámetro general Sucursal Casa Central           INNNNK000007015200300302021011000000007000700300137000
+/V=21
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 13:17:16JBENTANCOU
+ NNNNN 33803   Código de Sucursal Casa Central                   INNSN 000007015200300452021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 13:17:33JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=F(isHoliday,C2618,0,C33803,0) = 1
+/M=Error - Día no Hábil.
+*$2023-09-04 17:26:58SSB
+CNNNNN ME00000000000000000000100
+/F=F(isHoliday,C2618,0,0,0) = 1
+/M=Error - Día no Hábil.
+*$2023-09-04 17:27:01SSB
+CNNNNN ME00000000000000000000100
+/F=F(isHoliday,C2618,32,C33803,0) = 1
+/M=Error - Día no Hábil.
+*$2023-09-04 17:27:03SSB
+KNNNNN 010020002002200605000101
+/T=Parámetros contables
+/F=0012700NNN000000000Arial                                   
+*$2023-08-04 13:30:37JBENTANCOU
+TN  NN 1006TConfirmación modificación de fecha      C00000 00
+*$2023-08-04 13:03:38JBENTANCOU
+CNNNNN A 00000000000000000000110
+/M="Se modificará la fecha de próximo balance a "+C2618.0
+*$2023-08-04 13:11:09JBENTANCOU
+*N  NN *Llamada a SP que modifica la fecha de próximo balance
+*$2023-08-04 13:08:10JBENTANCOU
+ NNNNN 05022   ID de Proceso (0)                                 INNNNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 13:07:50JBENTANCOU
+ NNNNN 02618   Fecha próximo balance seleccionada                INNNNA000007015200300202021011000000007000700300137000
+/V=C2618.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 13:08:44JBENTANCOU
+CNNNNN  m00000000000000000000100
+/M=Llamada SP_MODIFICAR_FECHA_PROXIMO_BALANCE
+/R=TOP/CLIENTES SP_MODIFICAR_FECHA_PROXIMO_BALANCE, C5022 I, C9500 I, C2618.0 I,  C49 O, C910 O
+*$2023-08-04 13:10:30JBENTANCOU
+ NNNNN 00049   Código de retorno SP                              INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 13:07:50JBENTANCOU
+ NNNNN 00910   Mensaje retorno SP                                INNNN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 13:07:50JBENTANCOU
+CNNNNN ME00000000000000000000110
+/F=C49.0#1
+/M=C910.0
+*$2023-08-04 13:07:50JBENTANCOU
+TN  NN 1006TFinaliza Operación                      C00001 00
+*$2023-08-04 12:01:06JBENTANCOU
+ NNNNN 00025   Fecha Valor                                       INNNNA000000013300200243000011000000000000000200119000
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2023-08-04 12:01:06JBENTANCOU
+ N  NN 00028   Concepto                                          INNSNK000007015200300452001011000000007000700300137000
+/V=Modificación fecha próximo balance
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-04 12:01:39JBENTANCOU
+DN  NN 0000Ov00
+*$2023-08-04 13:09:08JBENTANCOU

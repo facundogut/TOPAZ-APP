@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-12-23T16:04:09 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REP_ACEPT_CAJA_MUN" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d26cbecf-c2ca-413f-910e-1677014e90cb">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="TICKET" class="java.lang.String"/>
+	<parameter name="NOM_ARCH" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 
+$P{NOM_ARCH} nom_archivo,
+concat(LEFT($P{NOM_ARCH}, len($P{NOM_ARCH}) -4), '_', replace(convert(VARCHAR(10),(select fechaproceso from parametros), 5),'-',''),'.pdf') nom_rep,
+(SELECT count(1) FROM REC_EXT_RECAUDOS_CANAL_AUX WHERE ID_CABEZAL = $P{TICKET}  ) cant_reg_archivo,
+(SELECT count(1) FROM REC_EXT_RECAUDOS_CANAL_AUX WHERE ID_CABEZAL = $P{TICKET} AND NRO_11 = 0) cant_reg_proc,
+(SELECT count(1) FROM REC_EXT_RECAUDOS_CANAL_AUX WHERE ID_CABEZAL = $P{TICKET}  AND NRO_11 = 1) cant_reg_rechaz,
+conv.NOMCONVREC ente, 
+sum(NRO_02) importe,
+count(1) cant_reg_x_ente,
+convert(VARCHAR(10),(select fechaproceso from parametros), 103) fechaproc
+FROM REC_EXT_RECAUDOS_CANAL_AUX ext 
+LEFT JOIN CONV_REL_ENTECONV conv ON conv.COD_ENTE = ext.CADENA_03 
+	WHERE ID_CABEZAL = $P{TICKET} AND NRO_11 = 0 AND (conv.TZ_LOCK = 0 OR conv.TZ_LOCK IS NULL)
+		GROUP BY CADENA_03 ,conv.NOMCONVREC]]>
+	</queryString>
+	<field name="cant_reg_archivo" class="java.lang.String"/>
+	<field name="cant_reg_proc" class="java.lang.String"/>
+	<field name="cant_reg_rechaz" class="java.lang.String"/>
+	<field name="ente" class="java.lang.String"/>
+	<field name="importe" class="java.lang.String"/>
+	<field name="fechaproc" class="java.lang.String"/>
+	<field name="cant_reg_x_ente" class="java.lang.String"/>
+	<field name="nom_rep" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="240" height="30" uuid="77b984df-9987-46b9-9c68-7f48e7c5f36d"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[NUEVO BANCO DEL CHACO S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="20" width="220" height="30" uuid="e968ec89-a80c-42cd-ba14-673e1eb24792"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[CM - Reporte de aceptados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="464" y="20" width="120" height="30" uuid="953d5bc2-cb7e-40db-af0b-9f4f53ceba15"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nombre Reporte:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="140" height="30" uuid="69e83ace-760c-4b72-a22c-9334284fc6ef"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nombre de archivo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="50" width="140" height="30" uuid="30ac9254-18fc-48f0-b101-6aa7b8238098"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Fecha Cobranza:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="550" y="50" width="136" height="30" uuid="07f06137-eaf7-4276-b687-9c047d52ab4a"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechaproc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="50" width="160" height="30" uuid="01adea5f-6b5f-4a24-b55b-cd1808389e0e"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOM_ARCH}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="584" y="20" width="238" height="30" uuid="854ec1ad-eae0-4d38-bdf6-7a249e2c3b19"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nom_rep}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="32">
+			<staticText>
+				<reportElement x="450" y="10" width="91" height="19" uuid="5b52b4c2-9428-41e5-9157-44a30006b01b"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Movimientos:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="610" y="10" width="70" height="19" uuid="b33738cb-d485-48dc-94c0-95f88cc4f705"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Importe:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="10" width="180" height="19" uuid="e0be116a-98a6-441f-9c4b-6e4151a003fe"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nombre ente]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="5" width="794" height="1" uuid="9df8def3-46cc-4a6b-b54e-73bb8b6e27be"/>
+			</line>
+			<staticText>
+				<reportElement x="570" y="10" width="20" height="19" uuid="2c9eae92-6b21-49f7-baec-a39e606b93b8"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[|]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="10" width="20" height="19" uuid="2a670d0a-e100-4b40-9ede-de4f23fce932"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[|]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="28" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="7" width="390" height="19" uuid="8c1fbd54-d445-4782-87c1-4bcd22c0c540"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ente}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="610" y="7" width="196" height="19" uuid="b9d7b71f-6b07-47ab-bf56-38bb1d7a802a"/>
+				<textElement textAlignment="Left">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="440" y="7" width="110" height="19" uuid="cbc6d831-fd04-46e9-b749-126c273e238b"/>
+				<textElement textAlignment="Center">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cant_reg_x_ente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="410" y="4" width="20" height="19" uuid="fe96f960-d096-4b79-9535-f9548aa1d28d"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[|]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="570" y="4" width="20" height="19" uuid="445e3984-4ba9-4e41-b0f9-62250873b739"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[|]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<summary>
+		<band height="122">
+			<staticText>
+				<reportElement x="1" y="20" width="259" height="30" uuid="d6cb46ed-cffb-4445-92bb-2791dba6033a"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total de movimientos del archivo: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="50" width="259" height="30" uuid="810e6c2e-a502-404f-b80e-a497f19bbfe8"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total de movimientos aceptados:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="80" width="259" height="30" uuid="0cc6ff0d-b62a-46c7-9a37-4dffe532509c"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total de movimientos rechazados:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="300" y="20" width="151" height="30" uuid="8d084c0f-45ad-4472-925d-115e587a1aee"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cant_reg_archivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="80" width="151" height="30" uuid="50fc8c48-a79c-4561-bfb4-ef46d5649101"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cant_reg_rechaz}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="2" y="5" width="794" height="1" uuid="a817ebe6-21ca-44df-8627-cfd2fad43f18"/>
+			</line>
+			<textField>
+				<reportElement x="300" y="50" width="151" height="30" uuid="c108660c-25b8-4c42-81ad-aa70a32b69fd"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cant_reg_proc}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

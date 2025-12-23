@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/productos/desarrolloCuotas/idPrestamo/{jtsoid}</uri>
+    <serviceDescription>Servicio que devuelve el detalle de las cuotas de un Prestamo / Credito</serviceDescription>
+    <title>Detalle de Cuotas de Prestamos</title>
+    <querys>
+        <query id="1" name="detalle" type="MULTIPLE">
+            <sql>SELECT s.JTS_OID,&#13;
+p.C2300 AS numeroCuota,&#13;
+p.C2313 AS fechaPago,  &#13;
+p.C2302 AS fechaVencimiento, &#13;
+p.DIAS_ATRASO_CANCELACION AS DiasAtraso,&#13;
+p.C2309 AS SaldoCapital,&#13;
+p.C2304 AS Capital,&#13;
+s.c1632 AS 	TasaInteres,&#13;
+p.C2305 AS Interes,&#13;
+p.IVAINTERES AS IvaIntereses,&#13;
+p.IVAINTCOMPMORA AS InteresesMoratorios,&#13;
+p.ICMORA_DEV AS IVAMoratorios,&#13;
+p.C2311 AS InteresesPunitorios,&#13;
+(P.C2304 + P.C2305) AS montoCuota&#13;
+FROM PLANPAGOS p&#13;
+INNER JOIN SALDOS s ON p.SALDO_JTS_OID= s.JTS_OID&#13;
+where s.JTS_OID=?</sql>
+            <input>
+                <inParameter description="" type="INTEGER">jtsoid</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="cuotas">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>numeroCuota</queryname>
+                        <servicename>numeroCuota</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DATE">
+                        <queryname>fechaPago</queryname>
+                        <servicename>fechaPago</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>DiasAtraso</queryname>
+                        <servicename>DiasAtraso</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DATE">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>Capital</queryname>
+                        <servicename>Capital</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>TasaInteres</queryname>
+                        <servicename>Tasa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>Interes</queryname>
+                        <servicename>Interes</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>IvaIntereses</queryname>
+                        <servicename>IvaIntereses</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>InteresesMoratorios</queryname>
+                        <servicename>InteresesMoratorios</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>IVAMoratorios</queryname>
+                        <servicename>IVAMoratorios</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>InteresesPunitorios</queryname>
+                        <servicename>InteresesPunitorios</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>montoCuota</queryname>
+                        <servicename>montoCuota</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

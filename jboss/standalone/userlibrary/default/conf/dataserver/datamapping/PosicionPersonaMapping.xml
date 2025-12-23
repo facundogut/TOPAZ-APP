@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by TOP (TOP) -->
+<map>
+	<class>
+		<class-name>posicion.objectsdomain.PosicionPersona</class-name>
+		<entity-name>core.vo_PosicionPersona</entity-name>
+		<table-name>CLI_POSICION_PERSONA</table-name>
+		<database-name>TOP/CLIENTES</database-name>	
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>tz_lock</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>cliente</attribute-name>
+			<column-name>CLIENTE</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>persona</attribute-name>
+			<column-name>PERSONA</column-name>
+			<key>primary</key>
+		</attribute>		
+		<attribute>
+			<attribute-name>saldo_jts_oid</attribute-name>
+			<column-name>SALDO_JTS_OID</column-name>
+			<key>primary</key>
+		</attribute>	
+		<attribute>
+			<attribute-name>rubro</attribute-name>
+			<column-name>RUBRO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>MONEDA</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>saldo</attribute-name>
+			<column-name>SALDO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>interes</attribute-name>
+			<column-name>INTERES</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>interesCancelado</attribute-name>
+			<column-name>INTERESCANCELADO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>mora</attribute-name>
+			<column-name>MORA</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>saldoMN</attribute-name>
+			<column-name>SALDO_MN</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>interesMN</attribute-name>
+			<column-name>INTERES_MN</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>interescanceladoMN</attribute-name>
+			<column-name>INTERESCANCELADO_MN</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>moraMN</attribute-name>
+			<column-name>MORA_MN</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>saldoDol</attribute-name>
+			<column-name>SALDO_DOL</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>interesDol</attribute-name>
+			<column-name>INTERES_DOL</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>interescanceladoDol</attribute-name>
+			<column-name>INTERESCANCELADO_DOL</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>moraDol</attribute-name>
+			<column-name>MORA_DOL</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>visualizable</attribute-name>
+			<column-name>VISUALIZABLE</column-name>
+		</attribute>	
+	</class>
+	<class>
+		<class-name>posicion.objectsdomain.PosicionGarantiaPersona</class-name>
+		<entity-name>core.vo_PosicionGarantiaPersona</entity-name>
+		<table-name>CLI_POSICION_GAR_PERSONA</table-name>
+		<database-name>TOP/CLIENTES</database-name>	
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>tz_lock</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>numGarantia</attribute-name>
+			<column-name>NUM_GARANTIA</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>persona</attribute-name>
+			<column-name>PERSONA</column-name>
+			<key>primary</key>
+		</attribute>	
+		<attribute>
+			<attribute-name>tipoPersona</attribute-name>
+			<column-name>TIPO_PERSONA</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>paisOrigen</attribute-name>
+			<column-name>PAIS_ORIGEN</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>tipo</attribute-name>
+			<column-name>TIPO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>subTipo</attribute-name>
+			<column-name>SUBTIPO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>subClasificacion</attribute-name>
+			<column-name>SUBCLASIFICACION</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>MONEDA</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>importeContractual</attribute-name>
+			<column-name>IMPORTECONTRACTUAL</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>autoliquidable</attribute-name>
+			<column-name>AUTOLIQUIDABLE</column-name>
+		</attribute>
+	</class>	
+	<query>
+		<class-name>posicion.objectsdomain.QueryPosicionPersona</class-name>
+		<query-name>query.vo_QueryPosicionPersona</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT S.C1803 AS CLIENTE,
+			       S.JTS_OID AS SALDO_JTS_OID,
+			       C.TITULARIDAD,
+			       S.C1730 AS RUBRO,
+			       S.MONEDA,
+			       S.C1604 AS SALDO,
+			       S.C1609 AS INTERES,
+			       S.C1610 AS INTERESCANCELADO,
+			       S.C1614 AS MORA,
+             		       S.C1694 AS VISUALIZABLE
+			  FROM SALDOS S
+			 INNER JOIN CLI_CLIENTEPERSONA C ON S.C1803 = C.CODIGOCLIENTE 
+			 AND C.NUMEROPERSONA = ? AND S.TZ_LOCK = 0 AND C.TZ_LOCK = 0
+		</sentence>
+		<attribute>
+			<attribute-name>cliente</attribute-name>
+			<column-name>CLIENTE</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>saldoJtsOid</attribute-name>
+			<column-name>SALDO_JTS_OID</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>titularidad</attribute-name>
+			<column-name>TITULARIDAD</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>rubro</attribute-name>
+			<column-name>RUBRO</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>MONEDA</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>saldo</attribute-name>
+			<column-name>SALDO</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>	
+		<attribute>
+			<attribute-name>interes</attribute-name>
+			<column-name>INTERES</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>interesCancelado</attribute-name>
+			<column-name>INTERESCANCELADO</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>mora</attribute-name>
+			<column-name>MORA</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>visualizable</attribute-name>
+			<column-name>VISUALIZABLE</column-name>
+			<column-type>String</column-type>
+		</attribute>
+	</query>	
+	<query>
+		<class-name>posicion.objectsdomain.QueryPosicionGarantiaPersona</class-name>
+		<query-name>query.vo_QueryPosicionGarantiaPersona</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT TPO_PERSONA AS TIPOGARANTE,
+			       CRE_GARANTIAPERSONAS.NUM_GARANTIA,
+			       CRE_GARANTIASRECIBIDAS.PAIS_GARANTIA,
+			       CRE_GARANTIASRECIBIDAS.TIPOGARANTIA,
+			       CRE_GARANTIASRECIBIDAS.SUBTIPOGARANTIA,
+			       CRE_GARANTIASRECIBIDAS.COD_SUBCLAGARANTIA,
+			       CRE_GARANTIASRECIBIDAS.IMPORTECONTRACTUAL,
+			       CRE_GARANTIASRECIBIDAS.MONEDA_GARANTIA,
+			       CRE_CLASGARANTIAS.AUTOLIQUIDABLE
+			  FROM CRE_GARANTIAPERSONAS
+			 INNER JOIN CRE_GARANTIASRECIBIDAS ON CRE_GARANTIAPERSONAS.NUM_GARANTIA =
+							      CRE_GARANTIASRECIBIDAS.NUM_GARANTIA
+			 INNER JOIN CRE_CLASGARANTIAS ON CRE_GARANTIASRECIBIDAS.PAIS_GARANTIA =
+							 CRE_CLASGARANTIAS.PAIS_GARANTIA
+						     AND CRE_GARANTIASRECIBIDAS.TIPOGARANTIA =
+							 CRE_CLASGARANTIAS.TIPOGARANTIA
+						     AND CRE_GARANTIASRECIBIDAS.SUBTIPOGARANTIA =
+							 CRE_CLASGARANTIAS.SUBTIPOGTIA
+						     AND CRE_GARANTIASRECIBIDAS.COD_SUBCLAGARANTIA =
+							 CRE_CLASGARANTIAS.COD_SUBCLA_GARANTIA
+						     WHERE CRE_GARANTIAPERSONAS.NUM_PERSONA = ? 	
+							 AND CRE_GARANTIAPERSONAS.TZ_LOCK = 0
+							 AND CRE_GARANTIASRECIBIDAS.TZ_LOCK = 0
+							 AND CRE_CLASGARANTIAS.TZ_LOCK = 0
+                  
+		</sentence>
+		<attribute>
+			<attribute-name>tipoGarante</attribute-name>
+			<column-name>TIPOGARANTE</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>numeroGarantia</attribute-name>
+			<column-name>NUM_GARANTIA</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>paisGarantia</attribute-name>
+			<column-name>PAIS_GARANTIA</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>tipoGarantia</attribute-name>
+			<column-name>TIPOGARANTIA</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>subTipoGarantia</attribute-name>
+			<column-name>SUBTIPOGARANTIA</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>codigoSubClase</attribute-name>
+			<column-name>COD_SUBCLAGARANTIA</column-name>
+			<column-type>long</column-type>
+		</attribute>	
+		<attribute>
+			<attribute-name>importe</attribute-name>
+			<column-name>IMPORTECONTRACTUAL</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>MONEDA_GARANTIA</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>autoliquidable</attribute-name>
+			<column-name>AUTOLIQUIDABLE</column-name>
+			<column-type>String</column-type>
+		</attribute>		
+	</query>			
+</map>

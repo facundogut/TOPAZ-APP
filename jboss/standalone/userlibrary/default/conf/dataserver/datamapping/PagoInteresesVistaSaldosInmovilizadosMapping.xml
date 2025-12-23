@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvistasaldosinmovilizados.QueryPagoInteresesVistaSaldosInmovilizados</class-name>
+        <query-name>query.PagoInteresesVistaSaldosInmovilizados</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					  SELECT   s.JTS_OID,
+							   s.C1815           
+						  FROM Saldos s
+						 INNER JOIN CLi_Clientes c ON s.C1803 = c.CODIGOCLIENTE
+						 INNER JOIN PLANCTAS pl ON pl.C6326 = s.C1730
+						 INNER JOIN VTA_DEFINICION_VISTA vd ON s.Moneda = vd.moneda
+								   AND s.c1772 = vd.grupo and s.PRODUCTO = vd.Producto
+						 INNER JOIN VTA_GRUPOS gr ON gr.cod_grupo = vd.grupo
+						 WHERE s.C1785 in (2, 3)
+						   AND (s.jts_oid = ? OR (-1 = ?))
+						   AND pl.C6318 in ('M', 'D')
+						   AND (s.tz_lock = 0)
+						   AND (vd.tz_lock = 0)
+						   AND (c.tz_lock = 0) 
+						   AND (s.C1815 &gt; 0)
+						   AND (C1734='I' AND C1728 &lt;&gt; 'I')
+						   AND ((gr.apertura_cli = 'S' AND s.jts_oid = vd.SALDO_JTS_OID)
+				           OR  (gr.apertura_cli &lt;&gt; 'S'))
+		  		</sentence>
+        <attribute>
+            <attribute-name>saldosJtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>devengadoPago</attribute-name>
+            <column-name>C1815</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+</map>

@@ -1,0 +1,377 @@
+VERSION:051
+TN  NN 1008TConsulta Sec. Generica                  S2750 00
+/O=C2669 ASC
+/F=C2672=0
+ NNNNN 2671   Descripcion    INNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509#0
+/P=I103
+ NNNNN 0670   Id             INNSNA00000701520030020202101100000000700070030013700
+/?=I103
+/V=C2669.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2669   ID Reg.ContableINNSN 00000701520030020202101100000000700070030013700
+/?=I103
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/P=I100
+TN  NN 1008TConsulta Sec. Generica                  S2770 00
+/?=I103
+/O=C2747 ASC, C2748 ASC
+/F=C2747=C2669.1
+ NNNNN 2749   Total Debitos  INNNN 00000701330027024300001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I101
+CNNNNN   00000000000000000000100
+/?=I101YI100
+/P=I95
+CNNNNN M 00000000000000000000100
+/?=1=0Y!I101
+/F=C2749#C2750
+/P=I95
+/M=Error - Sumas por Moneda NO son Iguales
+CNNNNN   00000000000000000000100
+/?=I100
+/A=I100
+TN  NN 1006TConsulta Generica                       C0000 00
+/?=I103Y!I95Y!I101
+CNNNNN  I00000000000000000000100
+/R=2
+TN  NN 1008TConsulta para control                   S2760 00
+/?=I103Y!I95
+/F=C2674=C2669.1
+*&Comienza la consulta para controlar si los registros están en condiciones para ser 
+*&procesados.
+*&
+ NNNNN 2682   Deb/Credito    INNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509#0
+/P=I102
+CNNNNN  F00000000000000000000100
+/F=!I102
+/R=4
+TN  NN 1006TConsulta Generica                       C0000 00
+/?=I103YI102
+ NNNNN 0001   Sucursal       INNNNA00001201510035026100101100000001200290035014100
+/V=C2677.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=C9509=0
+/P=I91
+/M=Sucursal no es Valida
+TN  NN 1006TConsulta Generica                       C0000 00
+/?=I103YI102
+ NNNNN 0003   Moneda         INNNNA00001201510035026100101100000001200290035014100
+/V=C2678.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=C9509=0
+/P=I92
+/M=Moneda no es Valida
+TN  NN 1006TConsulta Generica                       C2770 00
+/?=I103YI102
+ NNNNN 0007   Producto       INNNNA00001201510035026100101100000001200290035014100
+/V=C2679.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=C9509=0
+/P=I93
+/M=Producto no es Valido
+TN  NN 1006TConsulta Generica                       C2770 00
+/?=1=0YI103YI102
+ NNNNN 6326   Rubro Contable INNNNA00001201510035026100101100000001200290035014100
+/V=C2680.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=C9509=0
+/P=I94
+/M=Rubro no es Valido
+TN  NN 1006TConsulta Generica                       C0000 00
+/?=I103YI102
+CNNNNN   00000000000000000000100
+/?=I91OI92OI93OI94
+/P=I95
+TN  NN 1006TConsulta para seguir control            C0000 00
+/?=I103Y!I95YI102
+*&Continua controlando si los registros están en condiciones.
+CNNNNN  I00000000000000000000100
+/R=4
+TN  NN 1006TTodo bien, contabiliza                  C0000 00
+/?=I103Y!I95Y!I102
+*&Todos los registros están OK, contabiliza.
+*N  NN Incializo indicadores
+CNNNNN   00000000000000000000100
+/A=I95I101I102
+TN  NN 1008TConsulta Sec. Generica                  S2760 00
+/?=I103Y!I95
+/F=C2674=C2669.1
+ NNNNN 2682   Deb/Credito    INNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509#0
+/P=I102
+TN  NN 0007TDébito/Credito Contable                 T0211 00
+/?=I103Y!I95YI102
+ NNNNN 0001   Sucursal       INNNNA00001201510035026100101100000001200290035014100
+/V=C2677.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0003   Moneda         INNNNF00004101510064026100101100000004100290064014100
+/V=C2678.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0007   Producto       INNNNA00007001510093026000101100000007000290093014100
+/V=C2679.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=C7>0
+/P=I55
+ NNNNN 0004   Rubro OperativoINNNNA00010105980121069602001000000010104720121059800
+/?=C7>0
+/V=C6271
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 6326   Rubro Contable I NSNA00002401470044032702001100000002400340044012300
+/?=C7=0
+/V=C2680.12
+ NNNNN 0005   Cuenta         INNNNA00000701260027021000001100000000700070027011900
+/?=C2518.12>0
+/V=C2518.12
+/F=0013400NNN000000128Arial                                   
+/f=0013400NNN000000128Arial                                   
+ NNNNN 0005   Cuenta         INNNNA00000701260027021000001100000000700070027011900
+/?=C7=0
+/V=C6326
+/F=0013400NNN000000128Arial                                   
+/f=0013400NNN000000128Arial                                   
+ NNNNN 0006   Referencia     INNNNF00015401510177026102101100000015400290177014100
+/V=C2681.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0008   Ordinal        INNNNF00015404400177055000101100000015403120177042400
+/V=C2702.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0002   Cliente        INNNNA00015404400177055000101100000015403120177042400
+/?=C2095.12>0
+/V=C2095.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0023   Diario         INNNNK00018301510206028000121100300018300290206014100
+/V=D
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0024   Deb / Cred     INNNNA00018304210206055000121100300018303140206042600
+/V=C2682.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0025   Fecha Valor    INNNNA00021201510235026100001100000021200290235014100
+/V=C2686.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0029   Importe        INNNNA00024201510265027902001100000024200290265012700
+/V=C2687.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 6004   Centro de CostoINNSNA00027201510292020502101100000027200290292013500
+/V=C2683.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 6425   T.Cambio CompraINNSNA00027201510292020502101100000027200290292013500
+/?=C6403#'N'YC5260.12>0
+/V=C5260.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 6425   T.Cambio CompraINNSN 00027201510292020502101100000027200290292013500
+/?=C6403#'N'Y!(C5260.12>0)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0030   Equivalente M/NINNSNA00027201510292020502101100000027200290292013500
+/?=C6403#'N'
+/V=C5261.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Campo 63 con Valor 99 para NO Ejec - Cond en el ESQUEMA
+ NNNNN 0063   NO Ejec EsquemaINNNNK00025604450279057302001000000025603270279042500
+/?=(C6403#'N'YC6326=C6433)
+/V=99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0020   Moneda Esq ContINNNNF00000701470027016802101000000000700070027013300
+/?=(C6403#'N'YC6326=C6433)
+/V=C0003
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0127   Fecha          INNSN 00000701520030030200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 1627   Fecha de Vto.  INNSNA00002401470044032702001100000002400340044012300
+/?=C8896.12>C127
+/V=C8896.12
+ NNNNN 2674   ID Reg.ContableI NSNA00002401940047024702101100000002500620048016600
+/?=1=0
+/V=C2674.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2675   Nro. de  Linea I NSNA00005305660076061502101100000005304150076050300
+/?=1=0
+/V=C2675.12
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 1730   Rubro Contable INNSNA00002401470044032702001100000002400340044012300
+/V=C6326
+ NSSNN 0150   No. de Asiento INNSN 00000701500027027000001100000000700070027012600
+ NNNNN 0288   Num Iteracion  INNSNF00000701520030020202101100000000700070030013700
+/V=1+C288
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1803   Nro. Cliente   INNNNA00015404400177055000101100000015403120177042400
+/?=C2095.12>0
+/V=C0002
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1804   Rubro OperativoINNNNA00015404400177055000101100000015403120177042400
+/?=C7>0
+/V=C6271
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0028   Concepto       INNNNF00030201510325036100101100000030200290325014100
+/V=C2684.12[1,30]
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0450   LOGO           INNNNA00030201510325036100101100000030200290325014100
+/?=C288=1
+/V=C2684.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificacion Generica                   M2761 00
+/?=I103Y!I95YI102
+ NNNNN 2674   ID Reg.ContableINNSNA00002401940047024702101100000002500620048016600
+/V=C2674.12
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2675   Nro. de  Linea INNSNA00005305660076061502101100000005304150076050300
+/V=C2675.12
+/C=255255255
+/F=0012700NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2685   Fecha Proceso  INNSNA00033901970362070400001100000033600650359016900
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2688   Asiento Topaz  INNSNA00000701520030020200101100000000700070030013700
+/V=C9501
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta iteracion                      C0000 00
+/?=I103Y!I95YI102
+*&Vuelvo a procesar siguiente registro.
+CNNNNN  I00000000000000000000100
+/R=12
+TN  NN 1009TModificación Genérica                   M2751 00
+/?=I103YI95
+ NNNNN 2669   ID Reg.ContableINNSNF00005502640078032302101100000005501090078021300
+/V=C670.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2671   Descripcion    INNSN 00009102640114069600001100000009101090114021300
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2672   Estado         INNSNK00013002640208038602001111000013001090150020000
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2673   Fecha Estado   INSSNA00013005430153062700001100000013004280150051900
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificación Genérica                   M2751 00
+/?=I103Y!I95
+ NNNNN 2669   ID Reg.ContableINNSNF00005502640078032302101100000005501090078021300
+/V=C670.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2671   Descripcion    INNSN 00009102640114069600001100000009101090114021300
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2672   Estado         INNSNK00013002640208038602001111000013001090150020000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2673   Fecha Estado   INSSNA00013005430153062700001100000013004280150051900
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TItera nuevo Id                          C0000 00
+/?=I103
+*N  NN Incializo indicadores
+CNNNNN   00000000000000000000100
+/A=I95I101I102
+CNNNNN  I00000000000000000000100
+/?=1=0
+/R=1
+TN  NN 1006TConsulta Generica                       C0001 00
+ NNNNN 0450   LOGO           INNSNL00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0028   Concepto       INNNNF00021901490239035900101100000021900230239013500
+/V=C450[1,30]
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*#I94#Rubro Contable NO es Valido
+*#I95#Suc MOn Prod Rub NO Valido
+*#I55#Tiene Producto > 0
+*#I100#Primera vez
+*#I101#No hay mas registros
+*#I102#Hay registros contables para procesar
+*#I103#Hay registros contables para procesar
+*#I91#Sucursal NO Valida
+*#I92#Moneda NO Valida
+*#I93#Producto NO Valido

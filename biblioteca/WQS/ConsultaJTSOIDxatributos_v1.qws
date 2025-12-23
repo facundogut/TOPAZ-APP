@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/depjudicial/getCuentaxAtr/juzgado/{juzgado}/expediente/{expediente}/ano/{anoCausa}/{pagina}/{largopagina}</uri>
+    <serviceDescription>ConsultaJTSOIDxatributos</serviceDescription>
+    <title>ConsultaJTSOIDxatributos</title>
+    <querys>
+        <query id="1" name="paginado" type="MULTIPLE">
+            <sql>&#13;
+DECLARE @JUZGADO NUMERIC(12,0),@EXPEDIENTE VARCHAR(12),@ANO NUMERIC(4,0),&#13;
+&#13;
+  @pagina  AS INT = ?,&#13;
+  @largopagina AS INT = ?,&#13;
+  &#13;
+&#13;
+  &#13;
+  @TotalRegistros INT = 0,&#13;
+  @resto INT = 0,&#13;
+  @primerRegistroPag INT = 0,&#13;
+  @ultimoRegistroPag INT =0;&#13;
+  SET @JUZGADO =?;&#13;
+  SET @EXPEDIENTE =?;&#13;
+  SET @ANO =?;&#13;
+  SET @TotalRegistros = ( SELECT DISTINCT COUNT(*)&#13;
+	FROM DJ_CAUSAS dc(nolock)&#13;
+	JOIN DJ_CAUSA_CUENTA dcc (nolock) ON dc.NRO_CAUSA=dcc.NRO_CAUSA&#13;
+	WHERE (dc.JUZGADO=@JUZGADO OR @JUZGADO=0) AND (dc.EXPEDIENTE=@EXPEDIENTE OR @EXPEDIENTE=' ') AND (dc.ANO=@ANO OR @ANO=0) AND&#13;
+	((dc.TZ_LOCK &lt; 300000000000000 OR dc.TZ_LOCK &gt;= 400000000000000) AND (dc.TZ_LOCK &lt; 100000000000000 OR dc.TZ_LOCK &gt;= 200000000000000)) AND&#13;
+	((dcc.TZ_LOCK &lt; 300000000000000 OR dcc.TZ_LOCK &gt;= 400000000000000) AND (dcc.TZ_LOCK &lt; 100000000000000 OR dcc.TZ_LOCK &gt;= 200000000000000))&#13;
+	);&#13;
+	&#13;
+  SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina)&#13;
+  SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1&#13;
+  SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina)&#13;
+  &#13;
+  IF (@resto &lt; 0)&#13;
+  	BEGIN&#13;
+  		SET @resto = 0&#13;
+  	END &#13;
+  IF (@ultimoRegistroPag &gt;@TotalRegistros )&#13;
+  	BEGIN&#13;
+  	    SET @ultimoRegistroPag=@TotalRegistros&#13;
+  	END &#13;
+  &#13;
+&#13;
+&#13;
+IF(@pagina&gt;(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)))&#13;
+BEGIN&#13;
+SELECT NULL AS jtsoid, NULL as idCausa,&#13;
+	@pagina 																	AS paginaActual, &#13;
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,&#13;
+	@largopagina 																AS registroPorPag,&#13;
+	@TotalRegistros 														  	AS totalRegistros,&#13;
+	@primerRegistroPag 													  		AS primerRegistroPag,&#13;
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,&#13;
+	@resto 																	  	AS siguientesRegistros &#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+SELECT 	ROW_NUMBER() OVER(ORDER BY jtsoid) AS ORDEN, &#13;
+		jtsoid,&#13;
+		idCausa,&#13;
+		paginaActual,&#13;
+		cantidadPaginas,&#13;
+		registroPorPag,&#13;
+		totalRegistros,&#13;
+		primerRegistroPag,&#13;
+		ultimoRegistroPag,&#13;
+		siguientesRegistros&#13;
+		&#13;
+&#13;
+FROM&#13;
+(SELECT DISTINCT dcc.JTS_OID_CUENTA AS jtsoid, dc.NRO_CAUSA as idCausa,&#13;
+	@pagina 																	AS paginaActual, &#13;
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,&#13;
+	@largopagina 																AS registroPorPag,&#13;
+	@TotalRegistros 														  	AS totalRegistros,&#13;
+	@primerRegistroPag 													  		AS primerRegistroPag,&#13;
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,&#13;
+	@resto 																	  	AS siguientesRegistros 		&#13;
+	FROM DJ_CAUSAS dc(nolock)&#13;
+	JOIN DJ_CAUSA_CUENTA dcc (nolock) ON dc.NRO_CAUSA=dcc.NRO_CAUSA&#13;
+	WHERE (dc.JUZGADO=@JUZGADO OR @JUZGADO=0) AND (dc.EXPEDIENTE=@EXPEDIENTE OR @EXPEDIENTE=' ') AND (dc.ANO=@ANO OR @ANO=0) AND &#13;
+	((dc.TZ_LOCK &lt; 300000000000000 OR dc.TZ_LOCK &gt;= 400000000000000) AND (dc.TZ_LOCK &lt; 100000000000000 OR dc.TZ_LOCK &gt;= 200000000000000)) AND&#13;
+	((dcc.TZ_LOCK &lt; 300000000000000 OR dcc.TZ_LOCK &gt;= 400000000000000) AND (dcc.TZ_LOCK &lt; 100000000000000 OR dcc.TZ_LOCK &gt;= 200000000000000))&#13;
+&#13;
+) DATOS &#13;
+ORDER BY ORDEN&#13;
+OFFSET ((@pagina - 1) * @largopagina) ROWS &#13;
+FETCH NEXT @largopagina ROWS ONLY;&#13;
+&#13;
+END&#13;
+</sql>
+            <input>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+                <inParameter description="" type="FLOAT">juzgado</inParameter>
+                <inParameter description="" type="STRING">expediente</inParameter>
+                <inParameter description="" type="DOUBLE">anoCausa</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="cuentas">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>jtsoid</queryname>
+                        <servicename>jts_oid</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>idCausa</queryname>
+                        <servicename>idCausa</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

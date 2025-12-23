@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.topaz.server.core.system.ActualizarNumeratorAsigned</class-name>
+        <query-name>query.actualizarNumeratorAsigned</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT  ND.reutilizable, ND.NUMERO, NA.OID, NA.VALOR, NA.fechaProceso, NA.sucursal, NA.estado, NA.Asiento
+				FROM 	NUMERATORASIGNED NA INNER JOIN NUMERATORVALUES NV ON NA.OID = NV.OID 
+						INNER JOIN NUMERATORDEFINITION ND ON NV.NUMERO = ND.NUMERO
+				WHERE 
+						NA.Asiento =  ? AND 
+						NA.Sucursal = ? AND
+						NA.FechaProceso = ? AND
+						NA.Estado = ?
+			</sentence>
+        <attribute>
+            <attribute-name>Reutilizable</attribute-name>
+            <column-name>reutilizable</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Numero</attribute-name>
+            <column-name>NUMERO</column-name>
+            <column-type>long</column-type>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>OID</attribute-name>
+            <column-name>OID</column-name>
+            <column-type>long</column-type>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>Valor</attribute-name>
+            <column-name>VALOR</column-name>
+            <column-type>long</column-type>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>fechaProceso</column-name>
+            <column-type>date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>estado</column-name>
+            <column-type>string</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Asiento</attribute-name>
+            <column-name>Asiento</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.topaz.server.core.system.NumeratorDefinition</class-name>
+        <query-name>query.numeratorDefinitionReutilizable</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT REUTILIZABLE FROM NUMERATORDEFINITION WHERE NUMERO = ?
+			</sentence>
+        <attribute>
+            <attribute-name>Reutilizable</attribute-name>
+            <column-name>reutilizable</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.secuenciadores.objectsdomain.QuerySecuencias</class-name>
+        <query-name>query.QuerySecuencias</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+		SELECT NAME AS NOMBRE FROM SYS.SEQUENCES WHERE NAME LIKE 'NUM_%'
+	</sentence>
+        <attribute>
+            <attribute-name>nombre</attribute-name>
+            <column-name>NOMBRE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+</map>

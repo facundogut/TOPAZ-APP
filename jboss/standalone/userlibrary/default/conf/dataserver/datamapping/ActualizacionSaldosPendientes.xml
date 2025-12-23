@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by TOP (TOP) -->
+<map>
+	<query>
+		<class-name>topsystems.automaticprocess.clearing.updatesaldospendientes.QuerySaldosPendientes</class-name>
+		<query-name>query.SaldosPendientes</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT cle_depositos.saldo_jts_oid as SALDO_JTS_OID,
+			       CLE_CHEQUES_SALIENTE.Fecha_Acreditacion as FECHA_ACREDITACION,
+			       sum(CLE_CHEQUES_SALIENTE.Importe) as IMPORTE
+			  from CLE_CHEQUES_SALIENTE, cle_depositos, SALDOS
+			 where CLE_CHEQUES_SALIENTE.Numero_Deposito = cle_depositos.numero_deposito
+			   and cle_depositos.saldo_jts_oid = saldos.JTS_OID
+			   and CLE_CHEQUES_SALIENTE.ACREDITADO = 0
+			   and CLE_CHEQUES_SALIENTE.Fecha_Acreditacion is not null
+			   and CLE_CHEQUES_SALIENTE.DESTINO_CHEQUE in (1,5)
+			   and CLE_CHEQUES_SALIENTE.Tz_Lock = 0
+			   and ('TodasLasCamaras' = ? OR CLE_CHEQUES_SALIENTE.Codigo_Camara = ?)
+			 group by cle_depositos.saldo_jts_oid,
+          		CLE_CHEQUES_SALIENTE.Fecha_Acreditacion
+		</sentence>
+		<attribute>
+			<attribute-name>saldoJtsOid</attribute-name>
+			<column-name>SALDO_JTS_OID</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaAcreditacion</attribute-name>
+			<column-name>FECHA_ACREDITACION</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>importe</attribute-name>
+			<column-name>IMPORTE</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>		
+	</query>		
+</map>

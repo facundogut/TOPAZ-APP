@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/sibe/controlTope/cuit/monto/{cuit}/{monto}</uri>
+    <serviceDescription>Devuelve boolean excede el Tope máximo</serviceDescription>
+    <title>controlTope</title>
+    <querys>
+        <query id="1" name="controlTope" type="SIMPLE">
+            <sql>&#13;
+ DECLARE @cuit NUMERIC(11) = ?;&#13;
+DECLARE @monto NUMERIC(16)= ?;   &#13;
+ &#13;
+&#13;
+IF LEN(@cuit) &lt;&gt; 11 OR ISNUMERIC(@cuit) = 0&#13;
+    BEGIN&#13;
+        THROW 50000, 'Error: Cuit debe tener una longitud de 11 dígitos y ser numérico', 1;&#13;
+    END&#13;
+IF ISNUMERIC(@monto) = 0&#13;
+    BEGIN&#13;
+         THROW 50001, 'Error: Campo monto no válido como número',1;&#13;
+    END&#13;
+ &#13;
+IF NOT EXISTS (&#13;
+    SELECT 1&#13;
+    FROM VW_CLI_X_DOC&#13;
+    WHERE NUMERODOC = @cuit&#13;
+)&#13;
+BEGIN&#13;
+    THROW 50003, 'Cuit inexistente', 1;&#13;
+END&#13;
+ELSE&#13;
+BEGIN &#13;
+	SELECT CASE WHEN @monto &gt; MonTE THEN @monto-MonTE ELSE 0 END AS monto,&#13;
+       CASE WHEN @monto &gt; MonTE THEN 'True' ELSE 'False' END AS excede&#13;
+	FROM SIBE_CALIFICACION_CAB&#13;
+	WHERE Cuit = @cuit;&#13;
+END&#13;
+&#13;
+</sql>
+            <input>
+                <inParameter description="" type="LONG">cuit</inParameter>
+                <inParameter description="" type="LONG">monto</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="excede">
+                    <outParameter description="" type="LONG">
+                        <queryname>monto</queryname>
+                        <servicename>montoExcedido</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>excede</queryname>
+                        <servicename>excede</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

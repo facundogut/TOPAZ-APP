@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.j2ee.jboss.server.services.controltable.TableServersConnectionControl</class-name>
+        <entity-name>core.vo_ServersConnectionControl</entity-name>
+        <table-name>SERVERS_CONTROL</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>jts_oid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <key>primary</key>
+            <attribute-id-generator>selfNumerator</attribute-id-generator>
+        </attribute>
+        <attribute>
+            <attribute-name>ipServidor</attribute-name>
+            <column-name>IP_SERVER</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>httpPort</attribute-name>
+            <column-name>HTTP_PORT_SERVER</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>initialConnection</attribute-name>
+            <column-name>INITIAL_CONNECTION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>lastUpdate</attribute-name>
+            <column-name>LAST_UPDATE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>protocol</attribute-name>
+            <column-name>PROTOCOL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>ipConnected</attribute-name>
+            <column-name>IP_CONNECTED</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.j2ee.jboss.server.services.controltable.TableServersConnectionControl</class-name>
+        <query-name>query.core.vo_RowsOfServer</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT JTS_OID
+            FROM SERVERS_CONTROL
+            WHERE IP_CONNECTED = ?
+		</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.j2ee.jboss.server.services.controltable.TableServersConnectionControl</class-name>
+        <query-name>query.core.vo_InactiveRowsOfServer</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+            SELECT JTS_OID, IP_SERVER
+            FROM SERVERS_CONTROL
+            WHERE LAST_UPDATE &lt;= ?
+		</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ipServidor</attribute-name>
+            <column-name>IP_SERVER</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.j2ee.jboss.server.services.controltable.TableServersConnectionControl</class-name>
+        <query-name>query.core.vo_Rows</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT JTS_OID, IP_SERVER, INITIAL_CONNECTION, LAST_UPDATE, HTTP_PORT_SERVER, PROTOCOL, IP_CONNECTED  
+		            FROM SERVERS_CONTROL 
+					ORDER BY INITIAL_CONNECTION
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ipServidor</attribute-name>
+            <column-name>IP_SERVER</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>initialConnection</attribute-name>
+            <column-name>INITIAL_CONNECTION</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>lastUpdate</attribute-name>
+            <column-name>LAST_UPDATE</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>httpPort</attribute-name>
+            <column-name>HTTP_PORT_SERVER</column-name>
+            <column-type>Integer</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>protocol</attribute-name>
+            <column-name>PROTOCOL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ipConnected</attribute-name>
+            <column-name>IP_CONNECTED</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.processmgr.servercontrol.ServerControlValueObject</class-name>
+        <query-name>query.core.vo_FindByIpConnected</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				 SELECT JTS_OID, IP_SERVER,IP_CONNECTED, INITIAL_CONNECTION, LAST_UPDATE, HTTP_PORT_SERVER, PROTOCOL  
+		         FROM SERVERS_CONTROL WHERE IP_CONNECTED = ?
+				 ORDER BY INITIAL_CONNECTION
+			</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ipServidor</attribute-name>
+            <column-name>IP_SERVER</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ipConnected</attribute-name>
+            <column-name>IP_CONNECTED</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>initialConnection</attribute-name>
+            <column-name>INITIAL_CONNECTION</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>lastUpdate</attribute-name>
+            <column-name>LAST_UPDATE</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>httpPort</attribute-name>
+            <column-name>HTTP_PORT_SERVER</column-name>
+            <column-type>Integer</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>protocol</attribute-name>
+            <column-name>PROTOCOL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+</map>

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_SaldosRechazadosProcesoAnterior</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select SALDO_JTS_OID from REVISION_TASAS where FECHA=? and ESTADO = 'R'
+		</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.revisiontasas.RevisionTasas</class-name>
+        <entity-name>core.vo_RevisionTasas</entity-name>
+        <table-name>REVISION_TASAS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <key>primary</key>
+            <attribute-id-generator>selfNumerator</attribute-id-generator>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>observacion</attribute-name>
+            <column-name>OBSERVACION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tasaAnt</attribute-name>
+            <column-name>TASA_ANT</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tasaAct</attribute-name>
+            <column-name>TASA_ACT</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>criterioTasaRevision</attribute-name>
+            <column-name>CRITERIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>interesAnterior</attribute-name>
+            <column-name>INTERES_ANTERIOR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>cuotaAnterior</attribute-name>
+            <column-name>CUOTA_ANTERIOR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>puntoTasas</attribute-name>
+            <column-name>PUNTOS_TASA</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.revisiontasas.SaldoRevisionTasa</class-name>
+        <query-name>query.vo_SaldosRevisionTasas</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT jts_oid, c1631, PERIODOREVTASA
+			 FROM SALDOS s
+			 INNER JOIN CRE_SALDOS cs ON cs.SALDOS_JTS_OID=s.JTS_OID
+			 INNER JOIN TOPESPRODUCTO tp ON tp.CODPRODUCTO=s.PRODUCTO AND s.MONEDA=tp.MONEDA
+			 INNER JOIN (SELECT TIPOTASABASE, max(VIGENCIADESDE) AS VIGENCIADESDE FROM TASASBASE WHERE TZ_LOCK=0 
+			 GROUP BY TIPOTASABASE) tb ON tb.TIPOTASABASE=tp.TIPO_TASA_BASE 
+			 INNER JOIN TASASBASE tb1 ON tb1.TIPOTASABASE = tb.TIPOTASABASE AND tb1.VIGENCIADESDE=tb.VIGENCIADESDE AND tb1.TZ_LOCK=0
+			WHERE cs.TZ_LOCK=0 AND s.TZ_LOCK = 0 AND s.C1785 = 5
+			  and s.C1604 &lt;0 AND s.C1627 &gt;= ? 
+			  and s.C1690 in ('V', 'M')
+			  AND tp.TASA_REVISABLE='S'
+			  AND tb1.TASA_CONVERTIDA &lt;&gt; ISNULL(cs.TASA_CONVERTIDA,0)
+			  AND s.C1631 = (SELECT fechaprocesoanterior FROM PARAMETROS) -- Ajustado por el SP_PA_REVISION_DE_TASAS_PREPARA
+			  AND PERIODOREVTASA=1 -- Periodo de Revision diario
+		</sentence>
+        <attribute>
+            <attribute-name>jts_oid</attribute-name>
+            <column-name>jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaInicialRevisionTasa</attribute-name>
+            <column-name>c1631</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>periodoRevisionTasa</attribute-name>
+            <column-name>PERIODOREVTASA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

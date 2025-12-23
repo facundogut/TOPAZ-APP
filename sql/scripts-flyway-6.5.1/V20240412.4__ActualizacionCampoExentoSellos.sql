@@ -1,0 +1,4791 @@
+EXECUTE('
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''000007''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''000008''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''000009''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''000010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''000011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''000012''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''000013''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011111''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011112''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011119''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011121''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011129''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011211''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011291''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011299''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011321''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011329''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011331''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011341''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011342''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011400''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011501''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011509''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011911''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011912''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''011990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012121''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012311''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012319''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012410''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012420''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012490''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012510''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012590''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012600''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012701''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012709''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012800''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''012900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''013011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''013012''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''013013''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''013019''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''013020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014113''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014114''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014115''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014121''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014211''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014221''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014410''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014420''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014430''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014440''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014510''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014520''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014610''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014620''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014710''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014720''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014810''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014820''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014930''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''014990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016111''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016112''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016113''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016119''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016140''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016150''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016230''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016291''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016292''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''016299''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''017010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''017020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''021010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''021020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''021030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''022010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''022020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''024010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''024020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''031110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''031120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''031130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''031200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''031300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''032000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''051000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''052000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''061000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''062000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''071000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''072100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''072910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''072990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''081100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''081200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''081300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''081400''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''089110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''089120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''089200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''089300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''089900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''091000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''099000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''101011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''101012''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''101013''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''101020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''101030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''101040''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''101091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''101099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''102001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''102002''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''102003''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''103011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''103012''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''103020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''103030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''103091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''103099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''104011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''104012''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''104013''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''104020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''105010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''105020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''105030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''105090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''106110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''106120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''106131''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''106139''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''106200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107121''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107129''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107301''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107309''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107410''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107420''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107500''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107911''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107912''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107930''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107991''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107992''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''107999''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''108000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''109000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''110100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''110211''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''110212''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''110290''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''110300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''110411''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''110412''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''110420''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''110491''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''110492''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''120010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''120091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''120099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''131110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''131120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''131131''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''131132''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''131139''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''131201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''131202''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''131209''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''131300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''139100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''139201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''139202''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''139203''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''139204''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''139209''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''139300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''139400''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''139900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''141110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''141120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''141130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''141140''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''141191''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''141199''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''141201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''141202''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''142000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''143010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''143020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''149000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''151100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''151200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''152011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''152021''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''152031''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''152040''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''161001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''161002''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''162100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''162201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''162202''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''162300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''162901''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''162902''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''162903''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''162909''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''170101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''170102''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''170201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''170202''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''170910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''170990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''181101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''181109''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''181200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''182000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''191000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''192000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201140''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201180''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201401''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''201409''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''202101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''202200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''202311''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''202312''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''202320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''202906''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''202907''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''202908''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''203000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''204000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''210010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''210020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''210030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''210090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''221110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''221120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''221901''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''221909''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''222010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''222090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''231010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''231020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''231090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239202''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239209''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239391''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239399''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239410''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239421''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239422''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239510''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239591''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239592''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239593''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''239600''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''239900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''241001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''241009''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''242010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''242090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''243100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''243200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''251101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''251102''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''251200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''251300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''252000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''259100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''259200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''259301''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''259302''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''259309''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''259910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''259991''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''259992''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''259993''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''259999''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''261000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''262000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''263000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''264000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''265101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''265102''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''265200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''266010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''266090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''267001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''267002''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''268000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''271010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''271020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''272000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''273110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''273190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''274000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''275010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''275020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''275091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''275092''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''275099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''279000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''281100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''281201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''281301''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''281400''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''281500''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''281600''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''281700''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''281900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282400''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282500''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282600''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282901''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''282909''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''291000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''292000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''293011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''293090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''301100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''301200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''302000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''303000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''309100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''309200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''309900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''310010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''310020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''310030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''321011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''321012''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''321020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''322001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''323001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''324000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''329010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''329020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''329030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''329040''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''329090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''331101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''331210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''331220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''331290''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''331301''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''331400''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''331900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''332000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''351110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''351120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''351130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''351190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''351201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''351310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''351320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''352010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''352020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''353001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''360010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''360020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''370000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''381100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''381200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''382010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''382020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''390000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''410011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''410021''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''421000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''422100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''422200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''429010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''429090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''431100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''431210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''431220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''432110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''432190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''432200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''432910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''432920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''432990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''433010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''433020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''433030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''433040''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''433090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''439100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''439910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''D''
+WHERE CODIGO_ACT_AFIP = ''439990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''451110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''451190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''451210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''451290''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452401''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452500''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452600''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452700''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452800''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''452990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''453100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''453210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''453220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''453291''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''453292''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''454010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''454020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461012''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461013''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461014''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461019''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461021''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461022''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461029''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461031''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461032''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461039''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461040''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461092''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461093''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461094''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461095''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''461099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''462110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''462120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''462131''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''462132''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''462190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''462201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''462209''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463111''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463112''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463121''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463129''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463140''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463151''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463152''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463153''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463154''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463159''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463160''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463170''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463180''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463191''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463199''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463211''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463212''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463219''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''463300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464111''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464112''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464113''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464114''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464119''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464121''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464122''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464129''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464141''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464142''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464149''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464150''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464211''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464212''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464221''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464222''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464223''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464330''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464340''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464410''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464420''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464501''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464502''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464610''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464620''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464631''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464632''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464930''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464940''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464950''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464991''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''464999''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465330''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465340''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465350''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465360''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465390''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465400''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465500''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465610''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465690''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465930''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''465990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466121''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466129''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466330''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466340''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466350''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466360''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466370''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466391''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466399''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466931''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466932''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466939''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466940''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''466990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''469010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''469090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''471110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''471120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''471130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''471190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''471900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472111''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472112''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472140''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472150''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472160''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472171''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472172''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''472300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''473000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''474010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''474020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475230''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475240''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475250''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475260''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475270''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475290''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475410''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475420''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475430''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475440''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''475490''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''476110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''476120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''476130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''476200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''476310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''476320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''476400''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477140''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477150''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477230''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477290''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477330''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477410''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477420''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477430''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477440''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477450''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477460''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477470''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477480''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477490''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477810''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477820''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477830''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477840''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''477890''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''478010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''478090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''479101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''479109''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''479900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''491110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''491120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''491200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492140''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492150''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492160''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492170''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492180''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492221''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492229''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492230''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492240''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492250''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492280''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''492290''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''493110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''493120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''493200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''501100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''501200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''502101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''502200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''511000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''512000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''521010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''521020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''521030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''522010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''522020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''522091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''522092''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''522099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''523011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''523019''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''523020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''523031''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''523032''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''523039''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''523090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524230''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524290''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524330''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''524390''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''530010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''530090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''551010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''551021''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''551022''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''551023''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''551090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''552000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''561011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''561012''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''561013''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''561014''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''561019''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''561020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''561030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''561040''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''562010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''562091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''562099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''581100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''581200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''581300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''581900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''591110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''591120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''591200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''591300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''592000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''601000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''602100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''602200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''602310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''602320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''602900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''611010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''611090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''612000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''613000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''614010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''614090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''619000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''620100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''620200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''620300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''620900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''631110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''631120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''631190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''631200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''639100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''639900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''641100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''641910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''641920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''641930''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''641941''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''641942''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''641943''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''642000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''643001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''643009''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''649100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''649210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''649220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''649290''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''649910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''649991''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''649999''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''651110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''651120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''651130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''651210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''651220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''651310''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''651320''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''652000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''653000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''661111''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''661121''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''661131''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''661910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''661920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''661930''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''661991''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''661992''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''661999''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''662010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''662020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''662090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''663000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''681010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''681020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''681098''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''681099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''682010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''682091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''682099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''691001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''691002''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''692000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''702010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''702091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''702092''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''702099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''711001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''711002''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''711003''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''711009''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''712000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''721010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''721020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''721030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''721090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''722010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''722020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''731001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''731009''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''732000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''741000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''742000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''749001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''749002''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''749003''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''749009''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''750000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''771110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''771190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''771210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''771220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''771290''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''772010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''772091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''772099''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''773010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''773020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''773030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''773040''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''773090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''774000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''780000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''791100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''791200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''791901''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''791909''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''801010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''801020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''801090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''811000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''812010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''812020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''812090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''813000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''821100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''821900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''822000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''823000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''829100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''829200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''829900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''841100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''841200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''841300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''841900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''842100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''842200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''842300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''842400''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''842500''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''843000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''851010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''851020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''852100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''852200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''853100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''853201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''853300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''854910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''854920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''854930''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''854940''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''854950''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''854960''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''854990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''855000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''861010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''861020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''862110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''862120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''862130''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''862200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''863110''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''863120''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''863190''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''863200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''863300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''864000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''869010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''869090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''870100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''870210''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''870220''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''870910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''870920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''870990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''880000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''900011''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''900021''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''900030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''900040''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''900091''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''910100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''910200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''910300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''910900''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''920001''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''920009''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''931010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''931020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''931030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''931041''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''931042''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''931050''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''931090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''939010''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''939020''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''939030''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''939090''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''941100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''941200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''942000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''949100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''949200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''949910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''949920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''949930''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''E''
+WHERE CODIGO_ACT_AFIP = ''949990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''951100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''951200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''952100''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''952200''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''952300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''952910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''952920''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''952990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''960101''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''960102''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''960201''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''960202''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''960300''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''960910''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''960990''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''970000''
+
+
+UPDATE CLI_Cod_Act_AFIP
+SET Exento_Imp_Sellos = ''N''
+WHERE CODIGO_ACT_AFIP = ''990000''
+')
+

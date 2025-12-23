@@ -1,0 +1,31 @@
+﻿EXECUTE('
+IF OBJECT_ID (''dbo.ITF_COMARB_DEVOLUCION'') IS NOT NULL
+	DROP TABLE dbo.ITF_COMARB_DEVOLUCION
+
+CREATE TABLE dbo.ITF_COMARB_DEVOLUCION
+	(
+	ANO_RECAUDACIONES           VARCHAR (4) DEFAULT (''0'') NOT NULL,
+	MES_RECAUDACIONES           VARCHAR (2) DEFAULT (''0'') NOT NULL,
+	DECENA_MES                  VARCHAR (1) DEFAULT (''0'') NOT NULL,
+	CUIT                        VARCHAR (11) NOT NULL,
+	CBU                         VARCHAR (22),
+	IMPORTE_TOTAL_CREDITO       VARCHAR (20),
+	IMPORTE_TOTAL_RECAUDACIONES VARCHAR (20),
+	TIPO_CUENTA                 VARCHAR (1),
+	TIPO_MONEDA                 VARCHAR (1),
+	CANTIDAD_MOV                VARCHAR (6),
+	CRC                         VARCHAR (2),
+	ID_DEVOLUCION               VARCHAR (8),
+	TIPO_REGISTRO               VARCHAR (1),
+	IDENTIFICACION_JURIDICA     VARCHAR (3),
+	ES_CLIENTE                  VARCHAR (2),
+	ESTADO                      VARCHAR (2),
+	MOTIVO_RECHAZO              VARCHAR (700),
+	FECHAPROCESO                DATETIME,
+	ID                          INT IDENTITY NOT NULL,
+	Contabilizado               VARCHAR (1),
+	FechaInformado              DATE,
+	CONSTRAINT PK_ITF_COMARB_DEVOLUCION PRIMARY KEY (ID)
+	)
+')
+

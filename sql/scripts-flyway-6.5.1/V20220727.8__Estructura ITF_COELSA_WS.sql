@@ -1,0 +1,23 @@
+﻿EXECUTE('
+--------------------------
+--MODIFICO TIPO DATO CBU--
+--------------------------
+IF OBJECT_ID (''dbo.ITF_COELSA_WS'') IS NOT NULL
+	DROP TABLE dbo.ITF_COELSA_WS
+--
+')
+EXECUTE('
+--
+CREATE TABLE dbo.ITF_COELSA_WS
+	(
+	CBU          VARCHAR (30) DEFAULT ('' '') NOT NULL,
+	CUIT         NUMERIC (22) DEFAULT ((0)) NOT NULL,
+	NOMBRE       VARCHAR (250) DEFAULT ('' ''),
+	TIPO_PERSONA VARCHAR (1) DEFAULT ('' ''),
+	TZ_LOCK      NUMERIC (15) DEFAULT ((0)) NOT NULL,
+	CUIT1        NUMERIC (30),
+	CONSTRAINT PK_ITF_COELSA_WS_01 PRIMARY KEY (CBU, CUIT)
+	)
+--
+')
+

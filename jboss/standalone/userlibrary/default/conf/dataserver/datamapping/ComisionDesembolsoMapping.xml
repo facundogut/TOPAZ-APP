@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.cronogramaDevengamientoComisiones.CronogramaDevengamientoComisiones</class-name>
+        <query-name>query.devengamientoComisiones</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT SALDOS_JTS_OID, NUMERO_CUOTA from BS_COMISIONDESEMBOLSO cd 
+				INNER JOIN SALDOS s ON (cd.SALDOS_JTS_OID = s.JTS_OID)
+			WHERE cd.TZ_LOCK = 0 AND s.TZ_LOCK = 0 AND
+			      cd.IMPORTE_COMISION &gt; cd.DEVENGADO AND
+			     ((cd.FECHA_ULT_DEVENGADO is NULL OR cd.FECHA_ULT_DEVENGADO &lt; (select FECHAPROCESO from PARAMETROS)) OR
+		         (cd.FECHA_VENCIMIENTO &gt; (select FECHAPROCESO from PARAMETROS) and (C1604 = 0 or C1728='C')))
+			ORDER BY SALDOS_JTS_OID,NUMERO_CUOTA
+		</sentence>
+        <attribute>
+            <attribute-name>saldosJtsOid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroCuota</attribute-name>
+            <column-name>NUMERO_CUOTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.cronogramaDevengamientoComisiones.CronogramaDevengamientoComisiones</class-name>
+        <query-name>query.ObtenerFechaVtoCuotaComisionDesembolso</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>			
+			SELECT FECHA_VENCIMIENTO FROM BS_COMISIONDESEMBOLSO 
+			WHERE TZ_LOCK = 0 AND SALDOS_JTS_OID=? AND NUMERO_CUOTA=?
+		</sentence>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.cronogramaDevengamientoComisiones.CronogramaDevengamientoComisiones</class-name>
+        <entity-name>topsystems.vo.core_COMISIONDESEMBOLSO</entity-name>
+        <table-name>BS_COMISIONDESEMBOLSO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldosJtsOid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroCuota</attribute-name>
+            <column-name>NUMERO_CUOTA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>capitalPrestamo</attribute-name>
+            <column-name>CAPITAL_PRESTAMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>interesPrestamo</attribute-name>
+            <column-name>INTERES_PRESTAMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>remanentePrestamo</attribute-name>
+            <column-name>REMANENTE_PRESTAMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>capitalComision</attribute-name>
+            <column-name>CAPITAL_COMISION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>interesComision</attribute-name>
+            <column-name>INTERES_COMISION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>remanenteComision</attribute-name>
+            <column-name>REMANENTE_COMISION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importeComision</attribute-name>
+            <column-name>IMPORTE_COMISION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>devengado</attribute-name>
+            <column-name>DEVENGADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaUltimoDevengado</attribute-name>
+            <column-name>FECHA_ULT_DEVENGADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>monedaOrigen</attribute-name>
+            <column-name>MONEDA_ORIGEN</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.cronogramaDevengamientoComisionesMN</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>			
+					select jts_oid from saldos s where 
+					s.tz_lock = 0 
+					and s.c1785 = 5  
+					and s.c1604 &lt;&gt; 0
+					AND (s.ComisDesemMN &lt;&gt; 0)
+					AND s.jts_oid NOT IN (			
+						SELECT DISTINCT(c.saldos_jts_oid) FROM BS_COMISIONDESEMBOLSO c  
+						WHERE c.TZ_LOCK = 0		
+					)
+				</sentence>
+        <attribute>
+            <attribute-name>jts_oid</attribute-name>
+            <column-name>jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.cronogramaDevengamientoComisionesMO</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>			
+					select jts_oid from saldos s where 
+					s.tz_lock = 0 
+					and s.c1785 = 5  
+					and s.c1604 &lt;&gt; 0
+					AND (s.ComisDesemMO &lt;&gt; 0)
+					AND s.jts_oid NOT IN (			
+						SELECT DISTINCT(c.saldos_jts_oid) FROM BS_COMISIONDESEMBOLSO c  
+						WHERE c.TZ_LOCK = 0		
+					)
+				</sentence>
+        <attribute>
+            <attribute-name>jts_oid</attribute-name>
+            <column-name>jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

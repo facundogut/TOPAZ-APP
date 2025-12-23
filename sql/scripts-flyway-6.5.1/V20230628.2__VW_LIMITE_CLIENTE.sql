@@ -1,0 +1,29 @@
+EXECUTE('
+IF OBJECT_ID (''dbo.VW_LIMITE_CLIENTE'') IS NOT NULL
+	DROP VIEW dbo.VW_LIMITE_CLIENTE
+')
+EXECUTE('
+CREATE  VIEW [dbo].[VW_LIMITE_CLIENTE] (
+													CLIENTE, 
+													NIVEL, 
+													TIPO,
+													IDLIMITE, 
+													RIESGO, 
+													NOMBRERIESGO, 
+													FAMILIA, 
+													PRODUCTO, 
+													MONEDA, 
+													MONTO_LIMITE, 
+													DISP_LIMITE,
+													ESTADO)
+AS 
+SELECT TOP 9223372036854775807 WITH TIES
+CLIENTE, NIVEL, TIPO, IDLIMITE, RIESGO, NOMBRERIESGO,
+FAMILIA, PRODUCTO, MONEDA, MONTO_LIMITE, DISP_LIMITE, ESTADO
+FROM CRE_LIMITES_CLIENTE WITH(NOLOCK)
+ORDER BY    CLIENTE, 
+            IDLIMITE, 
+            RIESGO, 
+            FAMILIA, 
+            PRODUCTO
+')			

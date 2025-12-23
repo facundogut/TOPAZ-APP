@@ -1,0 +1,18 @@
+﻿EXECUTE('
+INSERT INTO dbo.OPCIONES
+	(
+	NUMERODECAMPO
+	, IDIOMA
+	, DESCRIPCION
+	, OPCIONINTERNA
+	, OPCIONDEPANTALLA
+	)
+VALUES
+	(
+	8684
+	, ''E''
+	, ''Cheque Digital''
+	, ''1''
+	, ''1''
+	)
+')

@@ -1,0 +1,20 @@
+service CONTROLCANAL; 
+description "Control de canal habilitado por producto"; 
+
+action:	SQLQuery CONTROLCANAL (
+  producto:	numeric,
+  moneda: numeric,
+  canal: numeric
+  ): [ 
+   
+    habilitado : string,
+    dsccanal: string
+]
+{ 
+  	properties {
+    ("statement", "SELECT pr.habilitado, cc.dsc_canal as dsccanal from PROD_RELCANALES pr inner join CLI_CANALES cc on pr.CANAL = cc.cod_canal where pr.PRODUCTO =? and pr.MONEDA =? and pr.CANAL =? and pr.TZ_LOCK =0"),
+    ("0", "producto"), 
+    ("1", "moneda"), 
+    ("2", "canal")
+    }
+}

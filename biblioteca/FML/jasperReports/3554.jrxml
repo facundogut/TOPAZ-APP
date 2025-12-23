@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2023-10-11T17:11:57 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DEP086" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ae7287c2-a15a-4aed-a775-c9b844f94ea1">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<parameter name="JTSOID" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT  dbo."SALDOS"."SUCURSAL", 
+(SELECT CONCAT(CONCAT( dbo."CLI_DIRECCIONES"."CALLE" , ' '),  dbo."CLI_DIRECCIONES"."NUMERO" ) 
+FROM  dbo."CLI_DIRECCIONES"  WHERE  dbo."CLI_DIRECCIONES"."ID"  = dbo."SALDOS"."SUCURSAL" AND
+ dbo."CLI_DIRECCIONES"."FORMATO"  = 'S' AND  dbo."CLI_DIRECCIONES"."TIPODIRECCION" = 'R'
+) AS DIRSUC,  dbo."CLI_CLIENTES"."NOMBRECLIENTE" ,  
+
+CASE 
+WHEN  dbo."CLI_CLIENTES"."TIPO" = 'F' THEN (SELECT CONCAT(CONCAT( dbo."CLI_DIRECCIONES"."CALLE" , ' '),  dbo."CLI_DIRECCIONES"."NUMERO" ) 
+FROM  dbo."CLI_DIRECCIONES"  WHERE  dbo."CLI_DIRECCIONES"."ID"  =   dbo."CLI_ClientePersona"."NUMEROPERSONA"   AND
+ dbo."CLI_DIRECCIONES"."FORMATO"  = 'PF' AND  dbo."CLI_DIRECCIONES"."TIPODIRECCION" = 'PR' )
+ 
+ WHEN  dbo."CLI_CLIENTES"."TIPO" = 'J' THEN (SELECT CONCAT(CONCAT( dbo."CLI_DIRECCIONES"."CALLE" , ' '),  dbo."CLI_DIRECCIONES"."NUMERO" ) 
+FROM  dbo."CLI_DIRECCIONES"  WHERE  dbo."CLI_DIRECCIONES"."ID"  =  dbo."CLI_ClientePersona"."NUMEROPERSONA"    AND
+ dbo."CLI_DIRECCIONES"."FORMATO"  = 'PJ' AND  dbo."CLI_DIRECCIONES"."TIPODIRECCION" = 'L' )
+ END AS DIRCLI,
+ 
+ CASE 
+WHEN  dbo."CLI_CLIENTES"."TIPO" = 'F' THEN (SELECT   dbo."CLI_LOCALIDADES"."DESCRIPCION_DIM3" 
+FROM  dbo."CLI_DIRECCIONES",   dbo."CLI_LOCALIDADES"  
+WHERE  dbo."CLI_DIRECCIONES"."ID"  =   dbo."CLI_ClientePersona"."NUMEROPERSONA"   AND
+ dbo."CLI_DIRECCIONES"."FORMATO"  = 'PF' AND  dbo."CLI_DIRECCIONES"."TIPODIRECCION" = 'PR'  
+ AND  dbo."CLI_LOCALIDADES"."CODIGOPAIS"=   dbo."CLI_DIRECCIONES"."PAIS"  AND  
+ dbo."CLI_LOCALIDADES"."DIM1" =  dbo."CLI_DIRECCIONES"."PROVINCIA" 
+ AND   dbo."CLI_LOCALIDADES"."DIM2" =   dbo."CLI_DIRECCIONES"."DEPARTAMENTO" 
+ AND   dbo."CLI_LOCALIDADES"."DIM3"  =  dbo."CLI_DIRECCIONES"."LOCALIDAD" )
+ 
+ WHEN  dbo."CLI_CLIENTES"."TIPO" = 'J' THEN (SELECT   dbo."CLI_LOCALIDADES"."DESCRIPCION_DIM3" 
+FROM  dbo."CLI_DIRECCIONES" ,  dbo."CLI_LOCALIDADES" 
+WHERE  dbo."CLI_DIRECCIONES"."ID"  =   dbo."CLI_ClientePersona"."NUMEROPERSONA"   AND
+ dbo."CLI_DIRECCIONES"."FORMATO"  = 'PJ' AND  dbo."CLI_DIRECCIONES"."TIPODIRECCION" = 'L' 
+ AND  dbo."CLI_LOCALIDADES"."CODIGOPAIS"=   dbo."CLI_DIRECCIONES"."PAIS"  AND  
+ dbo."CLI_LOCALIDADES"."DIM1" =  dbo."CLI_DIRECCIONES"."PROVINCIA" 
+ AND   dbo."CLI_LOCALIDADES"."DIM2" =   dbo."CLI_DIRECCIONES"."DEPARTAMENTO" 
+ AND   dbo."CLI_LOCALIDADES"."DIM3"  =  dbo."CLI_DIRECCIONES"."LOCALIDAD" )
+ END AS LOCALIDAD,
+ 
+ CASE 
+ 
+WHEN  dbo."CLI_CLIENTES"."TIPO" = 'F' THEN (SELECT   dbo."CLI_DIRECCIONES"."CPA_NUEVO" 
+FROM  dbo."CLI_DIRECCIONES"  WHERE  dbo."CLI_DIRECCIONES"."ID"  =  dbo."CLI_ClientePersona"."NUMEROPERSONA"    AND
+ dbo."CLI_DIRECCIONES"."FORMATO"  = 'PF' AND  dbo."CLI_DIRECCIONES"."TIPODIRECCION" = 'PR' )
+ WHEN  dbo."CLI_CLIENTES"."TIPO" = 'J' THEN (SELECT   dbo."CLI_DIRECCIONES"."CPA_NUEVO" 
+FROM  dbo."CLI_DIRECCIONES"  WHERE  dbo."CLI_DIRECCIONES"."ID"  =  dbo."CLI_ClientePersona"."NUMEROPERSONA"    AND
+ dbo."CLI_DIRECCIONES"."FORMATO"  = 'PJ' AND  dbo."CLI_DIRECCIONES"."TIPODIRECCION" = 'L' )
+ END AS CP,
+ 
+ (SELECT CONCAT(CONCAT( dbo."SUCURSALES"."SUCURSAL", ' - ' ),  dbo."SUCURSALES"."NOMBRESUCURSAL" ) FROM
+ dbo."SUCURSALES"  WHERE  dbo."SUCURSALES"."SUCURSAL" = dbo."SALDOS"."SUCURSAL"  ) AS NOMSUC,
+ 
+  dbo."SALDOS"."CUENTA" ,
+  
+   dbo."CV_CANCELACION_CUENTAS"."FECHA_CANCELACION",
+   
+ CASE 
+WHEN  dbo."CLI_CLIENTES"."TIPO" = 'F' THEN (SELECT    dbo."CLI_PROVINCIAS"."DESCRIPCION" 
+FROM  dbo."CLI_DIRECCIONES",   dbo."CLI_PROVINCIAS"  
+WHERE  dbo."CLI_DIRECCIONES"."ID"  =   dbo."CLI_ClientePersona"."NUMEROPERSONA"  AND
+ dbo."CLI_DIRECCIONES"."FORMATO"  = 'PF' AND  dbo."CLI_DIRECCIONES"."TIPODIRECCION" = 'PR'  
+ AND  dbo."CLI_PROVINCIAS"."CODIGOPAIS"=   dbo."CLI_DIRECCIONES"."PAIS"  AND  
+ dbo."CLI_PROVINCIAS"."DIM1" =  dbo."CLI_DIRECCIONES"."PROVINCIA"  )
+ 
+ WHEN  dbo."CLI_CLIENTES"."TIPO" = 'J' THEN (SELECT    dbo."CLI_PROVINCIAS"."DESCRIPCION" 
+FROM  dbo."CLI_DIRECCIONES" ,  dbo."CLI_PROVINCIAS" 
+WHERE  dbo."CLI_DIRECCIONES"."ID"  =   dbo."CLI_ClientePersona"."NUMEROPERSONA"   AND
+ dbo."CLI_DIRECCIONES"."FORMATO"  = 'PJ' AND  dbo."CLI_DIRECCIONES"."TIPODIRECCION" = 'L' 
+ AND  dbo."CLI_PROVINCIAS"."CODIGOPAIS"=   dbo."CLI_DIRECCIONES"."PAIS"  AND  
+ dbo."CLI_PROVINCIAS"."DIM1" =  dbo."CLI_DIRECCIONES"."PROVINCIA"  )
+ END AS PROVINCIA,
+  dbo."SALDOS"."C1604" 
+ 
+ FROM  dbo."CLI_CLIENTES",   dbo."SALDOS",   dbo."CV_CANCELACION_CUENTAS" ,  dbo."CLI_ClientePersona" 
+ WHERE  dbo."CLI_CLIENTES"."CODIGOCLIENTE"  = dbo."SALDOS"."C1803" 
+ AND  dbo."SALDOS"."JTS_OID" = $P{JTSOID} AND  
+ dbo."CV_CANCELACION_CUENTAS"."SALDO_JTS_OID" = dbo."SALDOS"."JTS_OID"
+ AND  dbo."CLI_ClientePersona"."CODIGOCLIENTE" = dbo."CLI_CLIENTES"."CODIGOCLIENTE"
+ AND  dbo."CLI_ClientePersona"."TITULARIDAD" = 'T']]>
+	</queryString>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="DIRSUC" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="DIRCLI" class="java.lang.String"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<field name="CP" class="java.lang.String"/>
+	<field name="NOMSUC" class="java.lang.String"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="FECHA_CANCELACION" class="java.sql.Timestamp"/>
+	<field name="PROVINCIA" class="java.lang.String"/>
+	<field name="C1604" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="66" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="440" height="20" uuid="4d963fb8-e2fa-4c53-bf91-a38a78b81d4c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Certificado de Saldo Deudor en Cuentas Corrientes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="30" width="210" height="20" uuid="25e901fb-d683-4495-bd58-501489a26238">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sin Cláusula de Intereses]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="144" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="14" width="52" height="15" uuid="efe32599-42b3-440e-9c31-d47a0f2393a5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="29" width="52" height="15" uuid="5f76e998-4483-4bc5-b4db-f6b603996087">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Domicilio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="52" height="15" uuid="446a7ef5-6fb3-449f-93f3-302498911434">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Sres.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="75" width="52" height="15" uuid="1777229e-a5e6-46d1-88bb-d69593a2741f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Domicilio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="52" height="15" uuid="3c0cb2a4-c5ec-427c-90d4-2cdf9f01e32c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Localidad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="90" width="20" height="15" uuid="33f0c575-9738-4cb0-a49e-f06f788e32e4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[CP:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="280" y="70" width="100" height="15" uuid="a724b0ac-45c9-44fd-ba03-848e9cc8ee7d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Cuenta Corriente N°:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="52" y="14" width="52" height="15" uuid="dc6c7510-aae8-42e1-bf3a-1d9517a3117a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="104" y="14" width="100" height="15" uuid="8279eeb9-ed4a-4bdf-89b9-883d60f5af37">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMSUC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="52" y="29" width="152" height="15" uuid="f87b3b58-56c2-4589-8dc9-d72335a153fa">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DIRSUC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="52" y="60" width="152" height="15" uuid="91681370-be15-4fea-9b90-90c614a591c6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRECLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="52" y="75" width="152" height="15" uuid="2b04fa92-739a-4aca-b53c-c96e83d06e6b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DIRCLI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="52" y="90" width="132" height="15" uuid="84fb0694-c943-4631-bafb-1bf44d7f1652">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="204" y="90" width="76" height="15" uuid="5dd29785-f588-4a26-982e-04ebbee0d3f4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="70" width="100" height="15" uuid="fe38d7ee-da66-4384-9e52-476981bae3de">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="328" splitType="Stretch">
+			<staticText>
+				<reportElement x="31" y="1" width="539" height="15" uuid="1ff89569-5cfd-43fc-9394-332459df7bf3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Dejamos constancia, a los fines del artículo 1.406 del Código Civil y Comercial de la Nación, que la Cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="31" y="16" width="119" height="15" uuid="d80fd1c9-a2a6-40d5-aee4-9e6713d5b400">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Corriente Bancaria N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="180" y="16" width="89" height="15" uuid="4b706977-eb10-4c79-9554-5ba507482e5a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[ de la Sucursal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="16" width="264" height="15" uuid="b99b766e-2c7f-4355-b35f-e24f4c618e08">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[del Nuevo Banco del Chaco S.A., perteneciente a]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="31" width="200" height="15" uuid="5781ffe3-0425-4624-bd56-7fa329f9c517">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[, con domicilio especial constituido en]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="454" y="31" width="116" height="15" uuid="131059b7-77ca-4918-920d-0dc4e87f57ca">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[(calle y número),]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="110" y="46" width="54" height="15" uuid="0dd625a9-7628-4e38-8920-73bdd06a4e25">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[(localidad),]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="213" y="46" width="157" height="15" uuid="042938c8-54bd-424a-997c-0e27341c1522">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[(Provincia), fue cerrada el día]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="408" y="46" width="162" height="15" uuid="a20cc976-9cfa-451f-ba6d-44f4569abbed">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[- aviso de cierre notificado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="31" y="61" width="173" height="15" uuid="7b2a52c4-e1a6-4610-a609-32e2f95fdc01">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[mediante Carta Documento N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="61" width="350" height="15" uuid="0383074c-7ec3-4145-bb09-9c78753a6870">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[de Correo Argentino -, registrando a dicha fecha un saldo deudor de]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="31" y="76" width="34" height="15" uuid="2c1b1922-5517-4748-972f-b4510c25f589">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[PESOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="150" y="76" width="9" height="15" uuid="b6d80ad4-7993-4e3a-bc6e-81ef622863bd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[($]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="76" width="234" height="15" uuid="54b52aa2-130b-4e05-ad41-85e3a14f7d7f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[), notificado mediante Carta Documento N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="478" y="76" width="92" height="15" uuid="ea6ca4ff-d69f-4cb2-8d94-be29026071aa">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[de Correo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="31" y="91" width="49" height="15" uuid="69fa9afc-56e1-4099-b327-7148039d0102">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Argentino.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="102" y="120" width="35" height="15" uuid="1e646625-90e7-4a24-92f6-6ba342d075fd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[(lugar),]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="220" y="120" width="100" height="15" uuid="d9ce76ae-85c6-47cb-b0ae-b652efb7cf8e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[(fecha emisión).-]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="104" y="150" width="100" height="15" uuid="0c4103a9-509e-4998-9abb-5a66cb28955c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[.................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="306" y="150" width="100" height="15" uuid="9514077e-5ca9-4e6b-ba95-040d70d5395b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[.................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="127" y="170" width="54" height="15" uuid="0aa2d8d1-4ee8-499a-9200-06ed82a02c3d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Apoderado*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="329" y="170" width="54" height="15" uuid="2a882903-57f2-4fa0-a862-3bb6b2ebcc12">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Apoderado*]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="210" width="560" height="80" uuid="ee3e6658-4c6b-4397-bd49-670575d04c50">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[(*) Apoderados con facultades suficientes para este acto otorgadas mediante Poder Especial instrumentado en
+Escritura N° .... de fecha ..../..../20.... pasada ante Escribano/a ....., Registro N° .... de la ciudad de Resistencia, Chaco.
+(Para Sucursal Buenos Aires agregar: Legalización N° .... del Colegio de Escribanos de la Provincia del Chaco de
+fecha ..........).]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="306" width="88" height="22" uuid="c3f6ea7d-649d-49e8-8426-612d3cbd9b6c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEP 086/10-15]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="131" y="16" width="49" height="15" uuid="fb4bb373-995d-4836-97ac-f06dedf0be2e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="249" y="16" width="56" height="15" uuid="88b1c6a7-4eec-4b26-a6b4-3418c3de932b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="31" y="31" width="119" height="15" uuid="85043aab-3dfc-4a1b-90a8-01ff9e2404bc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRECLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="325" y="31" width="129" height="15" uuid="14a79b05-b2dd-4c97-9c9f-fa0a9af5263a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DIRCLI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="31" y="46" width="79" height="15" uuid="fe0f38ba-1804-4b93-bfdd-d1f8add1974b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="350" y="46" width="58" height="15" uuid="1d7cd47c-97db-4bb3-a8df-8fcfb78127cd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{FECHA_CANCELACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="164" y="46" width="49" height="15" uuid="b4f9302b-aba8-4f2b-ae22-450f4c1307f9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{PROVINCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="32" y="120" width="70" height="15" uuid="0bec4954-b3f1-413d-ade1-5c0dfb93b1bb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMSUC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="138" y="120" width="82" height="15" uuid="344767c5-71f3-4d21-88eb-a2a09db9967a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="76" width="48" height="15" uuid="29a2ce88-dd78-400e-b251-bd8c9beb3fb4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{C1604}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

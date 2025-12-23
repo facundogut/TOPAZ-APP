@@ -1,0 +1,23 @@
+﻿ALTER TABLE dbo.BITACORA_USUARIOS ALTER COLUMN INICIALES VARCHAR (8)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

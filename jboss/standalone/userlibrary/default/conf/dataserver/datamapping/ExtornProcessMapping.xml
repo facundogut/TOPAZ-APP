@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.vo_extornoMovDiferidos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select ASIENTO, SUCURSAL, FECHA, OPERACION 
+              from ASIENTOS_A_EXTORNAR
+              where operacion=TO_NUMBER((SELECT valor FROM PARAMETROS_JTS where funcionalidad = 'TOPAZPOS' 
+              and parametro = 'OPERACION')) and procesado='N'
+		</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.vo_extornoDevPlazoAsientos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select ASIENTO, SUCURSAL, FECHA, OPERACION 
+			  from ASIENTOS_A_EXTORNAR
+			 where PROCESADO = 'N' 
+			   and OPERACION=(select valor from parametros_jts where funcionalidad = 'DEVENGAMIENTOCONT' and parametro = 'OPERACION')
+		</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.FechaValorParaExtorno</class-name>
+        <query-name>query.vo_extornofechaValorHoy</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT RTRIM(LTRIM(convert(CHAR,day(fechaproceso))))   +
+				   RTRIM(LTRIM(convert(CHAR,'/')))                 +
+				   RTRIM(LTRIM(convert(CHAR,month(fechaproceso)))) +
+				   RTRIM(LTRIM(convert(CHAR,'/'))) +
+				   RTRIM(LTRIM(convert(CHAR,year(fechaproceso)))) as VALOR
+				FROM PARAMETROS
+			</sentence>
+        <attribute>
+            <attribute-name>fechaValorString</attribute-name>
+            <column-name>VALOR</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.vo_extornoExposicionSobregiros</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select ASIENTO, SUCURSAL, FECHA, OPERACION 
+			  from ASIENTOS_A_EXTORNAR
+			 where PROCESADO = 'N' 
+			   and OPERACION=(select valor from parametros_jts where funcionalidad = 'EXPOSICION_SOBREGIROS' and parametro = 'OPERACION')
+		</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.vo_extornoCategorizaciónCartera</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select ASIENTO, SUCURSAL, FECHA, OPERACION 
+			  from ASIENTOS_A_EXTORNAR
+			 where PROCESADO = 'N' 
+			   and OPERACION=(select valor from parametros_jts where funcionalidad = 'CATEGORIZACION' and parametro = 'OPERACION')
+		</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.vo_extornoAjustesInterSucursal</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select ASIENTO, SUCURSAL, FECHA, OPERACION 
+			  from ASIENTOS_A_EXTORNAR
+			 where PROCESADO = 'N' 
+			   and OPERACION=(select valor from parametros_jts where funcionalidad = 'AJUSTES_INTER_SUCURSAL' and parametro = 'OPERACION')
+		</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.vo_extornoContabilizacionGarantias</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select ASIENTO, SUCURSAL, FECHA, OPERACION 
+			  from ASIENTOS_A_EXTORNAR
+			 where PROCESADO = 'N' 
+			   and OPERACION=(select valor from parametros_jts where funcionalidad = 'DEDUCCIONES_GARANTIAS' and parametro = 'OPERACION')
+		</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.vo_ReversaWebservice</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+                select ASIENTO, SUCURSAL, FECHA, OPERACION 
+        from ASIENTOS_A_EXTORNAR
+        where  procesado = 'N' and
+        operacion = (select valor from parametros_jts where 
+        funcionalidad = 'REVERSA_WEBSERVICE' and parametro = 'OPERACION') and 
+        fecha &lt;= (select fechaproceso  from parametros)
+                </sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.vo_extornoAfectacionGarantias</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					select ASIENTO, SUCURSAL, FECHA, OPERACION, PROCESADO
+					from ASIENTOS_A_EXTORNAR
+					where procesado = 'N' and
+					operacion = (select valor from parametros_jts where
+					funcionalidad = 'CONTABILIZACION_AFECTACION_GARANTIAS' and parametro = 'OPERACION') 
+				</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>procesado</attribute-name>
+            <column-name>PROCESADO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.vo_extornoPrevisiones</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+							select ASIENTO, SUCURSAL, FECHA, OPERACION from ASIENTOS_A_EXTORNAR 
+							where procesado = 'N' and operacion = (select valor from parametros_jts where    
+							funcionalidad = 'CONTABILIZACION_PREVISIONES' and parametro = 'OPERACION') 
+						</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.extornoAcuerdosSobregiros</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				select ASIENTO, SUCURSAL, FECHA, OPERACION from ASIENTOS_A_EXTORNAR 
+				where procesado = 'N' and operacion = (select valor from parametros_jts where    
+				funcionalidad = 'ACUERDOS_EN_CUENTAS_NO_CONSUMIDOS' and parametro = 'OPERACION') and 
+				fecha &lt;= (select fechaprocesoanterior from parametros)
+			</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+	<query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+        <query-name>query.extornoSaldosTarjetasCredito</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				select ASIENTO, SUCURSAL, FECHA, OPERACION from ASIENTOS_A_EXTORNAR 
+				where procesado = 'N' and operacion = (SELECT valor FROM parametros_jts 
+				WHERE FUNCIONALIDAD = 'CONTABILIZACION_SALDOS_TARJETAS_CREDITO' AND PARAMETRO = 'OPERACION') 
+			</sentence>
+        <attribute>
+            <attribute-name>numeroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

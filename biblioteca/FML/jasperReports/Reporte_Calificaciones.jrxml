@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reporte_Calificaciones" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+	c.C0902 AS NRO_CLIENTE,
+	c.C1000 AS NOMBRE_CLIENTE,
+	c.califinternafinal as CALIFICACION_INTERNA_FINAL,
+	c.CalsistFinAjust as CAL_SF_AJUSTADA,
+	c.CalifAlin as CALIFICACION_ALINEADA,
+	s.MONEDA,
+	s.C1730 AS RUBRO_CONTABLE,
+	s.criterio AS TIPO_CREDITO,
+	s.Producto AS PRODUCTO,
+	s.CUENTA AS NRO_PMO,
+	s.C1604 AS SALDO_CAPITAL,
+	s.C1609-s.c1610 AS SALDO_INTERESES,
+	(CASE WHEN C1628>(SELECT FECHAPROCESO FROM PARAMETROS) THEN 0 ELSE datediff(dd,C1628,(SELECT FECHAPROCESO FROM PARAMETROS)) END) AS ATRASO,
+	s.CALIF_OBJ AS CALIFICACION,
+	(cast((SELECT FECHAPROCESO FROM PARAMETROS) AS char) ) as FECHA
+	FROM SALDOS s, CL_CLIENTES c
+	WHERE s.C1803=c.C0902
+	AND s.c9314=5 AND s.C1604<0
+	ORDER BY c.C0902, s.CRITERIO, s.c1730]]>
+	</queryString>
+	<field name="NRO_CLIENTE" class="java.lang.Long"/>
+	<field name="NOMBRE_CLIENTE" class="java.lang.String"/>
+	<field name="CALIFICACION_INTERNA_FINAL" class="java.lang.String"/>
+	<field name="CAL_SF_AJUSTADA" class="java.lang.String"/>
+	<field name="CALIFICACION_ALINEADA" class="java.lang.String"/>
+	<field name="MONEDA" class="java.math.BigDecimal"/>
+	<field name="RUBRO_CONTABLE" class="java.math.BigDecimal"/>
+	<field name="TIPO_CREDITO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTO" class="java.math.BigDecimal"/>
+	<field name="NRO_PMO" class="java.math.BigDecimal"/>
+	<field name="SALDO_CAPITAL" class="java.math.BigDecimal"/>
+	<field name="SALDO_INTERESES" class="java.math.BigDecimal"/>
+	<field name="ATRASO" class="java.lang.Integer"/>
+	<field name="CALIFICACION" class="java.lang.String"/>
+	<field name="FECHA" class="java.lang.String"/>
+	<group name="Cliente">
+		<groupExpression><![CDATA[$F{NRO_CLIENTE}]]></groupExpression>
+		<groupHeader>
+			<band height="37">
+				<staticText>
+					<reportElement x="117" y="5" width="48" height="31"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[NOMBRE:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="349" y="5" width="117" height="31"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CALIFICACION INTERNA FINAL:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="-1" y="5" width="50" height="31"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CLIENTE:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="501" y="5" width="111" height="31"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CALIFICACION SF AJUSTADA:]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="647" y="5" width="120" height="31"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CALIFICACION ALINEADA:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="49" y="5" width="68" height="32"/>
+					<textElement verticalAlignment="Bottom"/>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{NRO_CLIENTE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="165" y="6" width="184" height="30"/>
+					<textElement verticalAlignment="Bottom"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE_CLIENTE}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="466" y="5" width="35" height="30"/>
+					<textElement verticalAlignment="Bottom"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CALIFICACION_INTERNA_FINAL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="612" y="5" width="35" height="30"/>
+					<textElement verticalAlignment="Bottom"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CAL_SF_AJUSTADA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="767" y="5" width="35" height="30"/>
+					<textElement verticalAlignment="Bottom"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CALIFICACION_ALINEADA}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="6">
+				<line>
+					<reportElement x="0" y="3" width="802" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="pRESTAMO">
+		<groupExpression><![CDATA[$F{NRO_PMO}]]></groupExpression>
+		<groupHeader>
+			<band height="40">
+				<staticText>
+					<reportElement x="255" y="10" width="85" height="24"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[NRO. PRESTAMO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="0" y="10" width="85" height="25"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[RUBRO CONTABLE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="85" y="10" width="85" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[TIPO CREDITO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="510" y="9" width="85" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[SALDO INTERES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="595" y="9" width="85" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[ATRASO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="680" y="9" width="85" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[CALIFICACION]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="340" y="9" width="85" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[MONEDA]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="425" y="9" width="85" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[SALDO CAPITAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="170" y="9" width="85" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="8" isBold="false"/>
+					</textElement>
+					<text><![CDATA[PRODUCTO]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="71" splitType="Stretch">
+			<staticText>
+				<reportElement x="304" y="33" width="127" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTABILIZADO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="304" y="13" width="217" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CALIFICACIONES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="704" y="-1" width="52" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="431" y="33" width="24" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AL]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="455" y="33" width="66" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="756" y="0" width="48" height="19"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement x="-1" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{RUBRO_CONTABLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="84" y="0" width="86" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TIPO_CREDITO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{SALDO_CAPITAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="510" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{SALDO_INTERESES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="255" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NRO_PMO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PRODUCTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="595" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{ATRASO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="680" y="0" width="85" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CALIFICACION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

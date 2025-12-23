@@ -1,0 +1,5 @@
+EXECUTE('
+INSERT INTO dbo.AYUDAS (NUMERODEARCHIVO, NUMERODEAYUDA, DESCRIPCION, FILTRO, MOSTRARTODOS, CAMPOS, CAMPOSVISTA, BASEVISTA, NOMBREVISTA, AYUDAGRANDE)
+VALUES (0, 128, ''Ayuda Remesas Sucursal'', NULL, 0, ''116R;338;65;114;809;460;913;910;'', ''Nro. Solicitud;Moneda;Descripción Moneda;Importe;Enviar / Recibir;Tipo de Destino;Descripción Tipo Destino;Destino;'', ''TOP/CLIENTES'', ''VW_REM_SOLICITUDREMESA'', 0)
+
+')

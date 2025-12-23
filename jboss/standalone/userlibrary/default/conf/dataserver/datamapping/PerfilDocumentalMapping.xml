@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.automaticprocess.clientes.valueobjects.PerfilDocumental</class-name>
+        <entity-name>core.vo_PerfilDocumental</entity-name>
+        <table-name>CLI_PERFILDOCUMENTAL</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>idPersona</attribute-name>
+            <column-name>ID_PERSONA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaActualizacion</attribute-name>
+            <column-name>FECHA_ACTUALIZACION</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>promedioSueldos</attribute-name>
+            <column-name>PROMEDIO_SUELDOS</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.clientes.valueobjects.QueryPerfilDocumental</class-name>
+        <query-name>query.PerfilDocumental</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT C.NUMEROPERSONA, max(H.FECHA_VALOR) MAX, min(h.FECHA_VALOR) MIN, 
+					SUM(CASE H.DEBITO_CREDITO WHEN 'D' THEN (H.MONTO * -1)
+					ELSE H.MONTO END) AS SUMA
+				FROM SALDOS S
+					INNER JOIN CLI_CLIENTEPERSONA C ON S.C1803 = C.CODIGOCLIENTE 
+					INNER JOIN 
+						(SELECT * FROM HISTORIA_VISTA WHERE CODIGO_TRANSACCION IN 
+							(SELECT T.CODIGO_TRANSACCION FROM TTR_CODIGO_TRANSACCION_DEF T WHERE T.EN_PROMEDIO_MENSUAL = 'S' 
+							AND T.TZ_LOCK = 0)
+						AND FECHA_VALOR &gt; ? AND FECHA_VALOR &lt;= ?) H ON H.SALDO_JTS_OID = S.JTS_OID
+					WHERE S.TZ_LOCK = 0 AND S.C1785 IN (SELECT CODIGO_PRODUCTO FROM PRODUCTOS_PROMEDIO_SUELDO)   
+					AND C.TITULARIDAD = 'T' AND C.TZ_LOCK = 0 
+					GROUP BY C.NUMEROPERSONA ORDER BY C.NUMEROPERSONA
+			</sentence>
+        <attribute>
+            <attribute-name>idPersona</attribute-name>
+            <column-name>NUMEROPERSONA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>maximaFechaValor</attribute-name>
+            <column-name>MAX</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>minimaFechaValor</attribute-name>
+            <column-name>MIN</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sumaSueldos</attribute-name>
+            <column-name>SUMA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+</map>

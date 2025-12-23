@@ -1,0 +1,4071 @@
+VERSION:054_5
+TNNNNN 0253TConsulta COBE (Estado=AC/MC/MD)         C03661 00
+VNSSNS 010002000204440799SSSD000000000000000000000000000000000000000
+/T=   Cobranza de Exportación
+/C=255255255
+KNSSNS 010019004800410747010100
+/T=Modificación  de Cobranzas de Exportación
+/F=0015700NNN000000000Arial                                   
+KNSSNS 010060004803470747000101
+/T=   Datos Cobranza   
+/F=0012700NNN000000000Arial                                   
+ NNNNN 08010   Filtro ayuda   INNSNK00000701520030020200101100000000700070030013700
+/V=ESTADO_BANCO='AC' OR ESTADO_BANCO='MD' OR ESTADO_BANCO='MC' OR ESTADO_BANCO='MR' OR ESTADO_BANCO='BR'
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-11 12:21:24VPORTO
+*N  NN ** Cambio provisorio AI en lugar de AC **
+*$2015-05-11 09:32:49VPORTO
+ NSSNS 59000   Ayuda COBEXPORTIENSN 01008200590339073800101160000017500390195013100
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 14:59:23VPORTO
+ NNNNN 58606   Nro de CobranzaINNSNA00000701500027027000001100000000700070027012600
+/V=C59000.1
+*$2015-05-08 13:00:33VPORTO
+ NSSNS 58615   Estado CobranzaINNSNK00003101260054037400001100000003000230053010700
+/V=I
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:54:48VPORTO
+ NNNNN 00029   Importe        INNSNA00000701360027037600001100000000700070027011200
+/V=C58611.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:57:31VPORTO
+ NSSNS 00006   Nro LCE        INNNNA01004505840065063202001100000004505100065056000
+/V=C59000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 13:00:55VPORTO
+ NNNNN 00025   Fecha Valor    INNNNA00000001330020024300001100000000000000020011900
+/V=C9500
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NNNNN 08010   Filtro ayuda   INNSNK00000701520027020202001100010000700070027013700
+/V=1=1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 58626   Estado BANCO   INNSN 00000701520027020202001100010000700070027013700
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2015-05-08 10:01:18VPORTO
+*N  NN *****************************
+*N  NN *** Subrutina que devuelve codigo bic del banco emisor
+DN  NN 3000SS
+ NNNNN 00339   B1LTAbankCode  INNSN 00000701500027027000001100000000700070027012600
+/f=0013700NNN000000000Arial                                   
+ NNNNN 00345   B1LTAcountryCodINNSN 00000701500027027000001100000000700070027012600
+/f=0013700NNN000000000Arial                                   
+ NNNNN 00347   B1LTAlocationCoINNSN 00000701500027027000001100000000700070027012600
+/f=0013700NNN000000000Arial                                   
+ NNNNN 00348   B1LTAlogicalTCoINNSN 00000701500027027000001100000000700070027012600
+/f=0013700NNN000000000Arial                                   
+ NNNNN 00357   B1LTAbranchCodeINNSN 00000701500027027000001100000000700070027012600
+/f=0013700NNN000000000Arial                                   
+*N  NN *****************************
+TN  NN 1006TConsulta Parametros                     C00001 00
+ NSSNN 04620   Código param.  INNSNK00021101470231027602101100000021100680231013000
+/V=780
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04622   Utilizado      INNSN 00021101470231027602101100000021100680231013000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C4622="S")
+/P=I210
+TN  NN 0253TConsulta NexCobeCuotas                  C03811 00
+/?=1=0
+*$2015-05-15 15:00:52VPORTO
+*N  NN **************************************************
+*N  NN *** I111 - Para evitar mostrar constantes ó campos que
+*N  NN *** NO se requieren para NBC (y venían de Migración).-
+*N  NN **************************************************
+*N  NN *** Cobranza en Cuotas NO para NBC.-
+*N  NN *** Para NBC el Rubro siempre será 1280.-
+*N  NN **************************************************
+*N  NN *** Por NBC: Prendo 101, Apago 102.-
+*N  NN **************************************************
+CNNNNN   00000000000000000000100
+/P=I101
+/A=I102I111
+*N  NN **************************************************
+*N  NN *** I101 = Cobranza NO es en Cuotas.-
+*N  NN *** !I101 = Cobranza ES en Cuotas.-
+*N  NN *** I102 = Cobranza ES Cedida.-
+*N  NN *** !I102 = Cobranza NO es Cedida.-
+*N  NN **************************************************
+*N  NN *** Hago lectura de NexCobeCuotas p/mantener datos originales.-
+*N  NN **************************************************
+ NNNNN 58643   NroCOBE        INNSNA00000701500027021000001100000000700070027012600
+/V=C0006.1
+*$2015-05-08 09:33:25VPORTO
+ NNNNN 58644   NroCuota       INNSNK00001101300031017100001100000001100190031009000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:34:18VPORTO
+ NNNNN 58648   Importe        INNSN 00000701500027027000001100000000700070027012600
+*$2015-05-08 09:35:48VPORTO
+TN  NN 0254TConsulta Secuencial Genérica            S03811 00
+/F=C58643=C0006.1
+*$2015-05-15 15:02:01VPORTO
+ NNNNN 58648   Importe        INNSN 00000701500027027000001100000000700070027012600
+*$2015-05-08 09:35:48VPORTO
+*N  NN **************************************************
+*N  NN *** I111 - Para evitar mostrar constantes ó campos que
+*N  NN *** NO se requieren para NBC (y venían de Migración).-
+*N  NN **************************************************
+*N  NN *** Cobranza en Cuotas NO para NBC.-
+*N  NN *** Para NBC el Rubro siempre será 1280.-
+*N  NN **************************************************
+*N  NN *** Por NBC: Prendo 101, Apago 102.-
+*N  NN **************************************************
+CNNNNN   00000000000000000000100
+/P=I101
+/A=I102I111
+*N  NN **************************************************
+*N  NN *** I101 = Cobranza NO es en Cuotas.-
+*N  NN *** !I101 = Cobranza ES en Cuotas.-
+*N  NN *** I102 = Cobranza ES Cedida.-
+*N  NN *** !I102 = Cobranza NO es Cedida.-
+*N  NN **************************************************
+*N  NN *** Hago lectura de NexCobeCuotas p/mantener datos originales.-
+*N  NN **************************************************
+CNNNNN   00000000000000000000100
+/F=C9509#0
+/P=I109
+*$2015-05-15 15:04:38VPORTO
+ NSSNS 58644   NroCuota       INNNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:05:26VPORTO
+TNNNNN 0250TAlta NexCobeCuotas (Ord900 + Cuota)     A03811 00
+/?=(I109)
+*$2015-05-15 15:04:54VPORTO
+ NSSNS 58643   NroCOBE        INNNNA00000701330027018102001100000000700070027012600
+/V=C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:37:48VPORTO
+ NSSNS 58644   NroCuota       INNNNF00000701330027018102001100000000700070027012600
+/V=900+C58644.4
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:05:39VPORTO
+ NSSNS 58645   RubroOperativo INNNNA00000701330027018102001100000000700070027012600
+/V=C58645.4
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:05:48VPORTO
+ NSSNS 58646   FechaVto       INNNNA00000701330027024300001100000000700070027012600
+/V=C58646.4
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:05:52VPORTO
+ NSSNS 58647   Moneda         INNNNA00000701330027024300001100000000700070027012600
+/V=C58647.4
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:05:58VPORTO
+ NSSNS 58648   Importe        INNNNA00000701330027024300001100000000700070027012600
+/V=C58648.4
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:05:55VPORTO
+ NSSNS 58649   Estado         INNNNA00000701330027024300001100000000700070027012600
+/V=C58649.4
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:06:02VPORTO
+ NSSNS 58642   Estado Dto.    INNNNA00000701330027024300001100000000700070027012600
+/V=C58642.4
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:06:06VPORTO
+ NSSNS 58650   EnviaSwift     INNNNA00000701330027024300001100000000700070027012600
+/V=C58650.4
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:06:10VPORTO
+ NSSNS 58651   AperOModif     INNNNA00000701330027024300001100000000700070027012600
+/V=C58651.4
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 15:06:13VPORTO
+CNNNNN  I00000000000000000000100
+/?=I109
+/R=4
+*$2015-05-15 15:06:51VPORTO
+TN  NN 0253TConsulta Documentos Adjuntos            C03761 00
+ NNNNN 58304   Nro LC         INNSNA00000701500027027000001100000000700070027012600
+/V=C0006.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:08:09VPORTO
+ NNNNN 58305   Ordinal        INNSNK00000701500027021000001100000000700070027012600
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:19:18VPORTO
+ NNNNN 58307   Letras         INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:19:49VPORTO
+TN  NN 0253TConsulta Instrucciones                  C03751 00
+ NNNNN 58653   Nro LC         INNSNA00000701500027027000001100000000700070027012600
+/V=C0006.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:22:21VPORTO
+ NNNNN 58654   Ordinal        INNSNK00000701500027021000001100000000700070027012600
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:22:53VPORTO
+ NNNNN 58655   Texto          INNSN 00000701500027171000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:23:30VPORTO
+TN  NN 0253TConsulta Observaciones                  C03741 00
+ NNNNN 58330   Numero LC      INNSNA00000701500027027000001100000000700070027012600
+/V=C0006.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:38:04VPORTO
+ NNNNN 58331   NumeroRemesa   INNSNK00000701500027021000001100000000700070027012600
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:39:32VPORTO
+*N  NN *** 1er. Registro
+ NSNNS 58339   Otros Document.INSNN 00014404750164073400001100000014403500164045100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:21:21VPORTO
+TN  NN 0253TConsulta Observaciones Mercaderías      C03741 00
+ NNNNN 58330   Numero LC      INNSNA00000701500027027000001100000000700070027012600
+/V=C0006.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:38:14VPORTO
+ NNNNN 58331   NumeroRemesa   INNSNK00000701500027021000001100000000700070027012600
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:39:40VPORTO
+*N  NN *** 2do. Registro
+ NSNNS 58332   Observacion1   INSNN 00017404750194073300001100000017403500194044600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:40:10VPORTO
+TNNNNN 0253TDatos Básicos COBE y simulacion Cargos  C00211 00
+VNSNNS 020004000304420798NSND000000000000000000000000000000000000000
+/T=   Datos de la Cobranza de Exportación
+/C=255255255
+CNNNNN  w00000000000000000000100
+/R=F
+KNSNNS 020008002502170451000101
+/T=   Datos Básicos   
+/F=0012700NNN000000000Arial                                   
+ NSNNS 00006   No. de CobranzaIDNNNA02004101820061027602101150000004100410061016000
+/V=C0006.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 00008   Ordinal        INNNNK02005501500075017402001100000005500160075013500
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 00005   Cuenta Cliente IDNNNF02007001820090027602101150000007000410090016000
+/V=C58603.1*100
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:53:45VPORTO
+*N  NN *** Datos Cliente.-
+ NSNNS 00002   No. del clienteINNNNF00000701330027022902001100000000700070027012600
+/V=C58603.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:53:58VPORTO
+DN  NN 0354SS
+ NNNNN 01002   Nomb.Reducido  INNSN 00000701500027057002001100000000700070027012600
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 01000   Nom. de clienteICNNN 02009901820119044000101150000002700120047013100
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 00003   Moneda         IDNNNA02012801820148021802101150000012800410148016000
+/V=C58610.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:54:23VPORTO
+ NSNNS 06400   Descripci½n    ICNNN 02012802320148044000101150000016200240182006800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 00035   Importe        I NNNA02015701820177031802001100000015700410177016000
+/V=C0029.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ****************************************************************
+*N  NN *** I171 => Cambió el Importe (hay que modificar además los Datos Básicos).-
+*N  NN ****************************************************************
+CNNNNN   00000000000000000000100
+/?=(C35.10#C58611.1)
+/P=I171
+*$2015-05-08 09:57:45VPORTO
+KNSNNS 020221002503130451000101
+/T=   Tipo de Cobranza Exportación   
+/F=0012700NNN000000000Arial                                   
+ NSNNS 03443   Vista/Diferida I NNNA02018601820209032500101111000018600410206016000
+/?=1=0
+/V=C58618.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-13 12:40:17VPORTO
+ NSNNS 03443   Vista/Diferida IINNNA02018601820209032500101150000018600410206016000
+/V=C58618.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-13 12:43:12VPORTO
+CNNNNN   00000000000000000000100
+/F=A(C3443="V")
+/P=I105
+*$2015-05-15 11:35:52VPORTO
+CNNNNN   00000000000000000000100
+/F=A(C3443="P")
+/P=I106
+*$2015-05-15 12:06:58VPORTO
+KNSNNS 020247004102670160000100
+/T=Es Cedida ?
+/F=0012700NNN000000000Arial                                   
+ NSNNS 01208   Cob. Cedida?   I NSNA02024701820343032500101111000057701290597024800
+/V=C58633.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:00:57VPORTO
+KNSNNS 020282004103020160000100
+/T=Es Avalada ?
+/F=0012700NNN000000000Arial                                   
+ NSNNS 01209   Cob. Avalada ? I NSNA02028201820366032500101111000059601290616024800
+/V=C58632.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:01:29VPORTO
+KNSNNS 020007046601290767000101
+/T=   Fechas   
+/F=0012700NNN000000000Arial                                   
+ NSNNS 00025   Fecha Emisión  IDNNNA02003406150054072500101150000003504890055059700
+/V=C58614.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:55:11VPORTO
+ NNNNN 00127   Fec.VencimientoI NNNA02006706160087070700001100000006604890086059700
+/V=C58607.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:55:39VPORTO
+CNNNNN ME00000000000000000000100
+/?=(C127.0<C25.0)
+/M=Fecha de Vencimiento debe ser MAYOR que Fecha de Emisión...
+ NNNNN 00026   Plazo          IDNNNF02009706150117072502101150000009704890117059700
+/V=C127-C25
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ****************************************************************
+*N  NN *** I181 => Cambió la Fecha de Vencimiento.-
+*N  NN ****************************************************************
+CNNNNN   00000000000000000000100
+/?=(C127.10#C58607.1)
+/P=I181
+*$2015-05-08 10:55:50VPORTO
+KNSNNS 020141046602530767000101
+/T=   Otros Datos      
+/F=0012700NNN000000000Arial                                   
+ NSSNN 58634   Forma Embarque I NSNA02017106150194073700101100000017104890194058600
+/V=C58634.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:05:49VPORTO
+ NSNNS 58617   Nro.Courrier   I NSNA02021406150237073700101100000021404890237058600
+/V=C58617.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:06:24VPORTO
+ NNNNN 00028   Concepto       INNNN 00000001330020040800001100000000000000020011900
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*N  NN ****************************************************************
+*N  NN ****************************************************************
+*N  NN =================================
+*N  NN DATOS PARA COBRO DE COMISION
+*N  NN CASO 1)  Cobro REAL
+*N  NN    Asumo o pido la cuenta para el cobro
+VNSSNS 800001000104300800NNND000000000000000000000000000000000000001
+/T=Cuenta Comisión
+/?=1=2
+/C=255255255
+KNSSNS 800005001503530781000101
+/?=1=2
+/T=Seleccione Cuenta para el cobro de comisión:
+/F=0012700NNN000000000Arial                                   
+*N  NN Filtros para la ayuda
+ NNNNN 01593   Cuenta         INNSNA00000701520030030202101100000000700070030013700
+/?=1=2
+/V=C8893.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01594   Moneda         INNSNA00000701520030030202101100000000700070030013700
+/?=1=2
+/V=C8894.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Pido la cuenta con una grilla
+ NNNNN 00416   Ayda Ctas ClienIENSN 80002600370340076802101160000014100970164022700
+/?=1=2
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01803   Nro. Cliente   INNSNA00000701520030020202101100000000700070030013700
+/?=1=2
+/V=C1803
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01591   Sucursal       INNSNA00000701520030020202101100000000700070030013700
+/?=1=2
+/V=C1591
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01592   Producto       INNSNA00000701520030020202101100000000700070030013700
+/?=1=2
+/V=C1592
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01593   Cuenta         INNSNA00000701520030030202101100000000700070030013700
+/?=1=2
+/V=C1593
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01594   Moneda         INNSNA00000701520030020202101100000000700070030013700
+/?=1=2
+/V=C1594
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01595   Operacion      INNSNA00000701520030030202101100000000700070030013700
+/?=1=2
+/V=C1595
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -
+*N  NN CASO 2)  Cobro SIMULADO
+*N  NN Utilizo Concepto Contable
+ NSSNS 06500   Cod. Concepto  INNNNK00004201640062026000101000000004200320062012500
+/V=4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06501   Desc. Concepto INNNN 00004102680061060000101100000006202200082060500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 06326   Rubro Contable INNNNA00008801480108024402001100000008800150108013400
+/V=C6502
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NNNNN 06340   Rubro OperativoINNSN 00000701520027020200001100010000700070027013700
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NSSNS 00003   Moneda         INNNNF00018501800205022802101000000018500510205016300
+/V=C003.10
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00007   Producto       INNNNK00000701330027016502001100000000700070027012600
+/V=0
+ NNNNN 00004   Rubro OperativoINNNNA00060002330620033102001000000060001000620022600
+/V=C6340.0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NSSNS 00005   Cuenta         INNNNA00011401480134024402001100000011400150134013400
+/V=C6326
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSSNS 00006   Operación      INNNNK00007801470098020202101100000007800210098013300
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00008   Ordinal        INNNNK00015301450173016602101100000015300190173013100
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -
+ NNNNN 01604   Saldo Actual   INNSN 00000701520030030202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -
+ NNNNN 00022   Sector         INNNN 00000001330020014902001100000000000000020011900
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00023   Caja/Diario    INNNNK00000701330027014400001100000000700070027012600
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00024   Débito         INNNNK00000001330020014400001100000000000000020011900
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00025   Fecha valor.2  INNNNA00000701330027024300001100000000700070027012600
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00029   Importe29      INNNNA00000701190027027902001100000000700070027011200
+/V=C58648.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:39:30VPORTO
+*N  NN =================================
+*N  NN CAMPOS NECESARIOS PARA EL MODULO
+*N  NN --------------------
+ NNNNN 00577   *MontoImponibleINNSNA00000701360027037600001100000000700070027011200
+/V=C029.10
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00924   *Segmento      INSSNK00000701500027021000001100000000700070027012600
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00262   *Rango Tarifas INSSN 00000701360027037600001100000000700070027011200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01165   Id Evento      INNSNK00000701500027021000001100000000700070027012600
+/V=7500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ---
+*N  NN otros datos para el modulo
+*N  NN ---
+CNNNNN ME00000000000000000000100
+/F=C1165=0
+/M=evento 0
+*N  NN INVOCACION AL MODULO:
+CNNNNN  M00000000000000000000100
+/R=commissions C1165
+CNNNNN M 00000000000000000000100
+/M=Presione Enter para continuar
+ NNNNN 00889   Total de CargosINNSN 00020001800223033000101100000020000550223017400
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00890   Total impuestosINNSN 00023001800253033000101100000023000550253017400
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN =================================
+TNNNNN 0252TModificación COBE                       M03661 00
+ NSNNS 58606   Nro de CobranzaINNNNA00001801490038019702001100000001800160038013500
+/V=C0006.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:49:55VPORTO
+ NNNNN 58610   Moneda         INNNNA00000701330027016502001100000000700070027012600
+/V=C0003.10
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:54:32VPORTO
+ NNNNN 58611   Importe        INNNNA00000701190027027902001100000000700070027011200
+/V=C0035.10
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:58:06VPORTO
+ NNNNN 58614   Fecha valor    INNSNA00000701330027024300001100000000700070027012600
+/V=C0025.10
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:55:21VPORTO
+ NNNNN 58615   Estado CobranzaINNNNK00000701330027014400001100000000700070027012600
+/V=I
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:55:03VPORTO
+ NNNNN 58607   Fecha de vto.  INNNNA00000701330027024300001100000000700070027012600
+/?=I101
+/V=C127.10
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:55:58VPORTO
+ NNNNN 58620   Maturity       INNSNA00000701500027057000001100000000700070027012600
+/?=!I101
+/V=C124.10
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:57:30VPORTO
+ NNNNN 58618   Vista/Diferida INNSNA00000701500027021000001100000000700070027012600
+/V=C3443.10
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:57:57VPORTO
+ NNNNN 58625   Nuevo/Viejo    INNSNK00000701500027021000001100000000700070027012600
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:59:07VPORTO
+ NSNNS 58605   Rubro          INNNNK00000701330027019702001100000000700070027012600
+/?=!I102
+/V=1280
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:59:25VPORTO
+ NSNNS 58605   Rubro          INNNNK00000701330027019702001100000000700070027012600
+/?=I102
+/V=1281
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:59:34VPORTO
+*N  NN **************************************************
+*N  NN *** Datos de la Cobranza.-
+*N  NN **************************************************
+VNSNNS 030039000304000800NSND000000000000000000000000000000000000000
+/T=   Más datos de la Cobranza de Exportación
+/C=255255255
+ NSNNS 03396   Español/Inglés INNNNK00030502330325024400001100000030501000325021900
+/V=I
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+CNSNNS   00000000000000000000100
+/F=A(C3396.00="E")
+/P=I56
+/A=I57
+CNNNNN   00000000000000000000100
+/?=I56
+/F=A(C3443.10="V")
+/P=I97
+/A=I98
+CNNNNN   00000000000000000000100
+/?=I57
+/F=A(C3443.10="V")
+/P=I99
+/A=I100
+ NNNNN 00809   Texto          INNNNK00000001330020019900001100000000000000020011900
+/?=I97
+/V=Vista 
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NNNNN 00809   Texto          INNNNK00000001330020019900001100000000000000020011900
+/?=I98
+/V=Plazo 
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NNNNN 00809   Texto          INNNNK00000001330020019900001100000000000000020011900
+/?=I99
+/V=Sight 
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NNNNN 00809   Texto          INNNNK00000001330020019900001100000000000000020011900
+/?=I100
+/V=Term  
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+KNSNNS 030020001201720393000101
+/T=GIRADOR
+/F=0012700NNN000000000Arial                                   
+ NSNNS 00902   Codigo Cliente INNNNA03004401180064037800101100000004400220064007800
+/V=C58603.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:54:07VPORTO
+ NSNNS 01004   Sub Segmento   INNNN 03004401180064037800101100000004400220064007800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 01000   Nombre         IINNN 03004401180064037800101150000004400210064007700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 00912   Número Cliente INNNNA03004401180064037800101100000004400220064007800
+/V=C902.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 01249   Tipo Dirección INNNNK03004401180064037800101100000004400220064007800
+/V=002
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 01250   Dirección      IISNN 03007101180091037800101150000007000210090010500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 01251   Nro. de Puerta IDSNN 03010001180120037800101150000010000220120010600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 01254   Cuidad/Localid IDSNN 03012901180149037800101150000013000220150010600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNSNNS 030180001203280396000101
+/T=BANCO DESTINATARIO
+/F=0012700NNN000000000Arial                                   
+KNSNNS 030202002902220112000100
+/T=¿Ingresa BIC?
+/F=0012700NNN000000000Arial                                   
+ NSNNS 01209   Opcion (S/N)   INNSNK00018501210205020900001130000000700070027012600
+/?=A(C58619#"")
+/V=S
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:28:45VPORTO
+ NSNNS 01209   Opcion (S/N)   INNSNK00018501210205020900001130000000700070027012600
+/?=A(C58619="")
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:31:31VPORTO
+ NSNNS 01209   Opcion (S/N)   IENSN 03020001200223020800001111000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 06280   Dirección BIC  I NSNF03023401190254022800001000000023200330252011600
+/?=A(C1209="S")
+/V=C58619.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:31:45VPORTO
+ NSNNS 06281   Nombre         IINNN 03026101190281037900101050000026100330281011600
+/?=A(C1209="S")
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 00820   Nombre         I NNN 03026101200281038000001000000026100290281011200
+/?=A(C1209#"S")
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 58612   Direc. Bco.DestI SNNK03023301200253038000001000000023200290252011200
+/?=A(C1209#"S")
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:09:58VPORTO
+ NSNNS 06282   Ciudad Banco   IISNN 03029101200311038000101050000029100290311011200
+/?=A(C1209="S")
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 58619   Corresponsal   INNSNA03021001250230023400001000000021000270230011000
+/?=A(C1209="S")
+/V=C6280
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:31:55VPORTO
+ NSNNS 58619   Corresponsal   INNSNA03021001250230023400001000000021000270230011000
+/?=A(C1209="N")
+/V=C820
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:32:12VPORTO
+*N  NN **************************************************
+*N  NN *** Control TRACE para Corresponsal CON/SIN Dirección BIC.-
+*N  NN **************************************************
+ NNNNN 07795   Comparo TRACE1 INNSNA00000701520027020200001100010000700070027013700
+/?=A(C1209="S")YI210
+/V=C6281
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 07795   Comparo TRACE1 INNSNA00000701520027020200001100010000700070027013700
+/?=A(C1209#"S")YI210
+/V=C820
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NSSNS 00808   Parámetro TRACEINNSNF00001901470041039200001100000002100140040006600
+/?=I210
+/V="Cliente|?|"+C7795+" |?|Datos|?|OPE-"+C9503+"  SUC-"+C9502+"  ASI-"+C9507+" |?|USERLOGIN|?|"+C9505 
+*$2016-08-11 16:21:11TOP
+ NSSNS 03940   Texto          INNSNK00005001470070032700001100000004900140069013300
+/?=I210
+/V=CheckAntilavado
+ NSSNS 00612   Ejecucion TraceINNNNF00009701430117020300001100000009800360118012500
+/?=I210
+/V=F(CheckAntiLavado, C3940,1,C808)
+CNSSNS M 00000000000000000000100
+/?=(C612=0)YI210
+/P=I228
+/M=Trace CheckAntilavado (1) => NO HAY Coincidencias...
+CNSSNS M 00000000000000000000110
+/?=(C612>0)YI210
+/P=I229
+/M="Trace CheckAntilavado (1) => HAY Coincidencias. Id: "+C612
+CNSSNS M 00000000000000000000100
+/?=(C612=(-1)OC612=(-2))YI210
+/P=I230I112
+/M=Trace CheckAntilavado (1) => Inactivo (NO ejecutó Control)
+*N  NN **************************************************
+*N  NN *** Control TRACE para Corresponsal SIN Dirección BIC.-
+*N  NN *** El Control era sólo para los que NO tenían Dirección BIC.-
+*N  NN *** Control TRACE para Corresponsal CON Dirección BIC.-
+*N  NN **************************************************
+ NNNNN 07795   Comparo TRACE1 INNSNA00000701520027020200001100010000700070027013700
+/?=(1=0)YA(C1209#"S")
+/V=C820
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NSSNS 00808   Parámetro TRACEINNSNF00001901470041039200001100000002100140040006600
+/?=(1=0)YA(C1209#"S")
+/V="Cliente|?|"+C7795+"|?|Datos|?| USR-"+C9505+"  ASI-"+C9507+"  SUC-"+C9502
+ NSSNS 03940   Texto          INNSNK00005001470070032700001100000004900140069013300
+/?=(1=0)YA(C1209#"S")
+/V=CheckAntilavado
+ NSSNS 00612   Ejecucion TraceINNNNF00009701430117020300001100000009800360118012500
+/?=(1=0)YA(C1209#"S")
+/V=F(CheckAntiLavado, C3940,1,C808)
+CNSSNS M 00000000000000000000100
+/?=(1=0)YA(C1209#"S")Y(C612=0)
+/P=I228
+/M=Trace CheckAntilavado (1) => NO HAY Coincidencias...
+CNSSNS M 00000000000000000000100
+/?=(1=0)YA(C1209#"S")Y(C612>0)
+/P=I229
+/M=Trace CheckAntilavado (1) => HAY Coincidencias...
+CNSSNS M 00000000000000000000100
+/?=(1=0)YA(C1209#"S")Y((C612=(-1)OC612=(-2)))
+/P=I230I112
+/M=Trace CheckAntilavado (1) => Inactivo (NO ejecutó Control)
+*N  NN ***
+KNNNNN 030037048400570760000100
+/T=GIRADO: Puede utilizar uno ya existente en Tabla
+/F=0012700NNN000000128Arial                                   
+KNNNNN 030061048400810760000100
+/T=NexGirados, ó dar de alta uno nuevo...
+/F=0012700NNN000000128Arial                                   
+*N  NN ***
+KNSNNS 030017040402510782000101
+/T=GIRADO
+/F=0012700NNN000000000Arial                                   
+CNNNNN  w03011004200132074411100
+/P=I201
+/R=2477
+/T=Alta Girados
+DN  NN 5310OS00
+/?=I201
+ NSNNS 02477   NombreGirado   I SNNA03013904840159074000001100000013904210159046500
+/V=C58608
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:10:11VPORTO
+ NSNNS 58608   Girado         INNNNA03005504810075073700001100000005504180075046200
+/V=C2477
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:10:23VPORTO
+ NSNNS 58609   Direc. girado  I SNNA03016404840184074000001100000016404200184047600
+/V=C2478.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:10:40VPORTO
+ NSNNS 58616   DirecGirado2   I SNNA03018904840209074000001100000018904200209047600
+/V=C2479.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:10:55VPORTO
+*N  NN **************************************************
+*N  NN *** Control TRACE para el Girado.-
+*N  NN **************************************************
+ NNNNN 07798   Comparo TRACE2 INNSNA00000701520027020200001000010000700070027013700
+/?=I210
+/V=C2477
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NSSNS 00191   Parametro TRACEINNSNF00001901470041039200001100000002100140040006600
+/?=I210
+/V="Cliente|?|"+C7798+" |?|Datos|?|OPE-"+C9503+"  SUC-"+C9502+"  ASI-"+C9507+" |?|USERLOGIN|?|"+C9505 
+*$2016-08-11 16:22:42TOP
+ NSSNS 03941   Texto          INNSNK00005001470070032700001100000004900140069013300
+/?=I210
+/V=CheckAntilavado
+ NSSNS 00670   Ejecución TraceINNNNF00009701430117020300001100000009800360118012500
+/?=I210
+/V=F(CheckAntiLavado, C3941,1,C191)
+CNSSNS M 00000000000000000000100
+/?=(C670=0)YI210
+/P=I231
+/M=Trace CheckAntilavado (2) => NO HAY Coincidencias...
+CNSSNS M 00000000000000000000110
+/?=(C670>0)YI210
+/P=I232
+/M="Trace CheckAntilavado (2) => HAY Coincidencias. Id: "+C670
+CNSSNS M 00000000000000000000100
+/?=(C670=(-1)OC670=(-2))YI210
+/P=I230I113
+/M=Trace CheckAntilavado (2) => Inactivo (NO ejecutó Control)
+*N  NN ***
+ NSNNS 03577   Cód de.correo  INNNNK00030502330325024102001100000030501000325021900
+/V=1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+CNSNNS   00000000000000000000100
+/F=C3577.00=1
+/P=I53
+/A=I54
+CNNNNN   00000000000000000000100
+/?=I56
+/F=C3577.00=1
+/P=I87
+CNNNNN   00000000000000000000100
+/?=I56
+/F=C3577.00=2
+/P=I88
+CNNNNN   00000000000000000000100
+/?=I57
+/F=C3577.00=1
+/P=I89
+CNNNNN   00000000000000000000100
+/?=I57
+/F=C3577.00=2
+/P=I90
+*N  NN **************************************************
+*N  NN *** Documentos y Mercaderías.-
+*N  NN **************************************************
+VNSNNS 040002000004460800SSSD000000000000000000000000000000000000000
+/T=   Documentos y Mercaderías
+/C=255255255
+KNSNNS 040011000702240775000101
+/T=Documentos
+/F=0012700NNN000000000Arial                                   
+ NSNNS 03578   Letras         I SNNA04004001840060022800001100000004000370060015600
+/V=C58307.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:20:24VPORTO
+ NSNNS 03579   Letras     2° CINSNN 00001103310031037500001100000001101980031031700
+/?=I54
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 03583   Fact. comercialI SNNA04006901840089022800001100000006900370089015600
+/V=C58309.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:32:10VPORTO
+ NSNNS 03592   Fact. com. 2° CINSNN 00002703310047037500001100000002701980047031700
+/?=I54
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 03593   Cert. SanitarioI SNNA04009901840119022800001100000009900370119015600
+/V=C58328.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:32:37VPORTO
+ NSNNS 03594   Fact. cons 2° CINSNN 00004303310063037500001100000004301980063031700
+/?=I54
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 03597   Póliza seguro  I SNNA04012901840149022800001100000012900370149015600
+/V=C58311.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:33:14VPORTO
+ NSNNS 03598   Póliza seg 2° CINSNN 00005903310079037500001100000005901980079031700
+/?=I54
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 03595   Cert. de orígenI SNNA04015901840179022800001100000015900370179015600
+/V=C58326.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:33:42VPORTO
+ NSNNS 03596   Cert. orig 2° CINSNN 00007503310095037500001100000007501980095031700
+/?=I54
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 03569   Cert. Inspecc. I SNNA04018901840209022800001100000018900370209015600
+/V=C58301.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:34:09VPORTO
+ NSNNS 03180   Cert.Insp. 2° CINSNN 00009103310111037500001100000009101980111031700
+/?=I54
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 03181   Lista empaque  I SNNA04004004940060053800001100000004003690060048800
+/V=C58322.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:34:43VPORTO
+ NSNNS 03398   Lista emp. 2° CINSNN 00010703310127037500001100000010701980127031700
+/?=I54
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 03399   Conocim.embarq.I SNNA04006904940089053800001100000006903690089048800
+/V=C58317.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:35:09VPORTO
+ NSNNS 03498   Conoc emb. 2° CINSNN 00012303310143037500001100000012301980143031700
+/?=I54
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 00867   Copia Conoc.   I SNNA04009904940119053800001100000009903690119048800
+/V=C58320.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:35:35VPORTO
+ NSNNS 00804   Copia Con. 2° CINSNN 00013903310159037500001100000013901980159031700
+/?=I54
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*N  NN ***
+ NSNNS 03182   Otros Docmtos. INNSNK00018501210205020900001100000000700070027012600
+/?=A(C58339.8#"")
+/V=S
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:21:33VPORTO
+ NSNNS 03182   Otros Docmtos. INNSNK00018501210205020900001100000000700070027012600
+/?=A(C58339.8="")
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:21:44VPORTO
+ NSNNS 03182   ¿Otros Docs?   I SNN 04012904940309064800001112000012903690149048800
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSNNS   00000000000000000000100
+/F=A(C3182.00="S")
+/P=I51
+CNSNNS   00000000000000000000100
+/?=I54
+/F=A(C3182.00="S")
+/P=I52
+ NSNNS 00745   Otros Document.I SNNA04015904940179075300001100000015903690179047000
+/?=I51
+/V=C58339.8
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:21:53VPORTO
+ NSNNS 00746   Otros Docs.contI SNNA04018904940209075200001100000018903690209046500
+/?=I51
+/V=C58340.8
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:22:21VPORTO
+ NSNNS 00747   Otros Docs.2º CINSNN 00020401520224053700001100000020400190224013800
+/?=I52
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 00748   Otr.Doc. 2º C  INSNN 00022101430241052800001100000022101430241052800
+/?=I52
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 03183   Cód. env docum.INNNN 04023601520256016300001000000023600190256013800
+/?=I42
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 00952   Cód env doc-IngINNNNA04025201550272016600001100000025200220272014100
+/?=I42
+/V=C3183.0
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+KNSNNS 040232000603590774000101
+/T=Mercaderías
+/F=0012700NNN000000000Arial                                   
+ NSNNS 03184   Desc. Merc. (1)I NNNF04026103170281064300001100000026101700281028900
+/V=C58332.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:40:21VPORTO
+ NSNNS 03210   Desc. Merc. (2)I SNNF04029103170311064300001100000029101700311028900
+/V=C58333.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:41:09VPORTO
+ NSNNS 03242   Desc. Merc. (3)I SNNF04032103170341064300001100000032101700341028900
+/V=C58334.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:41:50VPORTO
+*N  NN **************************************************
+*N  NN *** Instrucciones.-
+*N  NN **************************************************
+VNSNNS 080002000104460800NSND000000000000000000000000000000000000000
+/T=   Instrucciones
+/C=255255255
+CNNNNN  w00000000000000000000100
+/R=F
+ NSNNS 03342   Cód. Instruc.  IINNNK08002301630043031300101050000002300320043015100
+/?=A(C58618="V")
+/V=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:58:29VPORTO
+ NSNNS 03342   Cód. Instruc.  I NNNA08002301630043031302101012000002300320043015100
+/?=A(C58618="P")
+/V=C58621
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:11:09VPORTO
+CNNNNN ME00000000000000000000100
+/F=A(C58618="P")YC3342=1
+/M=Opción inválida para cobranza plazo.
+*$2015-05-08 10:58:43VPORTO
+ NNNNN 58621   Cod.Inst.Swift INNSNA00000701500027021000001100000000700070027012600
+/V=C3342
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:11:19VPORTO
+CNNNNN ME00000000000000000000100
+/F=A(C58618="P")YC3342=1
+/M=Opcion inválida para Cobranza plazo
+*$2015-05-08 10:58:54VPORTO
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3342.00=01
+/P=I65
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3342.00=02
+/P=I66
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3342.00=03
+/P=I67
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3342.00=01
+/P=I70
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3342.00=02
+/P=I71
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3342.00=03
+/P=I72
+*N  NN ***
+ NSNNS 09211   Instruc.Adic. 1I SNNA08009301620113076500001100000009300310113015000
+/V=C58655.7
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:23:44VPORTO
+ NNNNN 09191   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[1,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09192   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[66,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00087   Detalle de PagoINNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 09211   Instruc.Adic. 2I SNNF08012301620143076500001100000012300310143015000
+/V=C58656.7
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:26:01VPORTO
+ NNNNN 09193   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[1,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09194   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[66,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00229   Attachments    INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 09211   Instruc.Adic. 3I SNNF08015301620173076500001100000015300310173015000
+/V=C58657.7
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:26:36VPORTO
+ NNNNN 09195   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[1,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09196   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[66,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00231   WFObservacionesINNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 09211   Instruc.Adic. 4I SNNF08018301620203076500001100000018300310203015000
+/V=C58658.7
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:27:11VPORTO
+ NNNNN 09197   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[1,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09198   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[66,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00233   Res. Func.ALFA INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 09211   Instruc.Adic. 4I SNNF08021301620233076500001100000021300310233015000
+/V=C58659.7
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:27:42VPORTO
+ NNNNN 09199   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[1,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09200   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[66,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00272   ComandoEjec    INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 09211   Instruc.Adic. 5I SNNF08024301620263076500001100000024300310263015000
+/V=C58660.7
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:28:11VPORTO
+ NNNNN 09201   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[1,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09202   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[66,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09208   Alfa 150       INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 09211   Instruc.Adic. 6I SNNF08027301620293076500001100000027300310293015000
+/V=C58661.7
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:28:37VPORTO
+ NNNNN 09203   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[1,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09204   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[66,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09487   texto del mail INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 09211   Instruc.Adic. 7I SNNF08030301620323076500001100000030300310323015000
+/V=C58662.7
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:28:59VPORTO
+ NNNNN 09205   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[1,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09206   :45A:          INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211[66,65]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09473   Asunto         INNSNF00000701500027093000001100000000700070027012600
+/?=A(C9211#"")
+/V=C9211
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN **************************************************
+*N  NN *** Reembolso.-
+*N  NN **************************************************
+VNSNNS 060001000004460800SSSD000000000000000000000000000000000000000
+/T=   Reembolso
+/C=255255255
+*N  NN ***
+ NSNNS 00896   Observac. (1)  I SNNA06001002200030065700001100000001000850030020400
+/V=C58332.8
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:40:31VPORTO
+ NSNNS 00903   Observac. (2)  I SNNA06003502200055065700001100000003500850055020400
+/V=C58333.8
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:41:20VPORTO
+ NSNNS 00904   Observac. (3)  I SNNA06006002200080065700001100000006000850080020400
+/V=C58334.8
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:42:02VPORTO
+ NSNNS 00905   Observac. (4)  I SNNA06008502200105065700001100000008500850105020400
+/V=C58335.8
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:46:29VPORTO
+ NSNNS 00906   Inst. Adic. (2)I SNNA06011002200130065700001100000011000850130020400
+/V=C58336.8
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:46:48VPORTO
+ NSNNS 00907   Inst. Adic. (3)I SNNA06013502200155065700001100000013500850155020400
+/V=C58337.8
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:47:13VPORTO
+ NSNNS 00908   Inst. Adic. (4)I SNNA06016002200180065700001100000016000850180020400
+/V=C58338.8
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:47:54VPORTO
+ NSNNS 00909   Otros Doc.(1)  I SNNA06018502200205065700001100000018500850205020400
+/V=C58341.8
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:48:21VPORTO
+ NSNNS 00910   Otros Doc.(2)  I SNNA06021002200230065700001100000021000850230020400
+/V=C58342.8
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:50:06VPORTO
+*N  NN ***
+ NSNNS 03359   Cód. reembolso I NNNA06023602200347038502001112000023600850256020400
+/V=C58622
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:11:32VPORTO
+ NNNNN 58622   Cod.Reembolso  INNSNA00000701500027021000001100000000700070027012600
+/V=C3359
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:11:39VPORTO
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3359.00=0
+/P=I107
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3359.00=1
+/P=I75
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3359.00=2
+/P=I76
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3359.00=3
+/P=I77
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3359.00=0
+/P=I110
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3359.00=1
+/P=I78
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3359.00=2
+/P=I79
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3359.00=3
+/P=I80
+ NSNNS 03360   Reembolso adic I SNNA06026702200290048900001100000026700850287020400
+/V=C58343.8
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:50:31VPORTO
+ NSNNS 03365   Cód. falta pagoINSNN 06018701450207015600001012000018700120207013100
+/?=I42
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 00949   Cód fal pag-IngINNNNA00020101470221015800001100000020100140221013300
+/?=I42
+/V=C3365.0
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSNNS 03395   Código ProtestoI SNNA06029702200425038502001112000029700850317020400
+/?=I56
+/V=C58623
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:11:51VPORTO
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3395.00=0
+/P=I113
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3395.00=1
+/P=I81
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3395.00=2
+/P=I82
+CNSNNS   00000000000000000000100
+/?=I56
+/F=C3395.00=3
+/P=I83
+ NSNNS 03459   Código ProtestoI SNNA06029802200420038502001012000029800850318020400
+/?=I57
+/V=C58623
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:11:59VPORTO
+ NNNNN 58623   Cod.Protesto   INNSNA00000701500027021000001100000000700070027012600
+/?=I57
+/V=C3459
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:12:07VPORTO
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3459.00=0
+/P=I116
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3459.00=1
+/P=I84
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3459.00=2
+/P=I85
+CNSNNS   00000000000000000000100
+/?=I57
+/F=C3459.00=3
+/P=I86
+*N  NN **************************************************
+ NSNNS 03397   Perdonar GastosINNNN 00033802200498038500001112000033600850356020400
+/?=(I111)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNS 03460   Perdonar GastosINNNNA00033303930356056400101000000032900850349020400
+/?=(I111)YI57
+/V=C3397.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 58624   Perdona Gastos?INNSNA00000701500027021000001100000000700070027012600
+/?=(I111)
+/V=C3460
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:07:27VPORTO
+ NNNNN 00003   Moneda         INNSNA00000701500027021000001100000000700070027012600
+/V=C58610
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:54:45VPORTO
+ NNNNN 06401   S=mbolo Moneda INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06402   C½digo Swift   INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00127   Fecha          INSSNA00000701500027027000001100000000700070027012600
+/?=(C127.10>0)
+/V=C127.10
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00025   Fecha Valor    INNSNA00000701500027027000001100000000700070027012600
+/V=C25.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00671   Importe        INNSNK00000701360027037600001100000000700070027011200
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/P=I92
+ NNNNN 09517   Num L=nea Sec. INNSNK00000701500027021000001100000000700070027012600
+/V=15
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 00432   Operaci½n      INNSNK00005001590070027900001100000005000160070013500
+/V=1
+*N  NN **************************************************
+*N  NN *** Campos NBC.-
+*N  NN **************************************************
+*N  NN *** 8141, 8142, 8144, 8146 y 8147 tienen valor por defecto N
+*N  NN *** en la base de datos, con lo cual, sólo corresponde cambiar
+*N  NN *** a S cuando de cumpla la condición correspondiente.-
+*N  NN **************************************************
+ NSSNN 58627   Trace Girador  INNSNK00000701520030020200101100000000700070030013700
+/?=(C612#0)
+/V=S
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:05:06VPORTO
+ NSSNN 58628   Trace Girado   INNSNK00000701520030020200101100000000700070030013700
+/?=(C670#0)
+/V=S
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:05:23VPORTO
+ NSSNN 58632   Avalada        INNSNA00000701520030020200101100000000700070030013700
+/V=C1209.10
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:01:39VPORTO
+ NSSNN 58633   Cedida         INNSNA00000701520030020200101100000000700070030013700
+/V=C1208.10
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:01:07VPORTO
+ NSSNN 58634   Forma Embarque INNSNA00000701520030020200101100000000700070030013700
+/V=C58634.10
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:06:02VPORTO
+ NSSNN 58617   Nro.Courrier   INNSNA00005001590070027900001100000005000160070013500
+/V=C58617.10
+*$2015-05-08 11:06:37VPORTO
+*N  NN **************************************************
+*N  NN *** Estado NBC:
+*N  NN **************************************************
+*N  NN *** I229 => HAY Coincidencias Trace por Corresponsal.-
+*N  NN *** I232 => HAY Coincidencias Trace por Girado.-
+*N  NN *** I230 => No hubo control TRACE, se toma como Coincidencia.-
+*N  NN **************************************************
+ NSSNN 58626   Estado BANCO   INNSNK00000701520030020200101100000000700070030013700
+/V=MI
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:01:29VPORTO
+ NSSNN 58626   Estado BANCO   INNSNK00000701520030020200101100000000700070030013700
+/?=(I229)O(I230)O(I232)
+/V=MP
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:01:38VPORTO
+*N  NN ***********Agregado 16-09-2011*******
+*$2011-09-16 10:01:11TOP
+ NNNNN 58640   Importe Ant.   INNNNA00000701520030030202001100000000700070030013700
+/V=C0029.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:32:26VPORTO
+*N  NN *******************************************
+*$2011-09-15 15:34:07TOP
+TNNNNN 0253TInicializo p/Altas en COBE              C00001 00
+*$2015-05-15 11:07:40VPORTO
+ NNNNN 09517   Num L=nea Sec. INNSNK00000701500027021000001100000000700070027012600
+/V=15
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/P=I91I92
+ NSSNN 00041   Contador       INNSNK00000701500027021000001100000000700070027012600
+/V=0
+*$2015-05-14 14:21:53VPORTO
+TNNNNN 0254TConsulta Secuencial Genérica            S03811 00
+/F=C58643=C0006.1
+*$2015-05-15 11:07:57VPORTO
+ NNNNN 58643   NroCOBE        INNSNA00000701500027021000001100000000700070027012600
+/?=1=0
+/V=C0006.1
+*$2015-05-14 12:48:49VPORTO
+ NNNNN 58644   NroCuota       INNSNF00001101300031017100001100000001100190031009000
+/?=1=0
+/V=C432
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-14 12:48:54VPORTO
+*N  NN ***Si en Cobe Cuotas hay un registro se enciende el indicador 68***
+*$2015-05-15 11:08:26VPORTO
+ NNNNN 58648   Importe        INNSN 00000701500027027000001100000000700070027012600
+*$2015-05-08 09:39:40VPORTO
+CNNNNN   00000000000000000000100
+/F=C9509#0
+/P=I68
+*$2015-05-14 12:44:29VPORTO
+CNNNNN   00000000000000000000100
+/?=1=0
+/F=(I68)Y(C58644=1)
+/P=I105
+*$2015-05-15 11:08:51VPORTO
+CNNNNN ME00000000000000000000100
+/F=(!I68)Y(C671.16<C58611.11)
+/M=Sumatoria de Importes es menor a Importe Total de COBE!!!
+*$2015-05-14 15:05:42VPORTO
+ NNNNN 00432   Operaci½n      INNSNF00000701500027027000001100000000700070027012600
+/?=(I96)Y(1=0)
+/V=C432+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-14 12:45:30VPORTO
+TN  NN 0253TGo To 10 ó 12                           C00001 00
+/?=1=0
+*$2015-05-14 12:45:12VPORTO
+CNNNNN  I00000000000000000000100
+/?=I96
+/R=13
+ NNNNN 00432   Operaci½n      INNSNF00000701500027027000001100000000700070027012600
+/?=!I96
+/V=C432-1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C432>1
+/P=I68
+ NSSNN 00041   Contador       INNSNK00000701500027021000001100000000700070027012600
+/V=0
+TNNNNN 0253TConsulta Cuotas Ingresadas              C00001 00
+/?=(I68)Y1=0
+*$2015-05-14 12:29:51VPORTO
+ SNNNN 00041   C½d.Transacci½nINNSNF00000701500027021000001100000000700070027012600
+/V=C0041+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00432   Operaci½n      INNSNA00000701500027027000001100000000700070027012600
+/?=1=0
+/V=C0432.14
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-15 12:01:38VPORTO
+ SNNNN 58643   NroCOBE        INNSNA00000701500027021000001100000000700070027012600
+/V=C0006.1
+*$2015-05-08 09:37:02VPORTO
+ SNNNN 58644   NroCuota       INNSNA00001101300031017110001100000001100190031009000
+/V=C0041
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:38:21VPORTO
+ SNNNN 58648   Importe        INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:39:56VPORTO
+ SNNNN 58646   FechaVto       INNSN 00000701500027027000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:14:03VPORTO
+ SNNNN 09517   Num L=nea Sec. INNSNF00000701500027021000001100000000700070027012600
+/V=C9517+15
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CSNNNN M000000000000000000000100
+/F=(C9509=0)O(C41>C432)
+/M=Enter para continuar
+VNSNNS 120001037804460421SSSV000000000000000000000000000000000000010
+/T="Cuota No. " + C58644
+/?=I92
+/C=255255255
+*$2015-05-08 09:38:36VPORTO
+KNSNNS 120009004500290105000100
+/?=I92
+/T=Cuota
+/F=0012700NNN000000000Arial                                   
+KNSNNS 120009014000290238000100
+/?=I92
+/T=Vencimiento
+/F=0012700NNN000000000Arial                                   
+KNSNNS 120009030700290367020100
+/?=I92
+/T=Importe
+/F=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=I92
+/A=I92
+ NNNNN 00041   C½d.Transacci½nICNSN 12002900500049007310101150000000000000000000000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00128   Fecha          ICNSNA12002801410048021510101150000000000000000000000
+/V=C58646.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:14:17VPORTO
+ NNNNN 00673   Importe        ICNSNA12002902590049036712101150000000000000000000000
+/V=C58648.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:40:05VPORTO
+ SNNNN 09517   Num L=nea Sec. INNSNF00000701500027021000001100000000700070027012600
+/V=C9517+15
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 0336TAlta Cuotas COBE                        T03811 00
+/?=(I68)
+ NNNNN 00041   C½d.Transacci½nINNSNF00000701500027021000001100000000700070027012600
+/V=C0041+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=1=0
+/P=I96
+*$2015-05-15 11:23:19VPORTO
+VNSNNS 100001000102200379NSND000000000000000000000000000000000000010
+/T="Ingreso de Cuotas COBE " + C006.1
+/C=255255255
+*$2015-05-13 10:40:34VPORTO
+ NNNNN 58643   NroCOBE        INNSNA10000701500027021000001100000000700070027012600
+/V=C0006.1
+*$2015-05-08 09:37:11VPORTO
+ NNNNN 58644   NroCuota       IDNSNA10001201390032018000101150000001600280036010900
+/V=C41
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:38:46VPORTO
+ NNNNN 58646   FechaVto       I NSN 10004501380065021900001000000004700280067010900
+/?=I106
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-15 12:06:06VPORTO
+ NSSNS 58646   FechaVto       IDNNNA10004501370065024200101050000013000020150012100
+/?=I105
+/V=C0127.10
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 12:06:08VPORTO
+CNNNNN ME00000000000000000000100
+/?=!I91
+/F=!(C58646>C127)
+/M=Fecha de Vto. debe ser mayor a la anterior !!!
+*$2015-05-08 10:14:36VPORTO
+CNNNNN ME00000000000000000000100
+/F=C58646<C9500
+/M=La fecha no puede ser menor a la fecha actual !!!
+*$2015-05-08 10:14:48VPORTO
+ NNNNN 00127   Fecha          INNSNA00000701500027027000001100000000700070027012600
+/V=C58646
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:15:07VPORTO
+CNNNNN   00000000000000000000100
+/A=I91
+ NSNNS 58645   RubroOperativo INNNNK00000701330027019702001100000000700070027012600
+/?=!I102
+/V=1280
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:12:19VPORTO
+ NSNNS 58645   RubroOperativo INNNNK00000701330027019702001100000000700070027012600
+/?=I102
+/V=1281
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:12:29VPORTO
+ NNNNN 58647   Moneda         IDNSNA10007401390094017200101150000007700290097011000
+/V=C0003.11
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:16:49VPORTO
+ NNNNN 06400   Descripci½n    ICNSN 10007401890094033700101150000000000000000000000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 58648   Importe        I NSN 10010601380126030800001000000010800300128011100
+/?=I106
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-15 12:06:12VPORTO
+ NSSNS 58648   Importe        IDNNNA10010501370127030902101050000013000180150012300
+/?=I105
+/V=C0035.10
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 12:06:14VPORTO
+CNNNNN ME00000000000000000000100
+/F=C58648=0
+/M=El Importe no puede ser CERO !!!
+*$2015-05-08 09:40:27VPORTO
+ NNNNN 00671   Importe        INNSNF00000701360027037600001100000000700070027011200
+/V=C671+C58648
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:40:36VPORTO
+ NNNNN 00672   Importe        INNSNF00000701360027037600001100000000700070027011200
+/V=C58611.11-C671
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:58:17VPORTO
+CNNNNN ME00000000000000000000100
+/?=1=0
+/F=C671>C58611.7
+/M=Imp. ó sumatoria de Importes supera Importe Total de COBE!!!
+*$2015-05-13 11:39:52VPORTO
+CNNNNN ME00000000000000000000100
+/F=C671>C58611.11
+/M=Imp. ó sumatoria de Importes supera Importe Total de COBE!!!
+*$2015-05-13 11:40:17VPORTO
+ NNNNN 58649   Estado         INNSNK00000701500027021000001100000000700070027012600
+/V=I
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:10:20VPORTO
+ NNNNN 09517   Num L=nea Sec. INNSNF00000701500027021000001100000000700070027012600
+/V=C9517+15
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TNNNNN 0250TAlta NexCobeCuotas (Ord900 + Cuota)     A03811 00
+/?=(I68)Y(1=0)
+*$2015-05-15 14:59:55VPORTO
+ NSSNS 58643   NroCOBE        INNNNA00000701330027018102001100000000700070027012600
+/V=C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:37:48VPORTO
+ NSSNS 58644   NroCuota       INNNNF00000701330027018102001100000000700070027012600
+/V=900+C58644.16
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 12:57:44VPORTO
+ NSSNS 58645   RubroOperativo INNNNA00000701330027018102001100000000700070027012600
+/V=C58645.16
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:40:11VPORTO
+ NSSNS 58646   FechaVto       INNNNA00000701330027024300001100000000700070027012600
+/V=C58646.16
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:40:15VPORTO
+ NSSNS 58647   Moneda         INNNNA00000701330027024300001100000000700070027012600
+/V=C58647.16
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:40:19VPORTO
+ NSSNS 58648   Importe        INNNNA00000701330027024300001100000000700070027012600
+/V=C58648.16
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:39:58VPORTO
+ NSSNS 58649   Estado         INNNNA00000701330027024300001100000000700070027012600
+/V=C58649.16
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:40:27VPORTO
+ NSSNS 58642   Estado Dto.    INNNNA00000701330027024300001100000000700070027012600
+/V=C58642.16
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:40:46VPORTO
+ NSSNS 58650   EnviaSwift     INNNNA00000701330027024300001100000000700070027012600
+/V=C58650.16
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:40:50VPORTO
+ NSSNS 58651   AperOModif     INNNNA00000701330027024300001100000000700070027012600
+/V=C58651.16
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:40:53VPORTO
+TN  NN 0253TIteración para el Alta de Cuotas        C00001 00
+/?=(I68)
+VNSNNS 110001037804460421SSSV000000000000000000000000000000000000000
+/T=   Cuotas Ingresadas
+/?=I92
+/C=255255255
+KNSNNS 110009004500290105000100
+/T=Cuota
+/F=0012700NNN000000000Arial                                   
+KNSNNS 110009030700290367020100
+/T=Importe
+/F=0012700NNN000000000Arial                                   
+KNSNNS 110384010704040167000100
+/T=Restan :
+/F=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=I92
+/A=I92
+ NNNNN 00041   C½d.Transacci½nICNSNA11002900500049007310101150000000000000000000000
+/V=C0041.16
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00128   Fecha          ICNSNA11002801410048021510101150000000000000000000000
+/V=C58646.16
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:15:16VPORTO
+ NNNNN 00673   Importe        ICNSNA11002902590049036712101150000000000000000000000
+/V=C58648.16
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:40:48VPORTO
+ NNNNN 00672   Importe        ICNSNA11038401710404027900101150000000000000000000000
+/V=C0672.16
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/c=192192193
+/f=0012700NNN000000000Arial                                   
+KNSNNS 110009014000290238000100
+/T=Vencimiento
+/F=0012700NNN000000000Arial                                   
+CNNNNN  I00000000000000000000100
+/F=C672>0
+/R=16
+CNNNNN M 00000000000000000000100
+/F=C672=0
+/M=Enter para continuar
+CNNNNN  I00000000000000000000100
+/?=I68
+/R=13
+*$2015-05-14 14:10:22VPORTO
+CNNNNN ME00000000000000000000100
+/?=1=0
+/F=C672=0YC41<C432.14
+/M=No. Cuotas MENOR al ingresado originalmente !!!
+*$2015-05-14 11:31:49VPORTO
+CNNNNN ME00000000000000000000100
+/?=1=0
+/F=C672=0YC41>C432.14
+/M=No. Cuotas MAYOR al ingresado originalmente !!!
+*$2015-05-14 11:31:54VPORTO
+TN  NN 0252TModificacion FVto. e Importe            M03811 00
+/?=A(C58618.11="V")Y(1=0)
+*$2015-05-15 11:09:41VPORTO
+ NNNNN 58643   NroCOBE        INNSNA00000701500027021000001100000000700070027012600
+/V=C0006.1
+*$2015-05-08 09:37:20VPORTO
+ NNNNN 58644   NroCuota       INNSNK00001101300031017100001100000001100190031009000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:38:53VPORTO
+ NNNNN 58649   Estado         INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:10:33VPORTO
+*N  NN *** Fecha de Vencimiento.-
+ NSSNS 58646   FechaVto       INNNNA00000701330027024300001100000000700070027012600
+/?=(I181)
+/V=C0127.10
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:15:24VPORTO
+*N  NN *** Importe.-
+ NSSNS 58648   Importe        INNNNA00000701190027027902001100000000700070027011200
+/?=(I171)
+/V=C0035.10
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:40:55VPORTO
+TN  NN 0252TModificación Documentos Adjuntos        M03761 00
+ NNNNN 58304   Nro LC         INNSNA00000701500027027000001100000000700070027012600
+/V=C0006.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:08:20VPORTO
+ NNNNN 58305   Ordinal        INNSNK00000701500027021000001100000000700070027012600
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:19:30VPORTO
+ NSNNS 58307   Letras         INSNNF00002501650045020900001100000002500180045013700
+/V=C3578.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:20:35VPORTO
+ NSNNS 58309   Factura Comer. INSNNF00005401650074020900001100000005400180074013700
+/V=C3583.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:32:21VPORTO
+ NSNNS 58328   Certific. SanitINSNNF00008401650104020900001100000008400180104013700
+/V=C3593.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:32:48VPORTO
+ NSNNS 58311   Poliza Seguro  INSNNF00011401650134020900001100000011400180134013700
+/V=C3597.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:33:25VPORTO
+ NSNNS 58326   Cert. de origenINSNNF00014401650164020900001100000014400180164013700
+/V=C3595.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:33:52VPORTO
+ NSNNS 58301   Cert. Lib.1    INSNNF00017401650194020900001100000017400180194013700
+/V=C3569.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:34:21VPORTO
+ NSNNS 58322   Lista Empaque  INSNNF00002504750045051900001100000002503500045046900
+/V=C3181.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:34:52VPORTO
+ NSNNS 58317   Conocim.embarq.INSNNF00005404750074051900001100000005403500074046900
+/V=C3399.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:35:17VPORTO
+ NSNNS 58320   Copia Conoc    INSNNF00008404750104051900001100000008403500104046900
+/V=C0867.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:35:43VPORTO
+ NNNNN 58324   Cod. otros doc INNSNK00000701500027021000001100000000700070027012600
+/?=I51
+/V=S
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:35:58VPORTO
+ NNNNN 58324   Cod. otros doc INNSNK00000701500027021000001100000000700070027012600
+/?=!I51
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:36:07VPORTO
+TN  NN 0252TModificación Instrucciones              M03751 00
+ NNNNN 58653   Nro LC         INNSNA00000701500027027000001100000000700070027012600
+/V=C0006.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:22:41VPORTO
+ NNNNN 58654   Ordinal        INNSNK00000701500027021000001100000000700070027012600
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:23:04VPORTO
+ NNNNN 58655   Texto          INNSNF00000701500027171000001100000000700070027012600
+/V=C9191.11+C9192.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:23:54VPORTO
+ NNNNN 58656   Texto          INNSNF00000701500027171000001100000000700070027012600
+/V=C9193.11+C9194.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:26:10VPORTO
+ NNNNN 58657   Texto          INNSNF00000701500027171000001100000000700070027012600
+/V=C9195.11+C9196.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:26:54VPORTO
+ NNNNN 58658   Texto          INNSNF00000701500027171000001100000000700070027012600
+/V=C9197.11+C9198.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:27:24VPORTO
+ NNNNN 58659   Texto          INNSNF00000701500027171000001100000000700070027012600
+/V=C9199.11+C9200.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:27:51VPORTO
+ NNNNN 58660   Texto          INNSNF00000701500027171000001100000000700070027012600
+/V=C9201.11+C9202.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:28:21VPORTO
+ NNNNN 58661   Texto          INNSNF00000701500027171000001100000000700070027012600
+/V=C9203.11+C9204.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:28:45VPORTO
+ NNNNN 58662   Texto          INNSNF00000701500027171000001100000000700070027012600
+/V=C9205.11+C9206.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:29:07VPORTO
+TN  NN 1003TAlta Automatica Generica                T03741 00
+ NNNNN 58330   Numero LC      INNSNA00000701500027027000001100000000700070027012600
+/V=C0006.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:38:21VPORTO
+ NNNNN 58331   NumeroRemesa   INNSNK00000701500027021000001100000000700070027012600
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:39:49VPORTO
+*N  NN *** 1er. Registro
+ NSNNS 58339   Otros Document.INSNNA00014404750164073400001100000014403500164045100
+/V=C745.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:22:06VPORTO
+ NSNNS 58340   Otros Docs.contINSNNA00017404750194073300001100000017403500194044600
+/V=C746.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:22:29VPORTO
+ NSNNS 58332   Observacion1   INSNNA00017404750194073300001100000017403500194044600
+/V=C896.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:40:39VPORTO
+ NSNNS 58333   Observacion2   INSNNA00017404750194073300001100000017403500194044600
+/V=C903.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:41:30VPORTO
+ NSNNS 58334   Observacion3   INSNNA00017404750194073300001100000017403500194044600
+/V=C904.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:42:10VPORTO
+ NSNNS 58335   Observacion4   INSNNA00017404750194073300001100000017403500194044600
+/V=C905.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:46:36VPORTO
+ NSNNS 58336   Instruc. adic.2INSNNA00017404750194073300001100000017403500194044600
+/V=C906.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:46:59VPORTO
+ NSNNS 58337   Instruc. adic.3INSNNA00017404750194073300001100000017403500194044600
+/V=C907.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:47:23VPORTO
+ NSNNS 58338   Instruc. adic.4INSNNA00017404750194073300001100000017403500194044600
+/V=C908.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:48:07VPORTO
+ NSNNS 58341   Otros Docs.2º CINSNNA00017404750194073300001100000017403500194044600
+/V=C909.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:48:29VPORTO
+ NSNNS 58342   Otr.Doc. 2º C  INSNNA00017404750194073300001100000017403500194044600
+/V=C910.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:50:17VPORTO
+ NSNNS 58343   Instruc. adic.1INSNNA00017404750194073300001100000017403500194044600
+/V=C3360.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:50:40VPORTO
+TN  NN 1003TAlta Automatica Generica                T03741 00
+ NNNNN 58330   Numero LC      INNSNA00000701500027027000001100000000700070027012600
+/V=C0006.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:38:29VPORTO
+ NNNNN 58331   NumeroRemesa   INNSNK00000701500027021000001100000000700070027012600
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:39:58VPORTO
+*N  NN *** 2do. Registro
+ NSNNS 58332   Observacion1   INSNNA00017404750194073300001100000017403500194044600
+/V=C3184.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:40:48VPORTO
+ NSNNS 58333   Observacion2   INSNNA00017404750194073300001100000017403500194044600
+/V=C3210.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:41:37VPORTO
+ NSNNS 58334   Observacion3   INSNNA00017404750194073300001100000017403500194044600
+/V=C3242.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:42:23VPORTO
+TN  NN 1001TEnvío de Mail por coincidencias Trace   A00991 00
+/?=(I229)O(I230)O(I232)
+VNSSNS 250005000004410803SSSD000000000000000000000000000000000000000
+/T=   Envío de Mail al Ofcial de Cuentas / Oficial de Cumplimiento
+/C=255255255
+KNSSNS 250045000903440781000101
+/T=   Por coincidencias con Listas Negras   
+/F=0012700NNN000000000Arial                                   
+ NNNNN 03042   Numerador MailsINNSN 25000701500027051000021100300000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03424   Id             INNSNA25000701500027051000021100300000700070027012600
+/V=C3042
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03236   Funcionalidad  INNSNK25000701520030020200101100000000700070030013700
+/V=COBRANZAS_EXPORTACION
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03237   Parametro      INNSNK25000701520030020200101100000000700070030013700
+/V=MOD_COBE_ING_TRACE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03427   Subject:       INNSNK25000701520030020200101100000000700070030013700
+/V=MOD_COBE_ING_TRACE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03426   From:          INNSNA25000701500027051000021100300000700070027012600
+/V=C3238
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 250079002600990160000100
+/T=Dirección de e-mail:
+/F=0013700NNN000000000Arial                                   
+ NSNNS 03425   Para:          I NSN 25007601740099076300121100300043406520457077000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=A(F(RTRIM,C3425)="")
+/M=Debe ingresar un mail...
+KNNNNN 250117002601370160000100
+/T=Texto:
+/F=0013700NNN000000000Arial                                   
+ NNNNN 00860   # Trace        INNSNA00000701520030020202121000300000700070030013700
+/?=(I229)
+/V=C612.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00860   # Trace        INNSNA00000701520030020202121000300000700070030013700
+/?=(I232)
+/V=C670.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00860   # Trace        INNSNA00000701520030020202121000300000700070030013700
+/?=(I230YI112)
+/V=C612.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00860   # Trace        INNSNA00000701520030020202121000300000700070030013700
+/?=(I230YI113)
+/V=C670.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 03427   Titulo:        INNSNK25007301650096075500121100300038303100403042900
+/V=Modif. COBE: Ingreso
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03428   Body:          IESSNF25011501740326076300021000300000700070027012600
+/?=(I229)
+/V="Modif. COBE Ingresada " + F(CHR,13) + "Corresponsal: Coincidencia en Lista OFAC y similares." + F(CHR,13) +  "Usuario:"+C9505+ F(CHR,13)+ "Sucursal:"+C9502+ F(CHR,13) + "Código de Verificación Topaz Trace:"+C860
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03428   Body:          IESSNF25011501740326076300021000300000700070027012600
+/?=(I232)
+/V="Modif. COBE Ingresada " + F(CHR,13) + "Girado: Coincidencia en Lista OFAC y similares." + F(CHR,13) +  "Usuario:"+C9505+ F(CHR,13)+ "Sucursal:"+C9502+ F(CHR,13) + "Código de Verificación Topaz Trace:"+C860
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03428   Body:          IESSNF25011501740326076300021000300000700070027012600
+/?=(I230)
+/V="Modif. COBE Ingresada " + F(CHR,13) + "Error de Conexión de TRACE" + F(CHR,13) +  "Usuario:"+C9505+ F(CHR,13)+ "Sucursal:"+C9502+ F(CHR,13) + "Código de Verificación Topaz Trace:"+C860
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TNNNNN 0252TConsulta si emite MT-499                M03811 00
+/?=1=0
+*$2015-05-15 14:07:38VPORTO
+ NSSNS 58643   NroCOBE        INNNNA00000701330027018102001100000000700070027012600
+/V=C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:37:40VPORTO
+ NSSNS 58644   NroCuota       INNNNK00000701330027018102001100000000700070027012600
+/V=1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:39:03VPORTO
+ NNNNN 58649   Estado         INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:10:42VPORTO
+CNNNNN   00000000000000000000100
+/A=I67
+*N  NN **************************************************************
+*N  NN *** Emisión del MT-499.-
+*N  NN **************************************************************
+VNSNNS 330077028501510231SSSD000000000000000000000000000000000000000
+/T=   Envío de Swift MT-499
+/C=255255255
+KNSNNS 330007000900750213001101
+/T=   Swift MT-499
+/F=0012700NNN000000000Arial                                   
+ NSSNS 00948   Emite?         I NNNK33003401050111018000001111000003700470057009800
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C948.00="S")
+/P=I67
+*N  NN *** Si hay coincidencias Trace (Listas Negras) y aún así decide emitir  => AVISO.-
+CNNNNN   00000000000000000000100
+/?=((I229)O(I230)O(I232))
+/P=I95
+VNSNNS 340228023302090328SSSD000000000000000000000000000000000000000
+/T=   A T E N C I Ó N   
+/?=(I55)
+/C=255255255
+KNNNNN 340020003700400288000100
+/?=(I55)
+/T=Decidió emitir MT-499 aún cuando existen
+/F=0012700NNN000000000Arial                                   
+KNSNNS 340049003700690288000100
+/?=(I55)
+/T=coincidencias con Listas Negras (Trace) y la
+/F=0012700NNN000000000Arial                                   
+KNSNNS 340078003700980288000100
+/?=(I55)
+/T=Operación pasará a Autorizar por un Oficial
+/F=0012700NNN000000000Arial                                   
+KNSNNS 340107003701270288000100
+/?=(I55)
+/T=de Cumplimiento....
+/F=0012700NNN000000000Arial                                   
+*N  NN *** Importe.-
+ NSSNS 00588   Nuevo Importe  INNNNA00022305470243067502101000000022304120243051200
+/?=(I171)Y(1=0)
+/V=C0029.10
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-14 10:13:01VPORTO
+ NSSNS 00588   Nuevo Importe  INNNNA00022305470243067502101000000022304120243051200
+/?=(I171)
+/V=C0035.10
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-14 10:13:40VPORTO
+ NSSNS 58648   Importe        INNNNA00000701190027027902001100000000700070027011200
+/?=(I171)Y(1=0)
+/V=C588.0
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 12:59:50VPORTO
+*N  NN *** Envío del Swift.-
+ NSSNS 58650   EnviaSwift     INNNNK00000701330027024300001100000000700070027012600
+/?=(I67)
+/V=S
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 11:41:44VPORTO
+ NSSNS 58650   EnviaSwift     INNNNK00000701330027024300001100000000700070027012600
+/?=(!I67)
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 11:41:52VPORTO
+ NNNNN 58649   Estado         INNSNK00000701500027021000001100000000700070027012600
+/V=I
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 10:10:51VPORTO
+ NSSNS 58651   AperOModif     INNNNK00000701330027024300001100000000700070027012600
+/V=M
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 11:42:25VPORTO
+TNNNNN 1006TConsulta Generica                       C00001 00
+*$2015-05-15 14:09:29VPORTO
+ NSSNS 58643   NroCOBE        INNNNA00000701330027018102001100000000700070027012600
+/?=1=0
+/V=C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:09:07VPORTO
+ NSSNS 58644   NroCuota       INNNNK00000701330027018102001100000000700070027012600
+/?=1=0
+/V=1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:09:12VPORTO
+ NNNNN 58649   Estado         INNSN 00000701500027021000001100000000700070027012600
+/?=1=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-15 14:09:17VPORTO
+CNNNNN   00000000000000000000100
+/A=I67
+*N  NN **************************************************************
+*N  NN *** Emisión del MT-499.-
+*N  NN **************************************************************
+VNSNNS 330077028501510231SSSD000000000000000000000000000000000000000
+/T=   Envío de Swift MT-499
+/C=255255255
+KNSNNS 330007000900750213001101
+/T=   Swift MT-499
+/F=0012700NNN000000000Arial                                   
+ NSSNS 00948   Emite?         I NNNK33003401050111018000001111000003700470057009800
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C948.00="S")
+/P=I67
+*N  NN *** Si hay coincidencias Trace (Listas Negras) y aún así decide emitir  => AVISO.-
+CNNNNN   00000000000000000000100
+/?=((I229)O(I230)O(I232))
+/P=I95
+VNSNNS 340228023302090328SSSD000000000000000000000000000000000000000
+/T=   A T E N C I Ó N   
+/?=(I55)
+/C=255255255
+KNNNNN 340020003700400288000100
+/?=(I55)
+/T=Decidió emitir MT-499 aún cuando existen
+/F=0012700NNN000000000Arial                                   
+KNSNNS 340049003700690288000100
+/?=(I55)
+/T=coincidencias con Listas Negras (Trace) y la
+/F=0012700NNN000000000Arial                                   
+KNSNNS 340078003700980288000100
+/?=(I55)
+/T=Operación pasará a Autorizar por un Oficial
+/F=0012700NNN000000000Arial                                   
+KNSNNS 340107003701270288000100
+/?=(I55)
+/T=de Cumplimiento....
+/F=0012700NNN000000000Arial                                   
+*N  NN *** Importe.-
+ NSSNS 00588   Nuevo Importe  INNNNA00022305470243067502101000000022304120243051200
+/?=(I171)Y(1=0)
+/V=C0029.10
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-14 10:13:01VPORTO
+ NSSNS 00588   Nuevo Importe  INNNNA00022305470243067502101000000022304120243051200
+/?=(I171)Y(1=0)
+/V=C0035.10
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-15 14:10:25VPORTO
+ NSSNS 58648   Importe        INNNNA00000701190027027902001100000000700070027011200
+/?=(I171)Y(1=0)
+/V=C588.0
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 12:59:50VPORTO
+*N  NN *** Envío del Swift.-
+ NSSNS 58650   EnviaSwift     INNNNK00000701330027024300001100000000700070027012600
+/?=(I67)Y(1=0)
+/V=S
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:10:33VPORTO
+ NSSNS 58650   EnviaSwift     INNNNK00000701330027024300001100000000700070027012600
+/?=(!I67)Y(1=0)
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:10:41VPORTO
+ NNNNN 58649   Estado         INNSNK00000701500027021000001100000000700070027012600
+/?=1=0
+/V=I
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-15 14:10:49VPORTO
+ NSSNS 58651   AperOModif     INNNNK00000701330027024300001100000000700070027012600
+/?=1=0
+/V=M
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:10:53VPORTO
+TNNNNN 0254TConsulta Secuencial Genérica            S03811 00
+/?=(I67)
+/F=(C58643=C0006.1) and (C58644<900)
+*$2015-05-15 15:19:26VPORTO
+ NNNNN 58648   Importe        INNSN 00000701500027027000001100000000700070027012600
+*$2015-05-08 09:39:40VPORTO
+CNNNNN   00000000000000000000100
+/F=C9509#0
+/P=I108
+*$2015-05-15 14:21:20VPORTO
+ NSSNS 58644   NroCuota       INNNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:36:29VPORTO
+TNNNNN 0252TModificacion Genérica                   M03811 00
+/?=(I67)Y(I108)
+*$2015-05-15 14:35:25VPORTO
+ NSSNS 58643   NroCOBE        INNNNA00000701330027018102001100000000700070027012600
+/V=C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:31:38VPORTO
+ NSSNS 58644   NroCuota       INNNNA00000701330027018102001100000000700070027012600
+/V=C58644.27
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:31:41VPORTO
+ NNNNN 58649   Estado         INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-15 14:31:44VPORTO
+ NSSNS 58650   EnviaSwift     INNNNK00000701330027024300001100000000700070027012600
+/V=S
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:31:57VPORTO
+ NSSNS 58651   AperOModif     INNNNK00000701330027024300001100000000700070027012600
+/V=M
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-15 14:31:54VPORTO
+CNNNNN  I00000000000000000000100
+/?=I108
+/R=27
+*$2015-05-15 14:22:03VPORTO
+TNNNNN 0253TMT-499                                  C00001 00
+/?=(I67)
+VNSSNS 440001000104460802NNND038000000000000000000000000000000000011
+/T="MT-499 / Datos Swift - COBE No.: "+C58606.1
+/C=255255255
+*$2015-05-08 09:50:13VPORTO
+KNSSNS 440030013201090636000101
+/F=0012700NNN000000000Arial                                   
+ NSSNS 00605   Bco. O. Swift  INNNNF00000701330027026500001100000000700070027012600
+/V=C339.1+C345.1+C347.1+C357.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSSNS 00964   Swift Urgente? IINNNK44005102940071032900101150000005101590071027800
+/V=N
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/F=A(C0964.00="S")
+/P=I169
+ NSSNS 00774   Modo mensaje   INNNNK00000701330027015500001100000000700070027012600
+/?=(I169)
+/V=N2
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSSNS 00131   Numerador SWIFTIINNN 44007602940096036200101150000007601590096027800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNSSNS 440118013202350636000101
+/T=   Banco Receptor   
+/F=0012700NNN000000000Arial                                   
+ NSSNS 00085   Dirección BIC  I NNNA44014102940161041300001000000014101590161027800
+/V=C6280.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00085   Direcc.BIC Bco INNNNF00006001750080031000001000000006000400080015900
+/V=F(TOUPPER,C85)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06280   Direcci¢n BIC  INNNNA00000001330020025400001100000000000000020011900
+/V=C85
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06281   Nombre         IDNNN 44017102940191055400101050000017101590191027800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06282   Ciudad         IDNNN 44019802940218055400101050000019801590218027800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNSSNS 440241013203230636000101
+/F=0012700NNN000000000Arial                                   
+CNNNNN  m00000000000000000000100
+/R=TOP/CLIENTES, sp_TPVerificarBICClave, C6280, C9500, C220 O
+CNNNNN   00000000000000000000100
+/F=C220=0
+/P=I177
+/A=I178
+*N  NN *** I177 => Emite MT-999 a partir del MT-499 (C220=0)
+CNNNNN M 00000000000000000000100
+/?=(I177)
+/M=Bco. Rec. sin Clave con nosotros. Se emite autom. MT-999...
+ NSSNS 00775   Gastos Mensaje INNNNF00000001330020016600001100000000000000020011900
+/V=C6280[9,3]
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+CNSSNS ME00000000000000000000100
+/F=A(C775.00="BIC")
+/P=I68
+/M=El Banco esta fuera del sistema SWIFT...
+ NSSNS 00866   Codigo de Mov. INNNNF00000701330027014400001100000000700070027012600
+/V=C6280[9,1]
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+CNSSNS   00000000000000000000100
+/F=A(C866.00#"X")
+/P=I88
+/A=I89
+ NSSNS 00855   Bco.Dest. SwiftINNNNF00005001430070027500001000000005000100070012900
+/?=(I88)
+/V=C6280[1,8]+"X"+C6280[9,3]
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSSNS 00855   Bco.Dest. SwiftINNNNF00004901440069027600001000000004900110069013000
+/?=(I89)
+/V=C6280[1,8]+"XXXX"
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSSNS 00823   Nombre Bco.PagaINNNNA00002702400047062500001100000002702400047062500
+/V=C6281.0
+/F=0012400NNN000000000Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSSNS 00853   20:Nuestra Ref.IINNNA44026102940281040400101150000026101590281026900
+/V=C58606.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:50:26VPORTO
+ NSSNS 00865   21:Ref.Corresp.I NNN 44028602940306047000001100000028601590306027800
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 0253TCampo 79 (Líneas 1 a 18)                C00001 00
+/?=(I67)
+VNSSNS 220005000204470802SSSD000000000000000000000000000000000000010
+/T="MT-499 *** Campo 79 - Líneas 1-18 *** / COBE No.: "+C58606.1 
+/C=255255255
+*$2015-05-08 09:50:38VPORTO
+KNSSNS 220001012603880667000101
+/T=   Narrativa Campo 79   
+/F=0012700NNN000000000Arial                                   
+ NSSNS 00760   Línea 1:       I SSN 22001802640037064400001100000002001460037023600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+CNSSNS   00000000000000000000100
+/F=F(LEN,F(LTRIM,C760.00))#0
+/P=I50
+ NSSNS 00761   Línea 2:       I SSN 22003702640057064400001100000003701460057023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C761.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 00762   Línea 3:       I SSN 22005702640077064400001100000005701460077023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C762.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 00764   Línea 4:       I SSN 22007702640097064400001100000007701460097023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C764.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 00765   Línea 5:       I SSN 22009702640117064400001100000009701460117023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C765.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 00766   Línea 6:       I SSN 22011702640137064400001100000011701460137023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C766.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 00767   Línea 7:       I SSN 22013702640157064400001100000013701460157023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C767.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 00768   Línea 8:       I SSN 22015702640177064400001100000015701460177023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C768.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 00769   Línea 9:       I SSN 22017702640197064400001100000017701460197023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C769.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 00770   Línea 10:      I SSN 22019702640217064400001100000019701460217023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C770.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 00763   Línea 11:      I SSN 22021702640237064400001100000021701460237023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C763.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03159   Línea 12:      I SSN 22023702640257064400001100000023701460257023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3159.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03160   Línea 13:      I SSN 22025702640277064400001100000025701460277023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3160.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03161   Línea 14:      I SSN 22027702640297064400001100000027701460297023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3161.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03162   Línea 15:      I SSN 22029702640317064400001100000029701460317023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3162.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03163   Línea 16:      I SSN 22031702640337064400001100000031701460337023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3163.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03164   Línea 17:      I SSN 22033702640357064400001100000033701460357023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3164.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03165   Línea 18:      I SSN 22035702640377064400001100000035701460377023600
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3165.00))#0
+/P=I50
+ NSSNS 00669   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C669+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+TN  NN 0253TCampo 79 (Líneas 19 a 35)               C00001 00
+/?=(I67)Y(I50)
+VNSSNS 350002000104450803SSSD000000000000000000000000000000000000010
+/T="MT-499 *** Campo 79 - Líneas 19-35 *** / COBE No.: "+C58606.1 
+/C=255255255
+*$2015-05-08 09:50:49VPORTO
+KNSSNS 350007012603700661000101
+/T=   Narrativa Campo 79   
+/F=0012700NNN000000000Arial                                   
+ NSSNS 03166   Línea 19:      I SSN 35002302630043064300001100000002301450043023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3166.00))#0
+/P=I50
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03167   Línea 20:      I SSN 35004302630063064300001100000004301450063023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3167.00))#0
+/P=I50
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03168   Línea 21:      I SSN 35006302630083064300001100000006301450083023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3168.00))#0
+/P=I50
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03169   Línea 22:      I SSN 35008302630103064300001100000008301450103023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3169.00))#0
+/P=I50
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03170   Línea 23:      I SSN 35010302630123064300001100000010301450123023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3170.00))#0
+/P=I50
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 03171   Línea 24:      I SSN 35012302630143064300001100000012301450143023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C3171.00))#0
+/P=I50
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09107   Línea 25:      I SSNK35014302630163064300001100000014301450163023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9107.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9107)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09108   Línea 26:      I SSNK35016302630183064300001100000016301450183023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9108.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9108)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09109   Línea 27:      I SSNK35018302630203064300001100000018301450203023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9109.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9109)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09110   Línea 28:      I SSNK35020302630223064300001100000020301450223023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9110.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9110)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09111   Línea 29:      I SSNK35022302630243064300001100000022301450243023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9111.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9111)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09112   Línea 30:      I SSNK35024302630263064300001100000024301450263023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9112.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9112)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09113   Línea 31:      I SSNK35026302630283064300001100000026301450283023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9113.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9113)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09114   Línea 32:      I SSNK35028302630303064300001100000028301450303023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9114.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9114)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09115   Línea 33:      I SSNK35030302630323064300001100000030301450323023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9115.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9115)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09116   Línea 34:      I SSNK35032302630343064300001100000032301450343023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9116.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9116)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+ NSSNS 09117   Línea 35:      I SSNK35034302630363064300001100000034301450363023500
+/?=(I50)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/?=(I50)
+/F=F(LEN,F(LTRIM,C9117.00))#0
+/P=I50
+CNSSNS ME00000000000000000000100
+/?=F(LEN, C9117)>50
+/M=La línea no puede tener más de 50 caracteres.
+ NSSNS 00670   No. Auxiliar 7 INNNNF00003006840050073102001100000000700070027012600
+/?=(I50)
+/V=C670+1
+/F=0008400NNN000000000MS Sans Serif                           
+/f=0008400NNN000000000MS Sans Serif                           
+TN  NN 0250TAlta Campos Swift T79                   A04361 00
+/?=(I67)
+ NSSNS 00891   Cant. cuotas   INNSNF00000701500027021000001100000000700070027012600
+/V=C891.00+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 04185   Identificacion INNSNA00000701500027027000001100000000700070027012600
+/V=C131.29
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 04188   Nro.Lineas     INNSNA00000701500027021000001100000000700070027012600
+/V=C891.00
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 04189   Tipo Campo     INNSNK00000701500027021000001100000000700070027012600
+/V=T79
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 04186   Nro. Cuenta    INNSNA00000701500027027000001100000000700070027012600
+/V=C58606.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:51:02VPORTO
+ NSSNS 04190   Swift          INNSNK00000701500027027000001100000000700070027012600
+/?=(!I177)
+/V=MT499_1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 04190   Swift          INNSNK00000701500027027000001100000000700070027012600
+/?=(I177)
+/V=MT999
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ***
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=1)
+/V=C760.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=2)
+/V=C761.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=3)
+/V=C762.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=4)
+/V=C764.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=5)
+/V=C765.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=6)
+/V=C766.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=7)
+/V=C767.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=8)
+/V=C768.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=9)
+/V=C769.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=10)
+/V=C770.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=11)
+/V=C763.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=12)
+/V=C3159.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=13)
+/V=C3160.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=14)
+/V=C3161.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=15)
+/V=C3162.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=16)
+/V=C3163.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=17)
+/V=C3164.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=18)
+/V=C3165.30
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN ***
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=19)
+/V=C3166.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=20)
+/V=C3167.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=21)
+/V=C3168.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=22)
+/V=C3169.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=23)
+/V=C3170.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=24)
+/V=C3171.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=25)
+/V=C9107.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=26)
+/V=C9108.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=27)
+/V=C9109.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=28)
+/V=C9110.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=29)
+/V=C9111.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=30)
+/V=C9112.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=31)
+/V=C9113.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=32)
+/V=C9114.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=33)
+/V=C9115.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=34)
+/V=C9116.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04187   Descripcion    INNNNA00000701330027024300001100000000700070027012600
+/?=(C891.0=35)
+/V=C9117.31
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN ***
+TN  NN 0253TGo To 28 por el T79                     C00001 00
+/?=(I67)
+CNSSNS  I00000000000000000000100
+/?=(I67)
+/F=((C891.32) < (C669.30+C670.31)) O ((C891.32) = (C669.30+C670.31))
+/R=32
+TN  NN 0250TAlta Swift Messages MT-499              A04341 00
+/?=(I67)Y!(I177)
+ NNNNN 05546   Identificacion INNSNA00000701500027027000001100000000700070027012600
+/V=C131.29
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05566   Status         INNSNK00000701500027027000001100000000700070027012600
+/V=3
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05547   B1applicationIdINNSNK00000701500027021000001100000000700070027012600
+/V=F
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05548   B1applicationPrINNSNK00000701500027021000001100000000700070027012600
+/V=01
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05549   B1LTAbankCode  INNSNK00000701500027021000001100000000700070027012600
+/V=NBCX
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05550   B1LTAcountryCodINNSNK00000701500027021000001100000000700070027012600
+/V=UY
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05551   B1LTAlocationCoINNSNK00000701500027021000001100000000700070027012600
+/V=MM
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05552   B1LTAlogicalTCoINNSNK00000701500027021000001100000000700070027012600
+/V=A
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05553   B1LTAbranchCodeINNSNK00000701500027021000001100000000700070027012600
+/V=XXX
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05554   B1sessionNumberINNSNK00000701500027021000001100000000700070027012600
+/V=0975
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05555   B1sequenceNumbeINNSNK00000701500027027000001100000000700070027012600
+/V=000073
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05556   B2inputOutputIdINNSNK00000701500027021000001100000000700070027012600
+/V=I
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05557   B2messageType  INNSNK00000701500027021000001100000000700070027012600
+/V=499
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00855   Bco.Dest. SwiftINNNNA00003001450053024500001100000003000300053013000
+/V=C855.29
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00121   Comentario     INNNNK00003004250053054500001100000003003100053041000
+/V=*Formato Libre*
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 02487   Banco Destino  INNNNF00006001450083044500001100000006000300083013000
+/V=C855.29+" "+C823.29[1,28]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00049   C20-N/Referenc.INNNNA00009001450113022502001100000009000300113013000
+/V=C58606.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:51:11VPORTO
+ NSSNS 05573   Referencia     INNNNA00009001450113022502001100000009000300113013000
+/V=C58606.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:51:19VPORTO
+ NNNNN 05558   B2MIRSLTIbankCoINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,1,4)
+ NNNNN 05559   B2MIRSLTIcountrINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,5,2)
+ NNNNN 05560   B2MIRSLTIlocatiINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,7,2)
+ NNNNN 05561   B2MIRSLTIlogicaINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,9,1)
+ NNNNN 05562   B2MIRSLTIbranchINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,10,3)
+ NNNNN 05563   B2messagePrioriINNSNK00000701500027021000001100000000700070027012600
+/?=(!I169)
+/V=N
+ NNNNN 05563   B2messagePrioriINNSNK00000701500027021000001100000000700070027012600
+/?=(I169)
+/V=U
+ NNNNN 05569   Comentario     INNSNF00000701500027021000001100000000700070027012600
+/V=C9501+C121+C58606.1+C9500
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*$2015-05-08 09:51:48VPORTO
+ NNNNN 05571   NomBanco       INNSNF00000701500027321000001100000000700070027012600
+/V=C823.29
+ NNNNN 05568   Formulario     INNSNA00000701500027027000001100000000700070027012600
+/V=C131.29
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+TNNNNN 0250TAlta Swift Emitidos MT-499              A04351 00
+/?=(I67)Y!(I177)
+ NNNNN 04453   Nro. Operacion INNSNA00000701500027027000001100000000700070027012600
+/V=C58606.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*$2015-05-08 09:52:01VPORTO
+ NNNNN 04455   Nro. Swift     INNSNA00000701500027027000001100000000700070027012600
+/V=C131.29
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04456   Tipo Swift     INNSNK00000701500027027000001100000000700070027012600
+/V=MT499
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04452   Tipo Operacion INNSNK00000701500027027000001100000000700070027012600
+/V=COBE
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04454   Nro.NegociacionINNSNK00000701500027027000001100000000700070027012600
+/V=0
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04457   Fecha Emitido  INNSNA00000701500027027000001100000000700070027012600
+/V=C9500.0
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04458   Banco          INNSNA00000701500027027000001100000000700070027012600
+/V=C6280.29
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04459   Ciudad         INNSNA00000701500027027000001100000000700070027012600
+/V=C6282.29
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04460   Pais           INNSN 00000701500027027000001100000000700070027012600
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04461   Importe        INNSNA00000701500027027000001100000000700070027012600
+/?=1=0
+/V=C4427.33
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04461   Importe        INNSNA00000701500027027000001100000000700070027012600
+/?=1=0
+/V=C588.25
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*$2015-05-12 10:40:53VPORTO
+ NNNNN 04461   Importe        INNSNA00000701500027027000001100000000700070027012600
+/V=C0035.10
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*$2015-05-12 10:45:58VPORTO
+ NNNNN 04462   Nro. Cliente   INNSNA00000701500027027000001100000000700070027012600
+/V=C0002.10
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04463   Moneda         INNSNA00000701500027027000001100000000700070027012600
+/V=C0003.10
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04464   Asientos       INNSNA00000701500027027000001100000000700070027012600
+/V=C9501.0
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04474   EtapaSwift     INNSNK00000701500027027000001100000000700070027012600
+/V=Modificacion
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+TN  NN 0250TAlta Swift MT-499                       A04281 00
+/?=(I67)Y!(I177)
+ NSSNS 05517   Id             INNSNA00000726110027273100001100000000725970027271600
+/V=C131.29
+ NSSNS 05518   T20            INNSNA00000726110027273100001100000000725970027271600
+/V=C853.29
+ NSSNS 05519   T21            INNSNA00000726110027273100001100000000725970027271600
+/V=C865.29
+TN  NN 0250TAlta Swift MT-499                       A04451 00
+/?=(I67)Y!(I177)
+ NSSNS 08477   ID             INNSNA00000726110027273100001100000000725970027271600
+/V=C131.29
+ NSSNS 08478   ITEM           INNSNK00000726110027273100001100000000725970027271600
+/V=1
+TN  NN 0250TAlta Swift Messages MT-999              A04341 00
+/?=(I177)
+ NNNNN 05546   Identificacion INNSNA00000701500027027000001100000000700070027012600
+/V=C131.7
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05566   Status         INNSNK00000701500027027000001100000000700070027012600
+/V=3
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05547   B1applicationIdINNSNK00000701500027021000001100000000700070027012600
+/V=F
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05548   B1applicationPrINNSNK00000701500027021000001100000000700070027012600
+/V=01
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05549   B1LTAbankCode  INNSNA00000701500027021000001100000000700070027012600
+/V=C339.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05550   B1LTAcountryCodINNSNA00000701500027021000001100000000700070027012600
+/V=C345.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05551   B1LTAlocationCoINNSNA00000701500027021000001100000000700070027012600
+/V=C347.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05552   B1LTAlogicalTCoINNSNA00000701500027021000001100000000700070027012600
+/V=C348.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05553   B1LTAbranchCodeINNSNA00000701500027021000001100000000700070027012600
+/V=C357.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05554   B1sessionNumberINNSNK00000701500027021000001100000000700070027012600
+/V=0975
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05555   B1sequenceNumbeINNSNK00000701500027027000001100000000700070027012600
+/V=000073
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05556   B2inputOutputIdINNSNK00000701500027021000001100000000700070027012600
+/V=I
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 05557   B2messageType  INNSNK00000701500027021000001100000000700070027012600
+/V=999
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00855   Bco.Dest. SwiftINNNNA00003001450053024500001100000003000300053013000
+/V=C855.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00121   Comentario     INNNNK00003004250053054500001100000003003100053041000
+/V=*Formato Libre*
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 02487   Banco Destino  INNNNF00006001450083044500001100000006000300083013000
+/V=C855.29+" "+C823.29[1,28]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00049   C20-N/Referenc.INNNNA00009001450113022502001100000009000300113013000
+/V=C58606.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:52:19VPORTO
+ NSSNS 05573   Referencia     INNNNA00009001450113022502001100000009000300113013000
+/V=C58606.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:52:27VPORTO
+ NNNNN 05558   B2MIRSLTIbankCoINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,1,4)
+ NNNNN 05559   B2MIRSLTIcountrINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,5,2)
+ NNNNN 05560   B2MIRSLTIlocatiINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,7,2)
+ NNNNN 05561   B2MIRSLTIlogicaINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,9,1)
+ NNNNN 05562   B2MIRSLTIbranchINNSNF00000701500027021000001100000000700070027012600
+/V=F(MID,C855.29,10,3)
+ NNNNN 05563   B2messagePrioriINNSNK00000701500027021000001100000000700070027012600
+/?=(!I169)
+/V=N
+ NNNNN 05563   B2messagePrioriINNSNK00000701500027021000001100000000700070027012600
+/?=(I169)
+/V=U
+ NNNNN 05569   Comentario     INNSNF00000701500027021000001100000000700070027012600
+/V=C9501+C121+C58606.1+C9500
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*$2015-05-08 09:52:37VPORTO
+ NNNNN 05571   NomBanco       INNSNF00000701500027321000001100000000700070027012600
+/V=C823.29
+ NNNNN 05568   Formulario     INNSNA00000701500027027000001100000000700070027012600
+/V=C131.29
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+TNNNNN 0250TAlta Swift Emitidos MT-999              A04351 00
+/?=(I177)
+ NNNNN 04453   Nro. Operacion INNSNA00000701500027027000001100000000700070027012600
+/V=C58606.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*$2015-05-08 09:52:47VPORTO
+ NNNNN 04455   Nro. Swift     INNSNA00000701500027027000001100000000700070027012600
+/V=C131.29
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04456   Tipo Swift     INNSNK00000701500027027000001100000000700070027012600
+/V=MT999
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04452   Tipo Operacion INNSNK00000701500027027000001100000000700070027012600
+/V=COBE
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04454   Nro.NegociacionINNSNK00000701500027027000001100000000700070027012600
+/V=0
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04457   Fecha Emitido  INNSNA00000701500027027000001100000000700070027012600
+/V=C9500.0
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04458   Banco          INNSNA00000701500027027000001100000000700070027012600
+/V=C6280.29
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04459   Ciudad         INNSNA00000701500027027000001100000000700070027012600
+/V=C6282.29
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04460   Pais           INNSN 00000701500027027000001100000000700070027012600
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN *** REVISAR **
+*$2015-05-11 13:53:49VPORTO
+ NNNNN 04461   Importe        INNSNA00000701500027027000001100000000700070027012600
+/?=1=0
+/V=C4427.33
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*$2015-05-12 10:40:32VPORTO
+ NNNNN 04461   Importe        INNSNA00000701500027027000001100000000700070027012600
+/V=C0035.10
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*$2015-05-12 10:46:17VPORTO
+ NNNNN 04462   Nro. Cliente   INNSNA00000701500027027000001100000000700070027012600
+/V=C0002.10
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04463   Moneda         INNSNA00000701500027027000001100000000700070027012600
+/V=C0003.10
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04464   Asientos       INNSNA00000701500027027000001100000000700070027012600
+/V=C9501.0
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 04474   EtapaSwift     INNSNK00000701500027027000001100000000700070027012600
+/V=Modificacion
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+TN  NN 0250TAlta Swift MT-999                       A04331 00
+/?=(I177)
+ NSSNS 05759   Id             INNSNA00000726110027273100001100000000725970027271600
+/V=C131.29
+ NSSNS 05760   T20            INNSNA00000726110027273100001100000000725970027271600
+/V=C853.29
+ NSSNS 05761   T21            INNSNA00000726110027273100001100000000725970027271600
+/V=C865.29
+TNNNNN 0250TAlta NexCobeCuotas (Ord900 + Cuota)     A03811 00
+/?=A(C58626="AC")OA(C58626="MC")Y(1=0)
+*$2015-05-15 12:58:01VPORTO
+ NSSNS 58643   NroCOBE        INNNNA00000701330027018102001100000000700070027012600
+/V=C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:37:48VPORTO
+ NSSNS 58644   NroCuota       INNNNF00000701330027018102001100000000700070027012600
+/V=900+1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:39:11VPORTO
+ NSSNS 58645   RubroOperativo INNNNA00000701330027018102001100000000700070027012600
+/V=C58645.3
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:13:09VPORTO
+ NSSNS 58646   FechaVto       INNNNA00000701330027024300001100000000700070027012600
+/V=C58646.3
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:15:36VPORTO
+ NSSNS 58647   Moneda         INNNNA00000701330027024300001100000000700070027012600
+/V=C58647.3
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:17:05VPORTO
+ NSSNS 58648   Importe        INNNNA00000701330027024300001100000000700070027012600
+/V=C58648.3
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 09:41:41VPORTO
+ NSSNS 58649   Estado         INNNNA00000701330027024300001100000000700070027012600
+/V=C58649.3
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:11:15VPORTO
+ NSSNS 58642   Estado Dto.    INNNNA00000701330027024300001100000000700070027012600
+/V=C58642.3
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 11:43:07VPORTO
+ NSSNS 58650   EnviaSwift     INNNNA00000701330027024300001100000000700070027012600
+/V=C58650.3
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 11:42:05VPORTO
+ NSSNS 58651   AperOModif     INNNNA00000701330027024300001100000000700070027012600
+/V=C58651.3
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 11:42:39VPORTO
+TNNNNN 0253TConsulta Genérica                       C00001 00
+/?=(I171)Y(1=0)
+*$2015-05-13 16:34:59VPORTO
+ NNNNN 58606   Nro de CobranzaINNNNA00000701520030030202021100300000700070030013700
+/V=C58606.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:53:10VPORTO
+ NNNNN 58611   Importe        INNNN 00000701520030030202021100300000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:58:44VPORTO
+CNNNNN   00000000000000000000100
+/?=(C58611>C58640)
+/P=I172
+/M=AUMENTA IMPORTE
+*$2015-05-08 11:32:44VPORTO
+CNNNNN   00000000000000000000100
+/?=(C58611<C58640)
+/P=I173
+/M=BAJA IMPORTE
+*$2015-05-08 11:32:55VPORTO
+ NSSNS 00587   Imp. a AumentarINNNNF00017501750195030302001000000017500400195014000
+/?=I172
+/V=C58611-C58640
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:33:06VPORTO
+ NSSNS 00587   Imp. a Bajar   INNNNF00017501750195030302001000000017500400195014000
+/?=I173
+/V=C58640-C58611
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:33:19VPORTO
+TNNNNN 0013TModificación de Importe en Saldos       O00211 00
+/?=(I171)Y(1=0)
+*$2015-05-13 16:35:10VPORTO
+ NNNNN 01810   OID Saldo      INNSNA00000701500027021002001100000000700070027012600
+/V=C58631.1
+/F=0013400NNN000000000MS Sans Serif                           
+/f=0013400NNN000000000MS Sans Serif                           
+*$2015-05-11 14:43:34VPORTO
+ NNNNN 01604   Saldo Actual   INNSN 00000701500027021002001100000000700070027012600
+/F=0013400NNN000000000MS Sans Serif                           
+/f=0013400NNN000000000MS Sans Serif                           
+ NNNNN 00001   Sucursal       INNSNA00000701500027021002001100000000700070027012600
+/V=C1591.0
+/F=0013400NNN000000000MS Sans Serif                           
+/f=0013400NNN000000000MS Sans Serif                           
+ NNNNN 00007   Producto       INNSNA00000701500027021002001100000000700070027012600
+/V=C1592.0
+/F=0013400NNN000000000MS Sans Serif                           
+/f=0013400NNN000000000MS Sans Serif                           
+ NNNNN 00004   Rubro OperativoINNNNA00000701330027022902001100000000700070027012600
+/V=C6271.0
+ NSSNS 00005   Cuenta         INNNNA00000701330027022902001100000000700070027012600
+/V=C1593.0
+/F=0013400NNN000000000MS Sans Serif                           
+/f=0013400NNN000000000MS Sans Serif                           
+ NSSNS 00003   Moneda         INNNNA00000701330027016502001100000000700070027012600
+/V=C1594.0
+/F=0013400NNN000000000MS Sans Serif                           
+/f=0013400NNN000000000MS Sans Serif                           
+ NSSNS 00006   Operación      INNNNA00000701330027018102001100000000700070027012600
+/V=C1595.0
+/F=0013400NNN000000000MS Sans Serif                           
+/f=0013400NNN000000000MS Sans Serif                           
+ NSSNS 00008   Ordinal        INNNNA00000701330027015702001100000000700070027012600
+/V=C1596.0
+/F=0013400NNN000000000MS Sans Serif                           
+/f=0013400NNN000000000MS Sans Serif                           
+ NNNNN 01600   Monto Original INNSN 00000701360027037600001100000000700070027011200
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*N  NN ***
+ NNNNN 00002   Cliente        INNNNA00000701330027022902001100000000700070027012600
+/V=C1803.0
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NNNNN 01002   Nomb.Reducido  INNSN 00000701500027069000001100000000700070027012600
+ NSSNS 00021   Suc. de destinoINNNNA00000701330027015702001100000000700070027012600
+/V=C58638.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 11:34:55VPORTO
+ NSSNS 00023   Caja/Diario    INNNNK00000001330020014400001100000000000000020011900
+/V=D
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSSNS 00024   Crédito        INNNNK00000701330027014400001100000000700070027012600
+/?=I172
+/V=C
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-19 10:57:48TOP
+ NSSNS 00024   Débito         INNNNK00000701330027014400001100000000700070027012600
+/?=I173
+/V=D
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-19 10:57:54TOP
+ NSSNS 00025   Fecha valor    INNNNA00000701330027024300001100000000700070027012600
+/V=C0025.0
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NSSNS 00029   Importe        INNNNA00000701190027027902001100000000700070027011200
+/V=C587.42
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-19 10:59:03TOP
+ NNNNN 00028   Nombre Operac. INNNNF00000701330027046300001100000000700070027012600
+/V="COBE Mod.No: "+C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-19 11:01:42TOP
+TNNNNN 0033TReserva Saldo (por dif. de Importe)     O00211 00
+/?=(I171)Y(1=0)
+*$2015-05-13 16:35:20VPORTO
+ NNNNN 00001   Sucursal       INNSNA00000701500027021002001100000000700070027012600
+/V=C9502
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-19 11:08:36TOP
+*N  NN ***********Agregado 16-09-2011*******
+*$2011-09-16 10:01:11TOP
+ NNNNN 00007   Producto       INNSNK00000701500027021002001100000000700070027012600
+/V=673
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-16 11:56:47TOP
+ NSSNS 00004   Rubro OperativoINNNNA00009301410113022500101100000009300150113012700
+/V=C6271
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2011-09-16 12:00:28TOP
+ NNNNN 00005   Cuenta         INNSNF00000701500027033002001100000000700070027012600
+/V=C58639.1*100
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 11:34:06VPORTO
+*N  NN *******************************************
+*$2011-09-15 15:34:07TOP
+ NNNNN 00003   Moneda         INNNNA00000701330027016502001100000000700070027012600
+/V=C58610.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 10:54:53VPORTO
+ NNNNN 00006   Operaci¢n      INNNNK00000001330020018102001100000000000000020011900
+/V=0
+/F=0007400NNN000000000MS Sans Serif                           
+/f=0007400NNN000000000MS Sans Serif                           
+ NNNNN 00008   Ordinal        INNNNK00000001330020015702001100000000000000020011900
+/V=0
+/F=0007400NNN000000000MS Sans Serif                           
+/f=0007400NNN000000000MS Sans Serif                           
+*N  NN ***********Agregado 16-09-2011*******
+*$2011-09-16 10:01:11TOP
+ NNNNN 00002   Cliente        INNNNA00000701520030030202001100000000700070030013700
+/V=C58639.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 11:34:17VPORTO
+*N  NN *******************************************
+*$2011-09-15 15:34:07TOP
+ NNNNN 00023   Diario         INNNNK00000001330020014400001100000000000000020011900
+/V=D
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NNNNN 00024   Débito         INNNNK00000701330027014400001100000000700070027012600
+/?=I172
+/V=D
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-19 11:03:15TOP
+ NNNNN 00024   Crédito        INNNNK00000701330027014400001100000000700070027012600
+/?=I173
+/V=C
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-19 11:03:21TOP
+ NNNNN 00025   Fecha valor    INNNNA00000701330027024300001100000000700070027012600
+/V=C0025.0
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NNNNN 00029   Importe        INNNNA00000701190027027902001100000000700070027011200
+/V=C587.42
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-19 11:02:16TOP
+ NNNNN 00021   Suc. de destinoINNNNA00000701330027015702001100000000700070027012600
+/V=C58638.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2015-05-08 11:35:06VPORTO
+ NNNNN 00028   Nombre Operac. INNNNF00000701330027046300001100000000700070027012600
+/V="COBE Mod.No: "+C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2011-09-19 11:02:48TOP
+TN  NN 0253TLlamada Oper5148 Sp_CargaSwift          C00001 00
+ NNNNN 00437   No. Cobranza   INNSNA00000701500027027000001100000000700070027012600
+/?=(I67)
+/V=C58606.1
+*$2015-05-08 09:53:22VPORTO
+ NNNNN 02488   IdNroSwift     INNSNA00000701500027027000001100000000700070027012600
+/?=(I67)
+/V=C131.29
+ NNNNN 00549   1er./2do. MT   INNSNK00003601700056023600001100000003600340056014600
+/?=(I67)
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** (C549=0) indica que NO hay Segundo MT (para la Oper5149 que se llama después de la Oper5148).-
+ NNNNN 00019   Nombre Operac. INNNNF00000701330027046300001100000000700070027012600
+/V="Mod. COBE Ing. No: "+C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ NNNNN 00028   Nombre Operac. INNNNF00000701330027046300001100000000700070027012600
+/V="Mod. COBE Ing. No: "+C0006.1
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+ N  NN 00254   Apellido       INNSNK00000701500027039000001100000000700070027012600
+ NSSNN 02274   Param.1 WFlow  INNNNF00000701520030045200001100000000700070030013700
+/V=C58606.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-05-08 09:53:30VPORTO
+DN  NN 6769OS01
+*N  NN *** MT-499 ó MT-999 (llama a la Oper. 5148 que luego llamará a la Oper. 5149).-
+DN  NN 5148Ov00
+/?=(I67)
+*#I72#Baja Importe.-
+*#I228#1er. Control Trace.-
+*#I95#Coincidencias Trace + Mensaje Emisión.-
+*#I229#1er. Control Trace.-
+*#I108#iteracion
+*#I96#Entro en la iteracion
+*#I109#itero
+*#I181#Modificó Fecha de Vencimiento
+*#I171#Modificó Importe
+*#I172#Aumenta importe.
+*#I88# 
+*#I173#Baja importe.
+*#I67#Emite Swift MT-499
+*#I57#
+*#I68#Banco fuera del Swift
+*#I230#Control Trace Inactivo.-
+*#I231#2do. Control Trace.-
+*#I111#Para evitar pasar por líneas de código.-
+*#I232#2do. Control Trace.-
+*#I210#Se utiliza control de Trace
+*#I101#Cobranza es en Cuotas ó no.-
+*#I112#Control Trace.-
+*#I201#Girados.-
+*#I102#Si la Cobranza es Cedida ó no.-
+*#I113#Control Trace.-
+*#I70#I70
+*#I105#Vista
+*#I106#Plazo
+*#I71#Aumenta Importe.-

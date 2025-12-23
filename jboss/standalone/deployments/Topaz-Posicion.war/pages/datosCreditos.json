@@ -1,0 +1,463 @@
+{
+	"page":{
+	
+		"attributes":[
+			{
+				"label" : "ID CLIENTE",
+				"key" : "IDCLIENTE"
+			},
+			{
+				"label" : "ID MONEDA",
+				"key" : "IDMONEDA"
+			}
+		],
+		
+		"frames":[
+		{ 	    "id":"ListaCreditos",
+				"title":"Lista Creditos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"ListaCreditos",
+					"parameters":["IDCLIENTE","IDMONEDA"]
+				},
+				"gridProperties":{
+					"pageLength": "4",
+					"columns":[
+						{
+							"header":"Producto",
+							"value":"PRODUCTO",
+	                        "columnSpan":3							
+						},
+						{
+							"header":"Cuenta",
+							"value":"NROCUENTA"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"Saldo Actual",
+							"value":"SALDOACTUAL"
+						},
+						{
+							"header":"Asesor",
+							"value":"ASESOR",
+                            "columnSpan":2
+						},
+						{
+							"header":"F.Desembolso",
+							"value":"FECHADESEMBOLSO"
+						},
+						{
+							"header":"F.Vencimiento",
+							"value":"FECHAVENCIMIENTO"
+						},
+						{
+							"header":"F.Ult.Mov.",
+							"value":"ULTIMOMOV"
+						},
+						{
+							"header":"Idsaldo",
+							"value":"IDSALDO",
+							"hidden":"true"
+						}
+					]
+				}
+			},
+			{
+				"id":"datosCredito",
+				"title":"Datos de Credito",
+				"icon":"client.png",
+				"type":"Form",
+				"input":{
+					"type":"nested",
+					"frameId":"ListaCreditos",
+					"service":"DatosCredito",
+					"parameters":["IDSALDO"]
+				},
+				"links":[
+					{
+						"name":"Datos Movimiento Credito",
+						"to":"datosMovimientoCredito",
+						"parameters":["IDSALDO"]
+					}
+				],
+                "formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Dia de Pago",
+	                            "key":"DIASPAGO"
+	                        },
+	                        {  
+	                            "label":"TEA %",
+	                            "key":"TASAEFECTIVAANUAL"
+	                        },
+	                        {  
+	                            "label":"Capital Original",
+	                            "key":"CAPITALORIGINAL"
+	                        },
+	                        {  
+	                            "label":"Nro. Operación",
+	                            "key":"NROOPERACION"
+	                        }			
+                        ],                        
+                    	[
+	                        {  
+	                            "label":"Estado",
+	                            "key":"ESTADO"
+	                        },
+	                        {  
+	                            "label":"Dias 1a Cuota",
+	                            "key":"DIASPRIMERACUOTA"
+	                        },
+	                        {  
+	                            "label":"Cantidad Cuotas",
+	                            "key":"CANTIDADCUOTAS"
+	                        },
+	                        {  
+	                            "label":"Cuotas Pagas",
+	                            "key":"CANTIDADCUOTASPAGAS"
+	                        },
+	                        {  
+	                            "label":"Periodo Cuotas",
+	                            "key":"PERIODOCUOTAS"
+	                        }
+                        ],                        
+                    	[
+	                        {  
+	                            "label":"Dias Mora",
+	                            "key":"DIASMORA"
+	                        },
+	                        {  
+	                            "label":"Linea Credito",
+	                            "key":"NROLINEACREDITO"
+	                        },
+							{
+								"label":"Orígen",
+								"key":"ORIGEN"							
+							},
+							{
+								"label":"Destino",
+								"key":"DESTINO"							
+							},	
+							{
+								"label":"Idsaldo",
+								"key":"IDSALDO",
+								"hidden":"true"								
+							}							
+                        ],                        
+                    	[
+	                        {  
+	                            "label":"Suc Desembolso",
+	                            "key":"SUCURSALENTREGA"
+	                        },
+	                        {  
+	                            "label":"Cuenta Desembolso",
+	                            "key":"CUENTADESEMBOLSO"
+	                        },
+							{
+								"label":"Categorización",
+								"key":"CATEGORIZACION"							
+							},
+							{
+								"label":"Tipo Amortización",
+								"key":"TIPOAMORTIZACION"							
+							}						
+                        ]
+                    ]
+                }
+			},
+			{
+				"id":"PlanDePagosCredito",
+				"title":"Plan de Pagos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"ListaCreditos",
+					"service":"PlanDePagos",
+					"parameters":["IDSALDO"]
+				},							
+				"gridProperties":{
+					"pageLength": "12",
+					"columns":[
+						{
+							"header":"Cuota",
+							"value":"NUMEROCUOTA"
+						},
+						{
+							"header":"Fecha Programada",
+							"value":"FECHAPROGRAMADA"
+						},
+						{
+							"header":"Capital",
+							"value":"CAPITAL"
+						},
+						{
+							"header":"Compensatorio",
+							"value":"COMPENSATORIO"
+						},
+						{
+							"header":"Moratorio",
+							"value":"INTERESMORATORIO"
+						},
+						{
+							"header":"Cargos",
+							"value":"CARGOS"
+						},
+						{
+							"header":"Total Cuota",
+							"value":"TOTALCUOTA"
+						},
+						{
+							"header":"Capital Pagado",
+							"value":"CAPITALPAGADO"
+						},
+						{
+							"header":"Compensatorio Pagado",
+							"value":"COMPENSATORIOPAGADO"
+						},
+						{
+							"header":"Cargos Pagados",
+							"value":"GASTOSPAGADOS"
+						},
+						{
+							"header":"Total Pagado",
+							"value":"TOTALPAGADO"
+						},
+						{
+							"header":"Fecha Pago",
+							"value":"FECHAPAGO"
+						},
+						{
+							"header":"Dias Atraso",
+							"value":"DIASATRASO"
+						}
+					]
+				}
+			},
+			{
+				"id":"movimientos",
+				"title":"Movimientos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"ListaCreditos",
+					"service":"MovimientosHistoriaPlazo10",
+					"parameters":["IDSALDO"]
+				},
+				"links":[
+					{
+						"name":"Datos Movimiento",
+						"to":"datosMovimientos",
+						"parameters":["ASIENTO","FECHAPROCESO","SUCURSAL"]
+					}
+				],				
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"F.Proceso",
+							"value":"FECHAPROCESO"
+						},
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL",
+							"hidden":true
+						},						
+						{
+							"header":"Sucursal",
+							"value":"SUCURSALDESC"
+						},
+						{
+							"header":"Asiento",
+							"value":"ASIENTO"
+						},
+						{
+							"header":"F.Valor",
+							"value":"FECHAVALOR"
+						},
+						{
+							"header":"Capital Pagado",
+							"value":"CAPITALPAGADO"
+						},
+						{
+							"header":"Interes Pagado",
+							"value":"INTERESPAGADO"
+						},
+						{
+							"header":"Mora Pagada",
+							"value":"MORAPAGADA"
+						},
+						{
+							"header":"Compensat. Mora",
+							"value":"ICMORA_PAGADO"
+						},						
+						{
+							"header":"Cargo",
+							"value":"IMPORTE_GASTO"
+						},
+						{
+							"header":"Total Pagado",
+							"value":"TOTALPAGADO"
+						},
+						{
+							"header":"Evento",
+							"value":"EVENTO"
+						}
+					]
+				}
+			},
+			{
+				"id":"Garantias",
+				"title":"Garantias Especificas",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"ListaCreditos",
+					"service":"GarantiasCredito",
+					"parameters":["IDSALDO"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Nro. Garantia",
+							"value":"NROGARANTIA"
+						},
+						{
+							"header":"Nombre",
+							"value":"NOMBRE"
+						},
+						{
+							"header":"Tipo Garantia",
+							"value":"TIPOGARANTIA"
+						},
+						{
+							"header":"Moneda Garantía",
+							"value":"MONEDAGTIA"
+						},
+						{
+							"header":"Rol",
+							"value":"ROL"
+						},
+						{
+							"header":"Valor Tasación",
+							"value":"VALORTASACION"
+						},
+						{
+							"header":"Importe Actual",
+							"value":"IMPORTEACTUAL"
+						},
+						{
+							"header":"Nro Certificado",
+							"value":"NUMEROCERTIFICADO"
+						},
+						{
+							"header":"Tipo Banco",
+							"value":"TIPOBANCOCENTRAL"
+						},
+						{
+							"header":"Fecha Inicio",
+							"value":"FECHAINICIO"
+						},
+						{
+							"header":"Fecha Vto",
+							"value":"FECHAVENCIMIENTO"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						}
+					]
+				}
+			},
+			{
+				"id":"Subsidios",
+				"title":"Subsidios",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"ListaCreditos",
+					"service":"SubsidiosPrestamo",
+					"parameters":["IDSALDO"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Código",
+							"value":"CODIGO"
+						},
+						{
+							"header":"Descripción",
+							"value":"DESCRIPCION"
+						},
+						{
+							"header":"Tipo Sub Interés",
+							"value":"TIPOSUBSIDIOINTERES"
+						},
+						{
+							"header":"Pts Interés",
+							"value":"PTSINTERES"
+						},
+						{
+							"header":"Tipo Sub Cargos",
+							"value":"TIPOSUBSIDIOCARGO"
+						},
+						{
+							"header":"Pts Cargos",
+							"value":"PTSCARGOS"
+						},
+						{
+							"header":"Fecha Desde",
+							"value":"FECHADESDE"
+						},
+						{
+							"header":"Fecha Inactivación",
+							"value":"FECHAINACTIVACION"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						}
+					]
+				}
+			},
+			{
+				"id":"Actividad",
+				"title":"Actividad",
+				"icon":"client.png",
+				"type":"Form",
+				"input":{
+					"type":"nested",
+					"frameId":"ListaCreditos",
+					"service":"ActividadCreditos",
+					"parameters":["IDSALDO"]
+				},
+                "formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Nro. Solicitud",
+	                            "key":"NROSOLICITUD"
+	                        },
+	                        {  
+	                            "label":"Codigo CIIU",
+	                            "key":"CODIGOCIIU"
+	                        },
+	                        {  
+	                            "label":"Fecha Desembolso",
+	                            "key":"FECHADESEMBOLSO"
+	                        }
+                        ]
+                    ]
+                }
+			}
+		]
+	}
+}

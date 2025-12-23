@@ -1,0 +1,1 @@
+EXECUTE('UPDATE  AYUDASSET     CAMPOS = ''1064R;1963R;33326R;33327R;1058R;1063R;2639;1057R;'',        CAMPOSVISTA = ''TipoDocIdent;NroDocIdent;TipoDocFisico;NumDocFisico;Nombre;TipoPersona;NivelApertura;NumeroPersona;''WHERE   NUMERODEARCHIVO IS NULL        AND        NUMERODEAYUDA = 9353;');

@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2021-04-15T14:23:48 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Registro de Firmas" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="c55079ab-cf22-4e49-82f2-dd5f523f2185">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="JTS_OID" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[JTS OID:]]></parameterDescription>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+S.JTS_OID,
+S.SUCURSAL, 
+S.C1803 as CLIENTE,
+S.PRODUCTO,
+S.MONEDA, 
+S.CUENTA,
+S.OPERACION,
+S.ORDINAL,
+CASE
+	WHEN EXISTS (SELECT * FROM PYF_APODERADOS WHERE ID_ENTIDAD = S.JTS_OID AND MONTO_MAX_INDIV <> 0) THEN 'INDISTINTA'
+	ELSE 'CONJUNTA'
+END AS MODALIDAD_CUENTA,
+CP.NUMEROPERSONA,
+E.EMAIL
+FROM SALDOS AS S
+INNER JOIN PRODUCTOS AS P ON P.C6250 = S.PRODUCTO AND P.TZ_LOCK = 0
+LEFT JOIN CLI_CLIENTEPERSONA AS CP ON S.C1803 = CP.CODIGOCLIENTE AND CP.TITULARIDAD = 'T' AND CP.TZ_LOCK = 0
+LEFT JOIN CLI_DIRECCIONES AS D ON CP.NUMEROPERSONA = D.ID AND D.TZ_LOCK = 0
+LEFT JOIN CLI_EMAILS AS E ON D.ID = E.ID AND E.TIPO IN ('PE', 'LE') AND E.TZ_LOCK = 0
+AND E.ORDINAL = (SELECT MIN(ORDINAL) FROM CLI_EMAILS WHERE ID = E.ID AND TIPO = E.TIPO AND TZ_LOCK = 0)
+WHERE S.TZ_LOCK = 0 AND S.JTS_OID = $P{JTS_OID}
+GROUP BY S.JTS_OID, S.SUCURSAL, S.C1803, S.PRODUCTO, S.MONEDA, S.CUENTA,
+S.OPERACION, S.ORDINAL, CP.NUMEROPERSONA, E.EMAIL]]>
+	</queryString>
+	<field name="JTS_OID" class="java.math.BigDecimal"/>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="CLIENTE" class="java.math.BigDecimal"/>
+	<field name="PRODUCTO" class="java.math.BigDecimal"/>
+	<field name="MONEDA" class="java.math.BigDecimal"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="OPERACION" class="java.math.BigDecimal"/>
+	<field name="ORDINAL" class="java.math.BigDecimal"/>
+	<field name="MODALIDAD_CUENTA" class="java.lang.String"/>
+	<field name="NUMEROPERSONA" class="java.math.BigDecimal"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<pageHeader>
+		<band height="64">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image>
+				<reportElement x="-20" y="-20" width="595" height="84" uuid="7339d4d3-e459-429c-9db6-9f25eaeb5098"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logolargo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="0" width="345" height="30" uuid="11f5680a-3a53-47e4-b2db-6690dcd3ab52">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph rightIndent="40"/>
+				</textElement>
+				<text><![CDATA[REGISTRO DE FIRMAS]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="142">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<subreport>
+				<reportElement x="0" y="0" width="555" height="60" uuid="d85e3752-c86a-4293-b0ec-2a8599e58497">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="JTS_OID">
+					<subreportParameterExpression><![CDATA[$F{JTS_OID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8866_Subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="141" width="570" height="1" uuid="2fe27401-3a9a-48a9-897a-828e3279b10c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+			</break>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="70" width="555" height="15" uuid="03421901-ea93-4cd0-a33f-c3de561c0d81">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Suscribase la palabra ANULADO en los cuadros sin firma. Raspaduras o enmiendas invalidan este registro]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="85" width="555" height="15" uuid="eb21192e-b4ba-407b-b9c0-98193f3456f9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[OBSERVACIONES:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="105" width="190" height="15" uuid="323e914b-001b-487c-91dc-ea50a9a92d4e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Confeccionado.....................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="190" y="105" width="185" height="15" uuid="5ca9b793-b267-495d-ba62-299d84a189ba">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Jefe.......................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="125" width="190" height="15" uuid="8c4aad67-b9da-4091-8ee1-0254bb908009">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Funcionario Superior...........................]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50">
+			<staticText>
+				<reportElement x="362" y="10" width="80" height="20" uuid="becee0c0-b75a-435e-9146-7cb986c2d2be"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DEP 003]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="450" y="10" width="60" height="20" uuid="6ef217f6-3d58-4325-a8f6-3e95f02623e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PAG. " + $V{PAGE_NUMBER} + "  /"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="510" y="10" width="20" height="20" uuid="0e9a25f1-2e1a-4b1f-8802-d26364893a33"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="120">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image>
+				<reportElement x="-20" y="0" width="595" height="84" uuid="90705115-6564-495b-9dae-e5c3780cdbd0"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logolargo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="210" y="20" width="345" height="30" uuid="2f62ea9a-c113-4911-8e75-001d10a4816b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+					<paragraph rightIndent="40"/>
+				</textElement>
+				<text><![CDATA[REGISTRO DE FIRMAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="555" height="20" uuid="b23791fa-7461-4877-86cd-b923a2dda38c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No hay datos para procesar]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

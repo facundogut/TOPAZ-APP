@@ -1,0 +1,183 @@
+service CONSULTAMOVSFECHACLI; 
+description "Consulta de Movimientos de una saldo para un rango de fechas dado."; 
+
+
+action:	SQLQuery NOMBRECLIENTE(
+        SucursalDeb: numeric,
+			CuentaDeb: numeric,
+			MonedaDeb: numeric,
+			ProductoDeb: numeric,
+			OperacionDeb: numeric,
+			OrdinalDeb: numeric,
+			Fecha_Desde: date<"YYYY-MM-DD">,
+			Fecha_Hasta: date<"YYYY-MM-DD">,
+			NroRegProcesar: numeric,
+			NroAsientoSig: numeric
+		) : 
+		[
+		    CODIGOCLIENTE:  numeric as CodigoCliente,
+		    NOMBRECLIENTE:  string as NombreCliente
+        ]
+        { 
+        properties {
+    		("statement", "select 1 as SCODERROR, CODIGOCLIENTE, fn_itf_translate(NOMBRECLIENTE) as NombreCliente from cli_clientes where codigocliente in(select C1803 from saldos where sucursal=? and cuenta=? and moneda=? and producto=? and operacion=? and ordinal=? and (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999))"),
+    		("0", "SucursalDeb"), 
+    		("1", "CuentaDeb"), 
+    		("2", "MonedaDeb"), 
+    		("3", "ProductoDeb"),
+    		("4", "OperacionDeb"),
+    		("5", "OrdinalDeb")
+        };
+  /*      
+  	action:SQLQuery BUSCO_ORDINAL() : [
+			SOrdinal:	numeric
+			
+			] {
+	condition { "SCODERROR = 1"};		
+		properties {
+			("statement", "select MAX(Ordinal) as SOrdinal  from saldos where sucursal=? and cuenta=? and moneda=?  and producto=? and operacion=? and (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999)"),
+			("0", "SucursalDeb"), 
+			("1", "CuentaDeb"), 
+			("2", "MonedaDeb"), 
+			("3", "ProductoDeb"),
+			("4", "OperacionDeb")
+			
+			
+			  }			
+	};
+
+	action:SQLQuery HAYSALDO() : [
+			SALDOACTUAL:	float as SaldoActual,
+			SALDOCONFIRMAR:	float as SaldoConfirmar,
+			SALDOSSIGUIENTE: float as SaldosSiguiente,
+			SALDOGARANTIA: numeric as SaldoGarantia,
+			CAPITAL: float as Capital,
+			FECHAAPERTURA: date as FechaApertura,
+			FECHAVTO: date as FechaVto, 
+			PLAZO: numeric as Plazo, 
+			TASA: numeric as Tasa, 
+			INTDEVENGAR: float as IntDevengar, 
+			INTDEVENGADO: float as IntDevengado
+			] {
+	condition { "SCODERROR = 1"};		
+		properties {
+			("statement", "select ABS(C1604) as SALDOACTUAL, ABS(C1606) as SALDOCONFIRMAR, ABS(C1607) as SALDOSSIGUIENTE, C1719 as SALDOGARANTIA, C1601 as  CAPITAL, C1621 as FECHAAPERTURA, C1627 as FECHAVTO, C1642 as PLAZO, C1632 as TASA, (C1608-C1611) as INTDEVENGAR, C1611 as INTDEVENGADO  from saldos where sucursal=? and cuenta=? and moneda=?  and producto=? and operacion=? and (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999)"),
+			("0", "SucursalDeb"), 
+			("1", "CuentaDeb"), 
+			("2", "MonedaDeb"), 
+			("3", "ProductoDeb"),
+			("4", "OperacionDeb")
+			
+			
+			  }			
+	};
+
+	*/
+	action: SQLQuery HAYREGISTROS():[
+			
+			SCODERROR: numeric
+			]
+        { 
+	condition { "SCODERROR = 1" };		
+    	properties 
+    		{ 
+    			("statement", "SELECT  1 as SCODERROR  FROM Movimientos_Contables M, Asientos S WHERE M.Sucursal_Cuenta=? AND M.Cuenta=? AND M.Moneda=? AND M.Producto=? AND M.Operacion_Cuenta=? AND M.Ordinal_Cuenta=? AND M.Asiento=S.Asiento AND M.FECHAPROCESO=S.FECHAPROCESO AND M.Sucursal=S.Sucursal AND S.ESTADO=77 AND M.Debitocredito is not NULL AND M.FECHAPROCESO>=? AND M.FECHAPROCESO<=? AND ROWNUM= 1 AND M.ASIENTO>=?"),
+    			("0", "SucursalDeb"), 
+    			("1", "CuentaDeb"), 
+    			("2", "MonedaDeb"), 
+    			("3", "ProductoDeb"), 
+    			("4", "OperacionDeb"), 
+    			("5", "OrdinalDeb"), 
+    			("6", "Fecha_Desde"),
+    			("7", "Fecha_Hasta"),
+    			("8", "NroAsientoSig")
+    			
+    			
+    			
+    	};
+    	
+    	
+    	action: SQLCall CARGODATOS(
+	 
+	 
+	  ): [ 
+	   
+	    SCARGO : numeric
+	 	
+	]
+	{ 
+	condition { "SCODERROR = 1" };		
+	  	properties { 
+	  	("statement", "{call SP_ITF_CONSULTAMOVSFECHA (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}"),
+		("0", "SucursalDeb"), 
+		("1", "CuentaDeb"), 
+		("2", "MonedaDeb"), 
+		("3", "ProductoDeb"),
+		("4", "OperacionDeb"),
+		("5", "OrdinalDeb"),
+		("6", "Fecha_Desde"),
+		("7", "Fecha_Hasta"),
+		("8", "NroRegProcesar"),
+    		("9", "NroAsientoSig"),
+		("10", "out SCARGO : numeric")
+		 
+		 
+		 
+	   };
+
+    	
+    	action: SQLQuery CONSULTAMOVS(): [ 
+    		 	XML_TAG: string as XML_TAG,
+    			FECHAPROCESO: string as Fecha_Proceso,
+    			FECHAVALOR: string as Fecha_Valor, 
+    			DEBITOCREDITO: string as Debito_Credito,
+    			MONTO: string as Monto,
+    			CONCEPTO: string as Concepto,
+    			CLIENTE: numeric as Cliente,
+    			ASIENTO: numeric as NroComprobante,
+			SUCURSAL: numeric as Sucursal
+    		]  {
+    	    condition { "SCARGO = 1" };
+    	    properties 
+    			{ 
+    			("statement", "SELECT 'Movimiento' as XML_TAG, Sucursal, TO_CHAR(FECHAPROCESO, 'dd/mm/yyyy') as FECHAPROCESO, TO_CHAR(FECHAVALOR, 'dd/mm/yyyy') as FECHAVALOR,DEBITOCREDITO, MONTO, fn_itf_translate(upper(CONCEPTO)) as CONCEPTO,CLIENTE ,ASIENTO FROM ITF_CONSULTA_MOVSFECHA WHERE suc_cuenta=? AND cuenta=? AND moneda=? AND producto=? AND  operacion=? AND ord_cuenta=? and ordinal<=? ORDER BY Ordinal"), 
+     			("0", "SucursalDeb"), 
+    			("1", "CuentaDeb"), 
+    			("2", "MonedaDeb"), 
+    			("3", "ProductoDeb"),
+    			("4", "OperacionDeb"),
+    			("5", "OrdinalDeb"),
+    			("6", "NroRegProcesar")
+    			
+    
+             }
+        }
+    };
+    
+    
+    
+    action: SQLQuery SITERMINO(): [ 
+    	 	
+    		
+    		FECHAPROCESO: string as Ult_FechaProceso,
+    		ASIENTO: numeric as Ult_Asiento
+    		
+    	]  {
+         condition { "SCARGO = 1" };
+         properties 
+        		{ 
+        		("statement", "SELECT  TO_CHAR(FECHAPROCESO, 'dd/mm/yyyy') as FECHAPROCESO, ASIENTO FROM ITF_CONSULTA_MOVSFECHA WHERE suc_cuenta=? AND cuenta=? AND moneda=? AND producto=? AND  operacion=? AND ord_cuenta=? and ordinal>? AND ROWNUM=1"),
+        		("0", "SucursalDeb"), 
+        		("1", "CuentaDeb"), 
+        		("2", "MonedaDeb"), 
+        		("3", "ProductoDeb"),
+        		("4", "OperacionDeb"),
+        		("5", "OrdinalDeb"),
+        		("6", "NroRegProcesar")
+        		
+        		
+        		
+       }       
+    }    
+}
+}

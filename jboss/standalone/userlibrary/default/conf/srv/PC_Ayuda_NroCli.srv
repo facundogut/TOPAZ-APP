@@ -1,0 +1,201 @@
+service AyudaNroCliente; 
+description "Ayuda de Nro Cliente"; 
+
+action:	SQLQuery Entity ( 
+ TIENEFILTRO: string,
+ CAMPO: string,
+ OPERADOR: string,
+ VALOR: string
+): [
+   	STIENEFILTRO: string,
+	SCAMPO: string,
+	SOPERADOR: string,
+	SVALOR: string
+	]
+{ 
+	properties {
+  	("statement", "select ? as STIENEFILTRO, ? as SCAMPO, ? as SOPERADOR, ? as SVALOR "), 
+	("0", "TIENEFILTRO"), ("1", "CAMPO"), ("2", "OPERADOR"), ("3", "VALOR")};
+	
+	
+	action:	SQLQuery Entity0 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"0\") && (SCAMPO == \"NOMBRECLIENTE\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE = ?"),
+		("0", "SVALOR")
+	    }
+	    };
+	action:	SQLQuery Entity1 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"1\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE LIKE  ? + '%'"),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity2 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"2\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE LIKE '%' + ? + '%'"),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity3 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"3\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE NOT LIKE '%' + ? + '%'"),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity4 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"4\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE = ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity5 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"5\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE != ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity6 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"6\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE > ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity7( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"7\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE >= ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity8 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"8\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE < ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity9 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"9\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND CODIGOCLIENTE <= ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity10 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"0\") && (SCAMPO == \"NOMBRE\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE = ?"),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity11 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBRE\")  && (SOPERADOR == \"1\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE LIKE  ? + '%'"),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity12 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBRE\")  && (SOPERADOR == \"2\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE LIKE '%' + ? + '%'"),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity13 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBRE\")  && (SOPERADOR == \"3\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE NOT LIKE '%' + ? + '%'"),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity14 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBRE\")  && (SOPERADOR == \"4\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE = ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity15 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBRE\")  && (SOPERADOR == \"5\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE != ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity16 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"IDCLIENTE\")  && (SOPERADOR == \"6\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE > ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity17( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBRE\")  && (SOPERADOR == \"7\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE >= ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity18 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBRE\")  && (SOPERADOR == \"8\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE < ? "),
+		("0", "SVALOR")
+	    }
+	    };
+		action:	SQLQuery Entity19 ( 
+		): [  IDCLIENTE: numeric, NOMBRE: string, TIPOCLIENTE: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBRE\")  && (SOPERADOR == \"9\") "};
+		properties {
+		("statement", "SELECT CODIGOCLIENTE AS IDCLIENTE, NOMBRECLIENTE AS NOMBRE, TIPO AS TIPOCLIENTE  FROM CLI_CLIENTES WHERE TZ_LOCK NOT LIKE '3%' AND NOMBRECLIENTE <= ? "),
+		("0", "SVALOR")
+	    }
+	    }
+}

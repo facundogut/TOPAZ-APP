@@ -1,0 +1,228 @@
+DROP PROCEDURE IF EXISTS dbo.SP_OPET001;
+GO
+
+CREATE PROCEDURE dbo.SP_OPET001
+    @idAsiento VARCHAR(10),
+    @fechaAsiento VARCHAR(8),
+    @sucursalAsiento VARCHAR(5),
+    @origenDebitoCredito VARCHAR(1),
+    @bancoContraparte VARCHAR(5),
+    @sucursalContraparte VARCHAR(5),
+    @moduloContraparte VARCHAR(2),
+    @cuentaContraparte VARCHAR(13),
+    @nombreContraparte VARCHAR(50),
+    @cuitContraparte VARCHAR(11),
+    @cbuContraparte VARCHAR(22),
+    @mismoTitular VARCHAR(1),
+    @extornoAsiento VARCHAR(1),
+    @monobanco VARCHAR(1),
+    @canal VARCHAR(2),
+    @motivo VARCHAR(3),
+    @referencia VARCHAR(15),
+    @RETORNO VARCHAR(3) OUTPUT,
+    @MENSAJE VARCHAR(4000) OUTPUT
+
+AS
+BEGIN
+
+    DECLARE
+    @estado_O VARCHAR(1) = NULL,
+    @estado_D VARCHAR(1) = NULL,
+    @registros_MT INT = 0,
+    @registros_MC INT = 0,
+    @registros_MTO INT = 0,
+    @registros_MTD INT = 0,
+    @extornos_IAB INT = 0,
+    @extornos_MT INT = 0,
+    @MT_CANAL VARCHAR (2) = @canal,
+    @MT_INTERFAZ VARCHAR(10) = 'OPET001', 
+    @MT_MOTIVO VARCHAR(3) = @motivo,
+    @MT_REFERENCIA VARCHAR(15) = @referencia,
+    @MT_ENTIDAD INT = 311,
+    @MT_ASIENTO INT,
+    @MT_FECHAPROCESO DATE,
+    @MT_SUCURSAL INT,
+    @MT_MONEDA INT,
+    @MT_CAPITALREALIZADO NUMERIC(15, 2),
+    @MT_CUENTA INT,
+    @MT_CLIENTE INT,
+    @MT_PRODUCTO VARCHAR(2),
+    @MT_NOMBRECLIENTE VARCHAR(50),
+    @MT_NUMERODOCUMENTO NUMERIC(11, 0),
+    @MT_CTA_CBU NUMERIC(22, 0),
+    @MT_ASIENTO_CONTRAPARTE INT = NULL,
+    @MT_FECHAPROCESO_CONTRAPARTE DATE = NULL,
+    @MT_SUCURSAL_CONTRAPARTE INT = NULL
+
+    SELECT @registros_MTO = COUNT(*)
+    FROM MAESTRO_TRANSFERENCIAS
+    WHERE ORIGEN_ASIENTO_NUMERO = @idAsiento
+        AND ORIGEN_ASIENTO_FECHA = @fechaAsiento
+        AND ORIGEN_ASIENTO_SUCURSAL = @sucursalAsiento
+        AND MAESTRO_TRANSFERENCIAS.TZ_LOCK = 0
+
+    SELECT @registros_MTD = COUNT(*)
+    FROM MAESTRO_TRANSFERENCIAS
+    WHERE DESTINO_ASIENTO_NUMERO = @idAsiento
+        AND DESTINO_ASIENTO_FECHA = @fechaAsiento
+        AND DESTINO_ASIENTO_SUCURSAL = @sucursalAsiento
+        AND MAESTRO_TRANSFERENCIAS.TZ_LOCK = 0
+
+    SET @registros_MT = @registros_MTO + @registros_MTD
+
+    IF @registros_MT <> 0
+        BEGIN
+        IF @registros_MTO <> 0
+                BEGIN
+            SELECT @estado_O = MAESTRO_TRANSFERENCIAS.ESTADO
+            FROM MAESTRO_TRANSFERENCIAS
+            WHERE ORIGEN_ASIENTO_NUMERO = @idAsiento
+                AND ORIGEN_ASIENTO_FECHA = @fechaAsiento
+                AND ORIGEN_ASIENTO_SUCURSAL = @sucursalAsiento
+                AND MAESTRO_TRANSFERENCIAS.TZ_LOCK = 0
+        END
+
+        IF @registros_MTD <> 0
+                BEGIN
+            SELECT @estado_D = MAESTRO_TRANSFERENCIAS.ESTADO
+            FROM MAESTRO_TRANSFERENCIAS
+            WHERE DESTINO_ASIENTO_NUMERO = @idAsiento
+                AND DESTINO_ASIENTO_FECHA = @fechaAsiento
+                AND DESTINO_ASIENTO_SUCURSAL = @sucursalAsiento
+                AND MAESTRO_TRANSFERENCIAS.TZ_LOCK = 0
+        END
+    END
+
+    IF @registros_MT = 0
+        BEGIN
+        SELECT @registros_MC = COUNT(*)
+        FROM MOVIMIENTOS_CONTABLES
+            inner join CLI_CLIENTES on MOVIMIENTOS_CONTABLES.CLIENTE = CLI_CLIENTES.CODIGOCLIENTE and CLI_CLIENTES.TZ_LOCK = 0
+            inner join CLI_ClientePersona on CLI_CLIENTES.CODIGOCLIENTE = CLI_ClientePersona.CODIGOCLIENTE and CLI_ClientePersona.TZ_LOCK = 0
+            inner join CLI_DocumentosPFPJ on CLI_ClientePersona.NUMEROPERSONA = CLI_DocumentosPFPJ.NUMEROPERSONAFJ and CLI_DocumentosPFPJ.TZ_LOCK = 0
+            left join VTA_SALDOS on MOVIMIENTOS_CONTABLES.SALDO_JTS_OID = VTA_SALDOS.JTS_OID_SALDO and VTA_SALDOS.TZ_LOCK = 0
+        WHERE MOVIMIENTOS_CONTABLES.ASIENTO = @idAsiento
+            AND MOVIMIENTOS_CONTABLES.FECHAPROCESO = @fechaAsiento
+            AND MOVIMIENTOS_CONTABLES.SUCURSAL = @sucursalAsiento
+            AND MOVIMIENTOS_CONTABLES.TIPO = 'M'
+            AND MOVIMIENTOS_CONTABLES.DEBITOCREDITO = @origenDebitoCredito
+    END
+
+    IF @registros_MC <> 0
+        BEGIN
+        SELECT
+            @MT_ASIENTO = MOVIMIENTOS_CONTABLES.ASIENTO,
+            @MT_FECHAPROCESO = MOVIMIENTOS_CONTABLES.FECHAPROCESO,
+            @MT_SUCURSAL = MOVIMIENTOS_CONTABLES.SUCURSAL,
+            @MT_MONEDA = MOVIMIENTOS_CONTABLES.MONEDA,
+            @MT_CAPITALREALIZADO = MOVIMIENTOS_CONTABLES.CAPITALREALIZADO,
+            @MT_CUENTA = MOVIMIENTOS_CONTABLES.CUENTA,
+            @MT_CLIENTE = MOVIMIENTOS_CONTABLES.CLIENTE,
+            @MT_PRODUCTO = 
+                CASE 
+                    WHEN SALDOS.C1785 = 2 THEN 'CC'
+                    WHEN SALDOS.C1785 = 3 THEN 'AC'
+                    ELSE NULL
+                END,
+            @MT_NOMBRECLIENTE = CLI_Clientes.NOMBRECLIENTE,
+            @MT_NUMERODOCUMENTO = CLI_DocumentosPFPJ.NUMERODOCUMENTO,
+            @MT_CTA_CBU = VTA_SALDOS.CTA_CBU
+        FROM MOVIMIENTOS_CONTABLES
+            inner join CLI_CLIENTES on MOVIMIENTOS_CONTABLES.CLIENTE = CLI_CLIENTES.CODIGOCLIENTE and CLI_CLIENTES.TZ_LOCK = 0
+            inner join CLI_ClientePersona on CLI_CLIENTES.CODIGOCLIENTE = CLI_ClientePersona.CODIGOCLIENTE and CLI_ClientePersona.TZ_LOCK = 0
+            inner join CLI_DocumentosPFPJ on CLI_ClientePersona.NUMEROPERSONA = CLI_DocumentosPFPJ.NUMEROPERSONAFJ and CLI_DocumentosPFPJ.TZ_LOCK = 0
+            left join VTA_SALDOS on MOVIMIENTOS_CONTABLES.SALDO_JTS_OID = VTA_SALDOS.JTS_OID_SALDO and VTA_SALDOS.TZ_LOCK = 0
+            join SALDOS on MOVIMIENTOS_CONTABLES.SALDO_JTS_OID = SALDOS.JTS_OID AND SALDOS.TZ_LOCK = 0
+        WHERE MOVIMIENTOS_CONTABLES.ASIENTO = @idAsiento
+            AND MOVIMIENTOS_CONTABLES.FECHAPROCESO = @fechaAsiento
+            AND MOVIMIENTOS_CONTABLES.SUCURSAL = @sucursalAsiento
+            AND MOVIMIENTOS_CONTABLES.TIPO = 'M'
+            AND MOVIMIENTOS_CONTABLES.DEBITOCREDITO = @origenDebitoCredito
+    END
+
+    IF @registros_MC <> 0 AND @monobanco = 1
+        BEGIN
+        SET @MT_ASIENTO_CONTRAPARTE = @MT_ASIENTO
+        SET @MT_FECHAPROCESO_CONTRAPARTE = @MT_FECHAPROCESO
+        SET @MT_SUCURSAL_CONTRAPARTE = @MT_SUCURSAL
+    END
+
+    IF @extornoAsiento = 'X'
+    BEGIN
+        SELECT @extornos_IAB = COUNT(*)
+        FROM ITF_ACREDITACION_BITACORA
+        WHERE NRO_ASIENTO = @idAsiento
+            AND FECHA_PROCESO = @fechaAsiento
+            AND SUCURSAL = @sucursalAsiento
+            AND TZ_LOCK <> 0
+
+        IF (@registros_MT <> 0 OR @registros_MC <> 0) AND @extornos_IAB <> 0
+        BEGIN
+        SET @extornos_MT = 1
+        END
+    END
+
+    IF @registros_MT <> 0 AND (@extornoAsiento = @estado_O OR @extornoAsiento = @estado_D)
+        BEGIN
+        SET @RETORNO = '500'
+        SET @MENSAJE = 'EL REGISTRO YA EXISTE'
+        RETURN;
+    END
+    ELSE IF @registros_MT <> 0 AND @extornoAsiento = 'C' AND (@estado_O = 'X' OR @estado_D = 'X')
+        BEGIN
+        SET @RETORNO = '500'
+        SET @MENSAJE = 'NO SE PUEDEN REVERSAR LOS EXTORNOS'
+        RETURN;
+    END
+    ELSE IF @registros_MT = 0 AND @registros_MC = 0
+        BEGIN
+        SET @RETORNO = '500'
+        SET @MENSAJE = 'NO EXISTE EL ASIENTO EN LA FECHA Y LA SUCURSAL INGRESADA'
+        RETURN;
+    END
+    ELSE IF (@extornos_MT = 0 OR @extornos_IAB = 0) AND @extornoAsiento = 'X'
+        BEGIN
+        SET @RETORNO = '500'
+        SET @MENSAJE = 'NO EXISTE EL EXTORNO DEL ASIENTO EN LA FECHA Y LA SUCURSAL INGRESADA'
+    END
+    ELSE IF @extornos_MT <> 0 AND @extornoAsiento = 'X' AND @registros_MT <> 0
+        BEGIN
+        IF @estado_O = 'C'
+            BEGIN
+            UPDATE dbo.MAESTRO_TRANSFERENCIAS
+                SET ESTADO = @extornoAsiento
+                WHERE ORIGEN_ASIENTO_NUMERO = @idAsiento
+                AND ORIGEN_ASIENTO_FECHA = @fechaAsiento
+                AND ORIGEN_ASIENTO_SUCURSAL = @sucursalAsiento;
+        END
+        IF @estado_D = 'C'
+            BEGIN
+            UPDATE dbo.MAESTRO_TRANSFERENCIAS
+                SET ESTADO = @extornoAsiento
+                WHERE DESTINO_ASIENTO_NUMERO = @idAsiento
+                AND DESTINO_ASIENTO_FECHA = @fechaAsiento
+                AND DESTINO_ASIENTO_SUCURSAL = @sucursalAsiento;
+        END
+        SET @RETORNO = 'OK'
+        SET @MENSAJE = 'EXTORNO REALIZADO'
+    END
+    ELSE
+        BEGIN
+        IF @origenDebitoCredito = 'D'
+                        BEGIN
+            INSERT INTO dbo.MAESTRO_TRANSFERENCIAS
+                (DESTINO_ASIENTO_NUMERO, DESTINO_ASIENTO_FECHA, DESTINO_ASIENTO_SUCURSAL, ORIGEN_ASIENTO_NUMERO, ORIGEN_ASIENTO_FECHA, ORIGEN_ASIENTO_SUCURSAL, DESTINO_ENTIDAD, DESTINO_SUBSISTEMA, DESTINO_SUCURSAL, DESTINO_CUENTA, DESTINO_CUIT, DESTINO_RAZON_SOCIAL, DESTINO_CBU, TITULAR, ESTADO, CANAL, INTERFAZ, MOTIVO, REFERENCIA, MONEDA, IMPORTE, SOLICITUD_FECHA, ORIGEN_ENTIDAD, ORIGEN_SUBSISTEMA, ORIGEN_SUCURSAL, ORIGEN_CUENTA, ORIGEN_CUIT, ORIGEN_RAZON_SOCIAL, ORIGEN_CBU)
+            VALUES
+                (@MT_ASIENTO_CONTRAPARTE, @MT_FECHAPROCESO_CONTRAPARTE, @MT_SUCURSAL_CONTRAPARTE, @MT_ASIENTO, @MT_FECHAPROCESO, @MT_SUCURSAL, @bancoContraparte, @moduloContraparte, @sucursalContraparte, @cuentaContraparte, @cuitContraparte, @nombreContraparte, @cbuContraparte, @mismoTitular, @extornoAsiento, @MT_CANAL, @MT_INTERFAZ, @MT_MOTIVO, @MT_REFERENCIA, @MT_MONEDA, @MT_CAPITALREALIZADO, @MT_FECHAPROCESO, @MT_ENTIDAD, @MT_PRODUCTO, @MT_SUCURSAL, @MT_CUENTA, @MT_NUMERODOCUMENTO, @MT_NOMBRECLIENTE, @MT_CTA_CBU);
+        END
+            ELSE IF @origenDebitoCredito = 'C' 
+                        BEGIN
+            INSERT INTO dbo.MAESTRO_TRANSFERENCIAS
+                (ORIGEN_ASIENTO_NUMERO, ORIGEN_ASIENTO_FECHA, ORIGEN_ASIENTO_SUCURSAL, DESTINO_ASIENTO_NUMERO, DESTINO_ASIENTO_FECHA, DESTINO_ASIENTO_SUCURSAL, ORIGEN_ENTIDAD, ORIGEN_SUBSISTEMA, ORIGEN_SUCURSAL, ORIGEN_CUENTA, ORIGEN_CUIT, ORIGEN_RAZON_SOCIAL, ORIGEN_CBU, TITULAR, ESTADO, CANAL, INTERFAZ, MOTIVO, REFERENCIA, MONEDA, IMPORTE, SOLICITUD_FECHA, DESTINO_ENTIDAD, DESTINO_SUBSISTEMA, DESTINO_SUCURSAL, DESTINO_CUENTA, DESTINO_CUIT, DESTINO_RAZON_SOCIAL, DESTINO_CBU)
+            VALUES
+                (@MT_ASIENTO_CONTRAPARTE, @MT_FECHAPROCESO_CONTRAPARTE, @MT_SUCURSAL_CONTRAPARTE, @MT_ASIENTO, @MT_FECHAPROCESO, @MT_SUCURSAL, @bancoContraparte, @moduloContraparte, @sucursalContraparte, @cuentaContraparte, @cuitContraparte, @nombreContraparte, @cbuContraparte, @mismoTitular, @extornoAsiento, @MT_CANAL, @MT_INTERFAZ, @MT_MOTIVO, @MT_REFERENCIA, @MT_MONEDA, @MT_CAPITALREALIZADO, @MT_FECHAPROCESO, @MT_ENTIDAD, @MT_PRODUCTO, @MT_SUCURSAL, @MT_CUENTA, @MT_NUMERODOCUMENTO, @MT_NOMBRECLIENTE, @MT_CTA_CBU);
+        END
+        SET @RETORNO = 'OK'
+        SET @MENSAJE = 'REGISTRO GRABADO'
+    END
+END

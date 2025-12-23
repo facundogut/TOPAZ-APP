@@ -1,0 +1,49 @@
+
+EXECUTE('
+IF OBJECT_ID (''dbo.VW_CANAL_CARGO_ESPECIFICO'') IS NOT NULL
+	DROP VIEW dbo.VW_CANAL_CARGO_ESPECIFICO
+')
+EXECUTE('
+CREATE VIEW VW_CANAL_CARGO_ESPECIFICO
+				(ID_CABEZAL,
+				ID_LINEA,
+				NRO_COMPROBANTE_CLIENTE,
+				LETRA,
+				PUNTO_VENTA,
+				TOTAL_CARGO_ESPECIFICO)
+AS
+
+
+SELECT DISTINCT c.ID,
+                d.ID_LINEA,
+                cc2.NRO_COMPROBANTE_CLIENTE,
+                cc2.LETRA,
+                cc2.PUNTO_VENTA,
+                cc2.TOTAL_CARGO_ESPECIFICO 
+      
+FROM REC_CAB_RECAUDOS_CANAL AS C WITH (nolock)
+ INNER JOIN REC_DET_RECAUDOS_CANAL D WITH (nolock) ON 
+    	C.ID=d.ID_CABEZAL
+	    AND  D.TZ_LOCK = 0 
+	    
+ INNER JOIN CONV_PADRONES AS cc2  WITH (nolock) ON 
+                             cc2.CONVENIO = (SELECT COD_ENTE FROM CONV_REL_ENTECONV WHERE ID_CONVREC = (SELECT CASE WHEN L.CONVENIO_PADRE = 0 THEN L.CONVENIO ELSE L.CONVENIO_PADRE END 
+																										  FROM REC_LIQUIDACION L, REC_CAB_RECAUDOS_CANAL C2 
+																										 WHERE L.ID_LIQUIDACION = C2.ID_LIQUIDACION
+																										   AND C2.ID =c.ID 
+																										   AND L.TZ_LOCK = 0
+																										   AND C2.TZ_LOCK =0) 
+                             					AND TZ_LOCK = 0) 
+                             AND cc2.TZ_LOCK =0
+                             AND cc2.TOTAL_CARGO_ESPECIFICO !=0
+                             AND cc2.TOTAL_CARGO_ESPECIFICO IS NOT NULL 
+                             AND cc2.NRO_COMPROBANTE_CLIENTE = SUBSTRING(d.CODIGO_BARRAS,9,8)
+							 AND cc2.LETRA = (SELECT CASE WHEN SUBSTRING(D2.CODIGO_BARRAS,4,1) = 0 THEN ''B'' 
+												 WHEN SUBSTRING(D2.CODIGO_BARRAS,4,1) = 1 THEN ''A''
+												ELSE ''Y'' END FROM REC_DET_RECAUDOS_CANAL D2
+												WHERE D2.ID_LINEA = d.ID_LINEA 
+												AND   d2.ID_CABEZAL = d.ID_CABEZAL) 
+							 AND cc2.PUNTO_VENTA = SUBSTRING(d.CODIGO_BARRAS,5,4)
+  WHERE C.TZ_LOCK = 0
+
+')

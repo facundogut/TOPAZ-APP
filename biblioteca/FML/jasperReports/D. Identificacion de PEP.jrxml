@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="D. Identificacion de PEP" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="87"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idPersona" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[select * from  (SELECT $P{idPersona} AS numero) b LEFT JOIN vlc_IdentificacionPEP v on v.idcliente =b.numero]]>
+	</queryString>
+	<field name="numero" class="java.lang.Boolean"/>
+	<field name="IDCLIENTE" class="java.lang.Long"/>
+	<field name="PEP" class="java.lang.String"/>
+	<field name="CARGO" class="java.lang.String"/>
+	<field name="PERIODO_DESDE" class="java.sql.Timestamp"/>
+	<field name="PERIODO_HASTA" class="java.sql.Timestamp"/>
+	<field name="RELACION" class="java.lang.String"/>
+	<field name="NOMBRE_RELACION" class="java.lang.String"/>
+	<field name="FONDOSGOB" class="java.lang.String"/>
+	<field name="PAIS" class="java.lang.String"/>
+	<detail>
+		<band height="128" splitType="Stretch">
+			<staticText>
+				<reportElement x="45" y="81" width="48" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Relación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="64" y="112" width="27" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[País:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="98" width="210" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tiene acceso a mover fondos del gobierno:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="14" width="488" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[¿Usted o algún Familiar desempeña o ha desempeñado algún cargo público en Nicaragua o en el extranjero?]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="49" y="67" width="44" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Periodo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="53" width="35" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cargo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="328" y="81" width="44" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="93" y="53" width="440" height="14">
+					<printWhenExpression><![CDATA[$F{PEP}=='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CARGO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="93" y="67" width="61" height="14">
+					<printWhenExpression><![CDATA[$F{PEP}=='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{PERIODO_DESDE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="372" y="81" width="161" height="17">
+					<printWhenExpression><![CDATA[$F{PEP}=='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE_RELACION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="91" y="81" width="234" height="14">
+					<printWhenExpression><![CDATA[$F{PEP}=='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{RELACION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="93" y="113" width="442" height="14">
+					<printWhenExpression><![CDATA[$F{PEP}=='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PAIS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="153" y="67" width="12" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[-]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="169" y="67" width="115" height="14">
+					<printWhenExpression><![CDATA[$F{PEP}=='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{PERIODO_HASTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="127" height="14"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[D. Identificación de PEP]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="127" width="555" height="1"/>
+			</line>
+			<rectangle>
+				<reportElement x="479" y="14" width="18" height="14"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="499" y="14" width="20" height="14"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Si]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="519" y="14" width="18" height="14"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="539" y="14" width="20" height="14"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="485" y="14" width="14" height="14">
+					<printWhenExpression><![CDATA[$F{PEP}=='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="525" y="14" width="14" height="14">
+					<printWhenExpression><![CDATA[$F{PEP}!='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="269" y="98" width="14" height="17">
+					<printWhenExpression><![CDATA[$F{FONDOSGOB}!='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="285" y="98" width="20" height="17"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="229" y="98" width="14" height="17">
+					<printWhenExpression><![CDATA[$F{FONDOSGOB}=='Si']]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[X]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="38" width="513" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Si su respuesta es afirmativa, favor contestar las siguientes preguntas:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="245" y="98" width="20" height="17"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Si]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="224" y="99" width="18" height="14"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="265" y="99" width="18" height="14"/>
+			</rectangle>
+		</band>
+	</detail>
+</jasperReport>

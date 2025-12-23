@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/Convenio/{idConvenio}/{idTipoConvenio}</uri>
+    <serviceDescription>Consulta convenios </serviceDescription>
+    <title>Consulta convenios </title>
+    <querys>
+        <query id="1" name="convenios" type="MULTIPLE">
+            <sql>
+				DECLARE @idConv AS numeric(11,0) =? 
+				DECLARE @idTipoConv AS varchar(9) =? 
+				
+				IF (ISNUMERIC(@idConv) &lt;&gt; 1 OR (ISNUMERIC(@idTipoConv) &lt;&gt; 1 AND LTRIM(RTRIM(@idTipoConv)) &lt;&gt; '')) 
+				BEGIN 
+					THROW 50000, 'Error: Los parámetros idConv e idTipoConv deben ser numéricos', 1; 
+				END 
+				
+				IF (LTRIM(RTRIM(@idTipoConv)) = '') 
+				BEGIN 
+					SELECT 
+					ccr.Id_ConvRec AS Id, 
+					ccr.NomConvRec AS Nombre, 
+					ccr.Id_TpoConv AS IdTipoConvenio, 
+					ccr.Estado AS Estado, 
+					ccr.Cliente AS IdCliente, 
+					ccr.Canal AS Canal, 
+					CONVERT(varchar(10),ccr.FecAlta, 103) AS FechaAlta, 
+					CONVERT(varchar(10),ccr.FecVto,103) AS FechaVencimiento, 
+					CONVERT(varchar(10),ccr.FecUltAct, 103) AS FechaUltimaActividad, 
+					CONVERT(varchar(10),ccr.FecCamEst, 103) AS FechaCambioEstado, 
+					ccr.DiaCierreDA AS DiaCierre, 
+					ccr.Id_ConvPadre AS IdConvenioPadre, 
+					ccr.Dir_Id AS IdDireccion, 
+					ccr.Cuit 
+					FROM CONV_CONVENIOS_REC ccr 
+					WHERE ccr.TZ_LOCK=0 
+					AND ccr.Id_ConvRec=@idConv 
+				END 
+				ELSE 
+				BEGIN 
+					SELECT 
+					ccr.Id_ConvRec AS Id, 
+					ccr.NomConvRec AS Nombre, 
+					ccr.Id_TpoConv AS IdTipoConvenio, 
+					ccr.Estado AS Estado, 
+					ccr.Cliente AS IdCliente, 
+					ccr.Canal AS Canal, 
+					CONVERT(varchar(10),ccr.FecAlta, 103) AS FechaAlta, 
+					CONVERT(varchar(10),ccr.FecVto,103) AS FechaVencimiento, 
+					CONVERT(varchar(10),ccr.FecUltAct, 103) AS FechaUltimaActividad, 
+					CONVERT(varchar(10),ccr.FecCamEst, 103) AS FechaCambioEstado, 
+					ccr.DiaCierreDA AS DiaCierre, 
+					ccr.Id_ConvPadre AS IdConvenioPadre, 
+					ccr.Dir_Id AS IdDireccion, 
+					ccr.Cuit 
+					FROM CONV_CONVENIOS_REC ccr 
+					WHERE ccr.TZ_LOCK=0 
+					AND ccr.Id_ConvRec=@idConv 
+					AND ccr.Id_TpoConv=@idTipoConv 
+				END
+			</sql>
+            <input>
+                <inParameter description="" type="INTEGER">idConvenio</inParameter>
+                <inParameter description="idTipoConvenio" type="STRING">idTipoConvenio</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="convenio">
+                    <outParameter description="" type="STRING">
+                        <queryname>id</queryname>
+                        <servicename>Id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombre</queryname>
+                        <servicename>Nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IdTipoConvenio</queryname>
+                        <servicename>IdTipoConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Estado</queryname>
+                        <servicename>Estado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IdCliente</queryname>
+                        <servicename>IdCliente</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Canal</queryname>
+                        <servicename>Canal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FechaAlta</queryname>
+                        <servicename>FechaAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FechaVencimiento</queryname>
+                        <servicename>FechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FechaUltimaActividad</queryname>
+                        <servicename>FechaUltimaActividad</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FechaCambioEstado</queryname>
+                        <servicename>FechaCambioEstado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DiaCierre</queryname>
+                        <servicename>DiaCierre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IdConvenioPadre</queryname>
+                        <servicename>IdConvenioPadre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IdDireccion</queryname>
+                        <servicename>IdDireccion</servicename>
+                    </outParameter>
+					<outParameter description="" type="STRING">
+                        <queryname>Cuit</queryname>
+                        <servicename>Cuit</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

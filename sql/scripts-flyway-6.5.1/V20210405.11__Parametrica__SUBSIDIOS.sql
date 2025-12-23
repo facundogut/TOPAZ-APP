@@ -1,0 +1,66 @@
+EXECUTE ('
+DELETE FROM CRE_ENTES_SUBSIDIOS
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (1	,''Ministerio de Planificación y Economía''	,''30999176832'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (2	,''Tesoreria General Provincia Del Chaco''	,''30999251907'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (3	,''Ministerio de Producción, Industria y Empleo''	,''30999251389'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (4	,''IPDUV Instituto Provi. Desarrollo Urbano Viviendas''	,''30999176905'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (5	,''FONDEP Fondo Nacional de Desarrollo Productivo''	,''30714554960'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (6	,''APA Administración Provincial del Agua''	,''30644696614'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (7	,''DVP Dirección de Vialidad Provincial''	,''30999176212'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (8	,''INSSSEP Instituto Seguri. Social Seguros Préstamos''	,''30999175461'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (9	,''SAMEEP l''	,''30556366906'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (10	,''Ministerio de Infraestructura y Servicios Públicos''	,''30650734986'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (11	,''Ministerio de Educación Cultura Ciencia Tecnología''	,''30999259789'',0,0)
+INSERT INTO CRE_ENTES_SUBSIDIOS (Codigo, Descripcion, CUIT, Cliente, TZ_LOCK)
+VALUES (12	,''Secretaría General de Gobierno  Provincia Chaco''	,''30710321872'',0,0)')
+
+EXECUTE ('
+DELETE  FROM CRE_SUBSIDIOS 
+INSERT INTO CRE_SUBSIDIOS (CodigoSubsidio, Descripcion, Ente, TipoCupo, MontoCupo, FechaInicio, FechaFin, TopeTasa, RenuevaAutomaticamente, TipoSubsidioInteres, TipoSubsidioCargo, PuntosInteres, PuntosCargos, DiaTope, PenalidadVencimiento, CuentaCobroPrincipal, CuentaCobroSecundaria, Estado, Prioridad, TZ_LOCK)
+VALUES (1, ''Préstamos a prestadores y proveedores de la salud'', 1, ''S'', 9999999999999, ''2019-02-01'', ''2021-01-21'', 9999, ''S'', ''PO'', ''PO'', 100, 0, 28, 0, 21443, 21443, ''A'', 0, 0)
+INSERT INTO CRE_SUBSIDIOS (CodigoSubsidio, Descripcion, Ente, TipoCupo, MontoCupo, FechaInicio, FechaFin, TopeTasa, RenuevaAutomaticamente, TipoSubsidioInteres, TipoSubsidioCargo, PuntosInteres, PuntosCargos, DiaTope, PenalidadVencimiento, CuentaCobroPrincipal, CuentaCobroSecundaria, Estado, Prioridad, TZ_LOCK)
+VALUES (5, ''Préstamos a MIPYME a partir de julio/2018'', 3, ''S'', 300000000, ''2019-06-01'', ''2021-05-31'', 9999, ''S'', ''FI'', ''PO'', 5, 0, 25, 0, 21443, 21443, ''A'', 0, 0)
+INSERT INTO CRE_SUBSIDIOS (CodigoSubsidio, Descripcion, Ente, TipoCupo, MontoCupo, FechaInicio, FechaFin, TopeTasa, RenuevaAutomaticamente, TipoSubsidioInteres, TipoSubsidioCargo, PuntosInteres, PuntosCargos, DiaTope, PenalidadVencimiento, CuentaCobroPrincipal, CuentaCobroSecundaria, Estado, Prioridad, TZ_LOCK)
+VALUES (7, ''Préstamos a MIPYME-COVID-19. Subsidio Fijo'', 1, ''O'', 300000000, ''2019-04-14'', ''2023-12-31'', 9999, ''N'', ''FI'', ''NA'', 12, 0, 25, 0, 21443, 21443, ''A'', 0, 0)
+INSERT INTO CRE_SUBSIDIOS (CodigoSubsidio, Descripcion, Ente, TipoCupo, MontoCupo, FechaInicio, FechaFin, TopeTasa, RenuevaAutomaticamente, TipoSubsidioInteres, TipoSubsidioCargo, PuntosInteres, PuntosCargos, DiaTope, PenalidadVencimiento, CuentaCobroPrincipal, CuentaCobroSecundaria, Estado, Prioridad, TZ_LOCK)
+VALUES (16, ''Préstamos a MIPYME a partir de julio/2018-76902'', 3, ''S'', 300000000, ''2019-06-01'', ''2021-05-31'', 9999, ''S'', ''FI'', ''PO'', 3, 0, 25, 0, 21443, 21443, ''A'', 0, 0)
+')
+
+EXECUTE ('
+DELETE FROM CRE_SUBSIDIOS_TRAMOS_INTERES
+
+DELETE FROM CRE_SUBSIDIOS_TRAMOS_CARGOS')
+
+EXECUTE ('
+DELETE FROM CRE_Prod_SUBSIDIOS
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (1,	26020	,''S'',	''Préstamos a prestadores y proveedores salud'',0)
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (2,	61201	,''S'',	''Préstamos a proveedores de SAMEEP-61201'',0)
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (3,	76902	,''S'',	''Préstamos a MIPYME hasta junio/2018 Fijo'',0)
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (4,	76902	,''S'',	''Préstamos a MIPYME hasta junio/2018 Variable'',0)
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (5,	76902	,''S'',	''Préstamos a MIPYME a partir de julio/2018-76902'',0)
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (6,	77802	,''S'',	''Préstamos a MIPYME. Subsidio Porcentual-7780X'',0)
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (6,	77803	,''S'',	''Préstamos a MIPYME. Subsidio Porcentual-7780X'',0)
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (7,	78101	,''S'',	''Préstamos a MIPYME-COVID-19. Subsidio Fijo-7810X'',0)
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (7,	78102	,''S'',	''Préstamos a MIPYME-COVID-19. Subsidio Fijo-7810X'',0)
+INSERT INTO CRE_Prod_SUBSIDIOS (COD_SUBSIDIO, COD_PRODUCTO, HABILITADO, DESCRIPCION, TZ_LOCK)
+VALUES (16,	76902	,''S'',	''Préstamos a MIPYME a partir de julio/2018-76902'',0)')

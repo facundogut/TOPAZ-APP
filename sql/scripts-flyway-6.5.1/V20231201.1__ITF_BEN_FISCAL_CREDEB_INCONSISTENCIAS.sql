@@ -1,0 +1,20 @@
+
+execute('
+DROP TABLE IF EXISTS dbo.ITF_BEN_FISCAL_CREDEB_INCONSISTENCIAS
+
+
+CREATE TABLE dbo.ITF_BEN_FISCAL_CREDEB_INCONSISTENCIAS
+	(
+	ID               INT IDENTITY NOT NULL,
+	fecha_proceso    DATETIME,
+	COD_CLIENTE      NUMERIC (11),
+	NRO_PERSONA      NUMERIC (11),
+	RAZON_SOCIAL     VARCHAR (80),
+	CUIT             VARCHAR (50),
+	cbu              VARCHAR (50),
+	codigo_beneficio VARCHAR (50),
+	FECHA_vigencia   VARCHAR (50),
+	causa_rechazo    VARCHAR (200),
+	PRIMARY KEY (ID)
+	)
+');

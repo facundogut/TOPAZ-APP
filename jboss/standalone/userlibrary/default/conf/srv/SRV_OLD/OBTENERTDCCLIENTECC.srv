@@ -1,0 +1,34 @@
+service OBTENERTDCCLIENTECC;
+description "Cuentas de tarjeta según documento del cliente";
+
+ action: SQLQuery ejecutarOperacion(
+
+	PAISDOC: numeric,
+	TIPODOC: string,
+      	NRODOC: string
+	) : [
+	CODERROR: numeric as CODERROR,
+	DESCERROR: string as DESCERROR
+	] 
+        {	 
+		properties { 
+		  	("statement", "SELECT 0 AS CODERROR, 'N/A' AS DESCERROR FROM DUAL ")
+				
+		};
+		
+		action: SQLQuery RESULTADO(
+		): [		
+		  CTATARJETA: numeric,
+		  MONEDA: numeric,
+		  LIMITE: numeric,
+		  PRODUCTO: numeric
+		] {
+	  	properties { 
+	  	("statement", "Select 0 as CTATARJETA, 0 as MONEDA, 0 as LIMITE, 0 as PRODUCTO from dual where not exists ( select NULL from CRE_TARJETA_CREDITO T, cre_marca_tarj_cobertura M  WHERE REGEXP_REPLACE('%%'||NRO_COD_TITULAR, '([[:punct:]^[:alpha:]])','') = ? and t.marca = m.codigo_marca and t.cobertura = m.codigo_cobertura and t.programa = m.codigo_programa and (nvl(cod_doc_titular,'UY') = (select codigoswift from cli_paises where codigopais = ?)) And (T.Tz_lock < 310000000000000  OR T.Tz_lock > 339999999999999) And (M.Tz_lock < 310000000000000  OR M.Tz_lock > 339999999999999)) union SELECT DISTINCT cuenta_plastico CTATARJETA, MONEDA, importe LIMITE, PRODUCTO FROM CRE_TARJETA_CREDITO T, cre_marca_tarj_cobertura M WHERE REGEXP_REPLACE('%%'||NRO_COD_TITULAR, '([[:punct:]^[:alpha:]])','') = ? and t.marca = m.codigo_marca and t.cobertura = m.codigo_cobertura and t.programa = m.codigo_programa and (nvl(cod_doc_titular,'UY') = (select codigoswift from cli_paises where codigopais = ?)) And (T.Tz_lock < 310000000000000  OR T.Tz_lock > 339999999999999) And (M.Tz_lock < 310000000000000  OR M.Tz_lock > 339999999999999)"),
+	  	("0", "NRODOC"),
+	  	("1", "PAISDOC"),
+	  	("2", "NRODOC"),
+	        ("3", "PAISDOC")
+	       	}
+	  }
+	}

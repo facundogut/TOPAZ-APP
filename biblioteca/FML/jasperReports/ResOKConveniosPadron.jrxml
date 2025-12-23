@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2022-09-22T14:40:42 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ResOKConveniosPadron" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="68efe07d-f9b8-48da-bea1-4a9d18cd6901">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="TICKET" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT nombrearchivo,Cast(fechaproceso AS date) AS fechaproceso ,Max(horaproceso) as horaproceso,
+ (SELECT trim(CAST(Cod_Ente AS CHAR)) + ' ' + desc_ente FROM CONV_REL_ENTECONV WHERE EXISTS (SELECT * FROM ITF_CONVENIOS_PADRON
+ WHERE cod_ente = nro_convenio and ID_TICKET = $P{TICKET} )) AS Ente, (SELECT count(*) FROM ITF_CONVENIOS_PADRON WHERE ID_TICKET = $P{TICKET} 
+ AND TIPO_REGISTRO = 2) AS CantRegAg
+ FROM ITF_CONVENIOS_PADRON WHERE  ID_TICKET =$P{TICKET}  GROUP BY NombreArchivo,fechaproceso;]]>
+	</queryString>
+	<field name="nombrearchivo" class="java.lang.String"/>
+	<field name="fechaproceso" class="java.lang.String"/>
+	<field name="horaproceso" class="java.lang.String"/>
+	<field name="Ente" class="java.lang.String"/>
+	<field name="CantRegAg" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="170" y="0" width="200" height="30" uuid="2810347b-17d2-43b4-a22d-f211b6e83eb2"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NUEVO BANCO DEL CHACO S.A]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="117" y="40" width="300" height="35" uuid="290f27e2-d131-45ab-99a6-275869fce79c"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RESULTADO DEL PROCESO DE BASES RECIBIDAS]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="173" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="50" width="108" height="20" uuid="bea7d116-940f-4c0f-bfaf-18cbba0eac60"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Archivo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="70" width="108" height="30" uuid="ba5dc832-d459-4120-a473-538121b82737"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de proceso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="100" width="108" height="30" uuid="ae578de4-3a78-418b-b580-2deadae45502"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora de proceso:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="50" width="100" height="20" uuid="b50ce71b-15ea-4f2a-aada-ba0bc44e2d91"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nombrearchivo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="43" y="10" width="56" height="30" uuid="679967a6-fd19-43a7-9e70-1cd4dc9c898d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ente:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="70" width="100" height="30" uuid="005714cd-092e-44da-9746-0e8bf225680e"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fechaproceso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="10" width="444" height="30" uuid="16e89fe5-3755-4f21-a7ea-802e848ea82a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="20" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Ente}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="12" y="140" width="530" height="30" uuid="d2fa5def-2c4b-4cfe-aff7-fe37efb4a88c"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[***** LA OPERACION DE IMPORTACION FUE EXITOSA *****
+----------------------------------------------------------------------
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="100" width="100" height="30" uuid="998a0bba-083d-495c-8ae7-75450dd2ea7f"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{horaproceso}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="20" y="40" width="525" height="4" uuid="8dee1f2f-99e8-4bd0-a538-54cc9c1ce79e"/>
+			</line>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="15" width="110" height="30" uuid="46238bd5-e02f-4fba-b3fc-db7673fa7cf7"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Registros Agregados:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="15" width="100" height="30" uuid="2355b374-61a6-4f9a-b6b7-e6531fd73570"/>
+				<textFieldExpression><![CDATA[$F{CantRegAg}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch"/>
+	</detail>
+	<columnFooter>
+		<band height="8" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

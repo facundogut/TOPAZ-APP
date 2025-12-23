@@ -1,0 +1,7 @@
+EXECUTE('
+
+UPDATE dbo.PARAMETROSGENERALES
+SET DESCRIPCION = ''Sucursal Centralizadora''
+WHERE CODIGO = 22;
+
+')

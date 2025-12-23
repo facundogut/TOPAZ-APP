@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/vinculacion/idTCByDocID/{docId}/{estado}/{pagina}/{largopagina}</uri>
+    <serviceDescription>El servicio retorna los id_Tarjeta correspondientes a Tarjetas de Crédito que se encuentren vinculadas al número de Documento Identificativo indicado por parámetro. También se indica por parámetro si se aplica (o no) un filtro que determine si se espera en la respuesta solo las cuentas activas o, por contrario, todas las cuentas (incluyendo las inhabilitadas). </serviceDescription>
+    <title>TarjetaCreditoIdxDocId</title>
+    <querys>
+        <query id="1" name="paginado" type="MULTIPLE">
+            <sql>&#13;
+&#13;
+DECLARE &#13;
+  		&#13;
+	@docId NUMERIC(12,0),&#13;
+	@estadoTJ    VARCHAR(1),&#13;
+	&#13;
+  @pagina  AS INT ,&#13;
+  @largopagina AS INT ,&#13;
+ &#13;
+  &#13;
+  @TotalRegistros INT = 0,&#13;
+  @resto INT = 0,&#13;
+  @primerRegistroPag INT = 0,&#13;
+  @ultimoRegistroPag INT =0;&#13;
+&#13;
+&#13;
+  SET @docId = ?; --desa: '20898419526'&#13;
+  SET @estadoTJ = ?;&#13;
+  SET @pagina = ?;&#13;
+  SET @largopagina = ?;&#13;
+&#13;
+SET @TotalRegistros = ( &#13;
+  &#13;
+	SELECT COUNT(*) FROM -- para que no me cuente tarjetas repetidas&#13;
+&#13;
+		(&#13;
+			SELECT DISTINCT	usu.NUM_TJC AS tarjNumero &#13;
+			FROM VW_CLI_X_DOC doc &#13;
+						JOIN TJC_MAESTRO_USUARIO usu ON doc.CODIGOCLIENTE = usu.CLIENTE&#13;
+						JOIN   TJC_MAESTRO_ADMINISTRADORAS adm ON usu.ADMINISTRADORA = adm.COD_ADMINISTRADORA&#13;
+						 WHERE 	 doc.NUMERODOC = @docId AND &#13;
+								(&#13;
+									UPPER(@estadoTJ) = 'A' AND isNull(usu.FECHA_BAJA_USU,'18000101') = '18000101'&#13;
+								 OR &#13;
+								 	UPPER(@estadoTJ) = 'T' &#13;
+								)&#13;
+		) AS k&#13;
+						&#13;
+&#13;
+ ) ;&#13;
+&#13;
+  SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina)&#13;
+  SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1&#13;
+  SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina)&#13;
+  &#13;
+  IF (@resto &lt; 0)&#13;
+  	BEGIN&#13;
+  		SET @resto = 0&#13;
+  	END &#13;
+  IF (@ultimoRegistroPag &gt;@TotalRegistros )&#13;
+  	BEGIN&#13;
+  	    SET @ultimoRegistroPag=@TotalRegistros&#13;
+  	END &#13;
+  &#13;
+&#13;
+IF(@pagina&gt;(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)))&#13;
+BEGIN&#13;
+SELECT &#13;
+	NULL AS admId,&#13;
+	NULL AS admDescripcion,&#13;
+	NULL AS tarjNumero,&#13;
+    NULL AS usuario,&#13;
+	@pagina 																	AS paginaActual, &#13;
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,&#13;
+	@largopagina 																AS registroPorPag,&#13;
+	@TotalRegistros 														  	AS totalRegistros,&#13;
+	@primerRegistroPag 													  		AS primerRegistroPag,&#13;
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,&#13;
+	@resto 																	  	AS siguientesRegistros &#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+SELECT 	ROW_NUMBER() OVER(ORDER BY tarjNumero) AS ORDEN, &#13;
+		admId,&#13;
+		admDescripcion,&#13;
+		tarjNumero,&#13;
+		usuario,&#13;
+		paginaActual,&#13;
+		cantidadPaginas,&#13;
+		registroPorPag,&#13;
+		totalRegistros,&#13;
+		primerRegistroPag,&#13;
+		ultimoRegistroPag,&#13;
+		siguientesRegistros&#13;
+		&#13;
+&#13;
+FROM&#13;
+(SELECT DISTINCT&#13;
+	adm.COD_ADMINISTRADORA 			AS admId,&#13;
+   adm.DESCRIPCION				AS admDescripcion,&#13;
+	usu.NUM_TJC 						AS tarjNumero,&#13;
+    usu.usuario							AS usuario,&#13;
+	@pagina 																	AS paginaActual, &#13;
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,&#13;
+	@largopagina 																AS registroPorPag,&#13;
+	@TotalRegistros 														  	AS totalRegistros,&#13;
+	@primerRegistroPag 													  		AS primerRegistroPag,&#13;
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,&#13;
+	@resto 																	  	AS siguientesRegistros 		&#13;
+	FROM VW_CLI_X_DOC doc &#13;
+			JOIN TJC_MAESTRO_USUARIO usu ON doc.CODIGOCLIENTE = usu.CLIENTE&#13;
+			JOIN   TJC_MAESTRO_ADMINISTRADORAS adm ON usu.ADMINISTRADORA = adm.COD_ADMINISTRADORA&#13;
+			 WHERE 	 doc.NUMERODOC = @docId AND &#13;
+					(&#13;
+						UPPER(@estadoTJ) = 'A' AND isNull(usu.FECHA_BAJA_USU,'18000101') = '18000101'&#13;
+					 OR &#13;
+					 	UPPER(@estadoTJ) = 'T' &#13;
+					)&#13;
+					&#13;
+&#13;
+&#13;
+) DATOS &#13;
+ORDER BY ORDEN&#13;
+OFFSET ((@pagina - 1) * @largopagina) ROWS &#13;
+FETCH NEXT @largopagina ROWS ONLY;&#13;
+&#13;
+END&#13;
+</sql>
+            <input>
+                <inParameter description="" type="LONG">docId</inParameter>
+                <inParameter description="" type="STRING">estado</inParameter>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="tarjetas">
+                    <outParameter description="" type="LONG">
+                        <queryname>admId</queryname>
+                        <servicename>administradora.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>admDescripcion</queryname>
+                        <servicename>administradora.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>tarjNumero</queryname>
+                        <servicename>numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>usuario</queryname>
+                        <servicename>usuario</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

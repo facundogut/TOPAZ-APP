@@ -1,0 +1,59 @@
+service LISTAAVISOS; 
+description "Servicio que los baja y borra, con un parametro que define la cantidad a bajar/borrar ."; 
+
+
+    	
+	action: SQLQuery LISTAVISOS(
+    	
+    	       
+	       Cantidad: numeric     
+	       
+	): [ 
+    		XML_TAG: string as XML_TAG,
+    		FECHA: string as Fecha,
+    		SUCURSAL: numeric as Sucursal,
+    		CUENTA: numeric as Cuenta,
+    		PRODUCTO: numeric as Producto,
+    		OPERACION: numeric as Operacion,
+    		ORD_CUENTA: numeric as Ordinal,
+    		CLIENTE: numeric as Cliente,
+    		SIGNO: string as Signo,
+    		MONEDA: numeric as Moneda,
+    		MONTO: float as Monto,
+    		CONCEPTO: string as Concepto,
+    		AVISO: string as TipoAviso
+    			
+    		]  {
+    	    
+    	    properties 
+    			{ 
+    			("statement", "SELECT 'Aviso' as XML_TAG, TO_CHAR(FECHA, 'dd/mm/yyyy') as FECHA, SUCURSAL, CUENTA, PRODUCTO, OPERACION, ORD_CUENTA ,CLIENTE,SIGNO, MONEDA, MONTO, fn_itf_translate(upper(CONCEPTO)) as CONCEPTO, AVISO FROM ITF_ALERTAS_ONLINE where ROWNUM between 1 and ? order by ordinal"), 
+     			("0", "Cantidad") 
+    	
+                     };    
+        
+         action: SQLCall BORROAVISOS(
+	       
+   	 
+	  ): [ 
+	   
+	    SCARGO : numeric
+	 	
+	]
+	      { 
+	
+	  	properties { 
+	  	("statement", "{call SP_ITF_BORRO_ALERTAS_CLI ( ?, ?)}"),
+	  	("0", "Cantidad"), 
+		("1", "out SCARGO : numeric")
+		 
+		 
+
+	                      }
+                        
+         
+                  }
+   
+    
+ }    
+

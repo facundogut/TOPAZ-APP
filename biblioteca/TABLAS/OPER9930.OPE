@@ -1,0 +1,915 @@
+VERSION:051
+TN  NN 1006T1 - Consulta de Cliente                 C0001 00
+ NSSNS 5101   SucursalDeb    I SNN 00002401460044023002101100000002400340044012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 2613   ProductoDeb    I SNN 00005201460072023002101100000005200340072012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0618   CuentaDeb      I SNN 00010303800123046402101100000010302680123035700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 2614   MonedaDeb      I SNN 00007701460097023002101100000007700340097012300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0617   OperacionDeb   I SNNK00010301460123023002101100000010200340122012300
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2617   OrdinalDeb     I SNNK00000701260027014702001100000000700070027011900
+/V=0
+/F=0013700NNN000000128Arial                                   
+/f=0013700NNN000000128Arial                                   
+ NNNNN 0856   TarjetaCuenta  I NNN 00000701260027014702001100000000700070027011900
+/F=0013700NNN000000128Arial                                   
+/f=0013700NNN000000128Arial                                   
+*N  NN -**** Campos del Middleware
+ NNNNN 4108   TipoProceso    I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 1444   NodoCliente    I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4161   TicketSesion   I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 5367   InfoOrigen     I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4404   ModoAutentica  I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4402   CodCanal       I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0317   Origen         I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 2612   NroDepOrigen   I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4162   NroTransaccion I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0622   IdAutentica    I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0531   IdInvocaTopaz  I NNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+*N  NN -**** Validacion de Datos de Ingreso
+*N  NN -**** Verifico si cargo una Cuenta para Debitar
+CNNNNN   00000000000000000000100
+/F=F(LEN,C618.1)>1
+/P=I93
+*N  NN -**** 12- Codigo Canal Inválido
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=A(C4402#"A")YA(C4402#"I")YA(C4402#"N")YA(C4402#"T")Y!I70Y!I71
+/V=12
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C4402#"A")YA(C4402#"I")YA(C4402#"N")YA(C4402#"T")
+/P=I71
+/M=Codigo Canal Inválido
+*N  NN -**** 13- Modo Autentica Inváida
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=A(C4404#"T")YA(C4404#"P")YA(C4404#"U")YA(C4404#"F")YA(C4404#"C")YA(C4404#"O")Y!I70YA(C4404#"N")Y!I71
+/V=13
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/?=!I71
+/F=A(C4404#"T")YA(C4404#"P")YA(C4404#"U")YA(C4404#"F")YA(C4404#"C")YA(C4404#"O")YA(C4404#"N")
+/P=I73
+/M=Modo Autentica Inváida
+CNNNNN   00000000000000000000100
+/F=I71OI73
+/P=I92
+/M=Modo Autentica Inváida
+ NNNNN 1382   Moneda         I NNNK00021205010232059902001100000021203680232049400
+/?=I92
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   NombreProdDeb  I NNNK00021205010232059902001100000021203680232049400
+/?=I92
+/V=ERROR
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0718   MontoDebito    I NNNK00021205010232059902001100000021203680232049400
+/?=I92
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   NombreProdCred I NNNK00021205010232059902001100000021203680232049400
+/?=I92
+/V=ERROR
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 2615   CuentaDeb      I NNNK00021205010232059902001100000021203680232049400
+/?=I92
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4158   NumeroTarjeta  I NNNK00021205010232059902001100000021203680232049400
+/?=I92
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4159   CuentaTarjeta  I NNNK00021205010232059902001100000021203680232049400
+/?=I92
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 8899   IdCliente      I SNNK00021205010232059902001100000021203680232049400
+/?=I92
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NSSNS 3256   MayFechaVto    INNNNK00004303050066061000101100000009702600117050500
+/V=18000101
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 4174   MayFechaVto    INNNNK00004303050066061000101100000009702600117050500
+/V=18000101
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0603   MayFechaVto    INNNNK00004303050066061000101100000009702600117050500
+/V=18000101
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+TN  NN 0006T2 - Consulta de Saldos Debito           C0001 00
+/?=!I92YI93
+VNSSNS 020002000204250795SSSD000000000000000000000000000000000000010
+/T="Cliente  "+C0002.1+"   "+C1000.1
+/C=192192192
+KNSSNS 020012002002380762000101
+/T=Datos de la Cuenta
+/F=0013700NNN000000000Arial                                   
+ NSSNS 0001   Sucursal       INNNNA02004301750066027102101100000004300450066015900
+/V=C5101.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0007   Producto       IDNNNA02007401750097027102101050000007400450097015900
+/V=C2613.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6251   Descripción    ICNNN 02007403050097061000101150000012802600148050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0003   Moneda         INNNNA02010601750129027102101100000010600450129015900
+/V=C2614.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6400   Descripción    ICNNN 02010603050129046300101150000015502600175040000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 0005   Cuenta         IDNNNF02013701750160027102101150000013700450160015900
+/V=C618.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0006   Operación      INNNNF00010301460123023002101100000010200340122012300
+/V=C617.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0008   Ordinal        INNNNA00000701260027014702001100000000700070027011900
+/V=C2617.1
+/F=0013700NNN000000128Arial                                   
+/f=0013700NNN000000128Arial                                   
+ NNNNN 0025   Fecha Valor    INNSNA00000701500027027000001100000000700070027012600
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1611   Intereses Dev  INNNN 00000701260027023802001100000000700070027011900
+/F=0013700NNN000000128Arial                                   
+/f=0013700NNN000000128Arial                                   
+ NSSNN 1651   Codigo Cancel  IINSN 02016801750191033300101150000016800450191015900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -**** 4 - Cuenta Debito Inexistente
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=C9509=0
+/V=4
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I78
+/M=Cuenta Inexistente
+*N  NN -**** 1- Cuenta Cancelada
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=C1651='1'Y!I78Y!I84
+/V=1
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/?=!I78Y!I84
+/F=C1651='1'
+/P=I75
+/M=Cuenta Cancelada
+ NSSNN 1679   Bloqueo/Afect  IINSN 02019901750222033300101150000019900450222015900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -**** 2- Cuenta Bloqueada
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=C1679='B'Y!I78Y!I84Y!I75
+/V=2
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/?=!I78Y!I84Y!I75
+/F=C1679='B'
+/P=I76
+/M=Cuenta Bloqueada
+*N  NN -**** 3 - Cuenta Embargada
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=C1679='E'Y!I78Y!I84Y!I75Y!I76
+/V=3
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/?=!I78Y!I84Y!I75Y!I76
+/F=C1679='E'
+/P=I77
+/M=Cuenta Embargada-No Puede Operar
+KNSSNS 020243002003530762000001
+/T=Saldos
+/F=0013700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C1694='N'
+/M=El Saldo es de tipo No visualizable
+ NSSNS 1741   Saldo Actual   IDNNN 02026502450288038002101050000026500450288015900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6401   Simbolo Moneda ICNNN 02026501750288021502101050000017400340194014600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6001   Disponible     IDNNN 02026506100288074502101050000026504100288052400
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6401   Simbolo Moneda ICNNN 02026505390288057902101050000017400340194014600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Falta analisis Bloqueo y definir Disponible contra PagoMininmo
+CNNNNN   00000000000000000000100
+/F=I75OI76OI77OI78OI84
+/P=I90
+ NNNNN 1382   Moneda         I SNNK00021205010232059902001100000021203680232049400
+/?=I90
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   NombreProdDeb  I NNNK00021205010232059902001100000021203680232049400
+/?=I90
+/V=ERROR
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0718   MontoDebito    I NNNK00021205010232059902001100000021203680232049400
+/?=I90
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   NombreProdCred I NNNK00021205010232059902001100000021203680232049400
+/?=I90
+/V=ERROR
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 2615   CuentaDeb      I NNNK00021205010232059902001100000021203680232049400
+/?=I90
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4158   NumeroTarjeta  I NNNK00021205010232059902001100000021203680232049400
+/?=I90
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4159   CuentaTarjeta  I NNNK00021205010232059902001100000021203680232049400
+/?=I90
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 8899   IdCliente      I SNNK00021205010232059902001100000021203680232049400
+/?=I90
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0902   Codigo Cliente INNNNA00021205010232059902001000000021203680232049400
+/?=!I90
+/V=C1803.2
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1030   Residencia     INNNN 00021205010232059902001000000021203680232049400
+/?=!I90
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1000   Rubro Contable INNNN 00021205010232059902001000000021203680232049400
+/?=!I90
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   NombreProdDeb  INNNNA00021205010232059902001000000021203680232049400
+/?=!I90
+/V=C1000.2
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+TN  NN 1006T3 - Busco por Nro. deTarjeta de Credito C0001 00
+/?=!I90Y!I92
+VNSSNS 020002000204250795SSSD000000000000000000000000000000000000010
+/T="Cliente  "+C0002.1+"   "+C1000.1
+/C=192192192
+KNSSNS 020012002002380762000101
+/T=Datos de la Cuenta
+/F=0013700NNN000000000Arial                                   
+ NSSNS 2706   Tarj. Crédito  IDNNNA02004301750066027102101150000004300450066015900
+/V=C856.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 2710   Cobertura      INNNN 02004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN -**** 5 - Tarjeta Credito  Inexistente
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I95
+/M=Tarjeta Inexistente
+ NSSNS 7723   Estado Tarjeta INNNN 02004303050066061000101100000009702600117050500
+/?=!I95
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN -**** 15- Monedas de cuentas diferentes
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=(C0003.2#C7727.3)Y!I95YI93
+/V=15
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=(C0003.2#C7727.3)Y!I95YI93
+/P=I84
+/M=IdAtutentica Inválido
+*N  NN ********************************************************
+*N  NN *** EP: 08/07/2011
+*N  NN *** MANTIS: 5789
+*N  NN *** Se quita este Control
+*N  NN -**** 10- Estado de Tarjeta <>'04' Embozada
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=A(C7723.3#"04")Y!I84Y!I95Y1=0
+/V=10
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/?=1=0
+/F=A(C7723.3#"04")Y!I84Y!I95
+/P=I94
+/M=IdAtutentica Inválido
+*N  NN ********************************************************
+CNNNNN   00000000000000000000100
+/F=I84OI94
+/P=I91
+/M=IdAtutentica Inválido
+ NSSNS 2704   Nro. Cuenta    INNNN 02004303050066061000101100000009702600117050500
+/?=!I91Y!I95
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 2705   Cta. Plástico  INNNN 02004303050066061000101100000009702600117050500
+/?=!I91Y!I95
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 2703   Nro. Cliente   INNNN 02004303050066061000101100000009702600117050500
+/?=!I91Y!I95
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 7727   Moneda         INNNN 02004303050066061000101100000009702600117050500
+/?=!I91Y!I95
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 1382   Moneda         I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   NombreProdDeb  I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=ERROR
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0718   MontoDebito    I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   NombreProdCred I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=ERROR
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 2615   CuentaDeb      I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4158   NumeroTarjeta  I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4159   CuentaTarjeta  I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 8899   IdCliente      I SNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0902   Codigo Cliente INNNNA00021205010232059902001000000021203680232049400
+/?=!I91Y!I95
+/V=C2703.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1030   Residencia     INNNN 00021205010232059902001000000021203680232049400
+/?=!I91Y!I95
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1000   Nombre Cliente INNNN 00021205010232059902001000000021203680232049400
+/?=!I91Y!I95
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   NombreProdCred INNNNA00021205010232059902001000000021203680232049400
+/?=!I91Y!I95
+/V=C1000.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+TN  NN 1008T4 - Busco por Cuenta Plastico Estado 04 S6191 00
+/?=!I90Y!I91Y!I92YI95
+ NSSNS 2705   Cta. Plástico  IDNNNA02004301750066027102101150000004300450066015900
+/V=C856.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 7723   Estado Tarjeta INNNN 00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I83
+/M=Tarjeta Inexistente
+ NSSNS 7725   Vencimiento    I NNN 00004303050066061000101100000009702600117050500
+/?=!I83
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 2706   Tarj. Crédito  I NNN 00004303050066061000101100000009702600117050500
+/?=!I83
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 4174   MayFechaVto    INNNNL00004303050066061000101100000009702600117050500
+/?=!I83
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0603   MayFechaVto    INNNNL00004303050066061000101100000009702600117050500
+/?=!I83
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 3256   MayFechaVto    INNNNL00004303050066061000101100000009702600117050500
+/?=!I83
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN -**** 5 - Tarjeta Credito  Inexistente
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=C9509=0YC8889<2Y!I83YI93
+/V=5
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0YC8889<2Y!I83YI93
+/P=I82
+/M=Tarjeta Inexistente
+*N  NN ********************************************************
+*N  NN *** EP: 08/07/2011
+*N  NN *** MANTIS: 5789
+*N  NN *** Nuevo criterio para seleccion de Tarjetas a mostrar
+*N  NN *** 1- Titular, en estado 4, no vencida, la de mayor fecha de vencimiento
+*N  NN *** 2-  En estado 4, la de mayor fecha de vencimiento
+*N  NN *** 3-  En otros estado, la de mayor fecha de vencimiento 
+*N  NN ********************************************************
+*N  NN -****  1- Titular y Estado 04 Embozada, No Vencida y con la de mayor Vto
+CNNNNN M 00000000000000000000100
+/F=(C7728.4=C7718.4)YA(C7723.4="04")Y(C7725.4>C3256.4)Y(C7725.4>C9500)Y!I83
+/P=I85
+/M=I85
+ NSSNS 3256   MayFechaVto    I NNNA00004303050066061000101100000009702600117050500
+/?=I85
+/V=C7725.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0648   Tarjeta85      I NNNA00004303050066061000101100000009702600117050500
+/?=I85
+/V=C2706.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 9093   Cliente        I NNNA00004303050066061000101100000009702600117050500
+/?=I85
+/V=C2703.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 9099   Cuenta         I NNNA00004303050066061000101100000009702600117050500
+/?=I85
+/V=C2704.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN -****  2- Estado 04 Embozada y con la de mayor Vto
+CNNNNN M 00000000000000000000100
+/F=A(C7723.4="04")Y(C7725.4>C4174.4)Y!I83
+/P=I86
+/M=I86
+ NSSNS 4174   MayFechaVto    I NNNA00004303050066061000101100000009702600117050500
+/?=I86
+/V=C7725.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0254   Tarjeta86      I NNNA00004303050066061000101100000009702600117050500
+/?=I86
+/V=C2706.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 3793   Cliente        I NNNA00004303050066061000101100000009702600117050500
+/?=I86
+/V=C2703.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 9092   Cuenta         I NNNA00004303050066061000101100000009702600117050500
+/?=I86
+/V=C2704.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN -****  3- Estado <>04 y con la de mayor Vto
+CNNNNN M 00000000000000000000100
+/F=A(C7723.4#"04")Y(C7725.4>C603.4)Y!I83
+/P=I87
+/M=I87
+ NSSNS 0603   MayFechaVto    I NNNA00004303050066061000101100000009702600117050500
+/?=I87
+/V=C7725.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 1322   Tarjeta87      I NNNA00004303050066061000101100000009702600117050500
+/?=I87
+/V=C2706.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 3268   Cliente        INNNNA00004303050066061000101100000009702600117050500
+/?=I87
+/V=C2703.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0429   Cuenta         INNNNA00004303050066061000101100000009702600117050500
+/?=I87
+/V=C2704.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+*N  NN -**** 15- Monedas de cuentas diferentes
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/?=(C0003.2#C7727.4)Y!I83YI93
+/V=15
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=(C0003.2#C7727.4)Y!I83YI93
+/P=I84
+/M=IdAtutentica Inválido
+CNNNNN   00000000000000000000100
+/?=I82OI84
+/P=I91
+/M=IdAtutentica Inválido
+ NSSNS 2703   Nro. Cliente   INNNNA02004303050066061000101100000009702600117050500
+/?=!I91Y!I83
+/V=C2703.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 7727   Moneda         INNNN 02004303050066061000101100000009702600117050500
+/?=!I91Y!I83
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 1382   Moneda         I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   NombreProdDeb  I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=ERROR
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0718   MontoDebito    I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   NombreProdCred I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=ERROR
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 2615   CuentaDeb      I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4158   NumeroTarjeta  I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4159   CuentaTarjeta  I NNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 8899   IdCliente      I SNNK00021205010232059902001100000021203680232049400
+/?=I91
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+*N  NN -****** Busco el Nombre del Cliente
+ NNNNN 0902   Codigo Cliente INNNNA00021205010232059902001000000021203680232049400
+/?=!I91Y!I83
+/V=C2703.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1030   Residencia     INNNN 00021205010232059902001000000021203680232049400
+/?=!I91Y!I83
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1000   Nombre Cliente INNNN 00021205010232059902001000000021203680232049400
+/?=!I91Y!I83
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   NombreProdCred INNNNA00021205010232059902001000000021203680232049400
+/?=!I91Y!I83
+/V=C1000.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+TN  NN 1006T5- Itero a la 4, Buscar Cuenta Plastico C0001 00
+/?=!I83Y!I90Y!I91Y!I92YI95
+ NSSNS 8889   Contador       INNNNF00004303050066061000101100000009702600117050500
+/V=C8889+1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 4148   Prendo I85     INNNNK00004303050066061000101100000009702600117050500
+/?=I85
+/V=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 1239   Prendo I86     INNNNK00004303050066061000101100000009702600117050500
+/?=I86
+/V=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 2979   Prendo I87     INNNNK00004303050066061000101100000009702600117050500
+/?=I87
+/V=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=I85
+/A=I85
+CNNNNN   00000000000000000000100
+/F=I86
+/A=I86
+CNNNNN   00000000000000000000100
+/F=I87
+/A=I87
+CNNNNN MI00000000000000000000100
+/M=Itero a la 4
+/R=4
+TN  NN 1006T6 - Todo OK                             C0001 00
+/?=!I90Y!I91Y!I92
+ NSSNS 3256   MayFechaVto    INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0648   Tarjeta85      INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 9099   Cuenta         INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 4174   MayFechaVto    INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0254   Tarjeta        INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 9092   Cuenta         INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0603   MayFechaVto    INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 1322   Tarjeta87      INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 0429   Cuenta         INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 4148   Prendo I85     INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 1239   Prendo I86     INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 2979   Prendo I87     INNNNL00004303050066061000101100000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN M 00000000000000000000100
+/F=C4148.6=1
+/P=I105
+/M=Tomo Titular Estado04 y Mayor Vto
+CNNNNN M 00000000000000000000100
+/F=C1239.6=1Y!I105
+/P=I96
+/M=Tomo Estado04 y Mayor Vto
+CNNNNN M 00000000000000000000100
+/F=C2979.6=1Y!I96Y!I105
+/P=I97
+/M=Tomo Estado<>04 y Mayor Vto
+*N  NN -****** Si esta todo OK 
+ NNNNN 4898   CodError       I NNNK00000701330027018102001100000000700070027012600
+/V=0
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 1382   Moneda         I NNNA00021205010232059902001100000021203680232049400
+/V=C0003.2
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   NombreProdDeb  I SNNK00021205010232059902001100000021203680232049400
+/?=!I93
+/V=NINGUNO
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   NombreProdDeb  I SNNA00021205010232059902001100000021203680232049400
+/?=I93
+/V=C4837.2
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+*N  NN -****** Monto Debito lo tiene el Payware, va en 0
+ NNNNN 0718   MontoDebito    I NNNK00021205010232059902001100000021203680232049400
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   NombreProdCred I SNNA00021205010232059902001100000021203680232049400
+/?=I95
+/V=C4838.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   NombreProdCred I SNNA00021205010232059902001100000021203680232049400
+/?=!I95
+/V=C4838.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 2615   CuentaDeb      I SNNA00021205010232059902001100000021203680232049400
+/?=I95
+/V=C9092.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 2615   CuentaDeb      I SNNA00021205010232059902001100000021203680232049400
+/?=!I95
+/V=C2704.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4158   NumeroTarjeta  I SNNA00021205010232059902001100000021203680232049400
+/?=I95YI105
+/V=C648.6
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4158   NumeroTarjeta  I SNNA00021205010232059902001100000021203680232049400
+/?=I95YI96
+/V=C254.6
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4158   NumeroTarjeta  I SNNA00021205010232059902001100000021203680232049400
+/?=I95YI97
+/V=C1322.6
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4158   NumeroTarjeta  I SNNA00021205010232059902001100000021203680232049400
+/?=!I95
+/V=C2706.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4159   CuentaTarjeta  I SNNA00021205010232059902001100000021203680232049400
+/?=I95YI105
+/V=C9099.6
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4159   CuentaTarjeta  I SNNA00021205010232059902001100000021203680232049400
+/?=I95YI96
+/V=C9092.6
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4159   CuentaTarjeta  I SNNA00021205010232059902001100000021203680232049400
+/?=I95YI97
+/V=C429.6
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4159   CuentaTarjeta  I SNNA00021205010232059902001100000021203680232049400
+/?=!I95
+/V=C2705.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 8899   IdCliente      I SNNA00021205010232059902001100000021203680232049400
+/?=I95
+/V=C902.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 8899   IdCliente      I SNNA00021205010232059902001100000021203680232049400
+/?=!I95
+/V=C2703.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NSSNS 0028   Concepto       INNNNF00012501110145033500101100000012500320145010700
+/V=C1444.1 + " Consulta Pago Tarjeta" 
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*#I94#Estado Tarjeta Incorrecta
+*#I83#Tarjeta de Credito Inexistente
+*#I84#Diferentes Monedas
+*#I73#
+*#I95#Busco por Cuenta Plastico
+*#I85#Titular y Estado 04 y mayor Vto
+*#I96#Tomo Estado 04 y Mayor Vto
+*#I97#Estado<>4 y Mayor Vto
+*#I86#Mayor Vto
+*#I87#Estado<>4 y Mayor Vto
+*#I78#Tarjeta Inexistente
+*#I91#Tarjeta Inexistente
+*#I105#Tomo Titular Estado04 y Mayor Vto
+*#I92#
+*#I82#No existe por Cuenta Plastico
+*#I93#Consulta por Debito en Cuenta
+*#I71#

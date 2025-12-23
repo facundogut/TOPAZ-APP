@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2025-06-11T16:38:19 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Sub reporte Firmas" columnCount="3" printOrder="Horizontal" pageWidth="555" pageHeight="250" whenNoDataType="NoDataSection" columnWidth="185" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" whenResourceMissingType="Error" isIgnorePagination="true" uuid="11864623-ecae-4466-afa3-393cd6727d3c">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="15"/>
+	<property name="ireport.y" value="0"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="CODIGO_CLIENTE" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[Código de Cliente:]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+CP.NUMEROPERSONA,
+CONCAT(PF.PRIMERNOMBRE + ' ',PF.APELLIDOPATERNO) AS NOMBRE,
+PJ.RAZONSOCIAL,
+D.TIPODOCUMENTO,
+D.NUMERODOCUMENTO,
+D.TIPO_DOC_FISICO,
+D.NUM_DOC_FISICO
+FROM CLI_ClientePersona AS CP
+LEFT JOIN CLI_PERSONASFISICAS AS PF ON CP.NUMEROPERSONA = PF.NUMEROPERSONAFISICA AND PF.TZ_LOCK = 0
+LEFT JOIN CLI_PERSONASJURIDICAS AS PJ ON CP.NUMEROPERSONA = PJ.NUMEROPERSONAJURIDICA AND PJ.TZ_LOCK = 0
+LEFT JOIN CLI_DocumentosPFPJ AS D ON CP.NUMEROPERSONA = D.NUMEROPERSONAFJ AND D.TZ_LOCK = 0
+AND D.TIPODOCUMENTO = (SELECT TOP 1 TIPODOCUMENTO FROM CLI_DOCUMENTOSPFPJ WHERE NUMEROPERSONAFJ = D.NUMEROPERSONAFJ AND TZ_LOCK = 0)
+AND D.NUMERODOCUMENTO = (SELECT TOP 1 NUMERODOCUMENTO FROM CLI_DOCUMENTOSPFPJ WHERE NUMEROPERSONAFJ = D.NUMEROPERSONAFJ AND TZ_LOCK = 0)
+WHERE CP.TZ_LOCK = 0
+AND CP.CODIGOCLIENTE = $P{CODIGO_CLIENTE}]]>
+	</queryString>
+	<field name="NUMEROPERSONA" class="java.math.BigDecimal"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="RAZONSOCIAL" class="java.lang.String"/>
+	<field name="TIPODOCUMENTO" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="TIPO_DOC_FISICO" class="java.lang.String"/>
+	<field name="NUM_DOC_FISICO" class="java.lang.String"/>
+	<detail>
+		<band height="200" splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<elementGroup>
+				<line>
+					<reportElement x="15" y="50" width="160" height="1" uuid="63b91e88-a28f-4be3-b451-ae25a378fa44">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="15" y="51" width="160" height="29" uuid="f9b544c0-eac5-406c-a932-468742b9caf8"/>
+					<textElement textAlignment="Center" verticalAlignment="Top">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{RAZONSOCIAL} != null ? "Por " + $F{RAZONSOCIAL} : "Firma Titular"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="15" y="80" width="160" height="20" uuid="db83da0f-cf12-4ab8-a88d-a6c085d1fe7b"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{RAZONSOCIAL} == null ? $F{NOMBRE} : ""]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="15" y="100" width="160" height="1" uuid="d630e2f1-90b5-4139-b676-95976ff36e50">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="15" y="101" width="160" height="20" uuid="f13bd9e6-397a-4961-9043-38e6854eb64c"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Aclaración"]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="15" y="130" width="160" height="20" uuid="e0989fa8-60b5-4a31-b4ad-7b15c31e81c3"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{TIPO_DOC_FISICO} == null ? $F{NUMERODOCUMENTO} : $F{NUM_DOC_FISICO}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="15" y="150" width="160" height="1" uuid="97d3566e-874a-4295-a9b7-026273b0255b">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="15" y="151" width="160" height="21" uuid="f04fa980-d170-47ac-8314-aca814887254">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{RAZONSOCIAL} == null ? $F{TIPO_DOC_FISICO} != null ? 
+$F{TIPO_DOC_FISICO} : $F{TIPODOCUMENTO} : "Tipo y Nº Documento"]]></textFieldExpression>
+				</textField>
+			</elementGroup>
+		</band>
+	</detail>
+	<noData>
+		<band height="200" splitType="Prevent">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<frame>
+				<reportElement x="15" y="50" width="160" height="121" uuid="6ceb9cff-492a-4133-b489-0b099c805394"/>
+				<line>
+					<reportElement x="0" y="0" width="160" height="1" uuid="576cf524-1b24-429d-8217-4062104d6434">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="1" width="160" height="20" uuid="474ae688-5c00-4520-8582-b4b6412ed252"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Firma Titular"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="50" width="160" height="1" uuid="01a535ba-bc42-4757-8d6a-bfe60c20b3c8">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="0" y="51" width="160" height="20" uuid="8a807239-42bf-45c5-904b-55ea06d92324"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Aclaración"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="100" width="160" height="1" uuid="e9eff220-fdfb-4339-ad46-caa8dcecca91">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="101" width="160" height="20" uuid="ff4ab6d3-5188-4ea0-a931-fb9f65663d88"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Tipo y Nº Documento"]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement x="197" y="50" width="160" height="121" uuid="4cc79f09-ae7d-46f4-8331-ff28c8e55245"/>
+				<line>
+					<reportElement x="0" y="0" width="160" height="1" uuid="5841eebd-304d-4896-b89c-e8e69e9a4192">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="1" width="160" height="20" uuid="0e60752c-b135-4985-85fd-22aea8202c08"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Firma Titular"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="50" width="160" height="1" uuid="7234077c-2443-488f-918f-141626255591">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="0" y="51" width="160" height="20" uuid="87275da1-6a37-410a-b753-7fe9a4eef6fe"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Aclaración"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="100" width="160" height="1" uuid="adf57c99-b96b-4d3b-b8e4-9ebef47e2188">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="101" width="160" height="20" uuid="dcdf5756-092b-4d97-986a-4e9d15cb4a8f"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Tipo y Nº Documento"]]></textFieldExpression>
+				</textField>
+			</frame>
+			<frame>
+				<reportElement x="382" y="51" width="160" height="121" uuid="b2c8d739-0d47-47d1-aef8-b268d6191e53"/>
+				<line>
+					<reportElement x="0" y="0" width="160" height="1" uuid="25bc89ce-df5f-4296-87e7-87f541976d4c">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="1" width="160" height="20" uuid="68eaf420-fe62-4518-8f1f-d9819842f1a6"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Firma Titular"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="50" width="160" height="1" uuid="e24e6ee7-f482-4fa2-8abf-1666ba14feee">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="0" y="51" width="160" height="20" uuid="891c08a3-4d2e-4dc7-83e9-8bb53d7bd92a"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Aclaración"]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="100" width="160" height="1" uuid="5d6833dc-86c9-4985-949a-a2a4d6a22f07">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					</reportElement>
+					<graphicElement>
+						<pen lineWidth="0.75"/>
+					</graphicElement>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement x="0" y="101" width="160" height="20" uuid="cf34f5a0-674a-486f-8b70-16cb0eaf6e1b"/>
+					<textElement textAlignment="Center" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="10"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Tipo y Nº Documento"]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</noData>
+</jasperReport>

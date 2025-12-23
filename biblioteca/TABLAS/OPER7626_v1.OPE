@@ -1,0 +1,1027 @@
+VERSION:055_5
+TN  NN 1006TConsulta Generica                       C00000 00
+*$2025-02-03 10:59:42LAUTAROS
+ NNNNN 01057   idPersona                                         INNNNI000007015200300202001011000000007000700300137000
+/V=idPersona
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:21:22LAUTAROS
+ NNNNN 00091   telefono                                          INNNNI000007015200300202001011000000007000700300137000
+/V=telefono
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:18:15LAUTAROS
+ NNNNN 00910   email                                             INNNNI000007015200300202001011000000007000700300137000
+/V=email
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:03:10LAUTAROS
+*N  NN ****Control que lleguen con valor
+*$2025-02-03 11:25:32LAUTAROS
+CNNNNN   00000000000000000000100
+/F= F(LEN,C910)=0
+/P=I99I20
+*$2025-02-05 17:58:44LAUTAROS
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C1057=0
+/P=I99I21
+*$2025-02-05 18:00:40LAUTAROS
+ NNNNN 00367   Alfa 35                                           INNNNF000007015200300202001011000000007000700300137000
+/V= F(LEN,C91)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:26:35LAUTAROS
+CNSSNN   00000000000000000000100
+/?=!I99
+/F=!F(VALIDCHARS,2,C91,"TELEFONO")
+/P=I99I11
+/M=Debe ingresar solo números
+*$2025-02-06 09:43:35LAUTAROS
+CNNNNN   00000000000000000000100
+/?=!I99
+/F= F(LEN,C91)#10
+/P=I99I22
+*$2025-02-06 09:39:02LAUTAROS
+CNSSNN   00000000000000000000100
+/?=!I99
+/F=(F(LEN,C91.1)=0)O(A(C91.1="0"))
+/P=I99I19
+/M=Sin datos - Campo Nro. teléfono
+*$2025-02-05 17:35:34LAUTAROS
+*N  NN *****
+*$2025-02-03 11:27:12LAUTAROS
+TN  NN 1006TValido Mail ingresado                   C00000 00
+/?=!I99
+*$2025-02-03 11:33:11LAUTAROS
+*N  NN ****Controlo mail
+*$2025-02-03 11:33:26LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(POS, C910,"@")=1
+/P=I200I99
+/M=Debe ingresar Dirección de Correo antes del Dominio
+*$2025-02-11 10:35:06LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(POSSTR,C910,"@")=0
+/P=I201I99
+/M=Mail debe contener "@" luego del nombre de cuenta
+*$2025-02-11 10:35:01LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(POSSTR,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),".")=0
+/P=I202I99
+/M=Falta separador "." luego del dominio
+*$2025-02-11 10:35:10LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(POS, C910, ".")- F(POS, C910, "@")=1
+/P=I203I99
+/M=Debe ingresar el dominio luego del "@"
+*$2025-02-11 10:35:15LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(LEN,C910)=F(POS,C910,".")
+/P=I204I99
+/M=Dominio incorrecto o incompleto
+*$2025-02-11 10:35:20LAUTAROS
+ NSSNN 00933   nombcuenta                                        INNNNF000148057101680763020011000100148042601680556000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEN,F(LEFT,C910, F(POS, C910, "@")-1))
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-02-11 10:36:08LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=C933='0'
+/P=I205I99
+/M=Mail debe tener nombre de cuenta
+*$2025-02-11 10:36:00LAUTAROS
+ NSSNN 00934   dominio                                           INNNNF000206057602260766020011000100204042502240555000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEN,F(LEFT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")-1))
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=C934='0'
+/P=I206I99
+/M=Mail debe tener dominio
+*$2025-02-11 10:36:18LAUTAROS
+ NSSNN 00935   extension                                         INNNNF000235057802550768020011000100233042702530557000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEN,F(RIGHT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),F(LEN,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")))- F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")))
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=C935='0'
+/P=I207I99
+/M=Mail debe tener extensión
+*$2025-02-11 10:36:22LAUTAROS
+ NSSNN 00272   Cuenta                                            INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEFT,C910, F(POS, C910, "@")-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+ NSSNN 00272   Cuenta minuscul                                   INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(TOLOWER, C272.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(VALIDCHARS,1,C272,"abcdefghijklmnñopqrstuvwxyz0123456789.!#$%&'*+/=?^_`{|}~-")=0
+/P=I208I99
+/M=Mail debe tener nombre de cuenta válido
+*$2025-02-11 10:36:27LAUTAROS
+ NSSNN 00274   Dominio                                           INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEFT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+ NSSNN 00274   Dominio minuscu                                   INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(TOLOWER, C274.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(VALIDCHARS,1,C274,"abcdefghijklmnñopqrstuvwxyz0123456789-")=0
+/P=I209I99
+/M=Mail debe tener dominio válido
+*$2025-02-11 10:36:35LAUTAROS
+ NSSNN 00936   Extension                                         INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(RIGHT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),F(LEN,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")))- F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), "."))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+ NSSNN 00936   Extension minus                                   INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(TOLOWER, C936.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=(F(RIGHT,C936,1)='.')OF(POSSTR,C936,"..")>0O(F(LEFT,C936,1)='.')
+/P=I210I99
+/M=Mail debe tener extensión válida
+*$2025-02-11 10:36:38LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=(F(RIGHT,C936,1)='.')OF(POSSTR,C936,"..")>0O(F(LEFT,C936,1)='.')
+/P=I211I99
+/M=Mail debe tener extensión válida
+*$2025-02-11 10:36:42LAUTAROS
+ NSSNN 00937   Sub Extension                                     INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" ")Y(F(POSSTR,C936,".")>0))Y!I99
+/V=F(TOLOWER,F(RIGHT,F(RIGHT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),F(LEN,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")))- F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")),F(LEN,C936)-F(POSSTR,C936,".")))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+ NSSNN 00936   Extension                                         INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" ")Y(F(POSSTR,C936,".")>0))Y!I99
+/V=F(TOLOWER,F(LEFT,F(RIGHT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),F(LEN,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")))- F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")),(F(POSSTR,C936,".")-1)))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 11:33:26LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(VALIDCHARS,1,C936,"abcdefghijklmnñopqrstuvwxyz0123456789-")=0
+/P=I212I99
+/M=Mail debe tener extensión válida
+*$2025-02-11 10:48:46LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(VALIDCHARS,1,C937,".abcdefghijklmnñopqrstuvwxyz0123456789-")=0
+/P=I213I99
+/M=Mail debe tener extensión válida
+*$2025-02-11 10:49:24LAUTAROS
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=(F(RIGHT,C937,1)='.')OF(POSSTR,C937,"..")>0O(F(RIGHT,C937,1)='-')
+/P=I214I99
+/M=Mail debe tener extensión válida
+*$2025-02-11 10:49:58LAUTAROS
+CNSSNN   00000000000000000000100
+/?=I200OI201OI202OI203OI204OI205OI206OI207OI208OI209OI210OI211OI212OI213OI214
+/P=I99I215
+/M=Mail no valido
+*$2025-02-03 11:33:26LAUTAROS
+TN  NN 1006TArmado Numero Cel                       C00000 00
+/?=!I99
+*$2025-02-05 18:01:32LAUTAROS
+ NSSNN 00753   Característica                                    INNNNF000130023801530326001010000000133008701560217000
+/?=!I99
+/V=F(LEFT,C91.1,3)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 15:54:54LAUTAROS
+ NSNNN 03951   Número                                            INNSNF000130036101530500001010000000133008701530178000
+/?=!I99
+/V=F(RIGHT,C91.1,7)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 15:58:56LAUTAROS
+ NSNNN 03952   Texto                                             INNNNF000104018601270505001010000000104003501270177000
+/?=!I99
+/V="+54-"+C753+"-"+C3951
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 15:55:19LAUTAROS
+TN  NN 1006TConsulta Personas                       C00000 00
+/?=!I99
+*$2025-02-03 12:03:07LAUTAROS
+ NNNNN 01401   Numero Persona                                    INNSNA000007015200300202021011000000007000700300137000
+/V=C1057.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 12:04:37LAUTAROS
+ NNNNN 01402   Fcha Nacimiento                                   INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 12:04:24LAUTAROS
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I99I23
+*$2025-02-03 12:19:51LAUTAROS
+TN  NN 1006TConsulto Mail de la persona             C00000 00
+/?=!I99
+*$2025-02-03 12:28:59LAUTAROS
+*N  NN ***Consulto si ya tiene mail
+*$2025-02-03 14:46:59LAUTAROS
+ NNNNN 43759   Descriptor CLI_EMAIL                              INNSNK000007015200300202021011000000007000700300137000
+/?=!I99
+/V=3342
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 12:29:34LAUTAROS
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/?=!I99
+/V="(TZ_LOCK>=400000000000000 OR TZ_LOCK<300000000000000)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 12:29:01LAUTAROS
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/?=!I99
+/V=C43760.0+" AND ID = '"+C1401.4+"'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 12:32:13LAUTAROS
+ NNNNN 43761   Documento se en                                   INNSNF000007015200300202021011000000007000700300137000
+/?=!I99
+/V=F(CANTIDAD,C43759,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 12:29:01LAUTAROS
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C43761.0 > 0
+/P=I30
+/M=La persona ya tiene un mail
+*$2025-02-03 12:33:05LAUTAROS
+*N  NN ***Obtengo ORDINAL
+*$2025-02-03 14:26:36LAUTAROS
+ NNNNN 00231   condicion                                         INNSNF000007015200300452001011000000007000700300137000
+/?=I30
+/V="ID="+C1401.4+"AND (TZ_LOCK>=400000000000000 OR TZ_LOCK<300000000000000)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 14:44:01LAUTAROS
+ NNNNN 00613   Numerico de 7                                     INNSNK000007015200300302021011000000007000700300137000
+/?=I30
+/V=33495
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:02:43LAUTAROS
+ NNNNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=3342
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:02:09LAUTAROS
+ NNNNN 00549   Tipo de tarjeta por defecto                       INNSNF000007015200300302021011000000007000700300137000
+/?=I30
+/V=F(MAXIMO,C109,C613,C231)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 14:45:37LAUTAROS
+TN  NN 1006TConsulto Telefono de la persona         C00000 00
+/?=!I99
+*$2025-02-03 14:52:14LAUTAROS
+ NNNNN 43759   Descriptor CLI_TELEFONO                           INNSNK000007015200300202021011000000007000700300137000
+/?=!I99
+/V=3341
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:03:04LAUTAROS
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/?=!I99
+/V="(TZ_LOCK>=400000000000000 OR TZ_LOCK<300000000000000)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 14:52:24LAUTAROS
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/?=!I99
+/V=C43760.0+" AND ID = '"+C1401.4+"'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 14:52:24LAUTAROS
+ NNNNN 43761   Documento se en                                   INNSNF000007015200300202021011000000007000700300137000
+/?=!I99
+/V=F(CANTIDAD,C43759,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 14:52:24LAUTAROS
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C43761.0 > 0
+/P=I31
+/M=La persona ya tiene un cel
+*$2025-02-03 14:53:24LAUTAROS
+*N  NN ***Obtengo ORDINAL
+*$2025-02-03 14:59:22LAUTAROS
+ NNNNN 00231   condicion                                         INNSNF000007015200300452001011000000007000700300137000
+/?=I31
+/V="ID="+C1401.4+"AND (TZ_LOCK>=400000000000000 OR TZ_LOCK<300000000000000)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 14:59:32LAUTAROS
+ NNNNN 00613   Numerico de 7                                     INNSNK000007015200300302021011000000007000700300137000
+/?=I31
+/V=33433
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:02:36LAUTAROS
+ NNNNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=3341
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:02:21LAUTAROS
+ NNNNN 00549   Tipo de tarjeta por defecto                       INNSNF000007015200300302021011000000007000700300137000
+/?=I31
+/V=F(MAXIMO,C109,C613,C231)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 14:59:32LAUTAROS
+TN  NN 1001TAlta CLI_EMAILS                         A33421 00
+/?=!I99
+*$2025-02-03 15:22:42LAUTAROS
+ NNNNN 33458   ID                                                INNNNA000007015200300302021011000000007000700300137000
+/V=C1401.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:07:26LAUTAROS
+ NNNNN 33460   FORMATO                                           INNNNK000007015200300302021011000000007000700300137000
+/V=PF
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:07:32LAUTAROS
+ NNNNN 33494   TIPO                                              INNNNK000007015200300302021011000000007000700300137000
+/V=PE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:07:38LAUTAROS
+ NNNNN 33495   ORDINAL                                           INNNNF000007015200300302021011000000007000700300137000
+/?=I30
+/V=C549.5+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:30:19LAUTAROS
+ NNNNN 33495   ORDINAL                                           INNNNK000007015200300302021011000000007000700300137000
+/?=!I30
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:08:11LAUTAROS
+ NNNNN 33496   EMAIL                                             INNNNA000007015200300302021011000000007000700300137000
+/V=C910.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:08:26LAUTAROS
+TN  NN 1001TAlta bitácora Correo Electrónico        A33431 00
+/?=!I99
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 34328   Ordinal                                           INNSNK000007015200300302021011000000007000700300137000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 33948   Alfa de 1                                         INNSNK000007015200300202001011000000007000700300137000
+/V=A
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:32LAUTAROS
+ NSSNN 33938   Fecha                                             INNNNA000007015200300302001011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 33939   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 33940   Asiento                                           INNNNA000007015200300302021011000000007000700300137000
+/V=C9507
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 33941   Ordinal                                           INNNNF000007015200300302021011000000007000700300137000
+/V=C34328
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 33942   Tipo traza                                        INNSNA000007015200300202001011000000007000700300137000
+/V=C33948
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 33946   Operación                                         INNSNA000007015200300202021011000000007000700300137000
+/V=C9503
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 33497   Usuario                                           INNNNA000007015200300302001011000000007000700300137000
+/V=C9505
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 33498   Hora                                              INNSNA000007015200300302001011000000007000700300137000
+/V=C9506
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+ NNNNN 33072   ID                                                INNSNA000007015200300302021011000000007000700300137000
+/V=C33458.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:16:08LAUTAROS
+ NNNNN 33073   Formato                                           INNNNA000007015200300202001011000000007000700300137000
+/V=C33460.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:16:11LAUTAROS
+ NNNNN 33074   Tipo                                              INNSNA000007015200300202001011000000007000700300137000
+/V=C33494.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:16:15LAUTAROS
+ NNNNN 33075   Ordinal Email                                     INNSNA000007015200300202021011000000007000700300137000
+/V=C33495.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:16:19LAUTAROS
+ NNNNN 33076   Email                                             INNNNA000007015200300452001011000000007000700300137000
+/V=C910.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:15:15LAUTAROS
+TN  NN 1001TAlta CLI_TELEFONOS                      A33411 00
+/?=!I99
+*$2025-02-03 15:22:34LAUTAROS
+ NNNNN 33422   ID                                                INNNNA000007015200300302021011000000007000700300137000
+/V=C1401.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:25:30LAUTAROS
+ NNNNN 33426   FORMATO                                           INNNNK000007015200300302021011000000007000700300137000
+/V=PF
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:25:52LAUTAROS
+ NNNNN 33427   TIPO                                              INNNNK000007015200300302021011000000007000700300137000
+/V=PE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:26:06LAUTAROS
+ NNNNN 33435   FIJO/CELULAR                                      INNNNK000007015200300302021011000000007000700300137000
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:26:45LAUTAROS
+ NNNNN 33433   ORDINAL                                           INNNNF000007015200300302021011000000007000700300137000
+/?=I31
+/V=C549.6+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:30:10LAUTAROS
+ NNNNN 33433   ORDINAL                                           INNNNK000007015200300302021011000000007000700300137000
+/?=!I31
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 15:30:37LAUTAROS
+ NNNNN 33441   NÚMERO                                            INNNNA000007015200300302021011000000007000700300137000
+/V=C3952.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 16:02:28LAUTAROS
+TN  NN 1001TAlta bitácora Teléfonos                 A33441 00
+/?=!I99
+*$2025-02-03 16:11:01LAUTAROS
+ NNNNN 34319   Ordinal                                           INNSNK000007015200300302021011000000007000700300137000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:10:52LAUTAROS
+ NSSNN 33948   Alfa de 1                                         INNSNK000007015200300202001011000000007000700300137000
+/V=A
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:10:52LAUTAROS
+ NSSNN 33080   Fecha                                             INNNNA000007015200300302001011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:10:52LAUTAROS
+ NNNNN 33450   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:11:07LAUTAROS
+ NNNNN 33529   Asiento                                           INNNNA000007015200300302021011000000007000700300137000
+/V=C9507
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:10:52LAUTAROS
+ NNNNN 33564   Ordinal                                           INNNNF000007015200300302021011000000007000700300137000
+/V=C34319
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:10:52LAUTAROS
+ NNNNN 33566   Tipo traza                                        INNSNA000007015200300202001011000000007000700300137000
+/V=C33948
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:10:52LAUTAROS
+ NNNNN 33567   OPERACIÓN                                         INNSNA000007015200300202021011000000007000700300137000
+/V=C9503
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:10:52LAUTAROS
+ NNNNN 33581   Usuario                                           INNNNA000007015200300302001011000000007000700300137000
+/V=C9505
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:10:52LAUTAROS
+ NNNNN 33582   Hora                                              INNSNA000007015200300302001011000000007000700300137000
+/V=C9506
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:10:52LAUTAROS
+ NNNNN 33583   ID                                                INNSNA000007015200300302021011000000007000700300137000
+/V=C33422.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:11:26LAUTAROS
+ NNNNN 33612   Formato                                           INNNNA000007015200300202001011000000007000700300137000
+/V=C33426.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:11:30LAUTAROS
+ NNNNN 33616   Tipo                                              INNSNA000007015200300202001011000000007000700300137000
+/V=C33427.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:11:33LAUTAROS
+ NNNNN 33617   Ordinal Teléfon                                   INNSNA000007015200300202021011000000007000700300137000
+/V=C33433.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:11:37LAUTAROS
+ NNNNN 33618   Tipo Fijo/Celul                                   INNSNA000007015200300202021011000000007000700300137000
+/V=C33435.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:11:42LAUTAROS
+ NNNNN 33791   NUMERO                                            INNNNA000007015200300452001011000000007000700300137000
+/V=C33441.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:11:46LAUTAROS
+TN  NN 1006TRetornos                                C00000 00
+*$2025-02-03 16:25:29LAUTAROS
+ NNNNN 00025   Fecha Valor                                       INNNNA000000013300200243000011000000000000000200119000
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-03 16:25:29LAUTAROS
+ NNNNN 00622   RETORNO                                           INNNNK000007015200300302001011000000007000700300137000
+/V=OK
+/P=RETORNO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:30:58LAUTAROS
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/V=200
+/P=ERR_HTTP_CODE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:30:58LAUTAROS
+*N  NN Resultado OK
+*$2025-02-03 16:30:58LAUTAROS
+ NNNNN 00664   codResultado                                      INNSNK000007015200300202021011000000007000700300137000
+/?=!I99
+/V=0
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:30:58LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=!I99
+/V=Operación realizada con éxito!
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:33:26LAUTAROS
+*N  NN Resultado con Error
+*$2025-02-03 16:30:58LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI11
+/V=107
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 17:38:03LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI11
+/V=El telefono debe tener solo numeros
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 17:38:26LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI19
+/V=106
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 17:27:55LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI19
+/V=Sin datos - Campo Nro. teléfono
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 17:28:01LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI20
+/V=100
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:30:58LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI20
+/V=Sin datos - Campo mail.
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-06 09:45:24LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI21
+/V=101
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:31:16LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI21
+/V=Sin datos - Nro. Persona
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-06 09:45:33LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI22
+/V=102
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:33:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI22
+/V=El número de telefono debe tener 10 digitos.
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-05 17:36:29LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI23
+/V=103
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:34:55LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI23
+/V=No existe la persona ingresada.
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:35:08LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI215
+/V=104
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:35:47LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI215
+/V=Error - Mail no válido.
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:35:56LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI220
+/V=105
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:36:14LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI220
+/V=Error - Telefono no válido.
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-03 16:36:31LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI201
+/V=106
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:37:54LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI201
+/V=Mail debe contener "@" luego del nombre de cuenta
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:38:09LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI200
+/V=107
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:38:30LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI200
+/V=Correo no válido - debe ingresar dirección antes del dominio
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:38:41LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI202
+/V=108
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:39:22LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI202
+/V=Falta separador "." luego del dominio
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:39:29LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI203
+/V=109
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:40:48LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI203
+/V=Correo no válido - debe ingresar el dominio luego del arroba
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:40:40LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI204
+/V=110
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:41:26LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI204
+/V=Dominio incorrecto o incompleto
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:41:33LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI205
+/V=111
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:42:33LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI205
+/V=Mail debe tener nombre de cuenta
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:42:41LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI206
+/V=112
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:43:11LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI206
+/V=Mail debe tener dominio
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:43:02LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI207
+/V=113
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:43:38LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI207
+/V=Mail debe tener extensión
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:43:46LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI208
+/V=114
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:44:15LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI208
+/V=Mail debe tener nombre de cuenta válido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:44:23LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI208
+/V=114
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:44:29LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI208
+/V=Mail debe tener nombre de cuenta válido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:44:29LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI209
+/V=115
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:45:09LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI209
+/V=Mail debe tener dominio válido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:45:17LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI210
+/V=116
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:47:38LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI210
+/V=Correo no válido - mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:47:46LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI211
+/V=117
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:48:13LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI211
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:48:21LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI212
+/V=118
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:48:59LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI212
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:49:06LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI213
+/V=119
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:49:38LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI213
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:49:44LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI213
+/V=119
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:49:49LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI213
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:49:49LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI214
+/V=120
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:50:11LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI214
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-11 10:50:17LAUTAROS
+*#I210#Correo no válido - mail debe tener extensión válida
+*#I31#La persona ya tiene un telefono
+*#I200#Correo no válido - debe ingresar dirección antes del dominio
+*#I30#La persona ya tiene mail, Ordinal +1
+*#I215#Error - Mail no válido
+*#I201#Correo no válido - debe contener @ luego de la dirección
+*#I214#Correo no válido - mail debe tener subextensión válida
+*#I202#Correo no válido - falta separador "." luego del dominio
+*#I99#Error
+*#I203#Correo no válido - debe ingresar el dominio luego del arroba
+*#I204#Correo no válido - dominio incorrecto o incompleto
+*#I205#Correo no válido - mail debe tener nombre de cuenta
+*#I19#Sin datos - Campo Nro. teléfono
+*#I206#Correo no válido - mail debe tener dominio
+*#I207#Correo no válido - mail debe tener extensión
+*#I208#Correo no válido - mail debe tener nombre de cuenta válido
+*#I209#Correo no válido - mail debe tener dominio válido
+*#I20#No se ingresa mail
+*#I213#Correo no válido - subextensión debe tener caracteres válidos
+*#I21#No se ingreso una persona
+*#I220#Error - Teléfono no válido
+*#I212#Correo no válido - extensión debe tener caracteres válidos
+*#I22#No se ingresa telefono
+*#I11#Se debe ingresar solo numericos
+*#I23#No existe la persona ingresada
+*#I211#Correo no valido - CONTROL DUPLICADO??

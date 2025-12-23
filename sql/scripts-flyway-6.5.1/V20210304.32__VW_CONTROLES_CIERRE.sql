@@ -1,0 +1,29 @@
+/****** Object:  View [dbo].[VW_CONTROLES_CIERRE]    Script Date: 24/02/2021 12:15:16 ******/
+DROP VIEW [dbo].[VW_CONTROLES_CIERRE]
+GO
+
+/****** Object:  View [dbo].[VW_CONTROLES_CIERRE]    Script Date: 24/02/2021 12:15:16 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[VW_CONTROLES_CIERRE] (
+   CONTROL,
+   DESCRIPCION,
+   ESTADO
+   )
+AS 
+   SELECT
+      O.OPCIONINTERNA AS OPCION,
+      O.DESCRIPCION,
+	  'Sin realizar'
+   FROM 
+      dbo.OPCIONES AS O WITH (NOLOCK)
+   WHERE 
+      O.NUMERODECAMPO = 34549 
+	  AND O.IDIOMA = 'E'
+GO
+
+

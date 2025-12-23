@@ -1,0 +1,154 @@
+{
+	"page":{
+		"attributes":[
+			{
+				"label" : "ID SALDO",
+				"key" : "IDSALDO"
+			}
+		],
+		
+		"frames":[
+			{
+				"id":"datosCredito",
+				"title":"Datos de Credito",
+				"icon":"client.png",
+				"type":"Form",
+				"input":{
+					"type":"service",
+					"service":"DatosCredito",
+					"parameters":["IDSALDO"]
+				},
+                "formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Dia de Pago",
+	                            "key":"DIASPAGO"
+	                        },
+	                        {  
+	                            "label":"TEA %",
+	                            "key":"TASAEFECTIVAANUAL"
+	                        },
+	                        {  
+	                            "label":"Monto Desembolso",
+	                            "key":"MONTODESEMBOLSADO"
+	                        },
+	                        {  
+	                            "label":"Nro. Pagare",
+	                            "key":"PAGARE"
+	                        }			
+                        ],                        
+                    	[
+	                        {  
+	                            "label":"Estado",
+	                            "key":"ESTADO"
+	                        },
+	                        {  
+	                            "label":"Dias 1a Cuota",
+	                            "key":"DIASPRIMERACUOTA"
+	                        },
+	                        {  
+	                            "label":"Cantidad Cuotas",
+	                            "key":"CANTIDADCUOTAS"
+	                        },
+	                        {  
+	                            "label":"Cuotas Pagas",
+	                            "key":"CANTIDADCUOTASPAGAS"
+	                        },
+	                        {  
+	                            "label":"Periodo Cuotas",
+	                            "key":"PERIODOCUOTAS"
+	                        }
+                        ],                        
+                    	[
+	                        {  
+	                            "label":"Dias Mora",
+	                            "key":"DIASMORA"
+	                        },
+	                        {  
+	                            "label":"Linea Credito",
+	                            "key":"NROLINEACREDITO"
+	                        },
+							{
+								"label":"Idsaldo",
+								"key":"IDSALDO",
+								"hidden":"true"								
+							}							
+                        ]
+                    ]
+                }
+			},
+			{
+				"id":"movimientos",
+				"title":"Movimientos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"MovimientosHistoriaPlazo",
+					"parameters":["IDSALDO"]
+				},
+				"links":[
+					{
+						"name":"Datos Movimiento",
+						"to":"datosMovimientos",
+						"parameters":["ASIENTO","FECHAPROCESO","SUCURSAL"]
+					}
+				],				
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"F.Proceso",
+							"value":"FECHAPROCESO"
+						},
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL",
+							"hidden":true
+						},						
+						{
+							"header":"Sucursal",
+							"value":"SUCURSALDESC"
+						},
+						{
+							"header":"Asiento",
+							"value":"ASIENTO"
+						},
+						{
+							"header":"F.Valor",
+							"value":"FECHAVALOR"
+						},
+						{
+							"header":"Capital Pagado",
+							"value":"CAPITALPAGADO"
+						},
+						{
+							"header":"Interes Pagado",
+							"value":"INTERESPAGADO"
+						},
+						{
+							"header":"Mora Pagada",
+							"value":"MORAPAGADA"
+						},
+						{
+							"header":"Compensat. Mora",
+							"value":"ICMORA_PAGADO"
+						},						
+						{
+							"header":"Cargo",
+							"value":"IMPORTE_GASTO"
+						},
+						{
+							"header":"Total Pagado",
+							"value":"TOTALPAGADO"
+						},
+						{
+							"header":"Evento",
+							"value":"EVENTO"
+						}
+					]
+				}
+			}
+		]
+	}
+}

@@ -1,0 +1,81 @@
+﻿EXECUTE('
+-------------------------------
+--CORRECCIÓN VISTA DISPONIBLE--
+-------------------------------
+IF OBJECT_ID (''dbo.VW_GRUPOS_CUENTAS'') IS NOT NULL
+	DROP VIEW dbo.VW_GRUPOS_CUENTAS
+----
+')
+EXECUTE('
+----
+CREATE VIEW [dbo].[VW_GRUPOS_CUENTAS]
+/*JMB - 03/03/22 agrego C2627 reservas de negocio al disponible*/
+									(GRUPO,
+									NOMBRE_GRUPO,
+									SUCURSAL,
+									CUENTA,
+									DENOMINACION_CUENTA,
+									PRODUCTO,
+									DESCRIPCION_PRODUCTO,
+									MONEDA,
+									SALDO_ACTUAL,
+									TIPO_DOCUMENTO,
+									NUMERO_DOCUMENTO,
+									PRIORIDAD,
+									MONTO_MINIMO,
+									TIPO_SALDO_FONDO,
+									SUCURSAL_CUENTA_COMISION,
+									CUENTA_DEBITO_COMISION,
+									DENOMINACION_CUENTA_COMISION,
+									PRODUCTO_CUENTA_COMISION,
+									DESCRIPCION_PRODUCTO_COMISION,
+									MONEDA_CUENTA_COMISION)
+AS
+SELECT	s.GRUPO,
+		e.DESCRIPCION,
+		c.SUCURSAL,
+		c.CUENTA,
+		vc.NOMBRE_CUENTA,
+		c.PRODUCTO,
+		pc.C6251,
+		c.MONEDA,
+		(c.C1604 + c.C1605 + c.C1683+ c.C2627),
+		dc.TIPODOC,
+		dc.NUMERODOC,
+		s.PRIORIDAD,
+		s.MONTO_MINIMO,
+		s.TIPO_SALDO_FONDO,
+		d.SUCURSAL,
+		d.CUENTA,
+		vd.NOMBRE_CUENTA,
+		d.PRODUCTO,
+		pd.C6251,
+		d.MONEDA
+FROM DSP_GRUPOS_CUENTAS AS s with (nolock)
+LEFT JOIN DSP_DEFINICION_GRUPOS AS e with (nolock) ON 
+	s.GRUPO = e.GRUPO 
+	AND e.TZ_LOCK = 0
+LEFT JOIN SALDOS AS c with (nolock) ON 
+	s.SALDO_JTS_OID = c.JTS_OID 
+	AND c.TZ_LOCK = 0
+LEFT JOIN SALDOS AS d with (nolock) ON 
+	s.JTS_CTA_DEBITO_COMISION = d.JTS_OID 
+	AND d.TZ_LOCK = 0
+LEFT JOIN VTA_SALDOS AS vc with (nolock) ON 
+	s.SALDO_JTS_OID = vc.JTS_OID_SALDO 
+	AND vc.TZ_LOCK = 0
+LEFT JOIN VTA_SALDOS AS vd with (nolock) ON 
+	s.JTS_CTA_DEBITO_COMISION = vd.JTS_OID_SALDO 
+	AND vd.TZ_LOCK = 0 
+LEFT JOIN PRODUCTOS AS pc with (nolock) ON 
+	c.PRODUCTO = pc.C6250 
+	AND pc.TZ_LOCK = 0
+LEFT JOIN PRODUCTOS AS pd with (nolock) ON 
+	d.PRODUCTO = pd.C6250 
+	AND pd.TZ_LOCK = 0
+LEFT JOIN VW_CLI_X_DOC AS dc with (nolock) ON 
+	c.C1803 = dc.[CODIGOCLIENTE]
+WHERE 
+	s.TZ_LOCK = 0
+----
+')

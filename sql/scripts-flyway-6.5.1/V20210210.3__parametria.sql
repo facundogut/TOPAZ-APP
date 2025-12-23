@@ -1,0 +1,5 @@
+﻿EXECUTE('
+INSERT INTO PARAMETROS_JTS
+(FUNCIONALIDAD, PARAMETRO, VALOR, TZ_LOCK)
+VALUES(''ENVIO_CORREOS'', ''RUTA_ADJUNTO'', (select path from topazmap where grupomapa = 42 and NROMAQ = 0), 0)
+');

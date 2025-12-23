@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/deudacliente/{identificacioncliente}/{administradora}/{numerocuenta}/{entidad}</uri>
+    <serviceDescription>El servicio consulta en ADINTAR la deuda actualizada de una persona o socio.  Existen 2 modalidades para consultar la deuda, por socio de tarjetas o por cliente. </serviceDescription>
+    <title>ACTB003ADDEUDASCLI</title>
+    <querys>
+        <query id="1" name="getDeudas" type="MULTIPLE">
+            <sql>DECLARE @identificacioncliente VARCHAR(20)= ?;
+DECLARE @administradora INTEGER = ?;
+DECLARE @numerocuenta INTEGER = ?;
+DECLARE @entidad INTEGER = ?;
+
+SELECT 
+	mae.SUC_USUARIO AS entidad,
+	sal.USUARIO AS nroUsuario,
+	sal.ADMINISTRADORA AS administradora,
+	PERIODO_DEUDA AS periodoDeuda,
+	SALDO_MN AS saldoPesos,
+	SALDO_ME AS saldoDolares,
+	SALDO_MN_CIERRE AS saldoPesosCierre,
+	SALDO_ME_CIERRE AS saldoDolaresCierre,
+	PAGO_MN AS pagoPesos,
+	PAGO_ME AS pagoDolares,
+	FECHA_VTO AS fechaVencimiento,
+	COD_CANCELACION AS codCancelacion,
+	PAGO_MIN AS pagoMinimo,
+	DIAS_ATRASO AS diasAtraso,
+	IMPORTE_DEBITO AS importeaDebitar,
+	FECHA_CIERRE AS fechaUltimoPago
+		
+FROM TJC_SALDOS sal 
+	INNER JOIN TJC_MAESTRO_USUARIO mae ON sal.USUARIO = mae.USUARIO 
+	INNER JOIN SALDOS s ON  mae.JTS_SALDO_TARJETA = s.JTS_OID 
+	INNER JOIN VW_CLIENTES_PERSONAS vwCli ON s.C1803 = vwCli.CODIGOCLIENTE
+
+WHERE 	sal.TZ_LOCK = 0 AND 
+		mae.TZ_LOCK = 0 AND
+		s.TZ_LOCK = 0 AND
+		sal.ADMINISTRADORA = @administradora AND 
+	   	sal.USUARIO = @numerocuenta AND
+		mae.SUC_USUARIO = @entidad OR 
+		vwCli.NUMERODOC = @identificacioncliente;
+		
+</sql>
+            <input>
+                <inParameter description="CUIT" type="STRING">identificacioncliente</inParameter>
+                <inParameter description="Cod de administradora" type="INTEGER">administradora</inParameter>
+                <inParameter description="Numero de cuenta de usuario" type="INTEGER">numerocuenta</inParameter>
+                <inParameter description="Cod entidad" type="INTEGER">entidad</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="objetos">
+                    <outParameter description="entidad" type="INTEGER">
+                        <queryname>entidad</queryname>
+                        <servicename>entidad</servicename>
+                    </outParameter>
+                    <outParameter description="nroUsuario" type="INTEGER">
+                        <queryname>nroUsuario</queryname>
+                        <servicename>nroUsuario</servicename>
+                    </outParameter>
+                    <outParameter description="adm" type="INTEGER">
+                        <queryname>administradora</queryname>
+                        <servicename>administradora</servicename>
+                    </outParameter>
+                    <outParameter description="periodoDeuda" type="INTEGER">
+                        <queryname>periodoDeuda</queryname>
+                        <servicename>periodoDeuda</servicename>
+                    </outParameter>
+                    <outParameter description="saldoPesos" type="FLOAT">
+                        <queryname>saldoPesos</queryname>
+                        <servicename>saldoPesos</servicename>
+                    </outParameter>
+                    <outParameter description="saldoDolares" type="FLOAT">
+                        <queryname>saldoDolares</queryname>
+                        <servicename>saldoDolares</servicename>
+                    </outParameter>
+                    <outParameter description="saldoPesosCierre" type="FLOAT">
+                        <queryname>saldoPesosCierre</queryname>
+                        <servicename>saldoPesosCierre</servicename>
+                    </outParameter>
+                    <outParameter description="saldoDolaresCierre" type="FLOAT">
+                        <queryname>saldoDolaresCierre</queryname>
+                        <servicename>saldoDolaresCierre</servicename>
+                    </outParameter>
+                    <outParameter description="pagoPesos" type="FLOAT">
+                        <queryname>pagoPesos</queryname>
+                        <servicename>pagoPesos</servicename>
+                    </outParameter>
+                    <outParameter description="pagoDolares" type="FLOAT">
+                        <queryname>pagoDolares</queryname>
+                        <servicename>pagoDolares</servicename>
+                    </outParameter>
+                    <outParameter description="fechaVencimiento" type="DATE">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="codCancelacion" type="INTEGER">
+                        <queryname>codCancelacion</queryname>
+                        <servicename>codCancelacion</servicename>
+                    </outParameter>
+                    <outParameter description="pagoMinimo" type="FLOAT">
+                        <queryname>pagoMinimo</queryname>
+                        <servicename>pagoMinimo</servicename>
+                    </outParameter>
+                    <outParameter description="diasAtraso" type="INTEGER">
+                        <queryname>diasAtraso</queryname>
+                        <servicename>diasAtraso</servicename>
+                    </outParameter>
+                    <outParameter description="importeaDebitar" type="FLOAT">
+                        <queryname>importeaDebitar</queryname>
+                        <servicename>importeaDebitar</servicename>
+                    </outParameter>
+                    <outParameter description="fechaUltimoPago" type="DATE">
+                        <queryname>fechaUltimoPago</queryname>
+                        <servicename>fechaUltimoPago</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

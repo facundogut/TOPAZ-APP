@@ -1,0 +1,21 @@
+﻿EXECUTE('
+
+ALTER VIEW VW_TOTAL_REMESAS_DOM
+AS
+SELECT 
+	ID_SOPORTE ''Id soporte'',
+	FECHA_DEBITO ''Fecha débito'',
+	MONEDA ''Moneda'',
+	M.C6400 ''Descripción moneda'',
+	IMPORTE_A_TRANSP ''Importe a transp.'',
+	ESTADO ''Estado'',
+	O.DESCRIPCION AS ''Descripción Estado'',
+	FECHA_CREDITO ''Fecha crédito'',
+	IMPORTE_DESDE_TRANSP ''Importe desde transp.'',
+	NRO_REMESA_TOTAL ''Nro remesa por total'',
+	NRO_REMESA_NOPAGO ''Nro remesa por no pago''
+FROM TOTAL_REMESAS_DOMICILIO TR
+JOIN MONEDAS M ON M.C6399 = TR.MONEDA AND M.TZ_LOCK = 0
+JOIN OPCIONES O ON TR.ESTADO = O.OPCIONINTERNA AND O.NUMERODECAMPO = 49145 
+WHERE TR.TZ_LOCK = 0
+')

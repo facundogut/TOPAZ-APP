@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2021-04-15T14:45:15 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="8858_Subreport3" pageWidth="370" pageHeight="842" columnWidth="370" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="cdcc8e08-b03d-4cd5-ae9d-0b6067a9d588">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="NRO_PERSONA" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT O.DESCRIPCION AS TIPO_DIRECCION,
+D.TIPODIRECCION,
+D.CALLE,
+D.NUMERO,
+D.APARTAMENTO,
+D.PISO,
+L.DESCRIPCION_DIM3 AS LOCALIDAD,
+PR.DESCRIPCION AS PROVINCIA,
+PA.NOMBREPAIS AS PAIS,
+D.CPA_VIEJO,
+D.CPA_NUEVO,
+TEL.NUMERO AS TEL_FIJO,
+CEL.NUMERO AS CELULAR,
+E.EMAIL,
+D.OBSERVACIONES,
+P.NIF
+FROM CLI_DIRECCIONES AS D
+INNER JOIN OPCIONES AS O ON O.OPCIONINTERNA = D.TIPODIRECCION AND O.NUMERODECAMPO = 33052 AND O.IDIOMA = 'E'
+LEFT JOIN CLI_TELEFONOS AS TEL ON D.ID = TEL.ID AND TEL.TIPO IN ('PE', 'LE') AND TEL.TIPO_CEL_TEL = 'F' AND TEL.FORMATO IN ('PF','PJ') AND TEL.TZ_LOCK = 0
+AND TEL.ORDINAL = (SELECT MIN(ORDINAL) FROM CLI_TELEFONOS WHERE ID = TEL.ID AND TIPO = TEL.TIPO AND TIPO_CEL_TEL = TEL.TIPO_CEL_TEL AND TZ_LOCK = 0)
+LEFT JOIN CLI_TELEFONOS AS CEL ON D.ID = CEL.ID AND CEL.TIPO IN ('PE', 'LE') AND CEL.TIPO_CEL_TEL = 'C' AND CEL.FORMATO IN ('PF','PJ') AND CEL.TZ_LOCK = 0
+AND CEL.ORDINAL = (SELECT MIN(ORDINAL) FROM CLI_TELEFONOS WHERE ID = CEL.ID AND TIPO = CEL.TIPO AND TIPO_CEL_TEL = CEL.TIPO_CEL_TEL AND TZ_LOCK = 0)
+LEFT JOIN CLI_EMAILS AS E ON D.ID = E.ID AND E.TIPO IN ('PE', 'LE') AND E.FORMATO IN ('PF','PJ') AND E.TZ_LOCK = 0
+AND E.ORDINAL = (SELECT MIN(ORDINAL) FROM CLI_EMAILS WHERE ID = E.ID AND TIPO = E.TIPO AND TZ_LOCK = 0)
+LEFT JOIN CLI_PERSONASFISICAS AS P ON D.ID = P.NUMEROPERSONAFISICA AND P.TZ_LOCK = 0
+LEFT JOIN CLI_PAISES AS PA ON D.PAIS = PA.CODIGOPAIS AND PA.TZ_LOCK = 0
+LEFT JOIN CLI_LOCALIDADES AS L ON D.PAIS = L.CODIGOPAIS AND D.LOCALIDAD = L.DIM3 AND D.DEPARTAMENTO = L.DIM2 
+AND D.PROVINCIA = L.DIM1 AND L.TZ_LOCK = 0
+LEFT JOIN CLI_DEPARTAMENTOS AS DP ON D.PAIS = DP.CODIGOPAIS AND D.DEPARTAMENTO = DP.DEPARTAMENTO 
+AND D.PROVINCIA = DP.PROVINCIA AND DP.TZ_LOCK = 0
+LEFT JOIN CLI_PROVINCIAS AS PR ON D.PAIS = PR.CODIGOPAIS AND D.PROVINCIA = PR.DIM1 AND PR.TZ_LOCK = 0
+WHERE D.TZ_LOCK = 0 AND D.FORMATO IN ('PF','PJ') AND D.ID = $P{NRO_PERSONA}
+ORDER BY TIPODIRECCION DESC]]>
+	</queryString>
+	<field name="TIPO_DIRECCION" class="java.lang.String"/>
+	<field name="TIPODIRECCION" class="java.lang.String"/>
+	<field name="CALLE" class="java.lang.String"/>
+	<field name="NUMERO" class="java.math.BigDecimal"/>
+	<field name="APARTAMENTO" class="java.lang.String"/>
+	<field name="PISO" class="java.math.BigDecimal"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<field name="PROVINCIA" class="java.lang.String"/>
+	<field name="PAIS" class="java.lang.String"/>
+	<field name="CPA_VIEJO" class="java.math.BigDecimal"/>
+	<field name="CPA_NUEVO" class="java.lang.String"/>
+	<field name="TEL_FIJO" class="java.lang.String"/>
+	<field name="CELULAR" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="OBSERVACIONES" class="java.lang.String"/>
+	<field name="NIF" class="java.lang.String"/>
+	<detail>
+		<band height="75">
+			<printWhenExpression><![CDATA[new Boolean($V{REPORT_COUNT}.intValue() == 1)]]></printWhenExpression>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="80" height="15" uuid="86a52e10-e8e9-4f28-9796-8ae19b02a2f4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Domicilio Calle:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="80" y="0" width="210" height="15" uuid="fb38345f-8439-45d2-866e-75b87a8a376d">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{CALLE}!=null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CALLE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="290" y="0" width="20" height="15" uuid="29eb2bef-5fab-4873-94c3-0b540a1633a0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Nº:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="310" y="0" width="60" height="15" uuid="609a960b-c98d-4b03-8938-9f573cba3f88"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="-1" y="15" width="35" height="15" uuid="ff9f0294-2045-4e79-a8cd-36fac4eace28">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Dpto:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="34" y="15" width="95" height="15" uuid="693d3bf6-8dad-4881-8f0e-0c0a67d7287e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{APARTAMENTO}!=null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APARTAMENTO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="129" y="15" width="40" height="15" uuid="bdd3a7f8-91ce-40f7-936e-6c417f8dc240">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Planta:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="169" y="15" width="50" height="15" uuid="27a29189-56fb-4e57-8ad9-553341f2eb74">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PISO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="219" y="15" width="55" height="15" uuid="8eb94867-558d-4d56-8559-a23edb936b9a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Localidad:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="274" y="15" width="96" height="15" uuid="22a9eaf5-1992-4c01-ba36-218ff9c2d620">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{LOCALIDAD}!=null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="30" width="55" height="15" uuid="387249fb-b046-4ea3-8069-7719d8963519">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Provincia:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="55" y="30" width="85" height="15" uuid="a845e0f7-7726-44fa-b049-42e797f7e78e">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{PROVINCIA}!=null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROVINCIA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="140" y="30" width="30" height="15" uuid="f049acf9-fc00-48a3-a4a0-605b7a26518d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[País:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="170" y="30" width="75" height="15" uuid="ee9a8d86-0178-450b-978e-5a1270d7a6ab">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{PAIS}!=null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAIS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="245" y="30" width="60" height="15" uuid="e7b383e6-a5f6-4bb0-85b7-19fa2a3dab5e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Nuevo C.P.:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="305" y="30" width="65" height="15" uuid="139ab288-7f58-4f1d-aa5c-a904aeb0b259">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{CPA_NUEVO}!=null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPA_NUEVO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="-1" y="45" width="70" height="15" uuid="82a81f14-47fd-4709-aa5e-39f7b7dee3b1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Teléfono fijo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="190" y="45" width="45" height="15" uuid="9b764154-2c06-4c66-ab04-e4d0ee03147c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Celular:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="-1" y="60" width="35" height="15" uuid="4a7109f2-8c76-47fb-9939-5672ee33caf0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Email:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="69" y="45" width="121" height="15" uuid="b07d3466-2807-401a-b9ca-8168f2fe95e7">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{LOCALIDAD}!=null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TEL_FIJO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="235" y="45" width="135" height="15" uuid="5a8340f0-24ad-4c48-86b6-17237778d9ed">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{LOCALIDAD}!=null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CELULAR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="34" y="60" width="336" height="15" uuid="462d3eec-b9f5-495f-812d-f2a3ca04249a">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{LOCALIDAD}!=null]]></printWhenExpression>
+				</reportElement>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="2"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMAIL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

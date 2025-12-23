@@ -1,0 +1,8 @@
+EXECUTE('CREATE OR ALTER VIEW dbo.VW_IB_FERIADOS(
+												[FECHA_FERIADO], 
+												[DESCRIPCION]
+											   
+								)
+AS 
+SELECT CAST(Concat(anio,dbo.NCADENAS(MES,2,''0'',''P''),dbo.NCADENAS(dia,2,''0'',''P'')) AS NUMERIC(8)) AS FECHA_FERIADO, DESCRIPCION FROM FERIADOS WHERE ANIO <> 0 And MES <> 0 and TZ_LOCK = 0
+')

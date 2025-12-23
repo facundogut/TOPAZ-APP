@@ -1,0 +1,43 @@
+service EVALFINALCC;
+description "Evaluacion Final CRM-InConcert";
+
+action:OperationQuery ejecutarOperacion
+(
+
+ SOLICITUDCRM: string,
+ PRODUCTO: numeric
+
+): [
+	C4131: numeric  as CODERROR,
+	C904: string  as DESCERROR ,
+	C537: string  as RESULTADO,
+	C879: numeric as MAYOR , 
+	C4161: numeric as CODSOLTOPAZ	
+
+] {
+
+	properties
+	{
+		("operationNumber", "6784")
+	
+		};
+
+	
+
+	action: SQLQuery REGLA(): [
+          	CODIGO: numeric,
+		DESCRIPCION: string as DESCRIPCION,
+		ESTADO: string as ESTADO
+	   
+]
+	{
+	properties{
+		("statement","select null as CODIGO, null as DESCRIPCION, null as ESTADO from dual where not exists ( select NULL from sl_criterios where solicitud=? and semaforo in ('Rojo','Ambar')) union select CODITEM as CODIGO, fn_itf_translate(DESCRIPCION) as DESCRIPCION, semaforo as ESTADO from sl_criterios where solicitud=? and semaforo in ('Rojo','Ambar')"),	
+		("0", "C4161"), 
+		("1", "C4161")
+		}
+	}
+		
+
+
+}

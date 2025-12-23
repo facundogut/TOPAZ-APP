@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/usogeneral/getDatosUsuario/{UsuarioAD}</uri>
+    <serviceDescription>El servicio retorna los datos básicos del usuario.</serviceDescription>
+    <title></title>
+    <querys>
+        <query id="1" name="getUsuario" type="SIMPLE">
+            <sql>declare @usuario varchar(50)=?;
+
+IF (@usuario IS NULL OR LTRIM(RTRIM(@usuario)) = '')
+BEGIN
+    THROW 501, 'El usuario no debe ser vacio', 1;
+END
+ELSE
+BEGIN
+SELECT
+    CASE WHEN pfpj.TIPODOCUMENTO IS NULL THEN 'Null' WHEN pfpj.TIPODOCUMENTO IS NOT NULL THEN pfpj.TIPODOCUMENTO END AS TIPODOCUMENTO,
+    CASE WHEN pfpj.NUMERODOCUMENTO IS NULL THEN 'Null' WHEN pfpj.NUMERODOCUMENTO IS NOT NULL THEN pfpj.NUMERODOCUMENTO END AS NUMERODOCUMENTO ,
+    CASE WHEN pf.EMPLEADO_BC_BANCO = 1 THEN 'N' WHEN pf.EMPLEADO_BC_BANCO = 2 THEN 'S' ELSE 'Null' END AS empleadoBanc,
+    CASE WHEN u.NOMBRE IS NULL THEN 'Null' WHEN u.NOMBRE IS NOT NULL THEN u.NOMBRE END AS NOMBRE,
+    CASE WHEN u.CLAVE IS NULL THEN 'Null' WHEN u.CLAVE IS NOT NULL THEN u.CLAVE END AS CLAVE,
+    CASE WHEN u.GRUPO IS NULL THEN 'Null' WHEN u.GRUPO IS NOT NULL  THEN u.GRUPO END AS GRUPO ,
+    CASE WHEN u.NROSUCURSAL IS NULL THEN 0 WHEN u.NROSUCURSAL IS NOT NULL  THEN u.NROSUCURSAL END AS sucursalId,
+    CASE WHEN s.NOMBRESUCURSAL IS NULL THEN 'Null' WHEN s.NOMBRESUCURSAL IS NOT NULL  THEN s.NOMBRESUCURSAL END AS descripcionSucursal
+FROM USUARIOS u 
+LEFT JOIN CLI_DocumentosPFPJ pfpj ON pfpj.TIPODOCUMENTO = u.TIPO_DOCUMENTO AND u.DOCUMENTO = pfpj.NUMERODOCUMENTO
+LEFT JOIN CLI_PERSONASFISICAS pf ON pfpj.NUMEROPERSONAFJ = pf.NUMEROPERSONAFISICA
+LEFT JOIN SUCURSALES s ON u.NROSUCURSAL = s.SUCURSAL
+WHERE u.CLAVE=upper(@usuario)
+END</sql>
+            <input>
+                <inParameter description="" type="STRING">UsuarioAD</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="getDatoUsuario">
+                    <outParameter description="" type="STRING">
+                        <queryname>NOMBRE</queryname>
+                        <servicename>Nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CLAVE</queryname>
+                        <servicename>Clave</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>empleadoBanc</queryname>
+                        <servicename>empleadoBanc</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>GRUPO</queryname>
+                        <servicename>Grupo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>sucursalId</queryname>
+                        <servicename>Sucursal.Id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionSucursal</queryname>
+                        <servicename>Sucursal.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIPODOCUMENTO</queryname>
+                        <servicename>Tipo_Doc</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NUMERODOCUMENTO</queryname>
+                        <servicename>Nro_Doc</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

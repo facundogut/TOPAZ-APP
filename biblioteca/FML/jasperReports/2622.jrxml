@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2025-06-03T10:31:00 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reporte de Saldos y promedios" language="groovy" pageWidth="595" pageHeight="842" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="67d1e7d5-6888-4cab-967d-0c0439c2754c">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.1" value="pageHeader"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH Data Adapter "/>
+	<style name="Titulo1" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Center" hImageAlign="Center" vTextAlign="Middle" vImageAlign="Middle" isBlankWhenNull="true" fontSize="14" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Titulo2" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Center" hImageAlign="Center" vTextAlign="Middle" vImageAlign="Middle" isBlankWhenNull="true" fontSize="12" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Titulo3" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Center" hImageAlign="Center" vTextAlign="Middle" vImageAlign="Middle" isBlankWhenNull="true" fontSize="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Column Header" hTextAlign="Left" hImageAlign="Left" vTextAlign="Middle" vImageAlign="Middle" isBlankWhenNull="true" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false"/>
+	<style name="Text" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Left" hImageAlign="Left" vTextAlign="Middle" vImageAlign="Middle" isBlankWhenNull="true" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box rightPadding="5"/>
+	</style>
+	<style name="Special Text" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Left" hImageAlign="Left" vTextAlign="Middle" vImageAlign="Middle" isBlankWhenNull="true" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box rightPadding="5"/>
+	</style>
+	<style name="Integer" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Right" hImageAlign="Right" vTextAlign="Middle" vImageAlign="Middle" pattern="#,##0;-#,##0" isBlankWhenNull="true" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box rightPadding="5"/>
+	</style>
+	<style name="Special Integer" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Right" hImageAlign="Right" vTextAlign="Middle" vImageAlign="Middle" pattern="#,##0;-#,##0" isBlankWhenNull="true" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box rightPadding="5"/>
+	</style>
+	<style name="Decimal" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Right" hImageAlign="Right" vTextAlign="Middle" vImageAlign="Middle" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box rightPadding="5"/>
+	</style>
+	<style name="Special Decimal" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Right" hImageAlign="Right" vTextAlign="Middle" vImageAlign="Middle" pattern="#,##0.00;-#,##0.00" isBlankWhenNull="true" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box rightPadding="5"/>
+	</style>
+	<style name="Percentage" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Right" hImageAlign="Right" vTextAlign="Middle" vImageAlign="Middle" pattern="#,##0.00 %" isBlankWhenNull="true" fontSize="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box rightPadding="5"/>
+	</style>
+	<style name="Special Percentage" forecolor="#000000" backcolor="#FFFFFF" hTextAlign="Right" hImageAlign="Right" vTextAlign="Middle" vImageAlign="Middle" pattern="#,##0.00 %" isBlankWhenNull="true" fontSize="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false">
+		<box rightPadding="5"/>
+	</style>
+	<parameter name="TOPAZ_FECHA_SISTEMA" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_HORA_ACTUAL" class="java.sql.Time" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.sql.Time(new java.util.Date().getTime())]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_TITULO1" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[Título cargado en la tabla parámetros]]></parameterDescription>
+		<defaultValueExpression><![CDATA["Institución TOP"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_INICIALES_USUARIO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HAOH"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_MES" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Mes:]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ANO" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Año:]]></parameterDescription>
+	</parameter>
+	<parameter name="P_SUCURSAL" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Nro. Sucursal (-1 Todas):]]></parameterDescription>
+	</parameter>
+	<parameter name="P_RUBRO" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[Rubro (-1 Todos):]]></parameterDescription>
+	</parameter>
+	<parameter name="GENERA_EXCEL" class="java.lang.Boolean" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[true]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+b.CODIGO_INTERNO AS 'CUENTA',
+b.MONEDA, 
+m.C6400 AS 'DESCRIPCION_MONEDA',
+m.C6401 AS 'SIMBOLO_MONEDA', 
+p.C6300 AS 'DESCRIPCION_RUBRO',
+b.PROMEDIO_DIARIO_ACTUAL, 
+CASE WHEN b3.SALDOSMESANTMO IS NULL THEN 0 ELSE b3.SALDOSMESANTMO END AS SALDOSMESANTMO , 
+b.SALDOFINMESMO,
+b.SUCURSAL
+FROM CO_BALANCE_RESULTADOS b 
+INNER JOIN MONEDAS m ON 
+b.ID_BCE=1 
+AND b.TIPO_BALANCE='D' 
+AND b.MONEDA=m.C6399 
+AND (b.SUCURSAL=$P{P_SUCURSAL} OR $P{P_SUCURSAL}=-1)
+AND b.FECHA = (SELECT MAX(b2.FECHA) FROM CO_BALANCE_RESULTADOS b2 WHERE b2.ID_BCE=1 AND b2.TIPO_BALANCE='D' AND MONTH(b2.FECHA)=$P{P_MES} AND YEAR(b2.FECHA)= $P{P_ANO})
+INNER JOIN PLANCTAS p ON 
+b.CODIGO_INTERNO=p.C6301
+AND (p.C6326=$P{P_RUBRO} OR $P{P_RUBRO}=-1)
+LEFT JOIN CO_BALANCE_RESULTADOS b3 ON 
+b3.ID_BCE=b.ID_BCE 
+AND  b3.SUCURSAL=b.SUCURSAL 
+AND b3.MONEDA=b.MONEDA 
+AND b3.CODIGO_INTERNO=b.CODIGO_INTERNO 
+AND b3.TIPO_BALANCE=b.TIPO_BALANCE
+AND b3.FECHA = (SELECT MIN(b4.FECHA) FROM CO_BALANCE_RESULTADOS b4 WHERE b4.ID_BCE=1 AND b4.TIPO_BALANCE='D' AND MONTH(b4.FECHA)= $P{P_MES}  AND YEAR(b4.FECHA)= $P{P_ANO} )
+WHERE NOT (b.PROMEDIO_DIARIO_ACTUAL=0 and (b3.SALDOSMESANTMO=0 OR b3.SALDOSMESANTMO IS NULL) and b.SALDOFINMESMO=0)
+ORDER BY b.CODIGO_INTERNO ASC, B.SUCURSAL ASC]]>
+	</queryString>
+	<field name="CUENTA" class="java.lang.String"/>
+	<field name="MONEDA" class="java.lang.Double"/>
+	<field name="DESCRIPCION_MONEDA" class="java.lang.String"/>
+	<field name="SIMBOLO_MONEDA" class="java.lang.String"/>
+	<field name="DESCRIPCION_RUBRO" class="java.lang.String"/>
+	<field name="PROMEDIO_DIARIO_ACTUAL" class="java.math.BigDecimal"/>
+	<field name="SALDOSMESANTMO" class="java.math.BigDecimal"/>
+	<field name="SALDOFINMESMO" class="java.math.BigDecimal"/>
+	<field name="SUCURSAL" class="java.lang.Double"/>
+	<title>
+		<band height="88" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement style="Titulo2" x="80" y="20" width="390" height="20" uuid="886c1598-90cc-43f3-8ca7-124bc1f67a46">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Consulta de saldos y promedios (V.N.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="56" width="50" height="16" uuid="05202746-6691-4a87-99d4-eab3250f6ec2">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="72" width="100" height="16" uuid="8de536cc-544e-4241-bc6f-24be5eee466b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="0" width="40" height="10" uuid="0b0fb468-a3be-4e54-86af-381ad40007b7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="10" width="40" height="10" uuid="82f6e2e2-b914-4f7e-b7fa-d8adada4b3fc"/>
+				<box>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Hora: ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="520" y="0" width="35" height="10" uuid="ac5716c0-5ad1-4670-ac75-eb5ecb7fb93c">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_FECHA_SISTEMA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm:ss">
+				<reportElement x="520" y="10" width="35" height="10" uuid="5fd9832e-e4dd-42c4-857f-73e6cd2223ea"/>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_HORA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="520" y="20" width="35" height="10" uuid="42b1c56c-ec64-4a3e-8f5d-09e844a6fc69"/>
+				<box>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_INICIALES_USUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="480" y="20" width="40" height="10" uuid="8ce35fce-3162-43ce-ab0f-8911cbdc279f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="30" width="40" height="10" uuid="18a6bade-8501-494f-8a69-2f056b9842d3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<text><![CDATA[Reporte Nro.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="520" y="30" width="35" height="10" uuid="073dde14-dd71-4752-b543-23011ccc0e0c"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[2622]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="80" height="56" uuid="eabbfc2e-93c8-4ad2-a731-29affed28e77"/>
+			</image>
+			<textField evaluationTime="Report">
+				<reportElement isPrintRepeatedValues="false" x="130" y="56" width="84" height="16" uuid="a8ac260d-e58a-45cc-81c4-0e5cb0cb2801">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box rightPadding="0">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_MES}+"/"+$P{P_ANO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="Titulo1" x="80" y="0" width="390" height="20" uuid="9a235e79-0dcf-40b6-9e66-00b2b4614700"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true" isItalic="false" pdfEncoding=""/>
+				</textElement>
+				<text><![CDATA[NUEVO BANCO DEL CHACO S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="215" y="56" width="75" height="16" uuid="2015c091-20b0-4599-aeb2-d0bd92f7f4d5">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SUCURSAL:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="354" y="56" width="50" height="16" uuid="5c054ba0-16a7-4b48-a8fb-dc7cd0304090">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RUBRO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="290" y="56" width="64" height="16" uuid="933367ca-1868-4c72-a82a-05b2f322403f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_SUCURSAL}==-1?"Todas":$P{P_SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="404" y="56" width="90" height="16" uuid="c1c0fd4e-5408-42f9-a3bf-3b5f95c22d72">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box rightPadding="2">
+					<topPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.3"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{P_RUBRO}==-1?"Todos":$P{P_RUBRO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="21" splitType="Stretch">
+			<staticText>
+				<reportElement style="Column Header" x="30" y="5" width="90" height="16" uuid="a5aa1efe-fb7f-4013-bb12-835050df6908"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuenta Contable]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column Header" x="120" y="5" width="40" height="16" uuid="f8a10876-a6db-4a9b-bc14-e7a728f7e97c"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column Header" x="290" y="5" width="90" height="16" uuid="dd68ace8-417e-4e34-aa04-6ea0192d6f3e"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Promedio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column Header" x="470" y="5" width="80" height="16" uuid="35bcfa5e-0e18-4852-a610-a615ba0db60b"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Saldo Actual]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column Header" x="160" y="5" width="130" height="16" uuid="99e3cf36-f81b-4b2c-bb72-32cd5bd4b2cc"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Descripción Cuenta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column Header" x="380" y="5" width="90" height="16" uuid="6e200589-b42b-4f2d-a8d2-0c95785bfedd"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Saldo Inicial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column Header" x="0" y="5" width="30" height="16" uuid="f4fac5cb-4170-48e9-8dc7-7863ebfa2297"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<text><![CDATA[Suc]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="29" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement stretchType="RelativeToBandHeight" x="30" y="4" width="90" height="20" uuid="aaf474e3-ad7c-4a86-8963-e50ae61d2505"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="120" y="4" width="40" height="20" uuid="1352a262-4a78-403b-afe1-27d2e6ad585c"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SIMBOLO_MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="160" y="4" width="130" height="20" uuid="9f63a839-8321-49e1-9e1b-0812c7a8246e"/>
+				<textElement textAlignment="Left">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESCRIPCION_RUBRO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;" isBlankWhenNull="true">
+				<reportElement x="470" y="4" width="80" height="20" uuid="3f00d2bb-c811-49e5-a6e5-cef1b963399b"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDOFINMESMO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;" isBlankWhenNull="true">
+				<reportElement x="290" y="4" width="90" height="20" uuid="694df2da-19d3-489a-ace8-d9468f808117"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROMEDIO_DIARIO_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;" isBlankWhenNull="true">
+				<reportElement x="380" y="4" width="90" height="20" uuid="a3993741-9006-4aa1-b8cb-97288bc2bf95"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SALDOSMESANTMO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#####">
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="4" width="30" height="20" uuid="3c759ff7-19cd-4802-ba5d-3389cc162149"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="29" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="1" width="130" height="14" uuid="f0185a25-4212-4f8d-92d2-70925ec3d0f0">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="15" width="130" height="14" uuid="08f7e900-546a-47af-98db-30e8fa08daee">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Página:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="130" y="1" width="425" height="14" uuid="4bbca386-acf5-44f8-943e-836443e7deeb"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_INICIALES_USUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="450" y="15" width="105" height="14" uuid="82a8671f-32f7-4a0f-bf74-fc0b410e94e4">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="0.0"/>
+					<leftPen lineWidth="0.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Consulta de saldos y promedios (V.N.)]]></text>
+			</staticText>
+			<textField evaluationTime="Master">
+				<reportElement x="130" y="15" width="320" height="14" uuid="03690630-9ae2-4f65-98fd-87da5fea147c"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{MASTER_CURRENT_PAGE}+"/"+$V{MASTER_TOTAL_PAGES}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="80">
+			<staticText>
+				<reportElement x="450" y="0" width="50" height="14" uuid="13b870c9-ffc6-4bb6-9f90-50d1fc4b5e35"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="500" y="0" width="55" height="14" uuid="8eccd15c-83b4-49f1-b393-9c3f8fdaa96a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_FECHA_SISTEMA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="450" y="14" width="50" height="14" uuid="3322099f-97d9-40c6-a2d7-ccd6e52e8d09"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+			<textField pattern="HH:mm:ss">
+				<reportElement x="500" y="14" width="55" height="14" uuid="fe78c17a-2d08-4027-a4bb-7aecca10ad5e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_HORA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="28" width="555" height="20" uuid="0ef47731-5dab-4f8a-b717-ee771f6c91cd"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+					<font size="12" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Consulta de saldos y promedios (V.N.)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="555" height="20" uuid="8e613a85-cf46-49ab-a9d3-b99943ab7be7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No hay datos para procesar]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

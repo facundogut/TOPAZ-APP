@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/guia/getSucursal/{idSucursal}</uri>
+    <serviceDescription>Consulta Sucursales NBCH</serviceDescription>
+    <title>Consulta Sucursales NBCH</title>
+    <querys>
+        <query id="1" name="GrupoConvenio" type="MULTIPLE">
+            <sql>
+	DECLARE @idSucursal NUMERIC(5)
+	SET @idSucursal = ?
+	
+	SELECT&#13;
+S.SUCURSAL AS idSucursal,&#13;
+S.NOMBRESUCURSAL AS NombreSucursal,&#13;
+S.CAPITALINTERIOR AS CapitalInterior,&#13;
+(SELECT O.DESCRIPCION FROM OPCIONES O WHERE O.NUMERODECAMPO =6022 AND O.OPCIONINTERNA=S.CAPITALINTERIOR AND O.IDIOMA='E') AS CapitalInteriorDesc,&#13;
+(SELECT SC.ESTADO&#13;
+FROM SUCURSALESSC SC WHERE SC.SUCURSAL = S.SUCURSAL) AS EstadoSucursal,&#13;
+(SELECT O.DESCRIPCION&#13;
+FROM SUCURSALESSC SC, OPCIONES O WHERE SC.SUCURSAL = S.SUCURSAL AND O.NUMERODECAMPO =6387 AND O.OPCIONINTERNA=SC.ESTADO AND O.IDIOMA='E') AS EstadoSucursalDesc,&#13;
+S.CAT_BCRA AS CategoriaBCRA,&#13;
+(SELECT D.PAIS FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS idpais,&#13;
+(SELECT P.NOMBREPAIS FROM dbo.CLI_PAISES AS P, CLI_DIRECCIONES D  WITH(NOLOCK) WHERE P.CODIGOPAIS = D.PAIS AND S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS descripcionpais,&#13;
+(SELECT D.PROVINCIA FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS idprovincia,&#13;
+(SELECT PR.DESCRIPCION FROM dbo.CLI_PAISES P, CLI_PROVINCIAS PR, CLI_DIRECCIONES D  WITH(NOLOCK) WHERE P.CODIGOPAIS = D.PAIS&#13;
+	AND PR.CODIGOPAIS=D.PAIS AND PR.DIM1=D.PROVINCIA AND P.CODIGOPAIS=PR.CODIGOPAIS&#13;
+	AND S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS descripcionprovincia,&#13;
+(SELECT CAST(D.DEPARTAMENTO AS VARCHAR(3)) FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS iddepartamento,&#13;
+(SELECT DE.NOMBREDEP FROM dbo.CLI_PAISES P, CLI_PROVINCIAS PR, CLI_DEPARTAMENTOS DE, CLI_DIRECCIONES D WITH(NOLOCK) WHERE P.CODIGOPAIS = D.PAIS&#13;
+	AND PR.CODIGOPAIS=D.PAIS AND PR.DIM1=D.PROVINCIA AND P.CODIGOPAIS=PR.CODIGOPAIS&#13;
+	AND DE.CODIGOPAIS=PR.CODIGOPAIS AND DE.PROVINCIA=PR.DIM1 AND D.PAIS=DE.CODIGOPAIS AND D.PROVINCIA=DE.PROVINCIA AND D.DEPARTAMENTO=DE.DEPARTAMENTO&#13;
+	AND S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS descripciondepartamento,&#13;
+(SELECT CAST(D.LOCALIDAD AS VARCHAR(3)) FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS idlocalidad,&#13;
+(SELECT l.DESCRIPCION_DIM3 FROM dbo.CLI_PAISES P, CLI_PROVINCIAS PR, CLI_DEPARTAMENTOS DE, CLI_LOCALIDADES L, CLI_DIRECCIONES D WITH(NOLOCK) WHERE P.CODIGOPAIS = D.PAIS&#13;
+	AND PR.CODIGOPAIS=D.PAIS AND PR.DIM1=D.PROVINCIA AND P.CODIGOPAIS=PR.CODIGOPAIS&#13;
+	AND DE.CODIGOPAIS=PR.CODIGOPAIS AND DE.PROVINCIA=PR.DIM1 AND D.PAIS=DE.CODIGOPAIS AND D.PROVINCIA=DE.PROVINCIA AND D.DEPARTAMENTO=DE.DEPARTAMENTO&#13;
+	AND L.CODIGOPAIS=DE.CODIGOPAIS AND L.DIM1=DE.PROVINCIA AND L.DIM2=DE.DEPARTAMENTO AND L.CODIGOPAIS=D.PAIS AND L.DIM1=D.PROVINCIA AND L.DIM2=D.DEPARTAMENTO AND L.DIM3=D.LOCALIDAD&#13;
+	AND S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS descripcionlocalidad,&#13;
+(SELECT D.CPA_VIEJO FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS cp,&#13;
+(SELECT D.CPA_NUEVO FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS cpa,&#13;
+(SELECT D.CALLE FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS calle,&#13;
+(SELECT D.NUMERO FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS numero,&#13;
+(SELECT D.PISO FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS piso,&#13;
+(SELECT D.APARTAMENTO FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS apartamento,&#13;
+(SELECT CONCAT(D.CALLE,' ', D.NUMERO,' ',D.PISO) FROM CLI_DIRECCIONES D WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS domicilio,&#13;
+(SELECT CASE WHEN D.NORMALIZADO='S' THEN 'true' ELSE 'false' END FROM CLI_DIRECCIONES D&#13;
+	WHERE S.SUCURSAL=D.ID AND D.FORMATO='S' AND D.TZ_LOCK=0) AS normalizado&#13;
+&#13;
+FROM SUCURSALES S&#13;
+WHERE (S.SUCURSAL=@idSucursal OR 0=@idSucursal)&#13;
+	AND S.TZ_LOCK=0
+
+	</sql>
+            <input>
+                <inParameter description="idSucursal" type="INTEGER">idSucursal</inParameter>
+            </input>
+            <output>
+                <level groupby="idSucursal" name="Sucursal">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>idSucursal</queryname>
+                        <servicename>idSucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NombreSucursal</queryname>
+                        <servicename>NombreSucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CapitalInterior</queryname>
+                        <servicename>CapitalInterior</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CapitalInteriorDesc</queryname>
+                        <servicename>CapitalInteriorDesc</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>EstadoSucursal</queryname>
+                        <servicename>EstadoSucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>EstadoSucursalDesc</queryname>
+                        <servicename>EstadoSucursalDesc</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CategoriaBCRA</queryname>
+                        <servicename>CategoriaBCRA</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="DireccionSucursal">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>idpais</queryname>
+                        <servicename>pais.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionpais</queryname>
+                        <servicename>pais.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>idprovincia</queryname>
+                        <servicename>provincia.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionprovincia</queryname>
+                        <servicename>provincia.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>iddepartamento</queryname>
+                        <servicename>departamento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripciondepartamento</queryname>
+                        <servicename>departamento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>idlocalidad</queryname>
+                        <servicename>localidad.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionlocalidad</queryname>
+                        <servicename>localidad.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cp</queryname>
+                        <servicename>cp</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>cpa</queryname>
+                        <servicename>cpa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>calle</queryname>
+                        <servicename>calle</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>numero</queryname>
+                        <servicename>numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>piso</queryname>
+                        <servicename>piso</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>apartamento</queryname>
+                        <servicename>apartamento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>domicilio</queryname>
+                        <servicename>domicilio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>normalizado</queryname>
+                        <servicename>normalizado</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="contenedor" type="SIMPLE">
+            <sql>select '' as dato from parametros where 1=2</sql>
+            <input/>
+            <output>
+                <level groupby="" name="nivell1"/>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/conveniosCliente/{CUIT}/{IdTipoConvenio}/{TipoEnte}/{Estado}</uri>
+    <serviceDescription>Consulta convenios de Pagos</serviceDescription>
+    <title>Consulta convenios de Pagos</title>
+    <querys>
+        <query id="1" name="GrupoConvenio" type="MULTIPLE">
+            <sql>
+			DECLARE @CUIT NUMERIC(11)
+			DECLARE @IdTipoConvenio VARCHAR(5)
+			DECLARE @TipoEnte VARCHAR(2)
+			DECLARE @Estado VARCHAR(2)
+
+
+			SET @CUIT = ?
+			SET @IdTipoConvenio = ?
+			SET @TipoEnte = ?
+			SET @Estado = ?
+
+IF (@IdTipoConvenio IS NULL OR LTRIM(RTRIM(@IdTipoConvenio)) = '')
+BEGIN
+    SET @IdTipoConvenio = 'T'
+END
+
+IF (@TipoEnte IS NULL OR LTRIM(RTRIM(@TipoEnte)) = '')
+BEGIN
+    SET @TipoEnte = 'TD'
+END
+					
+IF (ISNUMERIC(@CUIT) = 0 OR LEN(@CUIT) &lt;&gt; 11)
+    OR ((ISNUMERIC(@IdTipoConvenio) = 0 AND UPPER(@IdTipoConvenio) &lt;&gt; 'T'))
+    OR (UPPER(@TipoEnte) NOT IN ('PR', 'PU', 'TD'))
+    OR (UPPER(@Estado) NOT IN ('A', 'B', 'T'))
+BEGIN
+    THROW 50000, 'Parámetros inválidos.', 1;
+END
+
+
+			SELECT 
+			CO.ID_ConvPago AS IdConvenio,
+			CO.Id_TpoConv AS IdTipoConvenio--,CO.*
+			FROM 
+			CONV_CONVENIOS_PAG CO
+			WHERE 
+				(CO.Cuit=@CUIT OR 0=@CUIT)
+				AND (convert(VARCHAR,CO.Id_TpoConv)=@IdTipoConvenio OR 'T'=@IdTipoConvenio)				
+				AND (CO.TpoEnte=@TipoEnte OR 'TD'=@TipoEnte)
+				AND (CO.Estado=@Estado OR 'T'=@Estado)
+				AND CO.TZ_LOCK=0
+			   ORDER BY CO.Id_TpoConv,CO.ID_ConvPago asc 
+	</sql>
+            <input>
+                <inParameter description="CUIT" type="LONG">CUIT</inParameter>
+                <inParameter description="IdTipoConvenio" type="STRING">IdTipoConvenio</inParameter>
+                <inParameter description="TipoEnte" type="STRING">TipoEnte</inParameter>
+                <inParameter description="Estado" type="STRING">Estado</inParameter>
+            </input>
+            <output>
+                <level groupby="IdTipoConvenio" name="ConveniosPagos">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>IdTipoConvenio</queryname>
+                        <servicename>IdTipoConvenio</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="IdConvenio">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>IdConvenio</queryname>
+                        <servicename>IdConvenio</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="contenedor" type="SIMPLE">
+            <sql>select '' as dato from parametros where 1=2</sql>
+            <input/>
+            <output>
+                <level groupby="" name="nivell1"/>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

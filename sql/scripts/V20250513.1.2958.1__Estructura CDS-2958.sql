@@ -1,0 +1,7 @@
+﻿EXECUTE('
+------------------------------
+--AJUSTE LARGO NOMBRECLIENTE--
+------------------------------
+ALTER TABLE GRL_CAB_ENVIO_ESTCTA ALTER COLUMN NOMBRECLIENTE VARCHAR(250)
+----
+')

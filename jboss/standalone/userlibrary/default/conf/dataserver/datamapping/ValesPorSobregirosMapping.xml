@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map>
+	<query>
+		<class-name>topsystems.automaticprocess.sobregiros.SaldoSobregirado</class-name>
+		<query-name>query.SaldoSobregirado</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT jts_oid,
+				   sucursal,
+				   cuenta,
+				   moneda,
+				   producto,
+				   operacion,
+				   ordinal,
+				   c1785 AS tipo_producto,
+				   c1730 AS rubro_contable,
+				   c1804 AS rubro_operativo,
+				   c1621 AS fecha_alta,
+				   c1604 AS SAL_SALDO_ACTUAL,
+				   c1605 AS SAL_IMPORTES_PENDIENTES,
+				   c1684 AS SAL_FECHA_VTO_CUPO,
+				   c1683 AS SAL_CUPO_SOBREGIROS,
+				   c1803 AS cliente,
+				   INTERMEDIACIONFINANCIERA,
+				   CODIGORESIDENCIA,
+				   SUBDIVISION1,
+				   SUBDIVISION2,
+				   SUBDIVISION3
+			FROM   saldos       s,
+				   cli_clientes c
+			WHERE  c.tz_lock = 0 AND
+				   s.tz_lock = 0 AND
+				   s.c1803 = c.codigocliente AND
+				   c1604 &lt; 0 AND
+				   (c1785 = 2 OR c1785 = 3)
+		</sentence>
+		<attribute>
+			<attribute-name>jts_oid</attribute-name>
+			<column-name>jts_oid</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>sucursal</attribute-name>
+			<column-name>sucursal</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>cuenta</attribute-name>
+			<column-name>cuenta</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>moneda</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>producto</attribute-name>
+			<column-name>producto</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>operacion</attribute-name>
+			<column-name>operacion</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>ordinal</attribute-name>
+			<column-name>ordinal</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>tipoProducto</attribute-name>
+			<column-name>tipo_producto</column-name>
+			<column-type>long</column-type>
+		</attribute>		
+		<attribute>
+			<attribute-name>rubroContable</attribute-name>
+			<column-name>rubro_contable</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>rubroOperativo</attribute-name>
+			<column-name>rubro_operativo</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaAlta</attribute-name>
+			<column-name>fecha_alta</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>		
+		<attribute>
+			<attribute-name>saldoActual</attribute-name>
+			<column-name>SAL_SALDO_ACTUAL</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>		
+		<attribute>
+			<attribute-name>importesPendientes</attribute-name>
+			<column-name>SAL_IMPORTES_PENDIENTES</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaVencimientoCupo</attribute-name>
+			<column-name>SAL_FECHA_VTO_CUPO</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>		
+		<attribute>
+			<attribute-name>cupoSobregiro</attribute-name>
+			<column-name>SAL_CUPO_SOBREGIROS</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>cliente</attribute-name>
+			<column-name>cliente</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>intermediacionFinanciera</attribute-name>
+			<column-name>INTERMEDIACIONFINANCIERA</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>residencia</attribute-name>
+			<column-name>CODIGORESIDENCIA</column-name>
+			<column-type>String</column-type>
+		</attribute>		
+		<attribute>
+			<attribute-name>subDivisionInt1</attribute-name>
+			<column-name>SUBDIVISION1</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>subDivisionInt2</attribute-name>
+			<column-name>SUBDIVISION2</column-name>
+			<column-type>String</column-type>
+		</attribute>	
+		<attribute>
+			<attribute-name>subDivisionInt3</attribute-name>
+			<column-name>SUBDIVISION3</column-name>
+			<column-type>String</column-type>
+		</attribute>		
+	</query>
+	<query>
+		<class-name>topsystems.topaz.server.objectsdomain.SaldoVistaPlazoImpl</class-name>
+		<query-name>query.PrestamoACancelar</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			select
+			c1665,c1604,c1608,jts_oid
+			from
+			saldos s
+			where		
+			tz_lock = 0 and
+			producto = ? and
+			c1627 &lt; = ? and			
+			(c1604 &lt; 0 or c1608 &gt; 0) and
+			c1785 = 5
+		</sentence>
+		<attribute>
+			<attribute-name>SAL_JTS_OID_CONTRACUENTA_RENOVACION</attribute-name>
+			<column-name>C1665</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>SAL_SALDO_ACTUAL</attribute-name>
+			<column-name>C1604</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>SAL_INT_AL_VTO</attribute-name>
+			<column-name>C1608</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>JTS_OID</attribute-name>
+			<column-name>jts_oid</column-name>
+			<column-type>long</column-type>
+		</attribute>
+	</query>
+	<class>
+		<class-name>topsystems.automaticprocess.sobregiros.ResultadoValesSobregiro</class-name>
+		<entity-name>core.vo_ResultadoValesSobregiro</entity-name>
+		<table-name>VTA_RES_VALE_SOBREGIRO</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>fecha_proceso</attribute-name>
+			<column-name>fecha_proceso</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>jts_oid_saldo</attribute-name>
+			<column-name>jts_oid_saldo</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>cant_dias_sobregiro</attribute-name>
+			<column-name>cant_dias_sobregiro</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>valor_sobregiro</attribute-name>
+			<column-name>valor_sobregiro</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>causa_vale</attribute-name>
+			<column-name>causa_vale</column-name>
+		</attribute>
+	</class>
+	<!--
+	<query>
+		<class-name>topsystems.automaticprocess.sobregiros.ModalidadActividadCiu</class-name>
+		<query-name>query.ModalidadActividadCiu</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT CL.CODACTIVIDACIIU, CA.MODALIDAD
+			  FROM CLI_Clientes CL
+			 INNER JOIN CLI_Cod_Act_CIIU CA ON CA.CODACTCIIU = CL.CODACTIVIDACIIU
+			 WHERE CL.CODIGOCLIENTE = ?
+			   AND CL.TZ_LOCK = 0
+			   AND CA.TZ_LOCK = 0
+		</sentence>
+		<attribute>
+			<attribute-name>codigoActividadCiiu</attribute-name>
+			<column-name>CODACTIVIDACIIU</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>modalidad</attribute-name>
+			<column-name>MODALIDAD</column-name>
+			<column-type>String</column-type>
+		</attribute>
+	</query>
+	-->
+</map>

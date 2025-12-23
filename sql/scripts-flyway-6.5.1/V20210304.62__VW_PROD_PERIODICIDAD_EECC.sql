@@ -1,0 +1,27 @@
+﻿/****** Object:  View [dbo].[VW_PROD_PERIODICIDAD_EECC]    Script Date: 24/02/2021 15:28:16 ******/
+DROP VIEW [dbo].[VW_PROD_PERIODICIDAD_EECC]
+GO
+
+/****** Object:  View [dbo].[VW_PROD_PERIODICIDAD_EECC]    Script Date: 24/02/2021 15:28:16 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[VW_PROD_PERIODICIDAD_EECC] (
+   OPCION,
+   DESCRIPCION
+   )
+AS 
+   SELECT
+      O.OPCIONINTERNA AS OPCION,
+      O.DESCRIPCION
+   FROM 
+      dbo.OPCIONES AS O with (nolock)
+   WHERE 
+      O.NUMERODECAMPO = 2351 
+	  AND O.IDIOMA = 'E'
+GO
+
+

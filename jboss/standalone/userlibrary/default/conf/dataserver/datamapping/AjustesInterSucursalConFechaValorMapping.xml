@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by DanielC (Top Systems) -->
+<map>
+	<query>
+		<class-name>topsystems.automaticprocess.ajustesintersucursalconfechavalor.SaldoPosicionQuery</class-name>
+		<query-name>query.SaldosPosicion</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>		
+select x.posicion_jts_oid, x.activo_jts_oid, x.pasivo_jts_oid, min(m.fechavalor) as fechavalor, x.moneda, rubro_activo, rubro_pasivo
+from movimientos_contables m 
+join asientos a on a.asiento=m.asiento and a.sucursal=m.sucursal and a.fechaproceso=m.fechaproceso
+join (
+        select s.jts_oid as posicion_jts_oid, sa.jts_oid as activo_jts_oid, sp.jts_oid as pasivo_jts_oid, 
+               s.sucursal, s.producto, s.cuenta, s.moneda, s.operacion, s.ordinal, pc.creditos_inter_suc as rubro_activo, 
+               pc.obligaciones_inter_suc as rubro_pasivo
+        from saldos s 
+        cross join co_parametroscontables pc
+        left outer join saldos sa on 
+        sa.sucursal=s.sucursal and sa.cuenta=pc.creditos_inter_suc and sa.moneda=s.moneda and sa.operacion=s.operacion and sa.ordinal=0 and sa.producto=0
+        left outer join saldos sp on
+        sp.sucursal=s.sucursal and sp.cuenta=pc.obligaciones_inter_suc and sp.moneda=s.moneda and sp.operacion=s.operacion and sp.ordinal=0 and sp.producto=0
+        where s.c1730=pc.posicion_inter_suc
+     ) x
+     on x.producto=m.producto and x.sucursal=m.sucursal_cuenta and x.cuenta=m.cuenta and x.moneda=m.moneda and x.operacion=m.operacion_cuenta and x.ordinal=m.ordinal_cuenta
+where m.marcaajuste='A' and
+      m.fechaproceso=(select fechaproceso from parametros) and m.fechavalor&lt;m.fechaproceso
+group by posicion_jts_oid, activo_jts_oid, pasivo_jts_oid, fechavalor, moneda, rubro_activo, rubro_pasivo
+</sentence>
+		<attribute>
+			<attribute-name>posicionJtsOid</attribute-name>
+			<column-name>POSICION_JTS_OID</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>activoJtsOid</attribute-name>
+			<column-name>ACTIVO_JTS_OID</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>pasivoJtsOid</attribute-name>
+			<column-name>PASIVO_JTS_OID</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaValor</attribute-name>
+			<column-name>FECHAVALOR</column-name>
+			<column-type>date</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>MONEDA</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>rubroActivo</attribute-name>
+			<column-name>RUBRO_ACTIVO</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>rubroPasivo</attribute-name>
+			<column-name>RUBRO_PASIVO</column-name>
+			<column-type>double</column-type>
+		</attribute>
+	</query>
+</map>

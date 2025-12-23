@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/personaFisicabyTipoyDNI/{tipodoc}/{doc}</uri>
+    <serviceDescription>Se espera obtener el ID de la persona humana relacionada a un tipo y número de documento físicos, ambos ingresados por parámetro.</serviceDescription>
+    <title>CLIT018getIDPersonaxDOC</title>
+    <querys>
+        <query id="1" name="getIDxDOC" type="SIMPLE">
+            <sql>DECLARE
+@tipodoc VARCHAR(4) = ?,
+@doc VARCHAR(15) = ?;
+
+IF @tipodoc NOT IN ( 'DNI','LC','PAS','LE','CI')
+BEGIN
+	THROW 50000, 'Tipo Documento incorrecto', 1;
+END
+
+IF isnumeric(@doc) = 0 and @tipodoc in ('DNI','CI')
+BEGIN
+	THROW 50000, 'Numero Documento incorrecto', 1;
+END
+
+IF(@tipodoc = 'DNI' AND NOT len(@doc) &lt;= 8)
+BEGIN
+	THROW 50000, 'Numero Documento incorrecto', 1;
+END
+
+IF (@tipodoc = 'CI' AND ((NOT len(@doc) &lt;= 11) or isnumeric(@doc) = 0))
+BEGIN
+	THROW 50000, 'Numero Documento incorrecto', 1;
+END
+
+IF (@tipodoc = 'PAS' AND (Isnumeric(SUBSTRING(@doc,4,6)) = 0 or len(@doc) &lt;&gt; 9))
+BEGIN
+	THROW 50000, 'Numero Documento incorrecto', 1;
+END
+
+IF (@tipodoc = 'LE' AND ((Isnumeric(SUBSTRING(@doc,1,4)) = 0) or  len(@doc) &lt;&gt; 12))
+BEGIN
+	THROW 50000, 'Numero Documento incorrecto', 1;
+END
+
+IF (@tipodoc = 'LC' AND ((len(@doc) = 4 AND ISNUMERIC(@doc) = 0) OR len(@doc) NOT IN (4,8)))
+BEGIN
+	THROW 50000, 'Numero Documento incorrecto', 1;
+END
+
+ SELECT numeropersonafj FROM CLI_DocumentosPFPJ WHERE @tipodoc = TIPO_DOC_FISICO AND @doc = NUM_DOC_FISICO AND TZ_LOCK = 0
+</sql>
+            <input>
+                <inParameter description="" type="STRING">tipodoc</inParameter>
+                <inParameter description="" type="STRING">doc</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="nroPersona">
+                    <outParameter description="" type="LONG">
+                        <queryname>numeropersonafj</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

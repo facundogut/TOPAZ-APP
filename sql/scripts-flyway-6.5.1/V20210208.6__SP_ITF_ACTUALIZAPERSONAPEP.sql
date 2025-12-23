@@ -1,0 +1,1 @@
+EXECUTE('UPDATE TOPAZMAP SET PATH=''/topaz/shared/pdf/'' WHERE GRUPOMAPA IN (42,43);')

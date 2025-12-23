@@ -1,0 +1,59 @@
+service BUSCARPERSONAPJEMPRESA; 
+description "Busqueda de Personas por Empresa"; 
+
+
+	action: SQLQuery DATOSPJ(
+				
+	Empresa : string,
+	NodoCliente: string,
+	TicketSesion: numeric,
+	InfoOrigen: string,
+	ModoAutentica: string,
+	CodCanal: string,
+	Origen: string,
+	NroDepOrigen: numeric,
+	NroTransaccion: numeric,
+	IdAutentica: string,
+	TipoProceso: string,
+	IdInvocaTopaz: string
+			
+			
+	):[
+			
+		CODERROR : string,
+		APELLIDOPATERNO : string as ApellidoPaterno,
+		APELLIDOMATERNO : string as ApellidoMaterno,
+		PRIMERNOMBRE : string as PrimerNombre,
+		SEGUNDONOMBRE : string as SegundoNombre,
+		NUMEROPERSONAJURIDICA : numeric as IdPersona,
+		RAZONSOCIAL : string as Empresa
+	
+	]{ 
+			
+	properties 
+		{ 
+			("statement", "SELECT 0 AS CODERROR, '' AS APELLIDOPATERNO, '' AS APELLIDOMATERNO, '' AS PRIMERNOMBRE, '' AS SEGUNDONOMBRE, PJ.NUMEROPERSONAJURIDICA, PJ.RAZONSOCIAL FROM CLI_PersonasJuridicas PJ WHERE PJ.RAZONSOCIAL LIKE ?"),
+			("0", "Empresa")
+					
+			
+
+	};
+			
+	action:	SQLQuery BUSCODOCUMENTO() : [
+	
+	
+			TIPODOCUMENTO: string as TipoDocumento,
+			NUMERODOCUMENTO: string as NroDocumento
+			
+	]{ 
+  			
+  	
+	properties {
+			("statement", "select TIPODOCUMENTO,NUMERODOCUMENTO from CLI_DocumentosPFPJ where numeropersonafj=?"),
+			("0", "NUMEROPERSONAJURIDICA")
+			
+	
+	}
+     }
+  
+  }

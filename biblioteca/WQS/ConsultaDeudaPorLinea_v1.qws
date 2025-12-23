@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/sibe/deudaxlinea/{ID_PERSONA}</uri>
+    <serviceDescription>ConsultaDeudaPorLinea</serviceDescription>
+    <title>ConsultaDeudaPorLinea</title>
+    <querys>
+        <query id="1" name="respuesta" type="SIMPLE">
+            <sql>DECLARE @P_ID_PERSONA VARCHAR(20) = ?;&#13;
+&#13;
+WITH DeudaTotal AS (&#13;
+    SELECT SUM(SALDO_DEUDA) AS deudaTotal&#13;
+    FROM VW_DEUDA_CLIENTES&#13;
+    WHERE  NUMEROPERSONA = @P_ID_PERSONA&#13;
+),&#13;
+TotalChequesVigentes AS (&#13;
+    SELECT SUM(SALDO_DEUDA) AS totalChequesVigentes&#13;
+    FROM VW_DEUDA_CLIENTES&#13;
+    WHERE NUMEROPERSONA =@P_ID_PERSONA AND TIPO = 6&#13;
+),&#13;
+Exclusiones AS (&#13;
+    SELECT&#13;
+        SUM(SALDO_DEUDA) AS montoExcluido&#13;
+    FROM&#13;
+        VW_DEUDA_CLIENTES VDC&#13;
+    LEFT JOIN&#13;
+        CRE_GARANTIACREDITO CG WITH(NOLOCK) ON CG.JTSOID_SALDO = VDC.JTS_OID&#13;
+    LEFT JOIN&#13;
+        CRE_GARANTIASRECIBIDAS CGR WITH(NOLOCK) ON CGR.NUM_GARANTIA = CG.NUM_GARANTIA&#13;
+    WHERE&#13;
+        VDC.NUMEROPERSONA = @P_ID_PERSONA&#13;
+        AND VDC.CLIENTE NOT IN (&#13;
+            SELECT CODIGOCLIENTE&#13;
+            FROM CRE_EXCLUSIONES_CLIENTES WITH(NOLOCK)&#13;
+            WHERE TZ_LOCK = 0&#13;
+        )&#13;
+        AND VDC.JTS_OID NOT IN (&#13;
+            SELECT DISTINCT CD.JTS_OID&#13;
+            FROM VW_CRE_DOCUMENTOS_DESC_O_AL_COBRO CD WITH (NOLOCK)&#13;
+            WHERE EXISTS (&#13;
+                SELECT 1&#13;
+                FROM CRE_EXCLUSIONES_CUIT_EMISOR CE WITH(NOLOCK)&#13;
+                WHERE CE.NUMERODOCUMENTO = CD.documento_librador&#13;
+                AND CE.CUENTA_FORANEA = CD.numerico_cuenta_giradora&#13;
+                AND CE.TZ_LOCK = 0&#13;
+            )&#13;
+            AND CD.jts_oid &lt;&gt; 0&#13;
+        )&#13;
+        AND VDC.JTS_OID NOT IN (&#13;
+            SELECT ASISTENCIA_JTS_OID&#13;
+            FROM CRE_EXCLUSIONES_ASISTENCIAS WITH(NOLOCK)&#13;
+            WHERE TZ_LOCK = 0&#13;
+        )&#13;
+        AND VDC.PRODUCTO NOT IN (&#13;
+            SELECT ITEM&#13;
+            FROM CRE_EXCLUSIONES_PRODUCTOS WITH(NOLOCK)&#13;
+            WHERE TIPO = 'P'&#13;
+            AND TZ_LOCK = 0&#13;
+        )&#13;
+        AND VDC.FAMILIA NOT IN (&#13;
+            SELECT ITEM&#13;
+            FROM CRE_EXCLUSIONES_PRODUCTOS WITH(NOLOCK)&#13;
+            WHERE TIPO = 'F'&#13;
+            AND TZ_LOCK = 0&#13;
+        )&#13;
+        AND ISNULL(CGR.TIPOGARANTIA, 0) IN (&#13;
+            SELECT TIPO_GARANTIA&#13;
+            FROM CRE_EXCLUSIONES_TIPOSGARANTIAS WITH(NOLOCK)&#13;
+            WHERE TZ_LOCK = 0&#13;
+        )&#13;
+)&#13;
+ &#13;
+SELECT&#13;
+    DT.deudaTotal,&#13;
+    TCV.totalChequesVigentes,&#13;
+    (DT.deudaTotal - ISNULL(E.montoExcluido, 0)) AS totalCuotasMes,&#13;
+	'' AS respuesta&#13;
+FROM&#13;
+    DeudaTotal DT&#13;
+LEFT JOIN&#13;
+    TotalChequesVigentes TCV ON 1 = 1&#13;
+LEFT JOIN&#13;
+    Exclusiones E ON 1 = 1;</sql>
+            <input>
+                <inParameter description="ID_PERSONA" type="STRING">ID_PERSONA</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="prueba">
+                    <outParameter description="respuesta" type="STRING">
+                        <queryname>respuesta</queryname>
+                        <servicename>respuesta</servicename>
+                    </outParameter>
+                    <outParameter description="deudaTotal" type="LONG">
+                        <queryname>deudaTotal</queryname>
+                        <servicename>deudaTotal</servicename>
+                    </outParameter>
+                    <outParameter description="totalChequesVigentes" type="LONG">
+                        <queryname>totalChequesVigentes</queryname>
+                        <servicename>totalChequesVigentes</servicename>
+                    </outParameter>
+                    <outParameter description="totalCuotasMes" type="LONG">
+                        <queryname>totalCuotasMes</queryname>
+                        <servicename>totalCuotasMes</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="lineaAnalisis" type="MULTIPLE">
+            <sql>&#13;
+DECLARE @P_ID_PERSONA VARCHAR(20) = ?;&#13;
+&#13;
+SELECT d.IdLinea, d.descripcionLinea,d.importe,d.fechaVencimiento,d.montoExcluido,d.horizonteLinea,d.disponibleCP,d.disponibleLP , CASE WHEN d.montoExcluido &gt; 0 THEN 1 ELSE 0 END AS deudaAExcluir&#13;
+FROM (&#13;
+select VW.PRODUCTO AS IdLinea,&#13;
+        NOMBREPRODUCTO AS descripcionLinea,&#13;
+        --Horizonte?&#13;
+        SALDO_DEUDA AS importe,&#13;
+        isnull(VENCIMIENTO,'1900/01/01') AS fechaVencimiento,&#13;
+        --- Exclusiones cliente&#13;
+        (SELECT&#13;
+                --- Exclusiones cliente&#13;
+                ISNULL((SELECT SUM(SALDO_DEUDA) FROM VW_DEUDA_CLIENTES WHERE NUMEROPERSONA = @P_ID_PERSONA --Modificar por parámetro&#13;
+                                 AND CLIENTE NOT IN (SELECT CODIGOCLIENTE&#13;
+                                 FROM CRE_EXCLUSIONES_CLIENTES WITH(NOLOCK) WHERE TZ_LOCK=0)&#13;
+                                 AND JTS_OID IN (SELECT DISTINCT JTS_OID FROM VW_CRE_DOCUMENTOS_DESC_O_AL_COBRO CD WITH (NOLOCK)&#13;
+                                 WHERE EXISTS (SELECT 1 FROM CRE_EXCLUSIONES_CUIT_EMISOR CE WITH(NOLOCK)&#13;
+                                 WHERE CE.NUMERODOCUMENTO = CD.documento_librador AND CE.CUENTA_FORANEA = CD.numerico_cuenta_giradora AND CE.TZ_LOCK=0)&#13;
+                                 AND CD.jts_oid &lt;&gt; 0)),0)&#13;
+                                 +&#13;
+                --- Exclusiones descuentos               &#13;
+                ISNULL((SELECT SUM(SALDO_DEUDA)&#13;
+                                    FROM VW_DEUDA_CLIENTES WHERE NUMEROPERSONA = @P_ID_PERSONA --Modificar por parámetro&#13;
+                                    AND CLIENTE IN (SELECT CODIGOCLIENTE FROM CRE_EXCLUSIONES_CLIENTES WITH(NOLOCK)&#13;
+                                    WHERE TZ_LOCK=0)),0)&#13;
+                                 +&#13;
+                --- Exlusiones asistencias&#13;
+                ISNULL((SELECT SUM(SALDO_DEUDA)&#13;
+                                    FROM VW_DEUDA_CLIENTES WHERE NUMEROPERSONA = @P_ID_PERSONA --Modificar por parámetro&#13;
+                                    AND CLIENTE NOT IN (SELECT CODIGOCLIENTE&#13;
+                                    FROM CRE_EXCLUSIONES_CLIENTES WITH(NOLOCK) WHERE TZ_LOCK=0)&#13;
+                                    AND JTS_OID NOT IN (SELECT DISTINCT JTS_OID FROM VW_CRE_DOCUMENTOS_DESC_O_AL_COBRO CD WITH(NOLOCK)&#13;
+                                    WHERE EXISTS (SELECT 1 FROM CRE_EXCLUSIONES_CUIT_EMISOR CE WITH(NOLOCK)&#13;
+                                    WHERE CE.NUMERODOCUMENTO = CD.documento_librador AND CE.CUENTA_FORANEA = CD.numerico_cuenta_giradora AND CE.TZ_LOCK=0)&#13;
+                                    AND CD.jts_oid &lt;&gt; 0)&#13;
+                                    AND JTS_OID IN (SELECT ASISTENCIA_JTS_OID&#13;
+                                    FROM CRE_EXCLUSIONES_ASISTENCIAS WITH(NOLOCK) WHERE TZ_LOCK=0)),0)&#13;
+                                 +&#13;
+                --- Exclusiones producto-familia&#13;
+                ISNULL((SELECT SUM(SALDO_DEUDA)&#13;
+                                    FROM VW_DEUDA_CLIENTES WHERE NUMEROPERSONA = @P_ID_PERSONA --Modificar por parámetro&#13;
+                                    AND CLIENTE NOT IN (SELECT CODIGOCLIENTE FROM CRE_EXCLUSIONES_CLIENTES WITH(NOLOCK)&#13;
+                                    WHERE TZ_LOCK=0)&#13;
+                                    AND JTS_OID NOT IN (SELECT ASISTENCIA_JTS_OID FROM CRE_EXCLUSIONES_ASISTENCIAS WITH(NOLOCK)&#13;
+                                    WHERE TZ_LOCK=0)&#13;
+                                    AND (PRODUCTO IN (SELECT ITEM FROM CRE_EXCLUSIONES_PRODUCTOS WITH(NOLOCK)&#13;
+                                    WHERE TIPO='P' AND TZ_LOCK=0)&#13;
+                                    OR (FAMILIA IN (SELECT ITEM FROM CRE_EXCLUSIONES_PRODUCTOS WITH(NOLOCK)&#13;
+                                    WHERE TIPO='F' AND TZ_LOCK=0)))),0)&#13;
+                                +&#13;
+                --- Exlusiones garantia&#13;
+                ISNULL((SELECT SUM(SALDO_DEUDA)&#13;
+                                    FROM VW_DEUDA_CLIENTES VDC&#13;
+                                    LEFT JOIN CRE_GARANTIACREDITO CG WITH(NOLOCK) ON CG.JTSOID_SALDO = VDC.JTS_OID&#13;
+                                    LEFT JOIN CRE_GARANTIASRECIBIDAS CGR WITH(NOLOCK) ON CGR.NUM_GARANTIA = CG.NUM_GARANTIA&#13;
+                                    WHERE VDC.NUMERODOC = '30710316496' --Modificar por parámetro&#13;
+                                    AND VDC.CLIENTE NOT IN (&#13;
+                                        SELECT CODIGOCLIENTE FROM CRE_EXCLUSIONES_CLIENTES WITH(NOLOCK)&#13;
+                                        WHERE TZ_LOCK = 0&#13;
+                                    )&#13;
+                                    AND VDC.JTS_OID NOT IN (&#13;
+                                        SELECT DISTINCT CD.JTS_OID&#13;
+                                        FROM VW_CRE_DOCUMENTOS_DESC_O_AL_COBRO CD WITH(NOLOCK)&#13;
+                                        WHERE EXISTS (&#13;
+                                            SELECT 1&#13;
+                                            FROM CRE_EXCLUSIONES_CUIT_EMISOR CE WITH(NOLOCK)&#13;
+                                            WHERE CE.NUMERODOCUMENTO = CD.documento_librador&#13;
+                                            AND CE.CUENTA_FORANEA = CD.numerico_cuenta_giradora&#13;
+                                            AND CE.TZ_LOCK = 0&#13;
+                                        )&#13;
+                                        AND CD.jts_oid &lt;&gt; 0&#13;
+                                    )&#13;
+                                    AND VDC.JTS_OID NOT IN (&#13;
+                                        SELECT ASISTENCIA_JTS_OID&#13;
+                                        FROM CRE_EXCLUSIONES_ASISTENCIAS WITH(NOLOCK)&#13;
+                                        WHERE TZ_LOCK = 0&#13;
+                                    )&#13;
+                                    AND VDC.PRODUCTO NOT IN (&#13;
+                                        SELECT ITEM&#13;
+                                        FROM CRE_EXCLUSIONES_PRODUCTOS WITH(NOLOCK)&#13;
+                                        WHERE TIPO = 'P'&#13;
+                                        AND TZ_LOCK = 0&#13;
+                                    )&#13;
+                                    AND VDC.FAMILIA NOT IN (&#13;
+                                        SELECT ITEM&#13;
+                                        FROM CRE_EXCLUSIONES_PRODUCTOS WITH(NOLOCK)&#13;
+                                        WHERE TIPO = 'F'&#13;
+                                        AND TZ_LOCK = 0&#13;
+                                    )&#13;
+                                    AND ISNULL(CGR.TIPOGARANTIA, 0) IN (&#13;
+                                        SELECT TIPO_GARANTIA&#13;
+                                        FROM CRE_EXCLUSIONES_TIPOSGARANTIAS WITH(NOLOCK)&#13;
+                                        WHERE TZ_LOCK = 0&#13;
+                                    )&#13;
+                                ), 0)) AS montoExcluido,&#13;
+                                CASE WHEN CLC.RIESGO = 1 THEN 'C' ELSE 'L' END AS horizonteLinea,&#13;
+                                CASE WHEN CLC.RIESGO = 1 THEN CLC.DISP_LIMITE ELSE 0 END AS disponibleCP,&#13;
+                                CASE WHEN CLC.RIESGO = 2 THEN CLC.DISP_LIMITE ELSE 0 END AS disponibleLP&#13;
+FROM VW_DEUDA_CLIENTES VW&#13;
+LEFT JOIN CRE_LIMITES_CLIENTE CLC ON VW.PRODUCTO = CLC.PRODUCTO AND VW.CLIENTE = CLC.CLIENTE AND CLC.TIPO = 4&#13;
+    WHERE VW.NUMEROPERSONA = @P_ID_PERSONA --Modificar por parámetro&#13;
+) d</sql>
+            <input>
+                <inParameter description="ID_PERSONA" type="STRING">ID_PERSONA</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="lineaAnalisis">
+                    <outParameter description="IdLinea" type="LONG">
+                        <queryname>IdLinea</queryname>
+                        <servicename>IdLinea</servicename>
+                    </outParameter>
+                    <outParameter description="descripcionLinea" type="STRING">
+                        <queryname>descripcionLinea</queryname>
+                        <servicename>descripcionLinea</servicename>
+                    </outParameter>
+                    <outParameter description="importe" type="FLOAT">
+                        <queryname>importe</queryname>
+                        <servicename>importe</servicename>
+                    </outParameter>
+                    <outParameter description="fechaVencimiento" type="DATE">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="montoExcluido" type="FLOAT">
+                        <queryname>montoExcluido</queryname>
+                        <servicename>montoExcluido</servicename>
+                    </outParameter>
+                    <outParameter description="horizonteLinea" type="STRING">
+                        <queryname>horizonteLinea</queryname>
+                        <servicename>horizonteLinea</servicename>
+                    </outParameter>
+                    <outParameter description="disponibleCP" type="FLOAT">
+                        <queryname>disponibleCP</queryname>
+                        <servicename>disponibleCP</servicename>
+                    </outParameter>
+                    <outParameter description="disponibleLP" type="FLOAT">
+                        <queryname>disponibleLP</queryname>
+                        <servicename>disponibleLP</servicename>
+                    </outParameter>
+                    <outParameter description="deudaAExcluir" type="BOOLEAN">
+                        <queryname>deudaAExcluir</queryname>
+                        <servicename>deudaAExcluir</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

@@ -1,0 +1,171 @@
+<map>
+	<!--query>
+		<class-name>topsystems.automaticprocess.balance.QueryBalanceCuatroColumnas</class-name>
+		<query-name>query.BalanceCuatroColumnas</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT 
+			  ID_BCE,
+			  CODIGO_INTERNO,
+			  RUBRO, 
+			  Round(sum(SaldoFinMesMN),2) AS SaldoFinMesMN,
+			  Round(sum(SaldoFinMesME),2) AS SaldoFinMesMO,
+			  Round(sum(SaldoFinMEMN),2)  AS SaldoFinMEMN,
+			  Round(sum(SaldoFinTot),2)   AS SaldoFinTot
+			from
+			  (
+				  SELECT  
+				    ID_BCE,
+				    CODIGO_INTERNO,
+				    RUBRO, 
+				    SaldoFinMesMN,
+				    SaldoFinMesME,
+				    case when (substr(rubro,1,1) &lt;&gt; '7' and substr(rubro,1,1) &lt;&gt; '6') then
+					ROUND(SaldoFinMesME * hc1.tipo_cambio_bcu,2)
+				    else
+					saldoeqmn
+				    end as SaldoFinMEMN,
+				    case when (substr(rubro,1,1) &lt;&gt; '7' and substr(rubro,1,1) &lt;&gt; '6') then
+					ROUND(SaldoFinMesME * hc1.tipo_cambio_bcu,2) + ROUND(SaldoFinMesMN,2)
+				    else
+					(ROUND(saldoeqmn,2) + ROUND(SaldoFinMesMN,2))
+				    end as SaldoFinTot
+
+				  FROM historicotiposcambio hc1,
+				    (
+					  SELECT  ID_BCE,
+						  CODIGO_INTERNO,
+						  RUBRO,
+						  sum(SaldoFinMesMN) SaldoFinMesMN,
+						  sum(SaldoFinMesME) SaldoFinMesME,
+						  sum(saldoeqmn) saldoeqmn
+					  FROM
+						  (
+						  SELECT  ID_BCE,
+							  CODIGO_INTERNO,
+							  C6301 RUBRO,
+							  case when s.moneda = 0 or s.moneda = 9800 then
+							    case when (substr(C6301,1,1) &lt;&gt; '7' and substr(C6301,1,1) &lt;&gt; '6') then
+							      saldo_ajustado * round(tipo_cambio_bcu,4) 
+							    else
+							       (saldo_ajustado - saldo_ajustado_resultado_mn)
+							    end
+							  else
+							      0
+							  end as SaldoFinMesMN,
+							  case when s.moneda &lt;&gt;  0 AND s.moneda &lt;&gt; 9800 THEN
+							      CASE WHEN s.moneda &lt;&gt; 1111 AND s.moneda &lt;&gt; 1112 AND s.moneda &lt;&gt; 2700 THEN
+								  (saldo_ajustado / arbitraje_cierre_bcu) 
+							      ELSE
+								  (saldo_ajustado * arbitraje_cierre_bcu) 
+							      END
+							  else
+							      case when (substr(C6301,1,1) &lt;&gt; '7' and substr(C6301,1,1) &lt;&gt; '6') then
+								  0
+							      else
+								  saldo_ajustado_resultado_me
+							      end
+							  end as SALDOFINMESME,
+							  saldo_ajustado_resultado_mn saldoeqmn
+						  FROM
+							  grl_Saldos_diarios sd,
+							  saldos s,
+							  historicotiposcambio hc,
+							  planctas p,
+							  CO_BALANCE_ESTRUCTURA CBE
+
+						  WHERE (CBE.ID_BCE = ? OR - 1 = ?)
+						      AND CBE.RUBRO_CONTABLE = RUBROCONTABLE
+						      AND CBE.RELACION = 'R'
+						      AND CBE.NIVEL = 1                          
+						      and saldos_jts_oid=jts_oid
+						      and s.moneda = hc.moneda
+						      and hc.fecha_cotizacion = ?
+						      and fecha = ?
+						      and C1730 = C6326
+						      AND sd.TZ_LOCK=0
+						      AND s.TZ_LOCK=0
+						      AND p.TZ_LOCK=0
+						      AND cbe.TZ_LOCK=0
+						      --and saldo_ajustado &lt;&gt; 0
+						      )
+					  GROUP BY ID_BCE, CODIGO_INTERNO, RUBRO
+				  )
+				  WHERE hc1.codigo_tipo_cambio=1 AND hc1.moneda = 2222 AND hc1.fecha_cotizacion = ?
+			    )
+			group by   ID_BCE, CODIGO_INTERNO, rubro
+		</sentence>
+		<attribute>
+			<attribute-name>IDBCE</attribute-name>
+			<column-name>ID_BCE</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>CodigoInterno</attribute-name>
+			<column-name>CODIGO_INTERNO</column-name>
+			<column-type>string</column-type>
+		</attribute>       		
+		<attribute>
+			<attribute-name>RUBRO</attribute-name>
+			<column-name>RUBRO</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>SaldoFinMesMN</attribute-name>
+			<column-name>SaldoFinMesMN</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>SaldoFinMesMO</attribute-name>
+			<column-name>SaldoFinMesMO</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>SaldoFinMEMN</attribute-name>
+			<column-name>SaldoFinMEMN</column-name>
+			<column-type>double</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>SaldoFinTot</attribute-name>
+			<column-name>SaldoFinTot</column-name>
+			<column-type>double</column-type>
+		</attribute>
+	</query-->
+	<!--class>
+		<class-name>topsystems.automaticprocess.balance.TotalizedQueryBalanceCuatroColumnas</class-name>
+		<entity-name>query.BalanceResultados4Col</entity-name>
+		<table-name>CO_BALANCE_RESULTADOS_4_COL</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>FechaProceso</attribute-name>
+			<column-name>FECHA</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>CodigoInterno</attribute-name>
+			<column-name>CODIGO_INTERNO</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>idBCE</attribute-name>
+			<column-name>ID_BCE</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>SaldoFinMesMO</attribute-name>
+			<column-name>SALDOFINMESME</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>SaldoFinMesMN</attribute-name>
+			<column-name>SALDOFINMESMN</column-name>
+		</attribute>	
+		<attribute>
+			<attribute-name>saldoFinMEMN</attribute-name>
+			<column-name>saldoFinMEMN</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>saldoFinTot</attribute-name>
+			<column-name>saldoFinTot</column-name>
+		</attribute>
+	</class-->
+</map>

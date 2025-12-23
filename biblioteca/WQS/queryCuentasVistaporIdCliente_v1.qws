@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/vinculacion/jts_oidByCliente/{PAGINA}/{LARGOPAGINA}/{CLIENTE}/{ESTADOCUENTA}/{SATELITE}</uri>
+    <serviceDescription>Consultar Cuentas por ID de de Cliente</serviceDescription>
+    <title>Consultar Cuentas por ID de de Cliente</title>
+    <querys>
+        <query id="1" name="PERSONA" type="MULTIPLE">
+            <sql>
+
+DECLARE 
+@pagina INT = ?, 
+@largopagina INT = ?, 
+@cliente INT = CONVERT(NUMERIC(12,0), ?), 
+@estadocuenta VARCHAR(2) = ?,
+@satelite VARCHAR(10) = trim(?),
+@TotalRegistros INT,
+@primerRegistroPag INT,
+@ultimoRegistroPag INT,
+@estadoc VARCHAR(10) = NULL,
+@estadoc1 VARCHAR(10) = NULL;
+
+IF LEN(@estadocuenta) != 1
+    THROW 50000, 'La longitud del parámetro @estadocuenta es invalido', 1;
+
+IF NOT (@estadocuenta LIKE '[ATJ]')
+    THROW 50000, 'El parámetro @estadocuenta debe ser A, T o J', 1;
+
+IF NOT (LEN(@cliente) &lt;= 8)
+    THROW 50000, 'La longitud del parámetro @cliente es invalido', 1;
+
+IF @pagina &lt;= 0 OR @largopagina &lt;= 0
+    THROW 50000, 'Los parámetros @pagina y @largopagina deben ser enteros positivos.', 1;
+
+
+IF @estadocuenta = 'A'
+    SET @estadoc = ' ';
+ELSE IF @estadocuenta = 'T'
+BEGIN
+    SET @estadoc = ' ';
+    SET @estadoc1 = '1';
+END
+
+SET @TotalRegistros = (
+SELECT COUNT(*)
+FROM SALDOS (NOLOCK) s
+INNER JOIN VTA_SALDOS (NOLOCK) v 
+    ON  s.JTS_OID = v.JTS_OID_SALDO 
+        AND s.C1803 = @cliente
+        AND s.C1785 IN (2, 3)
+        AND s.C1651 IN (COALESCE(@estadoc, ''), COALESCE(@estadoc1, ''))
+        AND s.TZ_LOCK = 0
+        AND NOT EXISTS (
+            SELECT 1 FROM EXCLUSIONES_SATELITES_PRODUCTOS esp 
+            WHERE 	esp.SATELITE = @satelite
+                AND esp.PRODUCTO = s.PRODUCTO
+        )
+INNER JOIN PRODUCTOS (NOLOCK) p ON s.PRODUCTO = p.C6250
+WHERE   
+    (@estadocuenta &lt;&gt; 'J' OR p.C6250 NOT IN (9, 10))
+    AND p.TZ_LOCK = 0
+);
+
+SET @primerRegistroPag = ((@pagina - 1) * @largopagina) + 1;
+SET @ultimoRegistroPag = @pagina * @largopagina;
+
+IF @ultimoRegistroPag &gt; @TotalRegistros
+    SET @ultimoRegistroPag = @TotalRegistros;
+
+IF @pagina &gt; CEILING(CAST(@TotalRegistros AS FLOAT) / @largopagina)
+BEGIN
+    SELECT 
+        NULL AS JTS_OID,
+        @pagina AS paginaActual, 
+        CEILING(CAST(@TotalRegistros AS FLOAT) / @largopagina) AS cantidadPaginas,
+        @largopagina AS registroPorPag,
+        @TotalRegistros AS totalRegistros,
+        @primerRegistroPag AS primerRegistroPag,
+        @ultimoRegistroPag AS ultimoRegistroPag,
+        0 AS siguientesRegistros;
+END
+ELSE
+BEGIN
+    SELECT 
+        ROW_NUMBER() OVER (ORDER BY s.JTS_OID) AS ORDEN,
+        s.JTS_OID,
+        @pagina AS paginaActual, 
+        CONVERT(NUMERIC(10,0), CEILING(CAST(@TotalRegistros AS FLOAT) / @largopagina)) AS cantidadPaginas,
+        @largopagina AS registroPorPag,
+        @TotalRegistros AS totalRegistros,
+        @primerRegistroPag AS primerRegistroPag,
+        @ultimoRegistroPag AS ultimoRegistroPag,
+        (@TotalRegistros - @ultimoRegistroPag) AS siguientesRegistros
+    FROM SALDOS (NOLOCK) s
+    INNER JOIN VTA_SALDOS (NOLOCK) v 
+        ON  s.JTS_OID = v.JTS_OID_SALDO 
+            AND s.C1803 = @cliente
+            AND s.C1785 IN (2, 3)
+            AND s.C1651 IN (COALESCE(@estadoc, ''), COALESCE(@estadoc1, ''))
+            AND s.TZ_LOCK = 0
+            AND NOT EXISTS (
+                SELECT 1 FROM EXCLUSIONES_SATELITES_PRODUCTOS esp 
+                WHERE 	esp.SATELITE = @satelite
+                    AND esp.PRODUCTO = s.PRODUCTO
+            )
+    INNER JOIN PRODUCTOS (NOLOCK) p ON s.PRODUCTO = p.C6250
+    WHERE   
+        (@estadocuenta &lt;&gt; 'J' OR p.C6250 NOT IN (9, 10))
+        AND p.TZ_LOCK = 0
+    ORDER BY s.JTS_OID
+    OFFSET (@primerRegistroPag - 1) ROWS FETCH NEXT @largopagina ROWS ONLY;
+END
+
+</sql>
+            <input>
+                <inParameter description="" type="INTEGER">PAGINA</inParameter>
+                <inParameter description="" type="STRING">LARGOPAGINA</inParameter>
+                <inParameter description="" type="STRING">CLIENTE</inParameter>
+                <inParameter description="" type="STRING">ESTADOCUENTA</inParameter>
+                <inParameter description="" type="STRING">SATELITE</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="jts_oid">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>JTS_OID</queryname>
+                        <servicename>jts_oid</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

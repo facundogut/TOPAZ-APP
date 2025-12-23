@@ -1,0 +1,329 @@
+VERSION:055_5
+TN  NN 1006TParametro de entrada                    C00001 00
+*$2024-12-23 11:07:40FMK
+ NNNNN 00420   Cod.Internacion                                   INNSNI000007015200300452001011000000007000700300137000
+/V=codNegociacion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:12:07FMK
+ NNNNN 00537   Alfa de 3                                         INNSNI000007015200300452001011000000007000700300137000
+/V=origen
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:13:58FMK
+ NNNNN 00804   Moneda SWIFT                                      INNSNI000007015200300452001011000000007000700300137000
+/V=cuenta.modulo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:14:33FMK
+ NNNNN 00065   Nro.Cuotas Plan                                   INNSNI000007015200300452001011000000007000700300137000
+/V=cuenta.sucursal
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:16:10FMK
+ NNNNN 00080   Numerico                                          INNSNI000007015200300452001011000000007000700300137000
+/V=cuenta.numero
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:16:52FMK
+ NNNNN 00429   Cuenta_Cr                                         INNNNI000007015200300302021011000000007000700300137000
+/V=cuit
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:18:03FMK
+ NNNNN 00603   FechaPago                                         INNNNI000007015200300302021011000000007000700300137000
+/V=fechaPago
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:19:48FMK
+ NNNNN 00118   Texto                                             INNNNI000007015200300302021011000000007000700300137000
+/V=cmc7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:20:10FMK
+ NNNNN 00760   chequeId                                          INNNNI000007015200300452001011000000007000700300137000
+/V=chequeId
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-17 21:53:53c00candigi
+ NNNNN 00060   Importe                                           INNSNI000007015200300452001011000000007000700300137000
+/V=importe
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 11:28:11FMK
+*N  NN validaciones minimas
+*$2024-12-26 10:25:46FMK
+CNNNNN   00000000000000000000100
+/?=F(LEN,C760)=0 O F(LEN,C760)>15
+/P=I10I99
+*$2025-02-17 21:54:48c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99 Y A(C537#"LK")YA(C537#"HB")
+/P=I11I99
+*$2025-02-18 09:22:22c00candigi
+CNNNNN   00000000000000000000100
+/?=F(LEN,C118)#29OF(VALIDCHARS,1,C118,"0123456789")=0
+/P=I12I99
+*$2025-03-05 15:11:00GOKU
+CNNNNN   00000000000000000000100
+/?=!I99 Y A(C804#"CC")
+/P=I13I99
+*$2025-02-18 09:22:36c00candigi
+ NNNNN 00761   FEC                                               INNNNF000007015200300452001011000000007000700300137000
+/V=C603.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:35:09c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99 Y A(C761.0="18000101")
+/P=I16I99
+/M=FechaPago inval
+*$2025-02-18 09:36:24c00candigi
+*N  NN Existe codigo negociación ? y tiene cheque con estado distinto de A ?
+*$2025-02-18 09:23:38c00candigi
+ NSSNN 00109   Descriptor CLE_DESCUENTOS_ECHEQ                   INNSNK000007015200300202021011000000007000700300137000
+/V=3581
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-17 21:17:07c00candigi
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V="ESTADO <> 'A' AND COD_NEGOCIACION='"+C420.0+"' AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000) AND (TZ_LOCK = 0 OR TZ_LOCK >= 200000000000000)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:31:36c00candigi
+CNSSNN   00000000000000000000100
+/?=!I99 Y F(CANTIDAD,C109,C9208)#0
+/P=I14I99
+/M=Ya existe codigo negociacion
+*$2025-02-18 09:22:44c00candigi
+*N  NN Existe cuenta?
+*$2025-02-18 09:24:09c00candigi
+ NSSNN 00109   Descriptor SALDOS                                 INNSNK000007015200300202021011000000007000700300137000
+/V=21
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:24:33c00candigi
+ NSSNN 09208   where                                             INNNNF000007015200300452001011000000007000700300137000
+/V="C1785=2 AND MONEDA=1 AND SUCURSAL="+C65.0+" AND CUENTA = "+C80.0+" AND TZ_LOCK=0"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:26:46c00candigi
+CNSSNN   00000000000000000000100
+/?=!I99 Y F(CANTIDAD,C109,C9208)=0
+/P=I15I99
+/M=No Existe cuenta
+*$2025-02-18 09:27:11c00candigi
+TN  NN 1003TAlta Automatica Generica                T35811 00
+/?=!I99
+*$2025-02-17 21:38:48c00candigi
+ NNNNN 35909   Código Negociación                                INNNNA000007013300270243000011000000007000700270126000
+/V=C420.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:27:52c00candigi
+ NNNNN 35931   Importe                                           INNNNA000007013300270243000011000000007000700270126000
+/V=C60.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:00c00candigi
+ NNNNN 35932   Fecha de Vencimiento                              INNNNA000007013300270243000011000000007000700270126000
+/V=C603.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:03c00candigi
+ NNNNN 35910   ID Cheque                                         INNNNA000007013300270243000011000000007000700270126000
+/V=C760.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:06c00candigi
+ NNNNN 35909   Código Negociación                                INNNNA000007013300270243000011000000007000700270126000
+/V=C420.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:09c00candigi
+ NNNNN 35911   CUIT Negociador                                   INNNNA000007013300270243000011000000007000700270126000
+/V=C429.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:11c00candigi
+ NNNNN 35935   Canal de Origen                                   INNNNA000007013300270243000011000000007000700270126000
+/V=C537.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:13c00candigi
+ NNNNN 35933   Banda del Cheque                                  INNNNF000007013300270243000011000000007000700270126000
+/V=C118.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:14c00candigi
+ NNNNN 35912   Codigo Banco                                      INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C118.1,1,3)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:15c00candigi
+ NNNNN 35913   Sucursal                                          INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C118.1,4,3)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:16c00candigi
+ NNNNN 35914   Codigo Postal                                     INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C118.1,7,4)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:17c00candigi
+ NNNNN 35915   Numero Cheque                                     INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C118.1,11,8)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:18c00candigi
+ NNNNN 35916   Numero Cuenta                                     INNNNF000007013300270243000011000000007000700270126000
+/V=F(MID,C118.1,19,11)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-18 09:28:19c00candigi
+ NNNNN 35934   Estado                                            INNNNK000007015200300202001011000000007000700300137000
+/V=A
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:28:21c00candigi
+ N  NN 35940   Serie Cheque                                      INNSNK000007015200300202001011000000007000700300137000
+/V=E
+/F=0012400NNN000000000Consolas                                
+/f=0012700NNN000000000Arial                                   
+*$2025-02-26 13:30:00c00candigi
+TN  NN 1006TRetorno                                 C00000 00
+*$2024-12-26 10:22:22FMK
+ NNNNN 00622   RETORNO                                           INNNNK000007015200300302001011000000007000700300137000
+/V=OK
+/P=RETORNO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:21:29FMK
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/V=200
+/P=ERR_HTTP_CODE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-26 10:21:29FMK
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=!I99
+/V=Alta de solicitud realizada
+/P=descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:36:39c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=!I99
+/V=0
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:36:39c00candigi
+*N  NN errores
+*$2025-02-18 09:36:43c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I10
+/V=Id cheque inválido
+/P=descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-17 21:55:03c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I10
+/V=1
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 10:51:12FMK
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I11
+/V=El origen es incorrecto.
+/P=descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 10:51:08FMK
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I11
+/V=2
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 10:51:03FMK
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I12
+/V=Formato de CMC7 es incorrecto.
+/P=descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 10:50:58FMK
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I12
+/V=3
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 10:50:53FMK
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I13
+/V=El modulo es incorrecto.
+/P=descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 10:50:47FMK
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I13
+/V=4
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 10:50:41FMK
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I14
+/V=El código de negociacion no debe estar registrado.
+/P=descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 10:50:35FMK
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I14
+/V=5
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-12-27 10:50:31FMK
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I15
+/V=Cuenta inexistente
+/P=descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:27:40c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I14
+/V=6
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-17 21:22:20c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I16
+/V=Fecha pago inválida
+/P=descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:37:04c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I14
+/V=7
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-18 09:37:07c00candigi
+*#I13#Modulo incorrecto
+*#I12#Error longitud de cmc7
+*#I15#Ya existe id cheque
+*#I14#Ya existe cod negociacion
+*#I99#error
+*#I16#FechaPago inval
+*#I11#Error en Origen
+*#I10#Idcheque obligatorio

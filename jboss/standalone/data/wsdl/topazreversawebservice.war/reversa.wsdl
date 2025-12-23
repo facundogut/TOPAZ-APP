@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://reversa.ws.topsystems/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns2="http://schemas.xmlsoap.org/soap/http" xmlns:ns1="http://topsystemscorp.com/services/header" name="reversa" targetNamespace="http://reversa.ws.topsystems/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://reversa.ws.topsystems/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://reversa.ws.topsystems/">
+  <xs:element name="reversa" type="tns:reversa"/>
+  <xs:element name="reversaPostingId" type="tns:reversaPostingId"/>
+  <xs:element name="reversaPostingIdResponse" type="tns:reversaPostingIdResponse"/>
+  <xs:element name="reversaResponse" type="tns:reversaResponse"/>
+  <xs:element name="reversaTransactionIdStep" type="tns:reversaTransactionIdStep"/>
+  <xs:element name="reversaTransactionIdStepResponse" type="tns:reversaTransactionIdStepResponse"/>
+  <xs:element name="topazPostingId" type="tns:topazPostingId"/>
+  <xs:complexType name="reversaPostingId">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="topazPostingId" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="reversaPostingIdResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="reversa">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="TopazPostingId" type="tns:topazPostingId"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="topazPostingId">
+    <xs:sequence>
+      <xs:element name="branchNumber" type="xs:long"/>
+      <xs:element name="postingNumber" type="xs:long"/>
+      <xs:element minOccurs="0" name="processDate" type="xs:dateTime"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="reversaResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="reversaTransactionIdStep">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="arg0" type="tns:body"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="body">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="checkingAccountOperationId" type="xs:string"/>
+      <xs:element name="glPostingRemove" type="xs:boolean"/>
+      <xs:element minOccurs="0" name="stepId" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="reversaTransactionIdStepResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="return" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="errorType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="TECHNICAL"/>
+      <xs:enumeration value="BUSINESS"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="TopazSoapException" type="tns:TopazSoapException"/>
+  <xs:complexType name="TopazSoapException">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="errorText" type="xs:string"/>
+      <xs:element minOccurs="0" name="message" type="xs:string"/>
+      <xs:element minOccurs="0" name="operation" type="xs:string"/>
+      <xs:element minOccurs="0" name="shortComment" type="xs:string"/>
+      <xs:element minOccurs="0" name="subtype" type="xs:string"/>
+      <xs:element minOccurs="0" name="type" type="xs:string"/>
+      <xs:element minOccurs="0" name="errorCode" type="xs:string"/>
+      <xs:element minOccurs="0" name="origin" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://reversa.ws.topsystems/" xmlns="http://topsystemscorp.com/services/header" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://topsystemscorp.com/services/header">
+  <xsd:element name="Topaz-User" nillable="true" type="xsd:string"/>
+  <xsd:element name="Topaz-Transaction-ID" nillable="true" type="xsd:string"/>
+  <xsd:element name="Topaz-Transaction-IDStep" nillable="true" type="xsd:int"/>
+</xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="reversaPostingId">
+    <wsdl:part element="tns:reversaPostingId" name="parameters">
+    </wsdl:part>
+    <wsdl:part element="ns1:Topaz-User" name="Topaz-User">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reversa">
+    <wsdl:part element="tns:reversa" name="parameters">
+    </wsdl:part>
+    <wsdl:part element="ns1:Topaz-User" name="Topaz-User">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reversaTransactionIdStep">
+    <wsdl:part element="tns:reversaTransactionIdStep" name="parameters">
+    </wsdl:part>
+    <wsdl:part element="ns1:Topaz-User" name="Topaz-User">
+    </wsdl:part>
+    <wsdl:part element="ns1:Topaz-Transaction-ID" name="Topaz-Transaction-ID">
+    </wsdl:part>
+    <wsdl:part element="ns1:Topaz-Transaction-IDStep" name="Topaz-Transaction-IDStep">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reversaPostingIdResponse">
+    <wsdl:part element="tns:reversaPostingIdResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reversaResponse">
+    <wsdl:part element="tns:reversaResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="reversaTransactionIdStepResponse">
+    <wsdl:part element="tns:reversaTransactionIdStepResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="TopazSoapException">
+    <wsdl:part element="tns:TopazSoapException" name="TopazSoapException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="ReversaServiceSoap">
+    <wsdl:operation name="reversaPostingId">
+      <wsdl:input message="tns:reversaPostingId" name="reversaPostingId">
+    </wsdl:input>
+      <wsdl:output message="tns:reversaPostingIdResponse" name="reversaPostingIdResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TopazSoapException" name="TopazSoapException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reversa">
+      <wsdl:input message="tns:reversa" name="reversa">
+    </wsdl:input>
+      <wsdl:output message="tns:reversaResponse" name="reversaResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TopazSoapException" name="TopazSoapException">
+    </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reversaTransactionIdStep">
+      <wsdl:input message="tns:reversaTransactionIdStep" name="reversaTransactionIdStep">
+    </wsdl:input>
+      <wsdl:output message="tns:reversaTransactionIdStepResponse" name="reversaTransactionIdStepResponse">
+    </wsdl:output>
+      <wsdl:fault message="tns:TopazSoapException" name="TopazSoapException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="reversaSoapBinding" type="tns:ReversaServiceSoap">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="reversaPostingId">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="reversaPostingId">
+        <soap:header message="tns:reversaPostingId" part="Topaz-User" use="literal">
+        </soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reversaPostingIdResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="TopazSoapException">
+        <soap:fault name="TopazSoapException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reversa">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="reversa">
+        <soap:header message="tns:reversa" part="Topaz-User" use="literal">
+        </soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reversaResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="TopazSoapException">
+        <soap:fault name="TopazSoapException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="reversaTransactionIdStep">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="reversaTransactionIdStep">
+        <soap:header message="tns:reversaTransactionIdStep" part="Topaz-User" use="literal">
+        </soap:header>
+        <soap:header message="tns:reversaTransactionIdStep" part="Topaz-Transaction-ID" use="literal">
+        </soap:header>
+        <soap:header message="tns:reversaTransactionIdStep" part="Topaz-Transaction-IDStep" use="literal">
+        </soap:header>
+        <soap:body parts="parameters" use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="reversaTransactionIdStepResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="TopazSoapException">
+        <soap:fault name="TopazSoapException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="reversa">
+    <wsdl:port binding="tns:reversaSoapBinding" name="ReversaServiceSoapPort">
+      <soap:address location="http://10.70.0.31:8080/topazreversa/reversa/ReversaServiceSoap"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/depjudicial/getCausa/{idCausa}</uri>
+    <serviceDescription>ConsultaCausaJudicialxID</serviceDescription>
+    <title>ConsultaCausaJudicialxID</title>
+    <querys>
+        <query id="1" name="validaciones" type="SIMPLE">
+            <sql>
+                BEGIN TRY
+                    DECLARE 
+                        @causa VARCHAR(12) = ?
+                    ;
+
+                    IF ISNUMERIC(@causa) = 0
+                    BEGIN
+                        THROW 50001, 'Error: La causa debe ser numérica', 1;
+                    END
+
+                    SELECT
+                        @causa AS "causa",
+                        0 AS "errorCodigo",
+                        'Sin errores' AS "error"
+                    ;
+
+                END TRY
+
+                BEGIN CATCH
+                    SELECT
+                        @causa AS "causa",
+                        ERROR_NUMBER() AS "errorCodigo",
+                        ERROR_MESSAGE() AS "error"
+                    ;
+                END CATCH
+            </sql>
+            <input> 
+                <inParameter description="" type="STRING">idCausa</inParameter>
+            </input>
+            <output>
+                <level groupby="causa" name="validaciones">
+                    <outParameter description="" type="STRING">
+                        <queryname>causa</queryname>
+                        <servicename>resultado.causa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>errorCodigo</queryname>
+                        <servicename>resultado.errorCodigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>error</queryname>
+                        <servicename>resultado.error</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="causa" type="SIMPLE">
+            <sql>
+                SELECT TOP 1
+                    dc.JUZGADO,
+                    dc.EXPEDIENTE,
+                    dc.ANO,
+                    dc.NRO_CAUSA,
+                    dc.TIPO_CAUSA,
+                    dtc.DESCRIPCION AS DescTipoCausa,
+                    dc.CARATULA, 
+                    dc.FECHA_CAUSA,
+                    dc.ESTADO,
+					dc.CAUSA_DESTINO,
+                    (SELECT DESCRIPCION FROM OPCIONES WHERE OPCIONINTERNA = dc.ESTADO AND NUMERODECAMPO = 33141) AS DescEstado
+                FROM DJ_CAUSAS dc (nolock)
+                LEFT JOIN DJ_CAUSA_CUENTA dcc (nolock) ON dc.NRO_CAUSA = dcc.NRO_CAUSA AND dcc.TZ_LOCK LIKE '[04]%'
+                LEFT JOIN DJ_TIPOS_CAUSAS dtc (nolock) ON dtc.CODIGO = dc.TIPO_CAUSA AND dtc.TZ_LOCK LIKE '[04]%'
+                WHERE 
+                    CAST(dc.NRO_CAUSA AS VARCHAR) = ? AND
+                    dc.TZ_LOCK LIKE '[04]%'
+            </sql>
+            <input>
+                <inParameter description="" type="STRING">idCausa</inParameter>
+            </input>
+            <output>
+                <level groupby="idCausa" name="causa">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NRO_CAUSA</queryname>
+                        <servicename>idCausa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>JUZGADO</queryname>
+                        <servicename>causa.nroJuzgado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ANO</queryname>
+                        <servicename>causa.anoCausa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>EXPEDIENTE</queryname>
+                        <servicename>causa.expediente</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIPO_CAUSA</queryname>
+                        <servicename>tipoCausa.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DescTipoCausa</queryname>
+                        <servicename>tipoCausa.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CARATULA</queryname>
+                        <servicename>caratula</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_CAUSA</queryname>
+                        <servicename>fechaCausa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ESTADO</queryname>
+                        <servicename>estado.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DescEstado</queryname>
+                        <servicename>estado.descripcion</servicename>
+                    </outParameter>
+					<outParameter description="" type="LONG">
+                        <queryname>CAUSA_DESTINO</queryname>
+                        <servicename>idCausaDestino</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="3" name="query demandados" type="MULTIPLE">
+            <sql>
+                SELECT DISTINCT 
+                    dd.NRO_PERSONA
+                FROM DJ_CAUSAS dc (nolock)
+                LEFT JOIN DJ_CAUSA_CUENTA dcc (nolock) ON dc.NRO_CAUSA = dcc.NRO_CAUSA AND dcc.TZ_LOCK LIKE '[04]%'
+                LEFT JOIN DJ_TIPOS_CAUSAS dtc (nolock) ON dtc.CODIGO = dc.TIPO_CAUSA AND dtc.TZ_LOCK LIKE '[04]%'
+                LEFT JOIN DJ_BENEFICIARIOS db (nolock) ON db.NRO_CAUSA = dc.NRO_CAUSA AND db.TZ_LOCK LIKE '[04]%'
+                LEFT JOIN DJ_DEMANDADOS dd (nolock) ON dd.NRO_CAUSA = dc.NRO_CAUSA AND dd.TZ_LOCK LIKE '[04]%'
+                WHERE
+                    CAST(dc.NRO_CAUSA AS VARCHAR) = ? AND
+                    dc.TZ_LOCK LIKE '[04]%'
+            </sql>
+            <input>
+                <inParameter description="" type="STRING">idCausa</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="demandados">
+                    <outParameter description="" type="LONG">
+                        <queryname>NRO_PERSONA</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="4" name="cuentas" type="MULTIPLE">
+            <sql>
+                SELECT DISTINCT 
+                    dcc.JTS_OID_CUENTA,
+                    db.ID_BENEFICIARIO
+                FROM DJ_CAUSAS dc (nolock)
+                LEFT JOIN DJ_CAUSA_CUENTA dcc (nolock) ON dc.NRO_CAUSA = dcc.NRO_CAUSA AND dcc.TZ_LOCK LIKE '[04]%'
+                LEFT JOIN DJ_TIPOS_CAUSAS dtc (nolock) ON dtc.CODIGO = dc.TIPO_CAUSA AND dtc.TZ_LOCK LIKE '[04]%'
+                LEFT JOIN DJ_BENEFICIARIOS db (nolock) ON db.NRO_CAUSA = dc.NRO_CAUSA AND db.TZ_LOCK LIKE '[04]%'
+                WHERE 
+                    CAST(dc.NRO_CAUSA AS VARCHAR) = ? AND
+                    dc.TZ_LOCK LIKE '[04]%'
+            </sql>
+            <input>
+                <inParameter description="" type="STRING">idCausa</inParameter>
+            </input>
+            <output>
+                <level groupby="JTS_OID_CUENTA" name="cuentas">
+                    <outParameter description="" type="LONG">
+                        <queryname>JTS_OID_CUENTA</queryname>
+                        <servicename>jts_oid</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="beneficiarios">
+                    <outParameter description="" type="LONG">
+                        <queryname>ID_BENEFICIARIO</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

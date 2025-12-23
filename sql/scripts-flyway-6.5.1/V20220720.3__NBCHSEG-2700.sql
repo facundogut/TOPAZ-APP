@@ -1,0 +1,1 @@
+Execute('UPDATE dbo.ITF_MASTER SET P1_CAPTION = ''ID Liquidacion'' WHERE ID = 30')

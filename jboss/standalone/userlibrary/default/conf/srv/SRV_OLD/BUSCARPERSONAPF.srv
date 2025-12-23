@@ -1,0 +1,61 @@
+service BUSCARPERSONAPF; 
+description "Busqueda de Personas por Nombres, Apellidos o Empresa"; 
+
+
+ action: SQLCall CARGODATOS(
+	   
+	ApellidoPaterno: string,
+	ApellidoMaterno: string,
+	PrimerNombre: string,
+	SegundoNombre: string
+	
+	 
+	  ): [ 
+	   
+	 
+	 	
+	]
+	{ 
+	
+	  	properties { 
+	  	("statement", "{call SP_ITF_BUSCAPERSONA_JB (?, ?, ?, ?, ?)}"),
+		("0", "ApellidoPaterno"), 
+		("1", "ApellidoMaterno"), 
+		("2", "PrimerNombre"), 
+		("3", "SegundoNombre"), 
+		("4", "out SORDINAL : numeric")
+		 
+		 
+		     
+	      }; 
+
+    	
+    	action: SQLQuery PERSONAS(): [ 
+    	
+		CODERROR : numeric as CODERROR,
+		TIPODOC: string as TipoDocumento,
+		NUMERODOC: string as NroDocumento,
+		NUMEROPERSONA : numeric as IdPersona,
+		APELLIDOPATERNO : string as ApellidoPaterno,
+		APELLIDOMATERNO : string as ApellidoMaterno,
+		PRIMERNOMBRE : string as PrimerNombre,
+		SEGUNDONOMBRE : string as SegundoNombre,
+		EMPRESA : string as Empresa
+    		]  {
+    	
+    	    		
+
+    	    properties 
+    			{ 
+    			("statement", "SELECT 0 as CODERROR, TIPODOC, NUMERODOC, NUMEROPERSONA, APELLIDOPATERNO, APELLIDOMATERNO, PRIMERNOMBRE, SEGUNDONOMBRE ,EMPRESA FROM ITF_BUSCARPERSONAPFPJ WHERE Ordinal=?"), 
+     			  ("0", "SORDINAL")
+			  
+    
+                        }
+                   }
+    
+    
+     
+         
+
+}

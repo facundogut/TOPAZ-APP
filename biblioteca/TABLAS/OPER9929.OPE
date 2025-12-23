@@ -1,0 +1,437 @@
+VERSION:051
+TN  NN 1006T1 - Pasaje de Parametros                C0000 00
+ NNNNN 4161   IdPersona      I SNN 00021205010232059902001100000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 3124   TipoDocumento  I SNN 00021205010232059902001100000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 5367   NroDocumento   I SNN 00021205010232059902001100000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 2631   PaisDocumento  I SNN 00021205010232059902001100000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+*N  NN -**** Campos del Middleware
+ NNNNN 3253   NodoCliente    I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 1057   TicketSesion   I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0254   InfoOrigen     I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4404   ModoAutentica  I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4402   CodCanal       I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 3250   Origen         I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 2612   NroDepOrigen   I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0429   NroTransaccion I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0622   IdAutentica    I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4108   TipoProceso    I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 0531   IdInvocaTopaz  I SNN 00000701330027018102001100000000700070027012600
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 4136   Codigo 06      INNNNK00021205010232059902001000000021203680232049400
+/?=!I50
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+*N  NN ***- I66 Busco por IdPersona
+CNNNNN   00000000000000000000100
+/F=F(LEN,C4161.1)>1
+/P=I66
+*N  NN ***- I67 Busco por Tipo y Nro Doc
+ NNNNN 2619   Días Vencidos  I NNNF00000701330027018102001100000000700070027012600
+/?=!I66
+/V=F(LEN,C3250.1)
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=!I66Y(F(LEN,C3124.1)>2)
+/P=I67
+*N  NN ***- I50 Mal los datos
+CNNNNN   00000000000000000000100
+/?=(!I66Y!I67)
+/P=I50
+ NNNNN 0745   TipoDocumento  INNNNK00021205010232059902001000000021203680232049400
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0746   NroDocumento   INNNNK00021205010232059902001000000021203680232049400
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+TN  NN 1008T2 - Busco el IdPersona                  S0341 00
+/?=!I50YI67
+ NNNNN 1855   Tipo Documento INNNNA00021205010232059902001000000021203680232049400
+/V=C3124.1
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1856   Nro. Documento INNNNA00021205010232059902001000000021203680232049400
+/V=C5367.1
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1861   Tipo Persona   INNNN 00021205010232059902001000000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1854   Nro Persona    INNNN 00021205010232059902001000000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1857   País Documento I NNN 00021205010232059902001000000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C2631.1#C1857.2
+/P=I60
+CNNNNN MF00000000000000000000100
+/F=C9509=1
+/M=Finalizo
+/R=2
+TN  NN 1008T3 - Clientes de la Persona              S0161 00
+/?=!I50
+ NNNNN 1505   IdPersona      INNNNA00021205010232059902001000000021203680232049400
+/?=I66
+/V=C4161.1
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1505   IdPersona      INSNNA00021205010232059902001100000021203680232049400
+/?=I67
+/V=C1854.2
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1508   Fecha Modif    INNNN 00021205010232059902001000000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+CNNNNN MF00000000000000000000100
+/F=C9509=0
+/P=I50
+/M=Finalizo
+/R=3
+CNNNNN M 00000000000000000000100
+/?=!I50YI70
+/F=C4136>0
+/A=I70
+/M=Apago I70
+ NNNNN 1506   Titularidad    INNNNA00021205010232059902001000000021203680232049400
+/?=!I50
+/V=C1506.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4136   Codigo 06      INNNNF00021205010232059902001000000021203680232049400
+/?=!I50
+/V=C4136+1
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4136   Codigo 06      INNNNL00021205010232059902001000000021203680232049400
+/?=I50
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1504   ClientePersona INNNN 00021205010232059902001000000021203680232049400
+/?=!I50
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0902   Codigo Cliente INNNNA00021205010232059902001000000021203680232049400
+/?=!I50
+/V=C1504.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1000   Nombre Cliente INNNN 00021205010232059902001000000021203680232049400
+/?=!I50
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1040   Tipo  Cliente  INNNN 00021205010232059902001000000021203680232049400
+/?=!I50
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1008   Ejecut.Cliente INNNN 00021205010232059902001000000021203680232049400
+/?=!I50
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1945   Oficial Cuenta:INNNNA00021205010232059902001000000021203680232049400
+/?=!I50
+/V=C1008.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1946   Nombre         INNNN 00021205010232059902001000000021203680232049400
+/?=!I50
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+TN  NN 1008T4 - Consulta Sec. Generica              S0161 00
+/?=!I50Y!I70Y!I60
+ NNNNN 1504   Cód. Cliente   INNNNA00021205010232059902001000000021203680232049400
+/V=C1504.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1507   Fecha Alta     INNNN 00021205010232059902001000000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+CNNNNN MF00000000000000000000100
+/F=C9509=0
+/P=I70
+/M=Prendo I70
+/R=4
+ NNNNN 1505   IdPersona      INNNNA00021205010232059902001100000021203680232049400
+/?=!I70
+/V=C1505.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0902   Codigo Cliente INNNNA00021205010232059902001000000021203680232049400
+/?=!I70
+/V=C1504.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1000   Nombre Cliente INNNN 00021205010232059902001000000021203680232049400
+/?=!I70
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1040   Tipo  Cliente  INNNN 00021205010232059902001000000021203680232049400
+/?=!I70
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=!I70
+/P=I80
+TN  NN 1008T5 - Busco Documentos de Persona         S0341 00
+/?=!I50Y!I60Y!I70
+ NNNNN 1854   Nro Persona    INNNNA00021205010232059902001000000021203680232049400
+/V=C1505.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1857   País Documento INNNN 00021205010232059902001000000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1855   Tipo Documento INNNN 00021205010232059902001000000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1856   Nro. Documento INNNN 00021205010232059902001000000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1861   Tipo Persona   INNNN 00021205010232059902001000000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0745   TipoDocumento  INNNNA00021205010232059902001000000021203680232049400
+/V=C1855.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0746   NroDocumento   INNNNA00021205010232059902001000000021203680232049400
+/V=C1856.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+*N  NN ***- I55 Si es Persona Fisica o Unipersonal
+CNNNNN   00000000000000000000100
+/F=A(C1861="F")OA(C1861="U")
+/P=I55
+/M=I55
+*N  NN ***- I56 Si es Interm Finac o Persona Juridica
+CNNNNN   00000000000000000000100
+/F=A(C1861="J")
+/P=I56
+/M=Es PJ
+ NNNNN 2615   Persona        INNNNF00021205010232059902001000000021203680232049400
+/?=!I50YI55
+/V=C1505.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1401   Numero Persona INNNNA00021205010232059902001000000021203680232049400
+/?=I55Y!I70
+/V=C1505.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1441   Cod.Residencia INNNN 00021205010232059902001000000021203680232049400
+/?=I55Y!I70
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1421   PrimerNombre   INNNNA00021205010232059902001000000021203680232049400
+/?=I55Y!I70
+/V=C1421.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1422   SegundoNombre  INNNNA00021205010232059902001000000021203680232049400
+/?=I55Y!I70
+/V=C1422.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1451   No.Pers.JurídicINNNNA00021205010232059902001000000021203680232049400
+/?=I56Y!I70
+/V=C1505.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1455   Apartamento    INNNN 00021205010232059902001000000021203680232049400
+/?=I56Y!I70
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 1452   Razon Social   INNNNA00021205010232059902001000000021203680232049400
+/?=I56Y!I70
+/V=C1452.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+CNNNNN  F00000000000000000000100
+/R=5
+TN  NN 1006T6 - Muestro Datos Consulta              C0001 00
+/?=(C1854.5#C4161.1)Y(I80Y!I70)O(I50YC4136.3=0)OI60
+ NNNNN 4898   CODERROR       I SNNK00000701330027018102001100000000700070027012600
+/?=!I50
+/V=0
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C4898="0")
+/P=I90
+ NNNNN 3793   IdCliente      I SNNA00021205010232059902001100000021203680232049400
+/?=!I50
+/V=C1504.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4862   RolPersona     I SNNF00021205010232059902001100000021203680232049400
+/?=!I50
+/V=O1506.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   PrimerNombre   I SNNA00021205010232059902001100000021203680232049400
+/?=!I50YI55YI90
+/V=C1421.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   PrimerApellido I SNNA00021205010232059902001100000021203680232049400
+/?=!I50YI55YI90
+/V=C1418.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   PrimerNombre   I SNNK00021205010232059902001100000021203680232049400
+/?=!I50YI56YI90
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   PrimerApellido I SNNK00021205010232059902001100000021203680232049400
+/?=!I50YI56YI90
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0656   NombreCliente  I SNNA00021205010232059902001100000021203680232049400
+/?=!I50YI90
+/V=C1000.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0745   TipoDocumento  IDSNNL00021205010232059902001100000021203680232049400
+/?=!I50YI90
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0746   NroDocumento   IDSNNA00021205010232059902001100000021203680232049400
+/?=!I50YI90
+/V=C746.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0747   EjecutivoCli   I SNNA00021205010232059902001100000021203680232049400
+/?=!I50YI90
+/V=C1946.3
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 2615   IdPersona      IDSNNA00021205010232059902001100000021203680232049400
+/?=!I50YI90
+/V=C1854.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4898   CODERROR       I SNNK00000701330027018102001100000000700070027012600
+/?=(I50YC4136.3=0)OI60
+/V=1
+/F=0013400NNN255255000Arial                                   
+/f=0013400NNN255255000Arial                                   
+ NNNNN 3793   IdCliente      I SNNK00021205010232059902001100000021203680232049400
+/?=(I50YC4136.3=0)OI60
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4862   RolPersona     I SNNK00021205010232059902001100000021203680232049400
+/?=(I50YC4136.3=0)OI60
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4837   PrimerNombre   I SNNK00021205010232059902001100000021203680232049400
+/?=(I50YC4136.3=0)OI60
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   PrimerApellido I SNNK00021205010232059902001100000021203680232049400
+/?=(I50YC4136.3=0)OI60
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0656   NombreCliente  I SNNK00021205010232059902001100000021203680232049400
+/?=(I50YC4136.3=0)OI60
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0745   TipoDocumento  IDSNNA00021205010232059902001000000021203680232049400
+/?=(I50YC4136.3=0)OI60
+/V=C745.1
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0746   NroDocumento   IDSNNA00021205010232059902001000000021203680232049400
+/?=(I50YC4136.3=0)OI60
+/V=C746.1
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 0747   EjecutivoCli   I SNNK00021205010232059902001100000021203680232049400
+/?=(I50YC4136.3=0)OI60
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 2615   IdPersona      IDSNNK00021205010232059902001100000021203680232049400
+/?=(I50YC4136.3=0)OI60
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=I80
+/A=I80
+TN  NN 1006T7 - Itero                               C0001 00
+/?=!I50Y!I70Y!I60
+ NNNNN 4837   PrimerNombre   INSNNK00021205010232059902001100000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   PrimerApellido INSNNK00021205010232059902001100000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+CNNNNN MI00000000000000000000100
+/M=A la 4
+/R=4
+TN  NN 1006T8 - Itero                               C0001 00
+/?=!I50Y!I60YI70
+ NNNNN 4837   PrimerNombre   INSNNK00021205010232059902001100000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 4838   PrimerApellido INSNNK00021205010232059902001100000021203680232049400
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=I55
+/A=I55
+CNNNNN   00000000000000000000100
+/?=I56
+/A=I56
+CNNNNN MI00000000000000000000100
+/?=I70
+/M=A la 3
+/R=3
+*#I50#No hay mas registros
+*#I55#Es PF
+*#I66#Busco por IdPersona
+*#I56#Es PJ
+*#I67#Busco por Tipo y Nro Doc
+*#I90#Todo OK
+*#I80#INo hay mas registros para procesar
+*#I70#s
+*#I60#Pais Documento Incorrecto

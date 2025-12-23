@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/promediosAcreditaciones/{cuit}</uri>
+    <serviceDescription>A partir de un Cuit / Cuil, el servicio devuelve promedio de los últimos 19 periodos. Es decir, devuelve el promedio del mes actual (en curso) mas 18 periodos anteriores. </serviceDescription>
+    <title>PromediosMensualesbyCuit</title>
+    <querys>
+        <query id="1" name="mesesAnteriores" type="MULTIPLE">
+            <sql>EXECUTE SP_PROMEDIOS_MOVIMIENTOS @cuit = ?;</sql>
+            <input>
+                <inParameter description="" type="LONG">cuit</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="meses">
+                    <outParameter description="" type="FLOAT">
+                        <queryname>promedio</queryname>
+                        <servicename>promedio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fecha</queryname>
+                        <servicename>mes</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="mesActual" type="SIMPLE">
+            <sql>SELECT LEFT(CONVERT(VARCHAR(6),FECHA,112), 6) AS fecha, PROMEDIO_ANUAL AS promedio FROM ITF_PROMEDIOS_MOVIMIENTOS WHERE ID = 1;</sql>
+            <input/>
+            <output>
+                <level groupby="" name="promedioAcreditacionActual">
+                    <outParameter description="" type="FLOAT">
+                        <queryname>promedio</queryname>
+                        <servicename>promedioAcreditacionActual</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

@@ -1,0 +1,27 @@
+﻿EXECUTE('
+-----------------------------
+--VALIDACIONES NBCHSEG-1174--
+-----------------------------
+UPDATE DICCIONARIO
+SET VALIDACION = 144
+WHERE NUMERODECAMPO = 1091
+----------------------------
+--MODIFICACIÓN LARGO CAMPO--
+----------------------------
+UPDATE DICCIONARIO
+SET LARGO = 6
+WHERE NUMERODECAMPO = 3000
+------------------------------------------
+--MODIFICACION DE CAMPO A RETORNAR AYUDA--
+------------------------------------------
+UPDATE DICCIONARIO
+SET LARGO = 1
+WHERE NUMERODECAMPO = 34885
+--
+UPDATE AYUDAS
+SET CAMPOS = ''34881RA1;34882RA2;34884;34880;''
+WHERE NUMERODEAYUDA = 34881
+----
+')
+
+

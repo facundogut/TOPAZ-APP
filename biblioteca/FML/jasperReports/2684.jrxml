@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-09-10T11:24:05 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Pago de Honorarios" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="51dc711e-4ec8-41ee-bf51-eafc1cad13b9">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="NRO_CONVENIO" class="java.lang.String">
+		<parameterDescription><![CDATA[Número de Convenio]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT TOP 1
+	--CONVENIO--
+	(SELECT CASE CONCAT('',a.Cuit) WHEN '0' THEN REPLICATE('_',11) WHEN '' THEN REPLICATE('_',11) ELSE CONCAT('',a.Cuit) END) AS Cuit,
+	(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',5) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',a.Plazo) END) AS Plazo, 
+	(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',10) ELSE dbo.Fn_NumberToWords(a.Plazo) END) AS W_Plazo,
+	a.FecAlta, 
+	a.Id_ConvPago, 
+	(SELECT CASE CONCAT('',a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE LEFT(CONVERT(VARCHAR,a.FecAlta,106),2) END) AS DIA,  
+	(SELECT CASE CONCAT('', a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE (SELECT dbo.Fn_NumberToWords(RIGHT(CONVERT(VARCHAR,FecAlta,106),4))) END) AS AÑO,
+	
+	-- CUENTA DEBITO -- 
+	(SELECT CASE CONCAT('',b.CUENTA) WHEN '' THEN REPLICATE('_',12)  ELSE CONCAT('',b.CUENTA) END)AS CUENTA, 
+	(SELECT CASE CONCAT('',e.C6251) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',e.C6251) END )AS TIPO_CUENTA,
+	(SELECT CASE CONCAT('',b.SUCURSAL) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',b.SUCURSAL) END) AS SUCURSAL, 
+	(SELECT CASE CONCAT('',d.NOMBRESUCURSAL) WHEN ''  THEN REPLICATE('_',25)  ELSE CONCAT('',d.NOMBRESUCURSAL) END) AS LOC_SUC, 
+	
+	
+	-- DIRECCION FISCAL --
+	(SELECT CASE CONCAT('',tf.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',n.NUMERO) END) AS TEL_DF,
+	(SELECT  CASE CONCAT('',n.CALLE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',n.CALLE)  END) AS CALLE_DF, 
+	(SELECT CASE CONCAT('',n.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',n.NUMERO) END) AS NRO_DF, 
+	(SELECT CASE CONCAT('apto ',n.APARTAMENTO) WHEN 'apto ' THEN '' ELSE CONCAT('apto ',n.APARTAMENTO) END)AS APTO_DF, 
+   	(SELECT CASE CONCAT('piso ',n.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ',n.PISO)  END) AS PISO_DF,
+	(SELECT CASE CONCAT('',p.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',p.DESCRIPCION_DIM3) END) AS LOCALIDAD_DF,
+	(SELECT CASE CONCAT('', o.DESCRIPCION) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('', o.DESCRIPCION) END) AS PROVINCIA_DF,
+	
+	--DIRECCION REAL --
+	(SELECT CASE CONCAT('',tr.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',n.NUMERO) END ) AS TEL_DR,
+	(SELECT CASE CONCAT('',r.CALLE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',r.CALLE) END) AS CALLE_DR,
+	(SELECT CASE CONCAT('',r.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',r.NUMERO) END) AS NRO_DR,
+	(SELECT CASE CONCAT('apto ',r.APARTAMENTO) WHEN 'apto ' THEN '' ELSE  CONCAT('apto ',r.APARTAMENTO) END) AS APTO_DR,
+	(SELECT CASE CONCAT('piso ', r.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ', r.PISO) END) AS PISO_DR,
+	(SELECT CASE CONCAT('',t.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',t.DESCRIPCION_DIM3) END) AS LOCALIDAD_DR,
+	(SELECT CASE CONCAT('',s.DESCRIPCION) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',s.DESCRIPCION) END)  AS PROVINCIA_DR,
+	
+	-- SUCURSAL -- 
+	(SELECT CASE CONCAT('',v.NOMBREDEP) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',v.NOMBREDEP) END) AS DEP_CONTRATO,
+	
+	--CLIENTE  --
+	(SELECT CASE CONCAT('', w.NOMBRECLIENTE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('', w.NOMBRECLIENTE) END) AS NOMBRECLIENTE,
+	(SELECT CASE CONCAT('',w.TIPO) WHEN '' THEN REPLICATE('_',15) WHEN 'J' THEN 'la Empresa' WHEN 'I' THEN 'la Institución' WHEN 'F' THEN 'la Persona' END) AS REPRESENTACION
+	
+	
+		FROM CONV_CONVENIOS_PAG a 
+    --CUENTA PAG --
+    LEFT JOIN SALDOS b ON a.CuentaDeb = b.JTS_OID AND b.TZ_LOCK = 0
+    LEFT JOIN CLI_DIRECCIONES c ON b.SUCURSAL = c.ID AND c.TZ_LOCK = 0
+    LEFT JOIN SUCURSALES d ON d.SUCURSAL = b.SUCURSAL AND d.TZ_LOCK = 0
+    LEFT JOIN PRODUCTOS e ON b.PRODUCTO = e.C6250 AND e.TZ_LOCK = 0
+    LEFT JOIN CLI_ClientePersona x ON a.Cliente = x.CODIGOCLIENTE AND x.TITULARIDAD = 'T' AND x.TZ_LOCK = 0
+    --DIRECCION FISCAL--
+	LEFT JOIN CLI_DIRECCIONES n ON a.Dir_Id = n.ID AND a.Dir_Formato =n.FORMATO AND a.Dir_Tipo = n.TIPODIRECCION AND a.Dir_ordinal = n.ORDINAL_DIR AND n.TZ_LOCK = 0
+	LEFT JOIN CLI_TELEFONOS tf ON tf.ID = a.Cliente AND tf.FORMATO IN ('PF','PJ') AND tf.ORDINAL = 1 AND tf.TIPO = 'LE' AND tf.TZ_LOCK = 0
+	LEFT JOIN CLI_PROVINCIAS o ON o.CODIGOPAIS =n.PAIS AND o.DIM1 = n.PROVINCIA AND o.TZ_LOCK = 0
+	LEFT JOIN CLI_LOCALIDADES p ON p.DIM1 = n.PROVINCIA AND p.DIM2 = n.DEPARTAMENTO AND p.DIM3 = n.LOCALIDAD AND p.TZ_LOCK = 0
+    --DIRECCION REAL--
+	LEFT JOIN  CLI_DIRECCIONES r ON a.Dir_Id = r.ID AND a.Dir_Formato = r.FORMATO AND r.TIPODIRECCION = 'R' AND r.TZ_LOCK = 0
+	LEFT JOIN CLI_TELEFONOS tr ON a.Cliente = tr.ID AND tr.FORMATO IN ('PF','PJ') AND tr.ORDINAL = 1 AND tr.TIPO = 'LE' AND tr.TZ_LOCK = 0
+    LEFT JOIN  CLI_PROVINCIAS s ON s.CODIGOPAIS = r.PAIS AND s.DIM1 = r.PROVINCIA AND s.TZ_LOCK = 0 AND s.TZ_LOCK = 0
+	LEFT JOIN CLI_LOCALIDADES t ON t.DIM1 = r.PROVINCIA AND t.DIM2 = r.DEPARTAMENTO AND t.DIM3 = r.LOCALIDAD AND t.TZ_LOCK = 0
+    --SUCURSAL --
+    LEFT JOIN CLI_DIRECCIONES u ON u.ID = x.numeropersona AND u.TZ_LOCK = 0
+    LEFT JOIN CLI_DEPARTAMENTOS v ON v.CODIGOPAIS = u.PAIS AND v.DEPARTAMENTO = u.DEPARTAMENTO AND v.PROVINCIA = u.PROVINCIA AND v.TZ_LOCK = 0
+    
+    --CLIENTE ---
+	LEFT JOIN CLI_CLIENTES w ON w.CODIGOCLIENTE = a.Cliente AND w.TZ_LOCK = 0
+	WHERE a.Id_ConvPago = $P{NRO_CONVENIO} AND a.TZ_LOCK = 0]]>
+	</queryString>
+	<field name="Cuit" class="java.lang.String"/>
+	<field name="Plazo" class="java.lang.String"/>
+	<field name="W_Plazo" class="java.lang.String"/>
+	<field name="FecAlta" class="java.sql.Timestamp"/>
+	<field name="Id_ConvPago" class="java.math.BigDecimal"/>
+	<field name="DIA" class="java.lang.String"/>
+	<field name="AÑO" class="java.lang.String"/>
+	<field name="CUENTA" class="java.lang.String"/>
+	<field name="TIPO_CUENTA" class="java.lang.String"/>
+	<field name="SUCURSAL" class="java.lang.String"/>
+	<field name="LOC_SUC" class="java.lang.String"/>
+	<field name="TEL_DF" class="java.lang.String"/>
+	<field name="CALLE_DF" class="java.lang.String"/>
+	<field name="NRO_DF" class="java.lang.String"/>
+	<field name="APTO_DF" class="java.lang.String"/>
+	<field name="PISO_DF" class="java.lang.String"/>
+	<field name="LOCALIDAD_DF" class="java.lang.String"/>
+	<field name="PROVINCIA_DF" class="java.lang.String"/>
+	<field name="TEL_DR" class="java.lang.String"/>
+	<field name="CALLE_DR" class="java.lang.String"/>
+	<field name="NRO_DR" class="java.lang.String"/>
+	<field name="APTO_DR" class="java.lang.String"/>
+	<field name="PISO_DR" class="java.lang.String"/>
+	<field name="LOCALIDAD_DR" class="java.lang.String"/>
+	<field name="PROVINCIA_DR" class="java.lang.String"/>
+	<field name="DEP_CONTRATO" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="REPRESENTACION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="80" splitType="Stretch">
+			<image>
+				<reportElement x="50" y="10" width="150" height="60" uuid="5d84144d-573a-48e3-bc89-37f9613d7505"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="69" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="50" y="40" width="450" height="20" uuid="814d5f73-eb51-4351-a313-5d6ca5ff8c87"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p>En la Ciudad de Resistencia, el "+$F{DIA}+" de "+new SimpleDateFormat("MMMM").format($F{FecAlta})+" del año "+$F{AÑO}+" entre <b>Nuevo Banco del Chaco S.A.</b>, con domicilio en calle Güemes Nº 102 de la ciudad de Resistencia, en adelante el “BANCO”, representado en este acto por los abajo firmantes, los cuales comparecen en el carácter de apoderados, con facultades suficientes para este acto, otorgadas mediante Poder General Amplio de Administración y Disposición instrumentado en Escritura Nº 75 de fecha 15/07/2016 pasada ante el Escribano Ariel Alfredo Farías, por una parte y por la otra "+$F{NOMBRECLIENTE}+" , CUIT Nº "+$F{Cuit}+", con domicilio en "+$F{CALLE_DR}+" Nº"+$F{NRO_DR}+", de la localidad de "+$F{LOCALIDAD_DR}+", provincia de "+$F{PROVINCIA_DR}+", teléfono "+$F{TEL_DR}+", con domicilio fiscal en "+$F{CALLE_DF}+" Nº"+$F{NRO_DF}+", de la localidad de "+$F{LOCALIDAD_DF}+", provincia de "+$F{PROVINCIA_DF}+", representada en este acto por los abajo firmantes, los que comparecen en nombre y representación de "+$F{REPRESENTACION}+", en adelante la “ENTIDAD”, convienen en celebrar el presente Convenio de PAGO DE HONORARIOS, que se regirá por las siguientes cláusulas y condiciones:</p><br>"+
+
+"<p><b>A los efectos del presente convenio, se entenderá por:</b></p>"+
+"<p><u>CUENTA PAGADORA:</u> <b>CUENTA "+$F{TIPO_CUENTA}+" N° "+$F{CUENTA}+" de sucursal "+$F{LOC_SUC}+" ("+$F{SUCURSAL}+")</b>, de titularidad de la ENTIDAD, habilitada en el BANCO, de la cual se debitará el importe total que resulte necesario para cubrir la acreditación ordenada más las comisiones e impuestos que correspondan al presente.</p>"+
+"<p><u>USUARIO:</u> Profesional afiliado/asociado a la ENTIDAD.</p>"+
+"<p><u>CUENTA:</u> Caja de Ahorro ó Cuenta Corriente de titularidad del USUARIO, habilitada en el BANCO, en la cual se acredita el pago objeto del presente convenio.</p><br>"+
+
+"<p><b>1. OBJETO.</b></p>"+
+"<p>La ENTIDAD solicita y el BANCO acepta, prestar el Servicio de <b>PAGO DE HONORARIOS CON CARÁCTER NO REMUNERATIVOS</b> a los USUARIOS de la ENTIDAD, por cuenta y orden de la misma, mediante la modalidad de acreditaciones en CUENTAS a nombre de éstos últimos, en los términos y condiciones que a continuación se detallarán.</p><br>"+
+
+"<p><b>2. VINCULACIÓN DE CAJAS DE AHORRO Y ACREDITACIÓN EN CUENTAS. PROCEDIMIENTO.</b></p>"+
+"<p>- La ENTIDAD realizará, tanto la solicitud de apertura de CUENTAS a nombre de sus USUARIOS como el pedido de las acreditaciones en las CUENTAS de los mismos, a través de la página web institucional <u>http://www.nbch.com.ar</u>, ingresando al módulo AUTOGESTION (o sistema de gestión que en lo sucesivo el BANCO implemente). Para el ingreso, la ENTIDAD contará con un usuario y clave otorgada por el BANCO.</p>"+
+"<p>- El BANCO podrá establecer nuevos procedimientos y/o medios de presentación de información, los que serán comunicados a la ENTIDAD con treinta (30) días de anticipación a su entrada en vigencia.</p>"+
+"<p>- La ENTIDAD es exclusiva responsable de la correcta carga de datos para su envío al BANCO, en forma individual o por archivo y de la integridad de los datos para la ejecución del servicio.</p><br>"+
+
+"<p><b>2.1. Vinculación.</b></p>"+
+"<p>- La ENTIDAD se compromete a suministrar al BANCO, en el formato preestablecido por este, los datos de los USUARIOS necesarios para la habilitación de las CUENTAS.</p>"+
+"<p>En la apertura de CUENTAS, a requerimiento de la ENTIDAD, generarán los formularios que integran el legajo digital de cada USUARIO que incluirá, el registro de firma y el contrato de apertura de la CUENTA (FORMULARIOS), integrados con la información provista por la ENTIDAD, los cuales estarán a disposición de la ENTIDAD en la pestaña “formularios” dentro del módulo AUTOGESTION, para ser impresos.</p>"+
+"<p>-El responsable de la ENTIDAD y/o personal autorizado por la misma –CON FIRMAS REGISTRADAS EN EL BANCO- imprimirá, certificará la correcta integración de los formularios por parte de sus USUARIOS y procederá a su presentación en la sucursal donde la ENTIDAD tenga radicada su CUENTA PAGADORA.</p>"+
+"<p>- La apertura de las CUENTAS implica la emisión automática de una <b>Tarjeta de Débito Chaco 24</b> para su utilización en las Redes de Cajeros Automáticos Link / Banelco / Cirrus, siendo la primera entrega sin costo, quedando las entregas sucesivas y reimpresiones sujetas a los costos vigentes con carácter general en el BANCO y a cargo de los titulares de las respectivas CUENTAS.</p><br>"+
+
+"<p><b>2.2. Acreditación de fondos.</b></p>"+
+"<p>Para el procesamiento de información vía web, ya sea en forma individual o mediante la importación de archivo plano, se establece un horario de corte automático diario, las 13:00 horas.</p>"+
+"<p>- La ENTIDAD, deberá ingresar vía web –con ajuste al formato que el BANCO establezca en el sitio web indicado precedentemente y antes de la hora de corte-, los archivos a procesar.</p>"+
+"<p>Los archivos recepcionados fuera de la hora indicada, serán procesados el día siguiente, los ingresados válidamente hasta la hora de corte serán procesados por el BANCO y tendrán disponibilidad efectiva en CUENTA, dentro de las 24 horas hábiles bancarias siguientes.</p>"+
+"<p>El ingreso –por parte de la ENTIDAD- del archivo de acreditación implica:</p>"+
+"<p>a.- La instrucción al BANCO para realizar el proceso de acreditación y autorización para debitar de la CUENTA PAGADORA, el importe total que resulte necesario para cubrir la acreditación ordenada más las comisiones e impuestos que correspondan al presente.</p>"+
+"<p>b.- Que no podrá solicitar reversa de la operatoria que resulta de la acreditación ordenada.</p>"+
+"<p>- Concluido el proceso de acreditación por el BANCO, la ENTIDAD tendrá a su disposición el reporte de rendición resultante de la acreditación, en el módulo AUTOGESTION anteriormente mencionado, ingresando a la opción ACREDITACIONES PRIVADAS SUELDOS-HONORARIOS-VARIOS, seleccionando el botón “DESCARGAR REPORTES DE ACREDITACIÓN”.</p>"+
+"<p>Los reportes de rendición que el BANCO pone a disposición de la ENTIDAD comprende:</p>"+
+"<p>1- LISTADO DE REGISTROS RECHAZADOS-</p>"+
+"<p>2- LISTADO DE REGISTROS ACEPTADOS-</p>"+
+"<p>- El BANCO sólo prestará el servicio en caso de contar la ENTIDAD con fondos líquidos y de libre disposición y/o acuerdo para girar en descubierto, a cuyo efecto el importe total correspondiente a pagos destinados a los USUARIOS, gastos de procesamiento, comisiones y cargas fiscales pertinentes, serán debitados a la ENTIDAD de su CUENTA PAGADORA, al momento de iniciar el proceso de acreditación.</p>"+
+"<p>- Será motivo de rechazo por el BANCO la solicitud de débito a los fines de este contrato, a cuentas cerradas, inhabilitadas, afectadas por medidas cautelares o sin disponibilidad de fondos para el cumplimiento del servicio por cualquier causa, entre otros, como así también si los datos suministrados por la ENTIDAD fueran incongruentes.</p>"+
+"<p>El BANCO podrá establecer nuevos procedimientos y/o medios de presentación de esta información, los que serán comunicados a la ENTIDAD con suficiente anticipación a su entrada en vigencia.</p><br>"+
+
+"<p><b>3. COMISIONES.</b></p>"+
+"<ul><p>El BANCO percibirá por la prestación del servicio la siguiente comisión, a cargo de la ENTIDAD:</p>"+
+"<li><p> Comisión fija mensual por mantenimiento de convenio: la suma de Pesos <b>TRESCIENTOS ($300,00) más IVA.</b></p>"+
+"<p><u>Variabilidad:</u> El BANCO podrá ajustar las comisiones establecidas, previa comunicación a la ENTIDAD con treinta (30) días de anticipación a la aplicación de los nuevos valores. En caso de disconformidad con los mismos, la ENTIDAD podrá rescindir el presente convenio a partir de la fecha de entrada en vigencia de los nuevos valores, sin que ello genere derecho a indemnización alguna para las partes.</p></li></ul><br>"+
+
+
+"<p><b>4. DERECHOS Y OBLIGACIONES DE LA ENTIDAD.</b></p>"+
+"<p>i. La ENTIDAD es exclusivamente responsable de la carga de datos en forma individual o por archivo y de la corrección e integridad de los datos suministrados al BANCO para la ejecución del servicio.</p>"+
+"<p>ii. La ENTIDAD será responsable de informar y solucionar los inconvenientes que se le presenten a sus USUARIOS en cuanto a montos, fechas de acreditación, acreditaciones no efectuadas por causas imputables a la ENTIDAD.</p>"+
+"<p>iii. Se compromete a suministrar al BANCO, la información que éste le requiera respecto de sus USUARIOS, cuando ello resulte necesario para cumplir con exigencias impuestas por el Banco Central de la República Argentina, la Unidad de Información Financiera y/u otros organismos públicos de control y supervisión.</p>"+
+"<p>iv. El cierre de las CUENTAS, se hará efectivo, transcurridos sesenta (60) días corridos, contados desde la fecha de la última acreditación de fondos, la comunicación de desvinculación del USUARIO por parte de la ENTIDAD o lo que antes suceda.</p><br>"+
+
+"<p><b>5. DERECHOS Y OBLIGACIONES DEL BANCO.</b></p>"+
+"<p>i. El BANCO se limitará única y exclusivamente a realizar los pagos que solicite la ENTIDAD en el marco del presente acuerdo, sin que esté obligado al cumplimiento de cualquier otra función no determinada expresamente en el mismo.</p>"+
+"<p>ii. El BANCO no tendrá responsabilidad alguna para el caso de que por fuerza mayor y/o por causas ajenas no pudiere cumplimentar alguna de las obligaciones establecidas y/o se demorase en la ejecución de las mismas. Entiéndase por hecho de fuerza mayor, cualquier hecho que ocurra excediendo la capacidad de control del BANCO, incluyendo sin restricciones: falta de disponibilidad de sistema de comunicación, sabotaje, incendio, inundación, explosión, caso fortuito, conmoción, huelgas o cualquier tipo de disturbios, insurrección, guerras o actos de gobierno. Asimismo, en estos supuestos, y si los mismos duraran más de tres meses, cualquiera de las partes podrá rescindir el acuerdo previa comunicación fehaciente a la contraparte y sin que dicho acto genere derecho a resarcimiento alguno.</p><br>"+
+
+
+"<p><b>6. CONFIDENCIALIDAD.</b></p>"+
+"<p>Los términos y condiciones del presente convenio son confidenciales, y, por ende, no deben ser divulgados a terceros, salvo cuando sea requerido por autoridad competente u orden judicial.</p>"+
+"<p>Asimismo, las partes se obligan a no divulgar ningún dato o información interna o confidencial acerca de la otra Parte, a la que puedan tener acceso en virtud del presente convenio, sin previo consentimiento por escrito de la otra parte. Asimismo, se obligan a no utilizarla para otro fin distinto al de convenio.</p><br>"+
+
+
+"<p><b>7. VIGENCIA.</b></p>"+
+"<p> <u>Plazo:</u> Los términos de este convenio serán a partir de la fecha del contrato por "+$F{W_Plazo}+" ("+$F{Plazo}+") meses, los convenios no operativos por un plazo de seis (6) meses corridos podrán ser dados de baja por el BANCO sin aviso previo a la ENTIDAD.</p>"+
+"<p><u>Rescisión:</u> Ambas partes se reservan la facultad de rescindir unilateralmente la vigencia de los términos y condiciones expresados en el presente convenio sin expresión de causa, con el solo recaudo de así preavisarlo a la otra parte con un mínimo de treinta (30) días corridos de antelación respecto a la fecha de efectiva rescisión, en cuyo caso la misma no generará derecho a indemnización a favor de ninguna de las Partes.</p>"+
+"<p><u>Resolución:</u> La falta de cumplimiento de cualquiera de las obligaciones previstas en el presente contrato dentro de los diez (10) días de intimado fehacientemente, con las modalidades convenidas, habilitará a la parte cumplidora a requerir la resolución del contrato.</p><br>"+
+
+"<p><b>8. ACUERDO ÚNICO.</b></p>"+
+"<p>El presente contrato y sus anexos constituye el acuerdo integral y único respecto de la materia en él reglada, por lo que prevalecerá sobre cualquier comunicación habida entre las partes con anterioridad al mismo, y/u otros convenios o acuerdos anteriores sobre el mismo objeto. La nulidad, inoponibilidad o inejecutabilidad de cualquiera de las cláusulas del presente contrato no afectará la validez, oponibilidad o ejecutabilidad de las restantes o del contrato. Las partes acuerdan modificar cualquier cláusula que se tornare nula, inoponible o inejectuble por cualquier motivo, procurando su ajuste al espíritu del contrato e intención de las partes al celebrarlo.</p><br>"+
+
+"<p><b>9. PREVENCION DE LAVADO DE DINERO Y FINANCIACIÓN DE TERRORISMO.</p></b>"+
+"<p>Para posibilitar el estricto cumplimiento a las normas que dicte la Unidad de Información Financiera, respecto a la identificación de Personas Expuestas Políticamente, al solicitar el alta de la CUENTA deberán identificarlas en tal condición y acompañar junto con toda la información que se tenga disponible sobre las mismas la “Declaración Jurada sobre condición de Persona Expuesta Políticamente” debidamente suscripta, pudiendo adicionar todo otro dato que considere necesario para tal identificación.</p>"+
+"<p>La ENTIDAD se compromete realizar el mejor esfuerzo para mantener actualizada esta información durante el curso de la relación comercial o contractual con los USUARIOS identificados como Personas Expuestas Políticamente, proveyendo al BANCO los datos que tenga disponible sobre tales personas.</p><br>"+
+
+"<p><b>10. COMUNICACIONES DEL BANCO A LA ENTIDAD. NOTIFICACIONES:</b>"+
+"<p>La ENTIDAD acepta como medio de comunicación fehaciente a los fines del presente convenio, el envío por parte del BANCO de un correo electrónico a la dirección que a continuación se inserta, obligándose a consultar diariamente la misma. Las comunicaciones así remitidas se considerarán realizadas en la fecha de su emisión.</p><br>"+
+"<p><b>Dirección/es de correo electrónico de la ENTIDAD:</b></p>"+
+"________________________________________________________________________________<br>"+
+
+"<p><b>11.</b> La ENTIDAD autoriza al BANCO la asignación de los roles <b>1 - “VINCULACIONES - APERTURA DE CUENTA” y 2 - “ACREDITACIONES PRIVADAS SUELDOS-HONORARIOS-VARIOS”</b> en el módulo de “AUTOGESTION” para el Usuario ___________________ con el que ya cuenta la ENTIDAD.</p><br>"+
+
+"<p><b>12. IMPUESTOS Y GASTOS.</b></p>"+
+"<p>El impuesto de sellos estará a cargo de ambas partes. Cualquier otro gasto o impuesto que pudiere corresponder estará en su totalidad a cargo de la ENTIDAD.</p><br>"+
+
+"<p><b>13. DOMICILIOS ESPECIALES. JURISDICCIÓN.</p></b>"+
+"<p>A todos los efectos legales, judiciales o extrajudiciales, las partes fijan domicilios especiales en los arriba indicados. Para cualquier controversia que pudiera surgir vinculada al presente contrato, las partes podrán someter la cuestión a la intervención del Centro de Mediación del Poder Judicial del Chaco. Manifiestan asimismo que en caso de fracasar dicha instancia dirimirán la cuestión por ante los tribunales civiles ordinarios de la Ciudad de Resistencia, con renuncia a cualquier otro fuero o jurisdicción, en especial al fuero federal.</p><br>"+
+
+"<p>En prueba de conformidad y previa integra lectura de la presente por los comparecientes se suscriben y se firman dos (2) ejemplares de un mismo tenor en el lugar y fecha indicados al comienzo.</p>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="10" width="450" height="20" uuid="8ba1d440-4526-4c2b-b620-f6a937bf6029"/>
+				<textElement textAlignment="Center" markup="html"/>
+				<textFieldExpression><![CDATA["<b><u>CONVENIO DE PAGO DE HONORARIOS Nº"+$P{NRO_CONVENIO}+"</u></b>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="10" width="100" height="16" uuid="ad3653ad-d5b4-4353-8292-e164813ab51e"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="10" width="100" height="16" uuid="2b3b74f1-3375-403e-b432-344354386381"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

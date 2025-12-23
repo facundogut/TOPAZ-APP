@@ -1,0 +1,36 @@
+﻿EXECUTE('
+----------------------------------------
+--NUEVAS OPCIONES ALGORITMOS INTERESES--
+----------------------------------------
+DELETE FROM OPCIONES WHERE NUMERODECAMPO = 1529 AND IDIOMA = ''E''
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1529, ''E'', ''Interés tasas s/saldo desde último pago'', ''B'', ''B'')
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1529, ''E'', ''Interés s/saldo por franjas de tasas'', ''F'', ''F'')
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1529, ''E'', ''Interés sobre mínimo del período'', ''M'', ''M'')
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1529, ''E'', ''Interés s/promedio a tasa s/Promedio'', ''R'', ''R'')
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1529, ''E'', ''Interés a tasas según saldo del día'', ''S'', ''S'')
+----------------
+DELETE FROM OPCIONES WHERE NUMERODECAMPO = 1535 AND IDIOMA = ''E''
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1535, ''E'', ''Interés tasas s/saldo desde último pago'', ''B'', ''B'')
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1535, ''E'', ''Interés s/saldo por franjas de tasas'', ''F'', ''F'')
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1535, ''E'', ''Interés s/promedio a tasa s/Promedio'', ''R'', ''R'')
+--
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (1535, ''E'', ''Interés a tasas según saldo del día'', ''S'', ''S'')
+----------------
+')

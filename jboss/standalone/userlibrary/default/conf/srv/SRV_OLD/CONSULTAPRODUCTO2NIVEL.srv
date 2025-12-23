@@ -1,0 +1,62 @@
+service CONSULTAPRODUCTO2NIVEL;
+description "Consulta de Productos de Segundo Nivel";
+
+action: SQLQuery TIPOPRODUCTO(
+	Sucursal:	numeric,
+	ProductoTopaz:	numeric,
+	Cuenta :	numeric,
+	Moneda :	numeric,
+	Operacion :	numeric,
+	Ordinal :	numeric,
+	NodoCliente :	string,
+	TicketSesion:	numeric,
+	InfoOrigen:	string,
+	ModoAutentica:	string,
+	CodCanal:	string,
+	Origen:		string,
+	NroDepOrigen:	numeric,
+	NroTransaccion:	numeric,
+	IdAutentica:	string,
+	TipoProceso:	string,
+	IdInvocaTopaz:	string
+) : [
+	STATUS :	numeric,
+	CODERROR :	string
+] { 	
+	properties 
+	{
+		("statement", "SELECT 0 AS CODERROR, C6252 as STATUS FROM Productos WHERE C6250=?  AND (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999)"),
+		("0", "ProductoTopaz")
+	};
+	action:	SQLQuery DATOSDELSALDO() : [
+		ProductoTopaz : numeric,
+			ClienteRol  : numeric,
+			CUENTA : numeric as Cuenta,
+			OPERACION : numeric as Operacion,
+			NROTARJETA  : numeric as NroTarjeta,
+			SALDO : float as Saldo,
+			PAQUETE : numeric as Paquete,
+			CLAVELEGADA : numeric as ClaveLegada,
+			TIPOPRODUCTO: string as TipoProducto
+	] {
+		condition { "STATUS = 2" };
+		properties {
+			("statement", "SELECT (SELECT o.descripcion FROM Opciones o WHERE o.numerodecampo=6252 AND o.idioma='E' AND to_char(C6252) = o.opcioninterna) AS ProdDescTopaz, C1803 as ClienteRol, Cuenta, Operacion, C1601 as Capital, Moneda, C1644 as Plazo, C1632 as TasaInteres, C1670 as Oficial,C1770 as Paquete, C1627 as FechaVencimiento, 0 as CuentaVista, (select calle as DIRENVIO from cli_direcciones_clientes where Codigocliente=C1803 and TipoDireccion in (3)) as DirEstCta, '' as InstAlVto, C1695 as Estado, C1604 + C1632 as CapitalInt, C1628 as ProximoVto FROM saldos S, productos P  where P.C6250=? and S.Producto=p.C6250 and S.Cuenta=? and S.Operacion=? and S.Ordinal=? AND (S.Tz_lock < 310000000000000  OR S.Tz_lock > 339999999999999) "),
+			("0", "Sucursal"),
+			("1", "ProductoTopaz"),
+			("2", "Cuenta"),
+			("3", "Moneda"),
+			("4", "Operacion"),
+			("5", "Ordinal")
+		
+		};
+	action:	SQLQuery DATOSDELPRODUCTO() : [
+		C6251 : string as ProdDesTopaz
+		]{
+		properties {
+			("statement", "SELECT C6251 FROM Productos Where C6250=? AND (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999) "),
+			("0", "PRODUCTO")
+		}
+		}
+	}
+}

@@ -1,0 +1,36 @@
+EXECUTE('
+IF OBJECT_ID (''VW_CRE_GASTOS_LEASING'') IS NOT NULL
+	DROP VIEW VW_CRE_GASTOS_LEASING
+')
+execute('
+CREATE or alter VIEW [VW_CRE_GASTOS_LEASING] (
+													Codigo, 
+													Descripcion, 
+													Categoria,
+													Tipo,
+													DistribuidoCanon,
+													CuotaDesde, 
+													CuotaHasta, 
+													Importe, 
+													FechaAlta, 
+													NUMERO_BIEN, 
+													SALDOS_JTS_OID)
+AS 
+SELECT DISTINCT g.CODIGO_TRAMITE AS Codigo, 
+		t.DESCRIPCION AS Descripcion, 
+		c.DESCRIPCION AS Categoria, 
+		tt.DESCRIPCION AS Tipo, 
+		dc.DESCRIPCION AS DistribuidoCanon,
+		g.CUOTA_DESDE AS CuotaDesde, 
+		g.CUOTA_HASTA AS CuotaHasta, 
+		g.IMPORTE AS Importe, 
+		g.FECHA_ALTA AS FechaAlta, 
+		g.NUMERO_BIEN, 
+		g.SALDOS_JTS_OID
+FROM CRE_GASTOS_LEASING g WITH(NOLOCK)
+INNER JOIN CRE_TIPO_TRAMITE_LEASING t WITH(NOLOCK) ON g.CODIGO_TRAMITE = t.CODIGO AND t.TZ_LOCK = 0
+INNER JOIN OPCIONES c WITH(NOLOCK) ON t.CATEGORIA = c.OPCIONINTERNA AND c.NUMERODECAMPO = 43374
+INNER JOIN OPCIONES tt WITH(NOLOCK) ON t.TIPO = tt.OPCIONINTERNA AND tt.NUMERODECAMPO = 43371
+INNER JOIN OPCIONES dc WITH(NOLOCK) ON t.DISTRIBUIDO_CUOTAS = dc.OPCIONINTERNA AND dc.NUMERODECAMPO = 43843
+WHERE g.TZ_LOCK = 0
+')

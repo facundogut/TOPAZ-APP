@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/productos/prestamosPersonales/getLineas/{cuit}</uri>
+    <serviceDescription>Consulta de Líneas de crédito disponibles por CUIT</serviceDescription>
+    <title>Obtiene las líneas de crédito disponibles por CUIT</title>
+    <querys>
+        <query id="1" name="validaciones" type="SIMPLE">
+            <sql>
+                BEGIN TRY
+                DECLARE @cuit VARCHAR(20) = ?;
+
+                IF ISNUMERIC(@cuit)=0
+                BEGIN
+                    THROW 50001, 'Error: El cuit debe ser numérico', 1;
+                END
+
+                IF LEN(@cuit) &lt;&gt; 11
+                BEGIN
+                    THROW 50002, 'Error: El cuit debe tener 11 dígitos', 1;
+                END
+
+                SELECT
+                    @cuit AS "cuit",
+                    0 AS "errorCodigo",
+                    'Sin errores' AS "error"
+                ;
+                END TRY
+
+                BEGIN CATCH
+                SELECT
+                    @cuit AS "cuit",
+                    ERROR_NUMBER() AS "errorCodigo",
+                    ERROR_MESSAGE() AS "error"
+                ;
+                END CATCH
+            </sql>
+            <input>
+                <inParameter description="" type="STRING">cuit</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="estado">
+                    <outParameter description="" type="STRING">
+                        <queryname>cuit</queryname>
+                        <servicename>estado.cuit</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>errorCodigo</queryname>
+                        <servicename>estado.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>error</queryname>
+                        <servicename>estado.descripcion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+
+        <query id="2" name="IdLineaCredito" type="MULTIPLE">
+            <sql>
+                DECLARE @cuit VARCHAR(12) = ?;
+
+                SELECT
+                    @cuit as "cuit",
+                    c.NomConvPago AS "nombreConvenioPago",
+                    p.C6250 AS "idLinea",
+                    p.C6251 AS "descripcionLinea",
+                    ISNULL(ca.MONTO_CALCULADO, 0) AS "montoDisponible",
+                    dg.canal AS "canal",
+                    opc.descripcion "descripcionCanal",
+                    s.JTS_OID AS "jtsOid",
+                    s.SUCURSAL AS "sucursal",
+                    s.CUENTA AS "cuenta",
+                    s.PRODUCTO AS "PRODUCTO"
+                FROM CRE_VINCULACIONES_CONVENIOS vc (NOLOCK)
+                INNER JOIN SALDOS s (NOLOCK) ON vc.JTS_CV = s.JTS_OID AND s.TZ_LOCK = 0 AND s.C1785 IN (2,3)
+                INNER JOIN CRE_PROD_CONVENIOS pc (NOLOCK) ON vc.ID_CONVENIO = pc.DATO_TIPO and pc.TIPO = 'C' AND pc.HABILITADO = 'S' AND pc.TZ_LOCK = 0
+                INNER JOIN PRODUCTOS p (NOLOCK) ON pc.PRODUCTO = p.C6250 AND p.TZ_LOCK = 0 AND p.C6800 = 'AH'
+                INNER JOIN CONV_CONVENIOS_PAG c (NOLOCK) ON pc.DATO_TIPO = c.ID_ConvPago AND c.TZ_LOCK=0
+                INNER JOIN CONV_TIPOS t (NOLOCK) ON c.Id_TpoConv = t.Id_TpoConv AND t.TZ_LOCK = 0
+                INNER JOIN CRE_PRODUCTOSCANALDIGITAL dg (NOLOCK) ON dg.PRODUCTO=P.C6250
+                INNER JOIN OPCIONES opc on dg.canal = opc.OPCIONINTERNA and opc.numerodecampo = 44232
+                LEFT JOIN CRE_AUX_SOL_CALCULO_ADELANTO ca (NOLOCK) ON p.C6250 = ca.PRODUCTO AND c.ID_ConvPago = ca.CONVENIO AND s.C1803 = ca.CLIENTE AND vc.ID_JURISDICCION = ca.ID_JURIDICCION AND ca.CANAL = dg.CANAL
+                INNER JOIN VW_CLI_X_DOC doc (NOLOCK) ON doc.CODIGOCLIENTE=s.C1803
+                WHERE vc.TZ_LOCK = 0 AND doc.NUMERODOC=@cuit
+
+            </sql>
+            <input>
+                <inParameter description="" type="STRING">cuit</inParameter>
+            </input>
+            <output>
+                <level groupby="idLinea, canal" name="lineas">
+
+                    <outParameter description="" type="LONG">
+                        <queryname>idLinea</queryname>
+                        <servicename>id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombreConvenioPago</queryname>
+                        <servicename>convenioPago.nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>jtsOid</queryname>
+                        <servicename>cuenta.jtsOid</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionLinea</queryname>
+                        <servicename>descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>montoDisponible</queryname>
+                        <servicename>montoDisponible</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>canal</queryname>
+                        <servicename>canal.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionCanal</queryname>
+                        <servicename>canal.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>sucursal</queryname>
+                        <servicename>cuenta.sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>cuenta</queryname>
+                        <servicename>cuenta.numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>producto</queryname>
+                        <servicename>cuenta.producto</servicename>
+                    </outParameter>
+
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

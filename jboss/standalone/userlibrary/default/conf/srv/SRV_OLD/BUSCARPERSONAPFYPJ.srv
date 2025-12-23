@@ -1,0 +1,66 @@
+service BUSCARPERSONAPFYPJ; 
+description "Busqueda de Personas Fisica o Juridica por Tipo y Nro Doc"; 
+
+
+	action: SQLQuery BUSCONUMEROPERSONAFJ(
+				
+	TipoDocumento: string,
+	NroDocumento: string,
+	PaisDocumento: numeric,
+	NodoCliente: string,
+	TicketSesion: numeric,
+	InfoOrigen: string,
+	ModoAutentica: string,
+	CodCanal: string,
+	Origen: string,
+	NroDepOrigen: numeric,
+	NroTransaccion: numeric,
+	IdAutentica: string,
+	TipoProceso: string,
+	IdInvocaTopaz: string
+	
+			
+			
+	):[
+			
+		CODERROR : string,
+		NUMEROPERSONAFJ : numeric as IdPersona,
+		TIPODOCUMENTO : string as TipoDocumento,
+		NUMERODOCUMENTO : string as NroDocumento
+		
+	
+	]{ 
+			
+	properties 
+		{ 
+			("statement", "SELECT 0 AS CODERROR, NUMEROPERSONAFJ, TIPODOCUMENTO, NUMERODOCUMENTO  FROM CLI_DocumentosPFPJ WHERE TIPODOCUMENTO=? AND NUMERODOCUMENTO=? AND PAISDOCUMENTO=? AND (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999)"),
+			("0", "TipoDocumento"),
+			("1", "NroDocumento"),
+			("2", "PaisDocumento")
+			
+					
+			
+
+	};
+			
+	action:	SQLQuery DATOSDENUMEROPERSONAFJ() : [
+	
+	
+			APELLIDOPATERNO : string as Apellido,
+			PRIMERNOMBRE : string as Nombre,
+			RAZONSOCIAL : string as Empresa
+			
+			
+	]{ 
+  			
+  	
+	properties {
+			("statement", "(SELECT '' AS APELLIDOPATERNO, '' AS PRIMERNOMBRE, PJ.RAZONSOCIAL FROM CLI_PersonasJuridicas PJ WHERE PJ.NUMEROPERSONAJURIDICA=? AND (PJ.Tz_lock < 310000000000000  OR PJ.Tz_lock > 339999999999999)) UNION (SELECT  APELLIDOPATERNO || ' ' || APELLIDOMATERNO, PRIMERNOMBRE || ' ' || SEGUNDONOMBRE, '' AS RAZONSOCIAL FROM CLI_PersonasFisicas PF WHERE PF.NUMEROPERSONAFISICA=? AND (PF.Tz_lock < 310000000000000  OR PF.Tz_lock > 339999999999999))"),
+			("0", "NUMEROPERSONAFJ"),
+			("1", "NUMEROPERSONAFJ")
+			
+	
+	}
+     }
+  
+  }

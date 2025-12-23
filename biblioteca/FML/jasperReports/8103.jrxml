@@ -1,0 +1,1691 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Incentivos" language="groovy" pageWidth="1008" pageHeight="612" orientation="Landscape" columnWidth="1004" leftMargin="2" rightMargin="2" topMargin="2" bottomMargin="2">
+	<property name="ireport.zoom" value="1.366026910730141"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:/CursoJasper/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaReporte" class="java.util.Date"/>
+	<parameter name="TOPAZ_INICIALES_USUARIO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[DECLARE @FechaCorte  AS SmallDatetime  = $P{FechaReporte}
+DECLARE @FechaInicio AS SmallDatetime  = CONVERT( SMALLDATETIME, ('01' +'/'+ convert(nvarchar,MONTH(@FechaCorte)) +'/' + CONVERT(NVARCHAR, YEAR(@FechaCorte))))
+DECLARE @FechaIni    AS SmallDatetime  = CONVERT(VarChar(12), DATEADD(yy,DATEDIFF(yy,0,getdate()), 0), 103)
+DECLARE @Usuario     AS Varchar(4)     = $P{TOPAZ_INICIALES_USUARIO}
+DECLARE @Indicador   AS Int
+
+SET @Indicador = (Select Count(Iniciales) From Usuarios Where Grupo = 'RRHH' And Tz_Lock = 0 And Iniciales = @Usuario)
+IF @Indicador > 0
+BEGIN
+			SELECT Totales.Usuario
+				   ,Totales.Id_Region
+				   ,Totales.Region
+				   ,Totales.IdPersona
+				   ,Totales.Cedula
+				   ,Totales.CodCargo
+				   ,Totales.Cargo
+				   ,Totales.Gerente
+				   ,Totales.Salario_Basico
+				   ,Totales.Incentivo_Base
+				   ,Totales.Total_SalarioIncentivo
+				   ,Totales.Porc_SalBasico
+				   ,Totales.Porc_Incentivo
+				   ,Totales.Colocaciones
+				   ,Totales.Metas_Colocaciones
+				   ,Totales.Porc_Cumplimiento_Colocaciones
+				   ,Totales.Porc_Peso_Colocaciones
+				   ,Totales.Meta_Cartera_Activa
+				   ,Totales.Porc_Cumplimiento_Cartera_Activa
+				   ,Totales.Saldo_Cartera
+				   ,Totales.Porc_Peso_CarteraActiva
+				   ,Totales.Meta_Clientes_Activos
+				   ,Totales.Clientes_Activos
+				   ,Totales.Porc_Cumplimiento_Clientes_Activos
+				   ,Totales.Meta_Estructura_Cartera
+				   ,Totales.Estructura_Cartera
+				   ,Totales.Porc_Cumplimiento_Estructura_Cartera
+				   ,Totales.Porc_Peso_ClientesActivos
+				   ,Totales.Porc_Peso_Estructura_Cartera
+				   ,Totales.CER1, Totales.Mora
+				   ,Totales.Porc_Mora_Deducible
+				   ,Totales.Porc_Cond_Cump_Colocaciones
+				   ,Totales.Porc_Cond_Cump_Clientes_Activos
+				   ,Totales.Porc_Cond_Cump_Cartera_Activa
+				   ,Totales.Porc_Cond_Cump_Estr_Cartera
+				   ,Totales.Porc_Neto_Colocaciones
+				   ,Totales.Porc_Neto_Cartera_Activa
+				   ,Totales.Porc_Neto_Clientes_Activos
+				   ,Totales.Porc_Neto_Estructura_Cartera
+				   ,Totales.Condicion_Colocaciones
+				   ,Totales.Porc_Neto_Total
+				   ,Totales.Condicion_Cartera_Activa
+				   ,Totales.Condicion_Clientes_Activos
+				   ,Totales.Condicion_Estructura_Cartera
+
+				   ,Totales.Inc_Colocaciones
+				   ,Totales.Inc_Cartera_Activa
+				   ,Totales.Inc_Clientes_Activos
+				   ,Totales.Inc_Estructura_Cartera
+				   ,'Total_Incentivos' = Totales.Inc_Colocaciones + Totales.Inc_Cartera_Activa + Totales.Inc_Clientes_Activos + Totales.Inc_Estructura_Cartera
+				   ,'Castigo'          = (Totales.Inc_Colocaciones + Totales.Inc_Cartera_Activa + Totales.Inc_Clientes_Activos + Totales.Inc_Estructura_Cartera) * Totales.Porc_Mora_Deducible
+				   ,'Incentivo_Pago'   = (Totales.Inc_Colocaciones + Totales.Inc_Cartera_Activa + Totales.Inc_Clientes_Activos + Totales.Inc_Estructura_Cartera) -
+										 ((Totales.Inc_Colocaciones + Totales.Inc_Cartera_Activa + Totales.Inc_Clientes_Activos + Totales.Inc_Estructura_Cartera) * Totales.Porc_Mora_Deducible)
+			FROM (
+			SELECT Final.Usuario
+				   ,Final.Id_Region
+				   ,Final.Region
+				   ,Final.IdPersona
+				   ,Final.Cedula
+				   ,Final.CodCargo
+				   ,Final.Cargo
+				   ,Final.Gerente
+				   ,Final.Salario_Basico
+				   ,Final.Incentivo_Base
+				   ,Final.Total_SalarioIncentivo
+				   ,Final.Porc_SalBasico
+				   ,Final.Porc_Incentivo
+				   ,Final.Colocaciones
+				   ,Final.Metas_Colocaciones
+				   ,Final.Porc_Cumplimiento_Colocaciones
+				   ,Final.Porc_Peso_Colocaciones
+				   ,Final.Meta_Cartera_Activa
+				   ,Final.Saldo_Cartera
+				   ,Final.Porc_Cumplimiento_Cartera_Activa
+				   ,Final.Porc_Peso_CarteraActiva
+				   ,Final.Meta_Clientes_Activos
+				   ,Final.Clientes_Activos
+				   ,Final.Porc_Cumplimiento_Clientes_Activos
+				   ,Final.Meta_Estructura_Cartera
+				   ,Final.Estructura_Cartera
+				   ,Final.Porc_Cumplimiento_Estructura_Cartera
+				   ,Final.Porc_Peso_ClientesActivos
+				   ,Final.Porc_Peso_Estructura_Cartera
+				   ,Final.CER1
+				   ,Final.Mora
+				   ,Final.Porc_Mora_Deducible
+				   ,Final.Porc_Cond_Cump_Colocaciones
+				   ,Final.Porc_Cond_Cump_Clientes_Activos
+				   ,Final.Porc_Cond_Cump_Cartera_Activa
+				   ,Final.Porc_Cond_Cump_Estr_Cartera
+				   ,Final.Porc_Neto_Colocaciones
+				   ,Final.Porc_Neto_Cartera_Activa
+				   ,Final.Porc_Neto_Clientes_Activos
+				   ,Final.Porc_Neto_Estructura_Cartera
+				   ,Final.Porc_Neto_Total
+				   ,Final.Condicion_Colocaciones
+				   ,Final.Condicion_Cartera_Activa
+				   ,Final.Condicion_Clientes_Activos
+				   ,Final.Condicion_Estructura_Cartera
+				   ,'Inc_Colocaciones'       = Case When Final.Porc_Cumplimiento_Colocaciones       >= Final.Porc_Cond_Cump_Colocaciones     Then (Final.Total_SalarioIncentivo * Final.Porc_Neto_Colocaciones       * Final.Porc_Incentivo) Else 0 End
+				   ,'Inc_Cartera_Activa'     = Case When Final.Porc_Cumplimiento_Cartera_Activa     >= Final.Porc_Cond_Cump_Cartera_Activa   Then (Final.Total_SalarioIncentivo * Final.Porc_Neto_Cartera_Activa     * Final.Porc_Incentivo) Else 0 End
+				   ,'Inc_Clientes_Activos'   = Case When Final.Porc_Cumplimiento_Clientes_Activos   >= Final.Porc_Cond_Cump_Clientes_Activos Then (Final.Total_SalarioIncentivo * Final.Porc_Neto_Clientes_Activos   * Final.Porc_Incentivo) Else 0 End
+				   ,'Inc_Estructura_Cartera' = Case When Final.Porc_Cumplimiento_Estructura_Cartera >= Final.Porc_Cond_Cump_Estr_Cartera     Then (Final.Total_SalarioIncentivo * Final.Porc_Neto_Estructura_Cartera * Final.Porc_Incentivo) Else 0 END
+			FROM(
+			SELECT calculos.Usuario
+				   ,calculos.Id_Region
+				   ,calculos.Region
+				   ,calculos.IdPersona
+				   ,calculos.Cedula
+				   ,calculos.CodCargo
+				   ,calculos.Cargo
+				   ,calculos.Gerente
+				   ,calculos.Salario_Basico
+				   ,calculos.Incentivo_Base
+				   ,calculos.Total_SalarioIncentivo
+				   ,calculos.Porc_SalBasico
+				   ,calculos.Porc_Incentivo
+				   ,calculos.Colocaciones
+				   ,calculos.Metas_Colocaciones
+				   ,calculos.Porc_Cumplimiento_Colocaciones
+				   ,calculos.Porc_Peso_Colocaciones
+				   ,calculos.Meta_Cartera_Activa
+				   ,calculos.Saldo_Cartera
+				   ,calculos.Porc_Cumplimiento_Cartera_Activa
+				   ,calculos.Porc_Peso_CarteraActiva
+				   ,calculos.Meta_Clientes_Activos
+				   ,calculos.Clientes_Activos
+				   ,calculos.Porc_Cumplimiento_Clientes_Activos
+				   ,calculos.Meta_Estructura_Cartera
+				   ,calculos.Estructura_Cartera
+				   ,calculos.Porc_Cumplimiento_Estructura_Cartera
+				   ,calculos.Porc_Peso_ClientesActivos
+				   ,calculos.Porc_Peso_Estructura_Cartera
+				   ,calculos.CER1
+				   ,Mora = (calculos.CER1)/(calculos.Saldo_Cartera) * 100
+				   ,'Porc_Mora_Deducible' = (Select Incentivo
+											  From [dbo].[INC_RANGOS] ir
+											 Where ir.CodVariable = 'F'
+											   And ir.CodRegion   = 0
+											   And ir.Codcargo    = calculos.CodCargo
+											   And ir.Tz_Lock     = 0
+											   And ((calculos.CER1)/(calculos.Saldo_Cartera) * 100.00  >= ir.MINIMO
+											   And ((calculos.CER1)/(calculos.Saldo_Cartera) * 100.00) <= ir.MAXIMO))
+					,calculos.Porc_Cond_Cump_Colocaciones
+					,calculos.Porc_Cond_Cump_Clientes_Activos
+					,calculos.Porc_Cond_Cump_Cartera_Activa
+					,calculos.Porc_Cond_Cump_Estr_Cartera
+
+					,'Porc_Neto_Colocaciones'        = (calculos.Porc_Cumplimiento_Colocaciones       * calculos.Porc_Peso_Colocaciones)
+					,'Porc_Neto_Cartera_Activa'      = (calculos.Porc_Cumplimiento_Cartera_Activa     * calculos.Porc_Peso_CarteraActiva)
+					,'Porc_Neto_Clientes_Activos'    = (calculos.Porc_Cumplimiento_Clientes_Activos   * calculos.Porc_Peso_ClientesActivos)
+					,'Porc_Neto_Estructura_Cartera'  = (calculos.Porc_Cumplimiento_Estructura_Cartera * calculos.Porc_Peso_Estructura_Cartera)
+        			,'Porc_Neto_Total'               = (calculos.Porc_Cumplimiento_Colocaciones       * calculos.Porc_Peso_Colocaciones)       +
+													   (calculos.Porc_Cumplimiento_Cartera_Activa     * calculos.Porc_Peso_CarteraActiva)      +
+													   (calculos.Porc_Cumplimiento_Clientes_Activos   * calculos.Porc_Peso_ClientesActivos)    +
+													   (calculos.Porc_Cumplimiento_Estructura_Cartera * calculos.Porc_Peso_Estructura_Cartera)
+     				,'Condicion_Colocaciones'       = Case When calculos.Porc_Cumplimiento_Colocaciones       >= calculos.Porc_Cond_Cump_Colocaciones       Then 'CUMPLE' Else 'NO CUMPLE' END
+					,'Condicion_Cartera_Activa'     = Case When calculos.Porc_Cumplimiento_Cartera_Activa     >= calculos.Porc_Cond_Cump_Cartera_Activa     Then 'CUMPLE' Else 'NO CUMPLE' END
+					,'Condicion_Clientes_Activos'   = Case When calculos.Porc_Cumplimiento_Clientes_Activos   >= calculos.Porc_Cond_Cump_Clientes_Activos   Then 'CUMPLE' Else 'NO CUMPLE' END
+					,'Condicion_Estructura_Cartera' = Case When calculos.Porc_Cumplimiento_Estructura_Cartera >= calculos.Porc_Cond_Cump_Estr_Cartera       Then 'CUMPLE' Else 'NO CUMPLE' End
+			 FROM (
+			SELECT reporte.Usuario
+				   ,reporte.Id_Region
+				   ,reporte.Region
+				   ,reporte.IdPersona
+				   ,reporte.Cedula
+				   ,reporte.CodCargo
+				   ,reporte.Cargo
+				   ,reporte.Gerente
+				   ,reporte.Salario_Basico
+				   ,reporte.Incentivo_Base
+				   ,reporte.Total_SalarioIncentivo
+				   ,reporte.Porc_SalBasico
+				   ,reporte.Porc_Incentivo
+				   ,reporte.Metas_Colocaciones
+				   ,Sum(reporte.Colocaciones) AS Colocaciones
+				   ,Sum(reporte.Porc_Cumplimiento_Colocaciones) AS Porc_Cumplimiento_Colocaciones
+				   ,reporte.Porc_Peso_Colocaciones
+				   ,reporte.Meta_Cartera_Activa
+				   ,Sum(reporte.Saldo_Cartera) AS Saldo_Cartera
+				   ,Sum(reporte.Porc_Cumplimiento_Cartera_Activa) AS Porc_Cumplimiento_Cartera_Activa
+				   ,reporte.Porc_Peso_CarteraActiva
+				   ,reporte.Meta_Clientes_Activos
+				   ,Sum(reporte.Clientes_Activos) AS Clientes_Activos
+				   ,Sum(reporte.Porc_Cumplimiento_Clientes_Activos) AS Porc_Cumplimiento_Clientes_Activos
+				   ,reporte.Meta_Estructura_Cartera
+				   ,reporte.Estructura_Cartera
+				   ,reporte.Porc_Cumplimiento_Estructura_Cartera
+				   ,reporte.Porc_Peso_ClientesActivos
+				   ,reporte.Porc_Peso_Estructura_Cartera
+				   ,Sum(reporte.CER1)AS CER1
+				   ,reporte.Porc_Cond_Cump_Colocaciones
+				   ,reporte.Porc_Cond_Cump_Cartera_Activa
+				   ,reporte.Porc_Cond_Cump_Clientes_Activos
+				   ,reporte.Porc_Cond_Cump_Estr_Cartera
+			FROM (
+			SELECT Gtes.UsuarioTopaz AS Usuario
+				   ,CarRegion.Id_Region
+				   ,CarRegion.Region
+				   ,Gtes.IdPersona
+				   ,Gtes.Cedula
+				   ,Gtes.CodigoCargo  AS CodCargo
+				   ,Gtes.Desccargo    AS Cargo
+				   ,Gtes.Nombre       AS Gerente
+					,Gtes.SalarioMensual AS Salario_Basico
+					,'Incentivo_Base' = (Select Incentivo_Base * Porc_Incentivo
+										  From Inc_Parametros_Cargos
+										  Where Codcargo   = Gtes.CodigoCargo
+											And CodRegion  = CarRegion.Id_Region
+											And CodSucursal = CarRegion.Sucursal_Prestamo
+											And Tz_Lock    = 0)
+					,'Total_SalarioIncentivo' = (Select Incentivo_Base
+										  From Inc_Parametros_Cargos
+										  Where Codcargo   = Gtes.CodigoCargo
+											And CodRegion  = CarRegion.Id_Region
+											And CodSucursal = CarRegion.Sucursal_Prestamo
+											And Tz_Lock    = 0)
+					,'Porc_SalBasico' = (Select Porc_SalBasico
+											From Inc_Parametros_Cargos
+											Where Codcargo   = Gtes.CodigoCargo
+											And CodRegion    = CarRegion.Id_Region
+											And CodSucursal = CarRegion.Sucursal_Prestamo
+											And Tz_Lock      = 0)
+				   ,'Porc_Incentivo' = (Select Porc_Incentivo
+										  From Inc_Parametros_Cargos
+										  Where Codcargo   = Gtes.CodigoCargo
+											And CodRegion  = CarRegion.Id_Region
+											And CodSucursal = CarRegion.Sucursal_Prestamo
+											And Tz_Lock    = 0)
+
+				   ,CarRegion.Metas_Colocaciones       AS Metas_Colocaciones
+				   ,CarRegion.Colocaciones             AS Colocaciones
+				   ,'Porc_Cumplimiento_Colocaciones'  = (CarRegion.Colocaciones / CarRegion.Metas_Colocaciones)
+				   ,'Porc_Peso_Colocaciones' =  (Select Peso
+												   From dbo.Inc_Peso
+												  Where Codvariable ='G'
+													And CodCargo    = GTES.CodigoCargo
+													And CodRegion   = CarRegion.Id_Region
+													And TZ_LOCK     = 0)
+				   ,CarRegion.Meta_Cartera_Activa      AS Meta_Cartera_Activa
+				   ,CarRegion.Saldo_Cartera            AS Saldo_Cartera
+				   ,'Porc_Cumplimiento_Cartera_Activa'      = (CarRegion.Saldo_Cartera / CarRegion.Meta_Cartera_Activa)
+				   ,'Porc_Peso_CarteraActiva' =  (Select Peso
+												   From dbo.Inc_Peso
+												  Where Codvariable ='A'
+													And CodCargo    = GTES.CodigoCargo
+													And CodRegion   = CarRegion.Id_Region
+													And TZ_LOCK     = 0)
+				   ,CarRegion.Meta_Clientes_Activos    AS Meta_Clientes_Activos
+				   ,CarRegion.Clientes_Activos         AS Clientes_Activos
+				   ,'Porc_Cumplimiento_Clientes_Activos'    = (CarRegion.Clientes_Activos / CarRegion.Meta_Clientes_Activos)
+				   ,'Porc_Peso_ClientesActivos' =  (Select Peso
+												   From dbo.Inc_Peso
+												  Where Codvariable ='B'
+													And CodCargo    = GTES.CodigoCargo
+													And CodRegion   = CarRegion.Id_Region
+													And TZ_LOCK     = 0)
+				   ,CarRegion.Meta_Estructura_Cartera  AS Meta_Estructura_Cartera
+				   ,CarRegion.Estructura_Cartera       AS Estructura_Cartera
+				   ,'Porc_Cumplimiento_Estructura_Cartera'  = (CarRegion.Estructura_Cartera / CarRegion.Meta_Estructura_Cartera)
+				   ,'Porc_Peso_Estructura_Cartera' =  (Select Peso
+													   From dbo.Inc_Peso
+													  Where Codvariable ='E'
+														And CodCargo    = GTES.CodigoCargo
+														And CodRegion   = CarRegion.Id_Region
+														And TZ_LOCK     = 0)
+				   ,CarRegion.CER1                     AS CER1
+
+					,'Porc_Cond_Cump_Colocaciones'  = (Select Porc_Cumplimiento
+														From Inc_Condicion_Cumplimiento ic
+													   Where CodVariable = 'G'
+														 And CodRegion   = CarRegion.Id_Region
+														 And TZ_Lock     = 0)
+
+					,'Porc_Cond_Cump_Cartera_Activa'  = (Select Porc_Cumplimiento
+														  From Inc_Condicion_Cumplimiento ic
+														 Where CodVariable = 'A'
+														   And CodRegion   = CarRegion.Id_Region
+														   And TZ_Lock     = 0)
+
+					 ,'Porc_Cond_Cump_Clientes_Activos'  =    (Select Porc_Cumplimiento
+																 From Inc_Condicion_Cumplimiento ic
+																Where CodVariable = 'B'
+																  And CodRegion   = CarRegion.Id_Region
+																  And TZ_Lock     = 0)
+
+					 ,'Porc_Cond_Cump_Estr_Cartera'  = (Select Porc_Cumplimiento
+														 From Inc_Condicion_Cumplimiento ic
+														Where CodVariable = 'E'
+														  And CodRegion   = CarRegion.Id_Region
+														  And TZ_Lock     = 0)
+			FROM (
+			SELECT Detalle.Id_Region
+				   ,Detalle.Region
+				   ,Detalle.Sucursal_Prestamo
+				   ,'Metas_Colocaciones' = (Select Metas From [dbo].[INC_METASVARIABLES] im
+										   Where im.CodSucursal = 0
+											 And im.CodVariable = 'G'
+											 And im.CodRegion   = Detalle.Id_Region
+											 And im.Mes         = MONTH(@FechaCorte)
+											 And im.Anio        = YEAR(@FechaCorte))
+				   /* CONSULTA A LA TABLA SALDOS */
+				   ,'Colocaciones' = (SELECT Sum(CapitalOriginal) AS TOTAL_DESEMBOLSADO
+									  FROM  (SELECT  trrs.CodRegion
+													,s.C1601 As CapitalOriginal
+													,ts.C6020 AS Agencia
+											   FROM dbo.SALDOS s WITH(NOLOCK)
+													INNER JOIN dbo.TC_SUCURSALES ts WITH(NOLOCK) ON s.Sucursal         = ts.C6021
+													INNER JOIN dbo.RH_FUNCIONARIO rf WITH(NOLOCK) ON rf.CodFuncionario = s.C1670
+													INNER JOIN dbo.TC_REL_REGION_SUCURSAL trrs ON s.Sucursal           = trrs.CodSucursal
+												 WHERE trrs.CodRegion  = Detalle.Id_Region
+												 And  s.SUCURSAL = Detalle.Sucursal_Prestamo
+												 And s.C1620 BETWEEN @FechaIni AND @FechaCorte
+												 And s.C1620   > '30/09/2014'
+												 And s.C9314   = 5
+												 And s.TZ_LOCK = 0
+												 --Filtro que excluye los créditos extornado ()
+												 And Not EXISTS(SELECT sre.SALDOSJTSOIDEXT FROM SL_RASTROS_EXTORNOS  sre WITH(NOLOCK) WHERE sre.SALDOSJTSOIDEXT = S.JTS_OID)
+												 )As Consulta
+												 Group By Consulta.CodRegion,Consulta.Agencia)
+
+					,'Meta_Cartera_Activa' = (Select Sum(Metas)
+												From [dbo].[INC_METASVARIABLES] im
+											   Where im.CodSucursal = 0
+												 And im.CodVariable = 'A'
+												 And im.CodRegion   =  Detalle.Id_Region
+												 And im.Mes         = MONTH(@FechaCorte)
+												 And im.Anio        = YEAR(@FechaCorte))
+				   ,Sum(Detalle.Saldo_Cartera)  AS Saldo_Cartera
+				   ,'Meta_Clientes_Activos' = (Select Sum(Metas)
+												From [dbo].[INC_METASVARIABLES] im
+												Where im.CodSucursal = 0
+												  And im.CodVariable = 'B'
+												  And im.CodRegion   = Detalle.Id_Region
+												  And im.Mes         = MONTH(@FechaCorte)
+												  And im.Anio        = YEAR(@FechaCorte))
+				   ,Count(Distinct CodCliente)  AS Clientes_Activos
+				   ,'Meta_Estructura_Cartera' = (Select Sum(Metas)
+												   From [dbo].[INC_METASVARIABLES] im
+												  Where im.CodSucursal = 0
+													And im.CodVariable In ('E')
+													And im.CodRegion = Detalle.Id_Region
+													And im.Mes       = MONTH(@FechaCorte)
+													And im.Anio      = YEAR(@FechaCorte))
+				   ,100.00                      AS Estructura_Cartera
+				   ,Sum(CER1) As CER1
+			FROM (
+			SELECT trs.CodRegion          AS Id_Region
+				   ,Region                 AS Region
+				   ,egp.Sucursal_Prestamo
+				   ,egp.Codigo_Cliente     AS CodCliente
+				   ,'Saldo_Cartera'      = Saldo_MO
+				   ,Case When egp.Dias_Atraso > 0 Then egp.Saldo_MO Else 0 End As 'CER1'
+			  FROM [dbo].[FN_EGP_FUNDESER_UNIVERSO] (@FechaCorte) egp
+				   INNER JOIN TC_REL_REGION_SUCURSAL trs   ON trs.CodSucursal      = egp.SUCURSAL_PRESTAMO
+				   INNER JOIN TC_REGIONES tr               ON tr.CodRegion         = trs.CodRegion
+			 WHERE Not Exists(Select sre.SALDOSJTSOIDEXT From SL_Rastros_Extornos sre WITH(NOLOCK) Where sre.SaldosJTSOIDEXT = egp.JTS_OID)
+			)detalle
+			GROUP BY  Detalle.Id_Region,Detalle.Region,Detalle.Sucursal_Prestamo
+			  )CarRegion
+			INNER JOIN (
+			SELECT GTES_NOMINA.IdPersona
+				   ,GTES_NOMINA.Cedula
+				   ,GTES_NOMINA.CodigoCargo
+				   ,GTES_NOMINA.Desccargo
+				   ,GTES_NOMINA.Nombre
+				   ,GTES_NOMINA.SalarioMensual
+				   ,trrs.CodRegion
+				   ,ar.usuarioTopaz
+			  FROM
+			 (--Lista de Gerentes segun NOMINA.SA
+			 Select cr.IdPersona
+				 ,(REPLACE(e.Cedula,'-' ,'')) Cedula
+				 ,e.CodCargo AS CodigoCargo
+				 ,c.Descripcion AS Desccargo
+				 ,e.Nombre
+				 ,e.SalarioMensual
+			  From CL_RELPERDOC cr  inner Join VINC_NOMINA e On (REPLACE(e.Cedula,'-' ,'')) collate Modern_Spanish_CI_AS IN (ISNULL(cr.NRODOCUMENTO,''))
+				   Inner Join VINC_NOMINA_CARGOS c On e.CodCargo = c.CodCargo
+					and c.CodCargo In (3)
+			 )GTES_NOMINA
+			/* EL RELACION PARA OBTENER LA SUCURSAL DEL GERENTE */
+			left Join RH_FUNCIONARIO rf ON rf.IdPersona = GTES_NOMINA.IdPersona
+			left Join AU_RELFUNCIONARIOUSR ar2 ON ar2.CODFUNCIONARIO = rf.CODFUNCIONARIO
+			left Join AU_RELFUNCIONARIOAGENCIA ar ON ar2.USUARIOTOPAZ = ar.USUARIOTOPAZ
+			left Join TC_REL_REGION_SUCURSAL trrs ON ar.CODAGENCIA = trrs.CODSUCURSAL
+			WHERE rf.IDPERSONA IS NOT NULL
+			  AND rf.FUNCESTADO = 'A'
+			  AND rf.TZ_LOCK    =  0
+			GROUP BY trrs.CODREGION
+				   ,ar.usuarioTopaz
+				   ,GTES_NOMINA.IdPersona
+				   ,GTES_NOMINA.Cedula
+				   ,GTES_NOMINA.CodigoCargo
+				   ,GTES_NOMINA.Desccargo
+				   ,GTES_NOMINA.Nombre
+				   ,GTES_NOMINA.SalarioMensual
+			   )GTES ON CarRegion.Id_Region = GTES.CodRegion
+			)Reporte
+			GROUP BY Reporte.Usuario,Reporte.Id_Region, Reporte.Region, Reporte.IdPersona, Reporte.Cedula,
+				  Reporte.CodCargo, Reporte.Cargo, Reporte.Gerente, Reporte.Salario_Basico,
+				  Reporte.Incentivo_Base, Reporte.Total_SalarioIncentivo,reporte.Porc_SalBasico,
+				  Reporte.Porc_Incentivo,Reporte.Porc_Peso_Colocaciones,Reporte.Metas_Colocaciones,
+				  Reporte.Meta_Cartera_Activa,Reporte.Porc_Peso_CarteraActiva, reporte.Estructura_Cartera,
+				  reporte.Porc_Cumplimiento_Estructura_Cartera,  Reporte.Meta_Clientes_Activos,
+				  Reporte.Meta_Estructura_Cartera, Reporte.Porc_Peso_ClientesActivos,
+				  Reporte.Porc_Peso_Estructura_Cartera
+				  ,reporte.Porc_Cond_Cump_Colocaciones
+				  ,reporte.Porc_Cond_Cump_Cartera_Activa
+				  ,reporte.Porc_Cond_Cump_Clientes_Activos
+				  ,reporte.Porc_Cond_Cump_Estr_Cartera
+			)calculos
+			)Final
+			)Totales
+			Order by Totales.Id_Region
+End
+Else
+BEGIN
+				SELECT Totales.Usuario
+					   ,Totales.Id_Region
+					   ,Totales.Region
+					   ,Totales.IdPersona
+					   ,Totales.Cedula
+					   ,Totales.CodCargo
+					   ,Totales.Cargo
+					   ,Totales.Gerente
+					   ,Totales.Salario_Basico
+					   ,Totales.Incentivo_Base
+					   ,Totales.Total_SalarioIncentivo
+					   ,Totales.Porc_SalBasico
+					   ,Totales.Porc_Incentivo
+					   ,Totales.Colocaciones
+					   ,Totales.Metas_Colocaciones
+					   ,Totales.Porc_Cumplimiento_Colocaciones
+					   ,Totales.Porc_Peso_Colocaciones
+					   ,Totales.Meta_Cartera_Activa
+					   ,Totales.Porc_Cumplimiento_Cartera_Activa
+					   ,Totales.Saldo_Cartera
+					   ,Totales.Porc_Peso_CarteraActiva
+					   ,Totales.Meta_Clientes_Activos
+					   ,Totales.Clientes_Activos
+					   ,Totales.Porc_Cumplimiento_Clientes_Activos
+					   ,Totales.Meta_Estructura_Cartera
+					   ,Totales.Estructura_Cartera
+					   ,Totales.Porc_Cumplimiento_Estructura_Cartera
+					   ,Totales.Porc_Peso_ClientesActivos
+					   ,Totales.Porc_Peso_Estructura_Cartera
+					   ,Totales.CER1, Totales.Mora
+					   ,Totales.Porc_Mora_Deducible
+					   ,Totales.Porc_Cond_Cump_Colocaciones
+					   ,Totales.Porc_Cond_Cump_Clientes_Activos
+					   ,Totales.Porc_Cond_Cump_Cartera_Activa
+					   ,Totales.Porc_Cond_Cump_Estr_Cartera
+					   ,Totales.Porc_Neto_Colocaciones
+					   ,Totales.Porc_Neto_Cartera_Activa
+					   ,Totales.Porc_Neto_Clientes_Activos
+					   ,Totales.Porc_Neto_Estructura_Cartera
+					   ,Totales.Condicion_Colocaciones
+					   ,Totales.Porc_Neto_Total
+					   ,Totales.Condicion_Cartera_Activa
+					   ,Totales.Condicion_Clientes_Activos
+					   ,Totales.Condicion_Estructura_Cartera
+          			   ,Totales.Inc_Colocaciones
+					   ,Totales.Inc_Cartera_Activa
+					   ,Totales.Inc_Clientes_Activos
+					   ,Totales.Inc_Estructura_Cartera
+					   ,'Total_Incentivos' = Totales.Inc_Colocaciones + Totales.Inc_Cartera_Activa + Totales.Inc_Clientes_Activos + Totales.Inc_Estructura_Cartera
+					   ,'Castigo'          = (Totales.Inc_Colocaciones + Totales.Inc_Cartera_Activa + Totales.Inc_Clientes_Activos + Totales.Inc_Estructura_Cartera) * Totales.Porc_Mora_Deducible
+					   ,'Incentivo_Pago'   = (Totales.Inc_Colocaciones + Totales.Inc_Cartera_Activa + Totales.Inc_Clientes_Activos + Totales.Inc_Estructura_Cartera) -
+											 ((Totales.Inc_Colocaciones + Totales.Inc_Cartera_Activa + Totales.Inc_Clientes_Activos + Totales.Inc_Estructura_Cartera) * Totales.Porc_Mora_Deducible)
+				FROM (
+				SELECT Final.Usuario
+					   ,Final.Id_Region
+					   ,Final.Region
+					   ,Final.IdPersona
+					   ,Final.Cedula
+					   ,Final.CodCargo
+					   ,Final.Cargo
+					   ,Final.Gerente
+					   ,Final.Salario_Basico
+					   ,Final.Incentivo_Base
+					   ,Final.Total_SalarioIncentivo
+					   ,Final.Porc_SalBasico
+					   ,Final.Porc_Incentivo
+					   ,Final.Colocaciones
+					   ,Final.Metas_Colocaciones
+					   ,Final.Porc_Cumplimiento_Colocaciones
+					   ,Final.Porc_Peso_Colocaciones
+					   ,Final.Meta_Cartera_Activa
+					   ,Final.Saldo_Cartera
+					   ,Final.Porc_Cumplimiento_Cartera_Activa
+					   ,Final.Porc_Peso_CarteraActiva
+					   ,Final.Meta_Clientes_Activos
+					   ,Final.Clientes_Activos
+					   ,Final.Porc_Cumplimiento_Clientes_Activos
+					   ,Final.Meta_Estructura_Cartera
+					   ,Final.Estructura_Cartera
+					   ,Final.Porc_Cumplimiento_Estructura_Cartera
+					   ,Final.Porc_Peso_ClientesActivos
+					   ,Final.Porc_Peso_Estructura_Cartera
+					   ,Final.CER1
+					   ,Final.Mora
+					   ,Final.Porc_Mora_Deducible
+					   ,Final.Porc_Cond_Cump_Colocaciones
+					   ,Final.Porc_Cond_Cump_Clientes_Activos
+					   ,Final.Porc_Cond_Cump_Cartera_Activa
+					   ,Final.Porc_Cond_Cump_Estr_Cartera
+					   ,Final.Porc_Neto_Colocaciones
+					   ,Final.Porc_Neto_Cartera_Activa
+					   ,Final.Porc_Neto_Clientes_Activos
+					   ,Final.Porc_Neto_Estructura_Cartera
+					   ,Final.Porc_Neto_Total
+					   ,Final.Condicion_Colocaciones
+					   ,Final.Condicion_Cartera_Activa
+					   ,Final.Condicion_Clientes_Activos
+					   ,Final.Condicion_Estructura_Cartera
+					   ,'Inc_Colocaciones'       = Case When Final.Porc_Cumplimiento_Colocaciones       >= Final.Porc_Cond_Cump_Colocaciones     Then (Final.Total_SalarioIncentivo * Final.Porc_Neto_Colocaciones       * Final.Porc_Incentivo) Else 0 End
+					   ,'Inc_Cartera_Activa'     = Case When Final.Porc_Cumplimiento_Cartera_Activa     >= Final.Porc_Cond_Cump_Cartera_Activa   Then (Final.Total_SalarioIncentivo * Final.Porc_Neto_Cartera_Activa     * Final.Porc_Incentivo) Else 0 End
+					   ,'Inc_Clientes_Activos'   = Case When Final.Porc_Cumplimiento_Clientes_Activos   >= Final.Porc_Cond_Cump_Clientes_Activos Then (Final.Total_SalarioIncentivo * Final.Porc_Neto_Clientes_Activos   * Final.Porc_Incentivo) Else 0 End
+					   ,'Inc_Estructura_Cartera' = Case When Final.Porc_Cumplimiento_Estructura_Cartera >= Final.Porc_Cond_Cump_Estr_Cartera     Then (Final.Total_SalarioIncentivo * Final.Porc_Neto_Estructura_Cartera * Final.Porc_Incentivo) Else 0 END
+				FROM(
+				SELECT calculos.Usuario
+					   ,calculos.Id_Region
+					   ,calculos.Region
+					   ,calculos.IdPersona
+					   ,calculos.Cedula
+					   ,calculos.CodCargo
+					   ,calculos.Cargo
+					   ,calculos.Gerente
+					   ,calculos.Salario_Basico
+					   ,calculos.Incentivo_Base
+					   ,calculos.Total_SalarioIncentivo
+					   ,calculos.Porc_SalBasico
+					   ,calculos.Porc_Incentivo
+					   ,calculos.Colocaciones
+					   ,calculos.Metas_Colocaciones
+					   ,calculos.Porc_Cumplimiento_Colocaciones
+					   ,calculos.Porc_Peso_Colocaciones
+					   ,calculos.Meta_Cartera_Activa
+					   ,calculos.Saldo_Cartera
+					   ,calculos.Porc_Cumplimiento_Cartera_Activa
+					   ,calculos.Porc_Peso_CarteraActiva
+					   ,calculos.Meta_Clientes_Activos
+					   ,calculos.Clientes_Activos
+					   ,calculos.Porc_Cumplimiento_Clientes_Activos
+					   ,calculos.Meta_Estructura_Cartera
+					   ,calculos.Estructura_Cartera
+					   ,calculos.Porc_Cumplimiento_Estructura_Cartera
+					   ,calculos.Porc_Peso_ClientesActivos
+					   ,calculos.Porc_Peso_Estructura_Cartera
+					   ,calculos.CER1
+					   ,Mora = (calculos.CER1)/(calculos.Saldo_Cartera) * 100
+					   ,'Porc_Mora_Deducible' = (Select Incentivo
+												  From [dbo].[INC_RANGOS] ir
+												 Where ir.CodVariable = 'F'
+												   And ir.CodRegion   = 0
+												   And ir.Codcargo    = calculos.CodCargo
+												   And ir.Tz_Lock     = 0
+												   And ((calculos.CER1)/(calculos.Saldo_Cartera) * 100.00  >= ir.MINIMO
+												   And ((calculos.CER1)/(calculos.Saldo_Cartera) * 100.00) <= ir.MAXIMO))
+						,calculos.Porc_Cond_Cump_Colocaciones
+						,calculos.Porc_Cond_Cump_Clientes_Activos
+						,calculos.Porc_Cond_Cump_Cartera_Activa
+						,calculos.Porc_Cond_Cump_Estr_Cartera
+
+						,'Porc_Neto_Colocaciones'        = (calculos.Porc_Cumplimiento_Colocaciones       * calculos.Porc_Peso_Colocaciones)
+						,'Porc_Neto_Cartera_Activa'      = (calculos.Porc_Cumplimiento_Cartera_Activa     * calculos.Porc_Peso_CarteraActiva)
+						,'Porc_Neto_Clientes_Activos'    = (calculos.Porc_Cumplimiento_Clientes_Activos   * calculos.Porc_Peso_ClientesActivos)
+						,'Porc_Neto_Estructura_Cartera'  = (calculos.Porc_Cumplimiento_Estructura_Cartera * calculos.Porc_Peso_Estructura_Cartera)
+
+						,'Porc_Neto_Total'               = (calculos.Porc_Cumplimiento_Colocaciones       * calculos.Porc_Peso_Colocaciones)       +
+														   (calculos.Porc_Cumplimiento_Cartera_Activa     * calculos.Porc_Peso_CarteraActiva)      +
+														   (calculos.Porc_Cumplimiento_Clientes_Activos   * calculos.Porc_Peso_ClientesActivos)    +
+														   (calculos.Porc_Cumplimiento_Estructura_Cartera * calculos.Porc_Peso_Estructura_Cartera)
+
+
+
+						,'Condicion_Colocaciones'       = Case When calculos.Porc_Cumplimiento_Colocaciones       >= calculos.Porc_Cond_Cump_Colocaciones       Then 'CUMPLE' Else 'NO CUMPLE' END
+						,'Condicion_Cartera_Activa'     = Case When calculos.Porc_Cumplimiento_Cartera_Activa     >= calculos.Porc_Cond_Cump_Cartera_Activa     Then 'CUMPLE' Else 'NO CUMPLE' END
+						,'Condicion_Clientes_Activos'   = Case When calculos.Porc_Cumplimiento_Clientes_Activos   >= calculos.Porc_Cond_Cump_Clientes_Activos   Then 'CUMPLE' Else 'NO CUMPLE' END
+						,'Condicion_Estructura_Cartera' = Case When calculos.Porc_Cumplimiento_Estructura_Cartera >= calculos.Porc_Cond_Cump_Estr_Cartera       Then 'CUMPLE' Else 'NO CUMPLE' End
+				 FROM (
+				SELECT reporte.Usuario
+					   ,reporte.Id_Region
+					   ,reporte.Region
+					   ,reporte.IdPersona
+					   ,reporte.Cedula
+					   ,reporte.CodCargo
+					   ,reporte.Cargo
+					   ,reporte.Gerente
+					   ,reporte.Salario_Basico
+					   ,reporte.Incentivo_Base
+					   ,reporte.Total_SalarioIncentivo
+					   ,reporte.Porc_SalBasico
+					   ,reporte.Porc_Incentivo
+					   ,reporte.Metas_Colocaciones
+					   ,Sum(reporte.Colocaciones) AS Colocaciones
+					   ,Sum(reporte.Porc_Cumplimiento_Colocaciones) AS Porc_Cumplimiento_Colocaciones
+					   ,reporte.Porc_Peso_Colocaciones
+					   ,reporte.Meta_Cartera_Activa
+					   ,Sum(reporte.Saldo_Cartera) AS Saldo_Cartera
+					   ,Sum(reporte.Porc_Cumplimiento_Cartera_Activa) AS Porc_Cumplimiento_Cartera_Activa
+					   ,reporte.Porc_Peso_CarteraActiva
+					   ,reporte.Meta_Clientes_Activos
+					   ,Sum(reporte.Clientes_Activos) AS Clientes_Activos
+					   ,Sum(reporte.Porc_Cumplimiento_Clientes_Activos) AS Porc_Cumplimiento_Clientes_Activos
+					   ,reporte.Meta_Estructura_Cartera
+					   ,reporte.Estructura_Cartera
+					   ,reporte.Porc_Cumplimiento_Estructura_Cartera
+					   ,reporte.Porc_Peso_ClientesActivos
+					   ,reporte.Porc_Peso_Estructura_Cartera
+					   ,Sum(reporte.CER1)AS CER1
+					   ,reporte.Porc_Cond_Cump_Colocaciones
+					   ,reporte.Porc_Cond_Cump_Cartera_Activa
+					   ,reporte.Porc_Cond_Cump_Clientes_Activos
+					   ,reporte.Porc_Cond_Cump_Estr_Cartera
+				FROM (
+				SELECT Gtes.UsuarioTopaz AS Usuario
+					   ,CarRegion.Id_Region
+					   ,CarRegion.Region
+					   ,Gtes.IdPersona
+					   ,Gtes.Cedula
+					   ,Gtes.CodigoCargo  AS CodCargo
+					   ,Gtes.Desccargo    AS Cargo
+					   ,Gtes.Nombre       AS Gerente
+						,Gtes.SalarioMensual AS Salario_Basico
+						,'Incentivo_Base' = (Select Incentivo_Base * Porc_Incentivo
+											  From Inc_Parametros_Cargos
+											  Where Codcargo   = Gtes.CodigoCargo
+												And CodRegion  = CarRegion.Id_Region
+												And CodSucursal = CarRegion.Sucursal_Prestamo
+												And Tz_Lock    = 0)
+						,'Total_SalarioIncentivo' = (Select Incentivo_Base
+											  From Inc_Parametros_Cargos
+											  Where Codcargo   = Gtes.CodigoCargo
+												And CodRegion  = CarRegion.Id_Region
+												And CodSucursal = CarRegion.Sucursal_Prestamo
+												And Tz_Lock    = 0)
+						,'Porc_SalBasico' = (Select Porc_SalBasico
+												From Inc_Parametros_Cargos
+												Where Codcargo   = Gtes.CodigoCargo
+												And CodRegion    = CarRegion.Id_Region
+												And CodSucursal = CarRegion.Sucursal_Prestamo
+												And Tz_Lock      = 0)
+					   ,'Porc_Incentivo' = (Select Porc_Incentivo
+											  From Inc_Parametros_Cargos
+											  Where Codcargo   = Gtes.CodigoCargo
+												And CodRegion  = CarRegion.Id_Region
+												And CodSucursal = CarRegion.Sucursal_Prestamo
+												And Tz_Lock    = 0)
+
+					   ,CarRegion.Metas_Colocaciones       AS Metas_Colocaciones
+					   ,CarRegion.Colocaciones             AS Colocaciones
+					   ,'Porc_Cumplimiento_Colocaciones'  = (CarRegion.Colocaciones / CarRegion.Metas_Colocaciones)
+					   ,'Porc_Peso_Colocaciones' =  (Select Peso
+													   From dbo.Inc_Peso
+													  Where Codvariable ='G'
+														And CodCargo    = GTES.CodigoCargo
+														And CodRegion   = CarRegion.Id_Region
+														And TZ_LOCK     = 0)
+					   ,CarRegion.Meta_Cartera_Activa      AS Meta_Cartera_Activa
+					   ,CarRegion.Saldo_Cartera            AS Saldo_Cartera
+					   ,'Porc_Cumplimiento_Cartera_Activa'      = (CarRegion.Saldo_Cartera / CarRegion.Meta_Cartera_Activa)
+					   ,'Porc_Peso_CarteraActiva' =  (Select Peso
+													   From dbo.Inc_Peso
+													  Where Codvariable ='A'
+														And CodCargo    = GTES.CodigoCargo
+														And CodRegion   = CarRegion.Id_Region
+														And TZ_LOCK     = 0)
+					   ,CarRegion.Meta_Clientes_Activos    AS Meta_Clientes_Activos
+					   ,CarRegion.Clientes_Activos         AS Clientes_Activos
+					   ,'Porc_Cumplimiento_Clientes_Activos'    = (CarRegion.Clientes_Activos / CarRegion.Meta_Clientes_Activos)
+					   ,'Porc_Peso_ClientesActivos' =  (Select Peso
+													   From dbo.Inc_Peso
+													  Where Codvariable ='B'
+														And CodCargo    = GTES.CodigoCargo
+														And CodRegion   = CarRegion.Id_Region
+														And TZ_LOCK     = 0)
+					   ,CarRegion.Meta_Estructura_Cartera  AS Meta_Estructura_Cartera
+					   ,CarRegion.Estructura_Cartera       AS Estructura_Cartera
+					   ,'Porc_Cumplimiento_Estructura_Cartera'  = (CarRegion.Estructura_Cartera / CarRegion.Meta_Estructura_Cartera)
+					   ,'Porc_Peso_Estructura_Cartera' =  (Select Peso
+														   From dbo.Inc_Peso
+														  Where Codvariable ='E'
+															And CodCargo    = GTES.CodigoCargo
+															And CodRegion   = CarRegion.Id_Region
+															And TZ_LOCK     = 0)
+					   ,CarRegion.CER1                     AS CER1
+
+						,'Porc_Cond_Cump_Colocaciones'  = (Select Porc_Cumplimiento
+															From Inc_Condicion_Cumplimiento ic
+														   Where CodVariable = 'G'
+															 And CodRegion   = CarRegion.Id_Region
+															 And TZ_Lock     = 0)
+
+						,'Porc_Cond_Cump_Cartera_Activa'  = (Select Porc_Cumplimiento
+															  From Inc_Condicion_Cumplimiento ic
+															 Where CodVariable = 'A'
+															   And CodRegion   = CarRegion.Id_Region
+															   And TZ_Lock     = 0)
+
+						 ,'Porc_Cond_Cump_Clientes_Activos'  =    (Select Porc_Cumplimiento
+																	 From Inc_Condicion_Cumplimiento ic
+																	Where CodVariable = 'B'
+																	  And CodRegion   = CarRegion.Id_Region
+																	  And TZ_Lock     = 0)
+
+						 ,'Porc_Cond_Cump_Estr_Cartera'  = (Select Porc_Cumplimiento
+															 From Inc_Condicion_Cumplimiento ic
+															Where CodVariable = 'E'
+															  And CodRegion   = CarRegion.Id_Region
+															  And TZ_Lock     = 0)
+				FROM (
+				SELECT Detalle.Id_Region
+					   ,Detalle.Region
+					   ,Detalle.Sucursal_Prestamo
+					   ,'Metas_Colocaciones' = (Select Metas From [dbo].[INC_METASVARIABLES] im
+											   Where im.CodSucursal = 0
+												 And im.CodVariable = 'G'
+												 And im.CodRegion   = Detalle.Id_Region
+												 And im.Mes         = MONTH(@FechaCorte)
+												 And im.Anio        = YEAR(@FechaCorte))
+					   /* CONSULTA A LA TABLA SALDOS */
+					   ,'Colocaciones' = (SELECT Sum(CapitalOriginal) AS TOTAL_DESEMBOLSADO
+										  FROM  (SELECT  trrs.CodRegion
+														,s.C1601 As CapitalOriginal
+														,ts.C6020 AS Agencia
+												   FROM dbo.SALDOS s WITH(NOLOCK)
+														INNER JOIN dbo.TC_SUCURSALES ts WITH(NOLOCK) ON s.Sucursal         = ts.C6021
+														INNER JOIN dbo.RH_FUNCIONARIO rf WITH(NOLOCK) ON rf.CodFuncionario = s.C1670
+														INNER JOIN dbo.TC_REL_REGION_SUCURSAL trrs ON s.Sucursal           = trrs.CodSucursal
+													 WHERE trrs.CodRegion  = Detalle.Id_Region
+													 And  s.SUCURSAL = Detalle.Sucursal_Prestamo
+													 And s.C1620 BETWEEN @FechaIni AND @FechaCorte
+													 And s.C1620   > '30/09/2014'
+													 And s.C9314   = 5
+													 And s.TZ_LOCK = 0
+													 --Filtro que excluye los créditos extornado ()
+													 And Not EXISTS(SELECT sre.SALDOSJTSOIDEXT FROM SL_RASTROS_EXTORNOS  sre WITH(NOLOCK) WHERE sre.SALDOSJTSOIDEXT = S.JTS_OID)
+													 )As Consulta
+													 Group By Consulta.CodRegion,Consulta.Agencia)
+
+						,'Meta_Cartera_Activa' = (Select Sum(Metas)
+													From [dbo].[INC_METASVARIABLES] im
+												   Where im.CodSucursal = 0
+													 And im.CodVariable = 'A'
+													 And im.CodRegion   =  Detalle.Id_Region
+													 And im.Mes         = MONTH(@FechaCorte)
+													 And im.Anio        = YEAR(@FechaCorte))
+					   ,Sum(Detalle.Saldo_Cartera)  AS Saldo_Cartera
+					   ,'Meta_Clientes_Activos' = (Select Sum(Metas)
+													From [dbo].[INC_METASVARIABLES] im
+													Where im.CodSucursal = 0
+													  And im.CodVariable = 'B'
+													  And im.CodRegion   = Detalle.Id_Region
+													  And im.Mes         = MONTH(@FechaCorte)
+													  And im.Anio        = YEAR(@FechaCorte))
+					   ,Count(Distinct CodCliente)  AS Clientes_Activos
+					   ,'Meta_Estructura_Cartera' = (Select Sum(Metas)
+													   From [dbo].[INC_METASVARIABLES] im
+													  Where im.CodSucursal = 0
+														And im.CodVariable In ('E')
+														And im.CodRegion = Detalle.Id_Region
+														And im.Mes       = MONTH(@FechaCorte)
+														And im.Anio      = YEAR(@FechaCorte))
+					   ,100.00                      AS Estructura_Cartera
+					   ,Sum(CER1) As CER1
+				FROM (
+				SELECT trs.CodRegion          AS Id_Region
+					   ,Region                 AS Region
+					   ,egp.Sucursal_Prestamo
+					   ,egp.Codigo_Cliente     AS CodCliente
+					   ,'Saldo_Cartera'      = Saldo_MO
+					   ,Case When egp.Dias_Atraso > 0 Then egp.Saldo_MO Else 0 End As 'CER1'
+				  FROM [dbo].[FN_EGP_FUNDESER_UNIVERSO] (@FechaCorte) egp
+					   INNER JOIN TC_REL_REGION_SUCURSAL trs   ON trs.CodSucursal      = egp.SUCURSAL_PRESTAMO
+					   INNER JOIN TC_REGIONES tr               ON tr.CodRegion         = trs.CodRegion
+				 WHERE Not Exists(Select sre.SALDOSJTSOIDEXT From SL_Rastros_Extornos sre WITH(NOLOCK) Where sre.SaldosJTSOIDEXT = egp.JTS_OID)
+				)detalle
+				GROUP BY  Detalle.Id_Region,Detalle.Region,Detalle.Sucursal_Prestamo
+				  )CarRegion
+				INNER JOIN (
+				SELECT GTES_NOMINA.IdPersona
+					   ,GTES_NOMINA.Cedula
+					   ,GTES_NOMINA.CodigoCargo
+					   ,GTES_NOMINA.Desccargo
+					   ,GTES_NOMINA.Nombre
+					   ,GTES_NOMINA.SalarioMensual
+					   ,trrs.CodRegion
+					   ,ar.usuarioTopaz
+				  FROM
+				 (--Lista de Gerentes segun NOMINA.SA
+				 Select cr.IdPersona
+					 ,(REPLACE(e.Cedula,'-' ,'')) Cedula
+					 ,e.CodCargo AS CodigoCargo
+					 ,c.Descripcion AS Desccargo
+					 ,e.Nombre
+					 ,e.SalarioMensual
+				  From CL_RELPERDOC cr  inner Join VINC_NOMINA e On (REPLACE(e.Cedula,'-' ,'')) collate Modern_Spanish_CI_AS IN (ISNULL(cr.NRODOCUMENTO,''))
+					   Inner Join VINC_NOMINA_CARGOS c On e.CodCargo = c.CodCargo
+						and c.CodCargo In (3)
+				 )GTES_NOMINA
+				/* EL RELACION PARA OBTENER LA SUCURSAL DEL GERENTE */
+				left Join RH_FUNCIONARIO rf ON rf.IdPersona = GTES_NOMINA.IdPersona
+				left Join AU_RELFUNCIONARIOUSR ar2 ON ar2.CODFUNCIONARIO = rf.CODFUNCIONARIO
+				left Join AU_RELFUNCIONARIOAGENCIA ar ON ar2.USUARIOTOPAZ = ar.USUARIOTOPAZ
+				left Join TC_REL_REGION_SUCURSAL trrs ON ar.CODAGENCIA = trrs.CODSUCURSAL
+				WHERE rf.IDPERSONA IS NOT NULL
+				  AND rf.FUNCESTADO = 'A'
+				  AND rf.TZ_LOCK    =  0
+				GROUP BY trrs.CODREGION
+					   ,ar.usuarioTopaz
+					   ,GTES_NOMINA.IdPersona
+					   ,GTES_NOMINA.Cedula
+					   ,GTES_NOMINA.CodigoCargo
+					   ,GTES_NOMINA.Desccargo
+					   ,GTES_NOMINA.Nombre
+					   ,GTES_NOMINA.SalarioMensual
+				   )GTES ON CarRegion.Id_Region = GTES.CodRegion
+				)Reporte
+				GROUP BY Reporte.Usuario,Reporte.Id_Region, Reporte.Region, Reporte.IdPersona, Reporte.Cedula,
+					  Reporte.CodCargo, Reporte.Cargo, Reporte.Gerente, Reporte.Salario_Basico,
+					  Reporte.Incentivo_Base, Reporte.Total_SalarioIncentivo,reporte.Porc_SalBasico,
+					  Reporte.Porc_Incentivo,Reporte.Porc_Peso_Colocaciones,Reporte.Metas_Colocaciones,
+					  Reporte.Meta_Cartera_Activa,Reporte.Porc_Peso_CarteraActiva, reporte.Estructura_Cartera,
+					  reporte.Porc_Cumplimiento_Estructura_Cartera,  Reporte.Meta_Clientes_Activos,
+					  Reporte.Meta_Estructura_Cartera, Reporte.Porc_Peso_ClientesActivos,
+					  Reporte.Porc_Peso_Estructura_Cartera
+					  ,reporte.Porc_Cond_Cump_Colocaciones
+					  ,reporte.Porc_Cond_Cump_Cartera_Activa
+					  ,reporte.Porc_Cond_Cump_Clientes_Activos
+					  ,reporte.Porc_Cond_Cump_Estr_Cartera
+				)calculos
+				)Final
+				)Totales
+				WHERE Totales.Usuario = @Usuario
+				Order by Totales.Id_Region
+END     ]]>
+	</queryString>
+	<field name="Usuario" class="java.lang.String"/>
+	<field name="Id_Region" class="java.math.BigDecimal"/>
+	<field name="Region" class="java.lang.String"/>
+	<field name="IdPersona" class="java.math.BigDecimal"/>
+	<field name="Cedula" class="java.lang.String"/>
+	<field name="CodCargo" class="java.lang.Integer"/>
+	<field name="Cargo" class="java.lang.String"/>
+	<field name="Gerente" class="java.lang.String"/>
+	<field name="Salario_Basico" class="java.math.BigDecimal"/>
+	<field name="Incentivo_Base" class="java.math.BigDecimal"/>
+	<field name="Total_SalarioIncentivo" class="java.math.BigDecimal"/>
+	<field name="Porc_SalBasico" class="java.math.BigDecimal"/>
+	<field name="Porc_Incentivo" class="java.math.BigDecimal"/>
+	<field name="Colocaciones" class="java.math.BigDecimal"/>
+	<field name="Metas_Colocaciones" class="java.math.BigDecimal"/>
+	<field name="Porc_Cumplimiento_Colocaciones" class="java.math.BigDecimal"/>
+	<field name="Porc_Peso_Colocaciones" class="java.math.BigDecimal"/>
+	<field name="Meta_Cartera_Activa" class="java.math.BigDecimal"/>
+	<field name="Porc_Cumplimiento_Cartera_Activa" class="java.math.BigDecimal"/>
+	<field name="Saldo_Cartera" class="java.math.BigDecimal"/>
+	<field name="Porc_Peso_CarteraActiva" class="java.math.BigDecimal"/>
+	<field name="Meta_Clientes_Activos" class="java.math.BigDecimal"/>
+	<field name="Clientes_Activos" class="java.lang.Integer"/>
+	<field name="Porc_Cumplimiento_Clientes_Activos" class="java.math.BigDecimal"/>
+	<field name="Meta_Estructura_Cartera" class="java.math.BigDecimal"/>
+	<field name="Estructura_Cartera" class="java.math.BigDecimal"/>
+	<field name="Porc_Cumplimiento_Estructura_Cartera" class="java.math.BigDecimal"/>
+	<field name="Porc_Peso_ClientesActivos" class="java.math.BigDecimal"/>
+	<field name="Porc_Peso_Estructura_Cartera" class="java.math.BigDecimal"/>
+	<field name="CER1" class="java.math.BigDecimal"/>
+	<field name="Mora" class="java.math.BigDecimal"/>
+	<field name="Porc_Mora_Deducible" class="java.math.BigDecimal"/>
+	<field name="Porc_Cond_Cump_Colocaciones" class="java.math.BigDecimal"/>
+	<field name="Porc_Cond_Cump_Clientes_Activos" class="java.math.BigDecimal"/>
+	<field name="Porc_Cond_Cump_Cartera_Activa" class="java.math.BigDecimal"/>
+	<field name="Porc_Cond_Cump_Estr_Cartera" class="java.math.BigDecimal"/>
+	<field name="Porc_Neto_Colocaciones" class="java.math.BigDecimal"/>
+	<field name="Porc_Neto_Cartera_Activa" class="java.math.BigDecimal"/>
+	<field name="Porc_Neto_Clientes_Activos" class="java.math.BigDecimal"/>
+	<field name="Porc_Neto_Estructura_Cartera" class="java.math.BigDecimal"/>
+	<field name="Condicion_Colocaciones" class="java.lang.String"/>
+	<field name="Porc_Neto_Total" class="java.math.BigDecimal"/>
+	<field name="Condicion_Cartera_Activa" class="java.lang.String"/>
+	<field name="Condicion_Clientes_Activos" class="java.lang.String"/>
+	<field name="Condicion_Estructura_Cartera" class="java.lang.String"/>
+	<field name="Inc_Colocaciones" class="java.math.BigDecimal"/>
+	<field name="Inc_Cartera_Activa" class="java.math.BigDecimal"/>
+	<field name="Inc_Clientes_Activos" class="java.math.BigDecimal"/>
+	<field name="Inc_Estructura_Cartera" class="java.math.BigDecimal"/>
+	<field name="Total_Incentivos" class="java.math.BigDecimal"/>
+	<field name="Castigo" class="java.math.BigDecimal"/>
+	<field name="Incentivo_Pago" class="java.math.BigDecimal"/>
+	<variable name="Metas_Colocaciones_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Metas_Colocaciones}]]></variableExpression>
+	</variable>
+	<variable name="Colocaciones_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Colocaciones}]]></variableExpression>
+	</variable>
+	<variable name="Meta_Cartera_Activa_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Meta_Cartera_Activa}]]></variableExpression>
+	</variable>
+	<variable name="Saldo_Cartera_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Saldo_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Meta_Clientes_Activos_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Meta_Clientes_Activos}]]></variableExpression>
+	</variable>
+	<variable name="Clientes_Activos_1" class="java.lang.Integer" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Clientes_Activos}]]></variableExpression>
+	</variable>
+	<variable name="Meta_Estructura_Cartera_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Meta_Estructura_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Estructura_Cartera_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Estructura_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Total_Incentivos_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Total_Incentivos}]]></variableExpression>
+	</variable>
+	<variable name="Castigo_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Castigo}]]></variableExpression>
+	</variable>
+	<variable name="Incentivo_Pago_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Incentivo_Pago}]]></variableExpression>
+	</variable>
+	<variable name="Mora_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Mora}]]></variableExpression>
+	</variable>
+	<variable name="Salario_Basico_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Region" calculation="Sum">
+		<variableExpression><![CDATA[$F{Salario_Basico}]]></variableExpression>
+	</variable>
+	<variable name="Metas_Colocaciones_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Metas_Colocaciones}]]></variableExpression>
+	</variable>
+	<variable name="Colocaciones_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Colocaciones}]]></variableExpression>
+	</variable>
+	<variable name="Porc_Cumplimiento_Colocaciones_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Porc_Cumplimiento_Colocaciones}]]></variableExpression>
+	</variable>
+	<variable name="Meta_Cartera_Activa_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Meta_Cartera_Activa}]]></variableExpression>
+	</variable>
+	<variable name="Saldo_Cartera_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Saldo_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Meta_Clientes_Activos_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Meta_Clientes_Activos}]]></variableExpression>
+	</variable>
+	<variable name="Clientes_Activos_2" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{Clientes_Activos}]]></variableExpression>
+	</variable>
+	<variable name="Meta_Estructura_Cartera_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Meta_Estructura_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Estructura_Cartera_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Estructura_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Mora_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Mora}]]></variableExpression>
+	</variable>
+	<variable name="Castigo_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Castigo}]]></variableExpression>
+	</variable>
+	<variable name="Incentivo_Pago_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Incentivo_Pago}]]></variableExpression>
+	</variable>
+	<variable name="Salario_Basico_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Salario_Basico}]]></variableExpression>
+	</variable>
+	<group name="Region">
+		<groupExpression><![CDATA[$F{Region}]]></groupExpression>
+		<groupHeader>
+			<band height="21">
+				<textField>
+					<reportElement mode="Transparent" x="8" y="1" width="157" height="20" backcolor="#999999"/>
+					<textElement>
+						<font size="12" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Region}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="26">
+				<staticText>
+					<reportElement mode="Opaque" x="9" y="6" width="980" height="15" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineStyle="Solid"/>
+						<topPen lineWidth="1.0" lineStyle="Solid"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement x="346" y="7" width="61" height="15"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Colocaciones_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="470" y="7" width="55" height="15"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Meta_Cartera_Activa_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="530" y="7" width="52" height="15"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Saldo_Cartera_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="624" y="7" width="35" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Meta_Clientes_Activos_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0">
+					<reportElement x="661" y="7" width="43" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Clientes_Activos_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="747" y="7" width="36" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Meta_Estructura_Cartera_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="788" y="7" width="34" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Estructura_Cartera_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="904" y="7" width="36" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Castigo_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="940" y="7" width="42" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Incentivo_Pago_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="864" y="7" width="39" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Mora_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="220" y="7" width="48" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Salario_Basico_1}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="9" y="3" width="980" height="1"/>
+					<graphicElement>
+						<pen lineWidth="2.0" lineStyle="Double"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="9" y="24" width="980" height="1"/>
+					<graphicElement>
+						<pen lineWidth="2.0" lineStyle="Double"/>
+					</graphicElement>
+				</line>
+				<textField pattern="#,##0.00">
+					<reportElement x="274" y="7" width="70" height="15"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Metas_Colocaciones_1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement mode="Opaque" x="9" y="6" width="205" height="15" backcolor="#CCCCCC"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="true" isUnderline="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA['SubTotal por ' + $F{Region}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="133" splitType="Stretch">
+			<staticText>
+				<reportElement x="476" y="92" width="42" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Meta Cartera Activa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="530" y="96" width="40" height="24"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cartera Activa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="581" y="92" width="37" height="31" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cump. Cartera Activa]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="346" y="96" width="61" height="24"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Colocaciones Reales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="274" y="96" width="57" height="24"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Metas Colocaciones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="100" width="97" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gerente de Regional]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="16" width="295" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FINANCIERA FUNDESER, SOCIEDAD ANONIMA]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="862" y="51" width="83" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="862" y="36" width="15" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="808" y="51" width="54" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Actual:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="249" y="42" width="365" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de Incentivos de Gerentes de Regionales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="214" y="99" width="54" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Salario Fijo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="701" y="90" width="41" height="33"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cump. Clientes Activos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="658" y="99" width="43" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Clientes Activos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="744" y="99" width="39" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Meta Est. Cartera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="785" y="99" width="34" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estr. Cartera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="622" y="90" width="36" height="33"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Metas Clientes Activos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="269" y="74" width="592" height="15" backcolor="#FFCC99"/>
+				<box>
+					<pen lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Indicadores de Desempeño]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="8" y="89" width="260" height="36" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="409" y="96" width="58" height="24"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cump. Colocaciones]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="8" y="74" width="260" height="15" forecolor="#FFFFFF" backcolor="#006600"/>
+				<box>
+					<pen lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos Generales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="822" y="90" width="39" height="33"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cump. Estr. Cartera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="861" y="74" width="125" height="15" forecolor="#FFFFFF" backcolor="#009999"/>
+				<box>
+					<pen lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Incentivo]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="861" y="89" width="125" height="36" forecolor="#000000" backcolor="#FFCC99"/>
+			</rectangle>
+			<elementGroup>
+				<textField>
+					<reportElement x="808" y="36" width="54" height="16"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+			</elementGroup>
+			<staticText>
+				<reportElement x="136" y="100" width="58" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Región]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="863" y="101" width="39" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mora]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="940" y="96" width="42" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Incentivo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="901" y="101" width="39" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Castigo]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="268" y="88" width="593" height="37" forecolor="#000000" backcolor="#FFCC99"/>
+			</rectangle>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="19">
+			<textField pattern="#,##0.00">
+				<reportElement x="469" y="1" width="56" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{Meta_Cartera_Activa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;-#,##0">
+				<reportElement x="623" y="0" width="36" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{Meta_Clientes_Activos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="661" y="0" width="43" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{Clientes_Activos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 %">
+				<reportElement x="704" y="0" width="41" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{Porc_Cumplimiento_Clientes_Activos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="785" y="0" width="40" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{Estructura_Cartera}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="747" y="0" width="38" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{Meta_Estructura_Cartera}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="8" y="17" width="978" height="1" forecolor="#CCCCCC"/>
+				<graphicElement>
+					<pen lineWidth="0.75" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement x="527" y="1" width="55" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Saldo_Cartera}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="7" y="0" width="127" height="17"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Gerente}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 %">
+				<reportElement x="825" y="0" width="39" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{Porc_Cumplimiento_Estructura_Cartera}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="220" y="1" width="49" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Salario_Basico}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="347" y="1" width="60" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{Colocaciones}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="273" y="1" width="71" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Metas_Colocaciones}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="863" y="1" width="41" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Mora}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="939" y="1" width="46" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Incentivo_Pago}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 %">
+				<reportElement x="584" y="1" width="34" height="16"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Porc_Cumplimiento_Cartera_Activa}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="904" y="1" width="35" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Castigo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="136" y="1" width="84" height="16"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Region}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 %">
+				<reportElement x="409" y="1" width="58" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Porc_Cumplimiento_Colocaciones}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="31">
+			<staticText>
+				<reportElement mode="Opaque" x="9" y="6" width="980" height="22" backcolor="#999999"/>
+				<box>
+					<pen lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="347" y="10" width="62" height="18"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Colocaciones_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="470" y="10" width="55" height="18"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Meta_Cartera_Activa_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="527" y="10" width="57" height="18"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Saldo_Cartera_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="624" y="10" width="35" height="18"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Meta_Clientes_Activos_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="661" y="11" width="43" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Clientes_Activos_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="747" y="11" width="38" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Meta_Estructura_Cartera_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="785" y="11" width="40" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Estructura_Cartera_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="862" y="11" width="41" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Mora_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="904" y="11" width="36" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Castigo_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="940" y="11" width="45" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Incentivo_Pago_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="277" y="10" width="67" height="18"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Metas_Colocaciones_2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="10" y="6" width="204" height="22" backcolor="#999999"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true" isUnderline="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA['Total General']]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="214" y="10" width="63" height="18"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Salario_Basico_2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

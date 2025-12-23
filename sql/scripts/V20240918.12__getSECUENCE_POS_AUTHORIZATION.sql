@@ -1,0 +1,22 @@
+﻿EXECUTE('
+DROP SEQUENCE IF EXISTS dbo.SQ_POS_AUTHORIZATION;
+')
+
+EXECUTE('
+CREATE sequence dbo.SQ_POS_AUTHORIZATION AS 
+    NUMERIC(18,0) 
+    start WITH 1
+    increment BY 1 
+    MINVALUE 1 
+    MAXVALUE 999999999999999999 
+    NO CYCLE 
+    CACHE 10;
+')
+
+EXECUTE('    
+ALTER PROCEDURE dbo.getSECUENCE_POS_AUTHORIZATION @retorno numeric(18,0) out 
+    AS 
+    BEGIN 
+        SET @retorno = NEXT value FOR dbo.SQ_POS_AUTHORIZATION; 
+    END;
+')

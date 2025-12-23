@@ -1,0 +1,5 @@
+﻿execute('
+
+DELETE CI_CARGOS_X_EVENTO WHERE ID_EVENTO IN (841,842) 
+
+')

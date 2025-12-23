@@ -1,0 +1,52 @@
+service BUSCARPERSONAXTIPONRODOC;
+description "Busqueda de Personas por Pais + TipoDoc + NroDoc";
+
+action:SQLQuery BUSCOTIPOPFPJDATOS
+(
+	
+	Pais:			string,
+	TipoDocumento:		string,
+	NroDocumento:		string
+) : [
+	STIPOPERSONA:		string,
+	CODERROR:		string,
+	NUMEROPERSONAFJ:	numeric as IdPersona
+] {
+	properties { 
+		("statement", "SELECT 0 AS CODERROR, TIPOPERSONA as STIPOPERSONA, NUMEROPERSONAFJ FROM CLI_DocumentosPFPJ WHERE  PAISDOCUMENTO=? AND TIPODOCUMENTO=? AND NUMERODOCUMENTO=?"),
+		("0", "Pais"),
+		("1", "TipoDocumento"),
+		("2", "NroDocumento")
+	};
+	action:SQLQuery BUSCODATOSPF() : [
+		APELLIDOPATERNO:	string as ApellidoPaterno,
+		APELLIDOMATERNO:	string as ApellidoMaterno,
+		PRIMERNOMBRE:		string as PrimerNombre,
+		SEGUNDONOMBRE:		string as SegundoNombre,
+		NUMEROPERSONAFISICA:	numeric as IdPersona,
+		RAZONSOCIAL:		string as Empresa
+	] {
+		condition { "STIPOPERSONA == \"F\"" };
+		properties {
+			("statement", "SELECT APELLIDOPATERNO, APELLIDOMATERNO, PRIMERNOMBRE, SEGUNDONOMBRE, NUMEROPERSONAFISICA, '' AS RAZONSOCIAL FROM CLI_PersonasFisicas WHERE NUMEROPERSONAFISICA=?"),
+			("0", "NUMEROPERSONAFJ")
+		}
+		
+		};
+		action:SQLQuery BUSCODATOSPJ() : [
+			APELLIDOPATERNO:	string as ApellidoPaterno,
+			APELLIDOMATERNO:	string as ApellidoMaterno,
+			PRIMERNOMBRE:		string as PrimerNombre,
+			SEGUNDONOMBRE:		string as SegundoNombre,
+			NUMEROPERSONAJURIDICA:	numeric as IdPersona,
+			RAZONSOCIAL:		string as Empresa
+			]
+			{
+			condition { "STIPOPERSONA == \"J\"" };
+			properties {
+				("statement", "SELECT '' AS APELLIDOPATERNO, '' AS APELLIDOMATERNO, '' AS PRIMERNOMBRE, '' AS SEGUNDONOMBRE, NUMEROPERSONAJURIDICA, RAZONSOCIAL FROM CLI_PersonasJuridicas WHERE NUMEROPERSONAJURIDICA=?"),
+				("0", "NUMEROPERSONAFJ")
+			
+		}
+	}
+}

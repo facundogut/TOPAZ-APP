@@ -1,0 +1,27 @@
+/****** Object:  View [dbo].[VW_REPORTES_CTA_VISTA]    Script Date: 24/02/2021 10:38:08 ******/
+DROP VIEW [dbo].[VW_REPORTES_CTA_VISTA]
+GO
+
+/****** Object:  View [dbo].[VW_REPORTES_CTA_VISTA]    Script Date: 24/02/2021 10:38:08 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[VW_REPORTES_CTA_VISTA] (
+   NUMERO,
+   DESCRIPCION
+   )
+AS 
+   SELECT
+      O.OPCIONINTERNA AS NUMERO,
+      O.DESCRIPCION
+   FROM 
+      dbo.OPCIONES AS O with (nolock)
+   WHERE 
+      O.NUMERODECAMPO = 34260 
+	  AND O.IDIOMA = 'E'
+GO
+
+

@@ -1,0 +1,10 @@
+﻿EXECUTE('
+-------------------
+--MODIFICAR CARGO--
+-------------------
+UPDATE CI_FORMULAS
+SET FORMULA = ''((C34686#''''S'''')Y(C34660=''''S'''')Y(C34776#''''I'''')Y((C34611<C35029)O(C35029=C34611)Y(C34611#C35028)))''
+WHERE ID_FORMULA = 211
+----
+')
+

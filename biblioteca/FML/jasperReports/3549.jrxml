@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2021-06-23T17:10:56 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="destruccionChequeras" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isFloatColumnFooter="true" uuid="ff10b81d-1155-4158-a8b5-880a34b57b60">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<parameter name="JTSOID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[JTS_OID:]]></parameterDescription>
+	</parameter>
+	<parameter name="SERIE" class="java.lang.String">
+		<parameterDescription><![CDATA[Serie:]]></parameterDescription>
+	</parameter>
+	<parameter name="CHEQUE_DESDE" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Cheque Desde:]]></parameterDescription>
+	</parameter>
+	<parameter name="CHEQUE_HASTA" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Cheque Hasta:]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  dbo."CHE_CHEQUERAS"."SERIE",  dbo."CHE_CHEQUERAS"."CHEQUEDESDE",  
+dbo."CHE_CHEQUERAS"."CHEQUEHASTA",  dbo."SALDOS"."SUCURSAL",  dbo."SALDOS"."CUENTA",
+dbo."SUCURSALES"."NOMBRESUCURSAL",
+(SELECT FECHAPROCESO FROM PARAMETROS) AS FECHA
+FROM  dbo."CHE_CHEQUERAS",  dbo."SALDOS",  dbo."SUCURSALES" 
+WHERE 
+(dbo."CHE_CHEQUERAS"."SUCURSAL" =  dbo."SALDOS"."SUCURSAL" AND 
+dbo."CHE_CHEQUERAS"."CUENTA" =  dbo."SALDOS"."CUENTA" AND
+dbo."CHE_CHEQUERAS"."MONEDA" =  dbo."SALDOS"."MONEDA" AND
+dbo."CHE_CHEQUERAS"."OPERACION" = dbo."SALDOS"."OPERACION"  AND 
+dbo."CHE_CHEQUERAS"."ORDINAL" =  dbo."SALDOS"."ORDINAL" AND
+dbo."CHE_CHEQUERAS"."PRODUCTO" =  dbo."SALDOS"."PRODUCTO" AND 
+dbo."SALDOS"."JTS_OID" = $P{JTSOID}
+AND  dbo."SUCURSALES"."SUCURSAL" =  dbo."SALDOS"."SUCURSAL"
+AND $P{CHEQUE_DESDE} = 0)
+OR
+(dbo."CHE_CHEQUERAS"."SUCURSAL" =  dbo."SALDOS"."SUCURSAL" AND 
+dbo."CHE_CHEQUERAS"."CUENTA" =  dbo."SALDOS"."CUENTA" AND
+dbo."CHE_CHEQUERAS"."MONEDA" =  dbo."SALDOS"."MONEDA" AND
+dbo."CHE_CHEQUERAS"."OPERACION" = dbo."SALDOS"."OPERACION"  AND 
+dbo."CHE_CHEQUERAS"."ORDINAL" =  dbo."SALDOS"."ORDINAL" AND
+dbo."CHE_CHEQUERAS"."PRODUCTO" =  dbo."SALDOS"."PRODUCTO" AND 
+dbo."SALDOS"."JTS_OID" = $P{JTSOID}
+AND  dbo."SUCURSALES"."SUCURSAL" =  dbo."SALDOS"."SUCURSAL"
+AND dbo."CHE_CHEQUERAS"."SERIE" = $P{SERIE}
+AND dbo."CHE_CHEQUERAS"."CHEQUEDESDE" = $P{CHEQUE_DESDE}
+AND dbo."CHE_CHEQUERAS"."CHEQUEHASTA" = $P{CHEQUE_HASTA})]]>
+	</queryString>
+	<field name="SERIE" class="java.lang.String"/>
+	<field name="CHEQUEDESDE" class="java.math.BigDecimal"/>
+	<field name="CHEQUEHASTA" class="java.math.BigDecimal"/>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="NOMBRESUCURSAL" class="java.lang.String"/>
+	<field name="FECHA" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="36" splitType="Stretch">
+			<staticText>
+				<reportElement x="160" y="0" width="240" height="30" uuid="4b68de4b-0c3e-463f-93a1-781cda175e99"/>
+				<textElement>
+					<font size="14" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Acta de Destrucción de Chequeras]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="-10" width="90" height="30" uuid="2617459a-3f02-491e-aa73-d78f39dd9964">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="117" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="50" height="15" uuid="228428c2-7774-490d-85fa-a8b448a5dd63">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="25" width="100" height="15" uuid="3add55f4-5e9e-435c-973b-b176c9a28c81">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Cuenta Corriente N°:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="10" width="100" height="15" uuid="0941f44d-a75a-4f96-97ea-f5c56e27c5ea">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="25" width="100" height="15" uuid="2be4b998-0299-4185-9e7a-2f2a80507bb4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="60" width="460" height="40" uuid="452a1586-2365-4c6f-92d8-9561d0d55028">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["En "+$F{NOMBRESUCURSAL}+", a los "+new SimpleDateFormat("dd").format($F{FECHA})+" días del mes "+new SimpleDateFormat("MM").format($F{FECHA})+" del año "+new SimpleDateFormat("yyyy").format($F{FECHA})+", habiéndose producido el cierre de la cuenta corriente arriba indicada, se procede a la destrucción de los formularios de cheques sin utilizar que a continuación se mencionan:"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="1" width="460" height="15" uuid="6f0e7682-bfa1-4813-a491-fcdf6b6bffd9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA["Formulario de Cheques Serie "+$F{SERIE}+", Nº "+$F{CHEQUEDESDE}+" a Nº "+$F{CHEQUEHASTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="211">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="11" width="132" height="15" uuid="96925919-2954-4774-806c-b8135af2ddb6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Funcionarios del Banco:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="51" width="100" height="15" uuid="338c8a43-9338-4872-933a-b3835c93edef">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[.................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="66" width="61" height="15" uuid="dfb67dcb-b4cf-4ec3-8da5-52c47bd23a97">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Firma y Sello]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="360" y="51" width="100" height="15" uuid="031493b1-8345-4e3c-8892-37a2dbd76f63">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[.................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="66" width="61" height="15" uuid="d2d64d91-6721-45ab-a109-be87872bef72">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Firma y Sello]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="122" width="80" height="15" uuid="38c09cf1-e18d-4cd0-8ef4-585185e64331">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Por el Cliente:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="122" width="100" height="15" uuid="0ac8a989-dbb1-4235-bdb0-69c0532a9923">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[.................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="134" y="137" width="30" height="15" uuid="945302c9-b3b4-4f29-9ee7-6c01614c0fc9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Firma]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="164" width="200" height="15" uuid="c6620e55-1b9c-4235-ab44-264f29695b17">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Aclaración:    .................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="185" width="200" height="15" uuid="3d17abef-1754-4e88-aa2f-6a09eeecb69a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Tipo y N° de Documento:    ..........................]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+</jasperReport>

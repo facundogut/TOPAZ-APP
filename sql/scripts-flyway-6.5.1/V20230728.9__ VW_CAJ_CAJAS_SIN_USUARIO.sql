@@ -1,0 +1,23 @@
+﻿execute('
+CREATE VIEW VW_CAJ_CAJAS_SIN_USUARIO
+AS
+SELECT 
+	c.NRO_CAJA ''NRO_CAJA'', 
+	c.SUCURSAL,
+	(CASE 
+		WHEN c.ESTADO = ''A'' THEN ''Abierta''
+		ELSE ''Cerrada''
+	END) AS ESTADO,
+	(CASE WHEN cc.Mini_Filial IS NULL THEN ''0''
+	ELSE CONVERT(varchar(3),cc.Mini_Filial)
+	END) AS ''MINIFILIAL'',
+	CASE WHEN c.nro_Caja<>999 THEN cc.Descripcion ELSE c.descripcion END AS ''DESCRIPCION''
+FROM TABLA_CAJAS c WITH(NOLOCK)
+
+LEFT JOIN CAJ_MiniFiliales cc WITH(NOLOCK) ON cc.SUCURSAL = c.SUCURSAL 
+								AND cc.Mini_Filial IN(	SELECT cm.Mini_Filial 
+														from CAJ_Cajas_MiniFiliales cm WITH(NOLOCK)
+														WHERE cm.Mini_Filial = cc.Mini_Filial 
+															AND cm.NRO_CAJA = c.NRO_CAJA)
+WHERE c.NRO_CAJA NOT IN ( SELECT NRODECAJA FROM USUARIOS WHERE NRODECAJA = c.NRO_CAJA AND NROSUCURSAL = c.SUCURSAL)
+')

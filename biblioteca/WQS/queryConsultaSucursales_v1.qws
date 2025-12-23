@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/getSucursal/{idSucursal}</uri>
+    <serviceDescription>Consulta Sucursales</serviceDescription>
+    <title>Consulta Sucursales</title>
+    <querys>
+        <query id="1" name="ListaSucursales" type="MULTIPLE">
+            <sql>DECLARE 
+  		
+  @idSucursal NUMERIC(10)
+
+BEGIN
+  SET @idSucursal = ?
+
+SELECT A.SUCURSAL AS idSucursal,
+	A.NOMBRESUCURSAL AS NombreSucursal,
+	A.CAPITALINTERIOR AS CapitalInterior,
+	(SELECT OP.DESCRIPCION FROM OPCIONES OP WHERE OP.NUMERODECAMPO = 6022 AND OP.OPCIONINTERNA = A.CAPITALINTERIOR AND OP.IDIOMA = 'E') AS CapitalInteriorDesc,
+	B.ESTADO AS EstadoSucursal,
+	(SELECT OP.DESCRIPCION FROM OPCIONES OP WHERE OP.NUMERODECAMPO = 6387 AND OP.OPCIONINTERNA = B.ESTADO AND OP.IDIOMA = 'E') AS EstadoSucursalDesc,
+	A.CAT_BCRA AS CategoriaBCRA,
+ 	C.PAIS AS PAISID,
+ 	(SELECT P.NOMBREPAIS FROM CLI_Paises P WHERE P.CODIGOPAIS = C.PAIS) AS PAISDESC,
+    CONVERT(VARCHAR, C.PROVINCIA) AS PROVINCIAID,
+ 	(SELECT PROV.DESCRIPCION FROM CLI_PROVINCIAS PROV WHERE PROV.CODIGOPAIS = C.PAIS AND PROV.DIM1 = C.PROVINCIA) AS PROVDESC,
+ 	CONVERT(VARCHAR, C.DEPARTAMENTO) AS DEPARTAMENTOID,
+ 	(SELECT DEP.NOMBREDEP FROM CLI_Departamentos DEP WHERE DEP.CODIGOPAIS = C.PAIS AND DEP.PROVINCIA = C.PROVINCIA AND DEP.DEPARTAMENTO = C.DEPARTAMENTO) AS DEPTODESC, 
+ 	CONVERT(VARCHAR, C.LOCALIDAD) AS LOCALIDADID,
+ 	(SELECT LOC.DESCRIPCION_DIM3 FROM CLI_LOCALIDADES LOC WHERE LOC.CODIGOPAIS=C.PAIS AND LOC.DIM1= C.PROVINCIA AND LOC.DIM2=C.DEPARTAMENTO AND LOC.DIM3=C.LOCALIDAD) LOCDESC,
+ 	C.CPA_VIEJO AS CP,
+ 	C.CPA_NUEVO AS CPA,
+ 	C.CALLE AS CALLE,
+ 	C.NUMERO,
+ 	C.PISO,
+ 	C.APARTAMENTO,
+ 	RTRIM(C.CALLE + ' ' + CONVERT(VARCHAR,C.NUMERO) + (CASE WHEN C.PISO = 0 OR C.PISO IS NULL THEN '' ELSE ' Piso: ' END) + CONVERT(VARCHAR,C.PISO) + (CASE WHEN LTRIM(C.APARTAMENTO) = '' OR LTRIM(C.APARTAMENTO) = '0' THEN '' ELSE ' Depto: ' END) + C.APARTAMENTO) AS DOMICILIO,
+ 	C.NORMALIZADO
+FROM SUCURSALES A
+  INNER JOIN SUCURSALESSC B ON B.SUCURSAL = A.SUCURSAL
+  INNER JOIN CLI_DIRECCIONES C ON C.ID = A.SUCURSAL AND C.FORMATO='S'
+  AND C.TIPODIRECCION='R'
+  AND C.ORDINAL_DIR=0
+WHERE A.TZ_LOCK = 0
+  AND B.TZ_LOCK = 0
+  AND (A.SUCURSAL = @idSucursal OR 0 = @idSucursal)
+
+END</sql>
+            <input>
+                <inParameter description="" type="INTEGER">idSucursal</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Sucursales">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>idSucursal</queryname>
+                        <servicename>Sucursal.idSucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NombreSucursal</queryname>
+                        <servicename>Sucursal.NombreSucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CapitalInterior</queryname>
+                        <servicename>Sucursal.CapitalInterior</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CapitalInteriorDesc</queryname>
+                        <servicename>Sucursal.CapitalInteriorDesc</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>EstadoSucursal</queryname>
+                        <servicename>Sucursal.EstadoSucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>EstadoSucursalDesc</queryname>
+                        <servicename>Sucursal.EstadoSucursalDesc</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CategoriaBCRA</queryname>
+                        <servicename>Sucursal.CategoriaBCRA</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>PAISID</queryname>
+                        <servicename>Sucursal.DireccionSucursal.pais.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>PAISDESC</queryname>
+                        <servicename>Sucursal.DireccionSucursal.pais.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>PROVINCIAID</queryname>
+                        <servicename>Sucursal.DireccionSucursal.provincia.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>PROVDESC</queryname>
+                        <servicename>Sucursal.DireccionSucursal.provincia.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DEPARTAMENTOID</queryname>
+                        <servicename>Sucursal.DireccionSucursal.departamento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DEPTODESC</queryname>
+                        <servicename>Sucursal.DireccionSucursal.departamento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>LOCALIDADID</queryname>
+                        <servicename>Sucursal.DireccionSucursal.localidad.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>LOCDESC</queryname>
+                        <servicename>Sucursal.DireccionSucursal.localidad.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CP</queryname>
+                        <servicename>Sucursal.DireccionSucursal.cp</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CPA</queryname>
+                        <servicename>Sucursal.DireccionSucursal.cpa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CALLE</queryname>
+                        <servicename>Sucursal.DireccionSucursal.calle</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NUMERO</queryname>
+                        <servicename>Sucursal.DireccionSucursal.numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>PISO</queryname>
+                        <servicename>Sucursal.DireccionSucursal.piso</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>APARTAMENTO</queryname>
+                        <servicename>Sucursal.DireccionSucursal.apartamento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DOMICILIO</queryname>
+                        <servicename>Sucursal.DireccionSucursal.domicilio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NORMALIZADO</queryname>
+                        <servicename>Sucursal.DireccionSucursal.normalizado</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="vacio" type="SIMPLE">
+            <sql>select '' as campo from parametros where 1 = 0</sql>
+            <input/>
+            <output>
+                <level groupby="" name="vacio">
+                    <outParameter description="" type="STRING">
+                        <queryname>campo</queryname>
+                        <servicename>vacio</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

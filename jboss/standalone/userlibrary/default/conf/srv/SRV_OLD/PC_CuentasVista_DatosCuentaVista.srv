@@ -1,0 +1,22 @@
+service DatosCuentaVista; 
+description "Servicio DatosCuentaVista"; 
+
+action:	SQLQuery Entity ( 
+ IDSALDO: string
+): [ 
+   	SUCURSAL: string,
+	PRODUCTO: string,
+	FECHAAPERTURA: string,
+   	SALDO: string,
+	IDSALDO: string
+]
+{ 
+  	properties { 
+  	("statement", "SELECT s.JTS_OID AS IDSALDO, suc.NOMBRESUCURSAL AS SUCURSAL, p.C6250 || ' - ' ||p.C6251 AS PRODUCTO, s.C1620 AS FECHAAPERTURA, s.C1604 AS SALDO  FROM SALDOS s JOIN SUCURSALES suc ON suc.SUCURSAL = s.SUCURSAL AND suc.TZ_LOCK = 0 JOIN PRODUCTOS p ON p.C6250 = s.PRODUCTO AND p.TZ_LOCK = 0 WHERE s.JTS_OID = to_number( ? ) "),
+	("0", "IDSALDO")	
+	}
+}
+
+
+
+

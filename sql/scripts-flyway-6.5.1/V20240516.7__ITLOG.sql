@@ -1,0 +1,37 @@
+Execute('CREATE TABLE dbo.LOG_KETTLE 
+(
+	ID_JOB bigint IDENTITY(1,1) NOT NULL, 
+	JOBNAME varchar(80) COLLATE Modern_Spanish_CI_AS NULL, 
+	SERVER varchar(50) COLLATE Modern_Spanish_CI_AS NULL, 
+	TPZ_USER varchar(10) COLLATE Modern_Spanish_CI_AS NULL, 
+	ESTADO_FIN varchar(10) COLLATE Modern_Spanish_CI_AS NULL, 
+	EXECUTION_ID numeric(10,0) NULL, 
+	ID_MASTER numeric(16,0) NULL, 
+	ASIENTO numeric(10,0) NULL, 
+	TICKET numeric(16,0) NULL, 
+	FECHA_PROCESO datetime NULL, 
+	FYH_INICIO datetime NULL, 
+	FYH_FIN datetime NULL, 
+	LOG_KETTLE text COLLATE Modern_Spanish_CI_AS NULL, 
+	LOG_FILE varchar(MAX) COLLATE Modern_Spanish_CI_AS NULL, 
+	CONSTRAINT PK_LOG_KETTLE_01 PRIMARY KEY (ID_JOB) 
+);
+create nonclustered index IDX_LOG_KETTLE_EXID on dbo.LOG_KETTLE (EXECUTION_ID ASC);
+create nonclustered index IDX_LOG_KETTLE_FP on dbo.LOG_KETTLE (FECHA_PROCESO DESC);
+create nonclustered index IDX_LOG_KETTLE_USR on dbo.LOG_KETTLE (TPZ_USER ASC);
+create nonclustered index IDX_LOG_KETTLE_AS on dbo.LOG_KETTLE (ASIENTO ASC);
+create nonclustered index IDX_LOG_KETTLE_SE on dbo.LOG_KETTLE (SERVER ASC);
+create nonclustered index IDX_LOG_KETTLE_FI on dbo.LOG_KETTLE (FYH_INICIO DESC);')
+
+
+Execute('create table dbo.LOG_KETTLE_LINES 
+(
+	ID bigint IDENTITY(1,1) NOT NULL, 
+	ID_JOB bigint NOT NULL, 
+	LOG_LINE text COLLATE Modern_Spanish_CI_AS NULL, 
+	CONSTRAINT PK_LOG_KETTLE_LINES PRIMARY KEY (ID), 
+	CONSTRAINT FK_LOG_KETTLE_LINES_LOGKETTLE FOREIGN KEY (ID_JOB) REFERENCES dbo.LOG_KETTLE(ID_JOB) ON DELETE CASCADE ON UPDATE CASCADE 
+); ')
+
+
+Execute('ALTER TABLE dbo.ITF_MASTER ADD KETTLE_NAME varchar(80) NULL;')

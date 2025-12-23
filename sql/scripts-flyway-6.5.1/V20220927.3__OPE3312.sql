@@ -1,0 +1,13 @@
+EXECUTE ('
+CREATE OR ALTER VIEW [dbo].[VW_DJ_ACTORES] 
+as
+SELECT d.Id,
+	   d.Descripcion,
+	   d.OBLIGATORIO 
+FROM DJ_ACTORES d WITH(NOLOCK)
+WHERE (d.TZ_LOCK =0);
+
+
+')
+
+

@@ -1,0 +1,4 @@
+﻿EXECUTE('
+ alter table TJD_SOLICITUD_LINK
+  add MONEDA_CUENTA NUMERIC(4,0);
+')

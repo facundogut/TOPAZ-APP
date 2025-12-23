@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2025-06-12T11:37:34 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="7717" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e78e09e0-e145-44e3-b411-dbdcc8db4405">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="TOPAZ_SUCURSAL_SISTEMA" class="java.lang.Integer" isForPrompting="false"/>
+	<parameter name="TOPAZ_FECHA_SISTEMA" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="TOPAZ_HORA_ACTUAL" class="java.sql.Time" isForPrompting="false"/>
+	<parameter name="JTS_OID" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[JTS OID:]]></parameterDescription>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+U.NOMBRESUCURSAL AS SUC_EMISION,
+CONCAT(DU.CALLE + ' ', DU.NUMERO) AS DIRECCION_SUCURSAL,
+V.NOMBRE_CUENTA,
+P.C6251 AS TIPO_CUENTA,
+M.C6400 AS MONEDA,
+SU.NOMBRESUCURSAL AS SUC_CUENTA,
+S.CUENTA,
+V.CTA_CBU,
+S.C1803 AS CLIENTE
+FROM SALDOS AS S
+INNER JOIN VTA_SALDOS AS V ON S.JTS_OID = V.JTS_OID_SALDO AND V.TZ_LOCK = 0
+LEFT JOIN SUCURSALES AS U ON U.SUCURSAL = $P{TOPAZ_SUCURSAL_SISTEMA}  AND U.TZ_LOCK = 0
+LEFT JOIN CLI_DIRECCIONES AS DU ON U.SUCURSAL = DU.ID AND DU.FORMATO = 'S' 
+AND DU.TIPODIRECCION = 'R' AND DU.ORDINAL_DIR = 0 AND DU.TZ_LOCK = 0
+LEFT JOIN PRODUCTOS AS P ON S.PRODUCTO = P.C6250 AND P.TZ_LOCK = 0
+LEFT JOIN MONEDAS AS M ON S.MONEDA = M.C6399 AND M.TZ_LOCK = 0
+LEFT JOIN SUCURSALES SU ON S.SUCURSAL = SU.SUCURSAL AND SU.TZ_LOCK = 0
+WHERE S.TZ_LOCK = 0 AND S.JTS_OID = $P{JTS_OID}]]>
+	</queryString>
+	<field name="SUC_EMISION" class="java.lang.String"/>
+	<field name="DIRECCION_SUCURSAL" class="java.lang.String"/>
+	<field name="NOMBRE_CUENTA" class="java.lang.String"/>
+	<field name="TIPO_CUENTA" class="java.lang.String"/>
+	<field name="MONEDA" class="java.lang.String"/>
+	<field name="SUC_CUENTA" class="java.lang.String"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="CTA_CBU" class="java.lang.String"/>
+	<field name="CLIENTE" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="680" splitType="Immediate">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="100" width="150" height="16" uuid="2fec9c34-b83c-49eb-8638-5494593f1499">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Sucursal de emisión:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="-10" y="230" width="190" height="16" uuid="2e3c8a77-458d-4f1e-964d-5a7f074c3ed3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Denominación de la cuenta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="77" y="70" width="400" height="25" uuid="1a2dc117-12af-4bab-9086-d192b3c906cc"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Constancia de C.B.U. (Clave Bancaria Uniforme)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="-10" y="355" width="730" height="25" uuid="968367f9-5526-493b-8c3f-4b73eb01282f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+					<paragraph lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[ESTE COMPROBANTE ES VÁLIDO PARA SER PRESENTADO ANTE AUTORIDADES QUE LO REQUIERAN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="436" height="50" uuid="0b85df6c-655f-44c9-a5fa-fb5785b91b71"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0" spacingAfter="0"/>
+				</textElement>
+				<text><![CDATA[N U E V O  B A N C O  D E L  C H A C O  S . A .<br/>Casa Central: Guemes 102-Resistencia-Chaco-Argentina<br/>C.U.I.T. 30-67015779-9  - Responsable Inscripto]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="Float" x="0" y="60" width="540" height="1" uuid="77332326-5ccd-404f-af80-78949bdd8292"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="-18" y="390" width="590" height="30" uuid="6e34a213-7e58-44c0-9fd7-5a9a28c98785"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="11" isBold="false"/>
+					<paragraph lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[----------------------------------------------------------------------------------------<br/>Dejo constancia de haber recibido de conformidad la C.B.U. (Clave Bancaria Uniforme)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="-13" y="640" width="580" height="20" uuid="b2acbbc7-6c78-48c1-8894-cb5bdbda2b2b"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[La cuenta se encuentra habilitada a la orden]]></text>
+			</staticText>
+			<subreport>
+				<reportElement positionType="Float" stretchType="RelativeToTallestObject" x="-10" y="165" width="565" height="60" isRemoveLineWhenBlank="true" uuid="d105f37c-55ff-44b4-96b9-9f8823ba9981"/>
+				<subreportParameter name="CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "7717_Subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement positionType="Float" x="190" y="100" width="365" height="16" uuid="722bc2a5-4647-440a-8a96-06e83f18c234">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUC_EMISION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="115" y="116" width="440" height="16" uuid="7574d2b2-fca8-4f33-adea-b244f0d2141c"/>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIRECCION_SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement positionType="Float" x="166" y="132" width="389" height="16" uuid="0b228fb3-6d7d-46e1-9d6d-e98b11aeabc8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_FECHA_SISTEMA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="h:mm a">
+				<reportElement positionType="Float" x="156" y="148" width="399" height="16" uuid="e9dccfbf-7cc0-429a-8cb0-99c42cddd19e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_HORA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="100" y="245" width="455" height="16" uuid="4af4fa75-7aa8-42e5-a0c2-fc861ed413c2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="44" y="260" width="511" height="16" uuid="2a821c83-e207-4d46-9c9d-147f7d700bc5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="150" y="275" width="405" height="16" uuid="d78f1ae7-f025-4c2f-bac1-2e3d1b24951d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUC_CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="115" y="290" width="440" height="16" uuid="8e054454-9553-4495-9db1-e6ba9dc15dd9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement positionType="Float" x="20" y="323" width="360" height="17" uuid="c2cad1e9-048c-423d-b0b0-ee75e7569820">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="13" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CTA_CBU}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="-10" y="430" width="555" height="200" uuid="3ff61d13-d3d2-40b7-9394-d81cfc392536"/>
+				<subreportParameter name="CODIGO_CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{CLIENTE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "7717_Subeport_Firmas.jasper"]]></subreportExpression>
+			</subreport>
+			<textField>
+				<reportElement positionType="Float" x="180" y="230" width="375" height="16" uuid="f345f34f-4291-4cd5-8479-59723ed57602">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_CUENTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="116" width="75" height="16" uuid="a5382b46-1aa8-4c54-9e6c-cddec7ce5d2e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Domicilio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="132" width="126" height="16" uuid="685d2a4c-d945-4020-8d4f-b1e0ee898004">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Fecha de Emisión:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="40" y="148" width="116" height="16" uuid="596df709-02aa-4ed5-a671-f3ceb36bbd7a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Hora de Emisión:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="-10" y="245" width="110" height="16" uuid="e06720c4-83c3-4ab6-908e-efe26f0ba0fe">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Tipo de cuenta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="-10" y="323" width="30" height="16" uuid="4cc96db7-c24c-40ec-94c5-ce4463c67a78">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[CBU:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="-10" y="260" width="54" height="16" uuid="1d34791d-dda1-4653-bd8c-33bdce4a9576"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Moneda:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="-10" y="275" width="160" height="16" uuid="9317e5da-7251-491c-83b9-a893b675dc4a"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Sucursal de la cuenta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="-10" y="290" width="125" height="16" uuid="70b2ff27-6e18-456b-9197-087b1da7ef76"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Número de Cuenta:]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<noData>
+		<band height="71"/>
+	</noData>
+</jasperReport>

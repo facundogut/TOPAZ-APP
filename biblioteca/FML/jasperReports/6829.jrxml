@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="6829" language="groovy" pageWidth="1080" pageHeight="842" orientation="Landscape" columnWidth="1040" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b4989238-ec18-4d96-b50f-3fac39ed4f91">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.one.page.per.sheet" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="pageHeader"/>
+	<parameter name="MES" class="java.lang.String"/>
+	<parameter name="ANIO" class="java.lang.String"/>
+	<parameter name="JTS_CUENTA" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT hv.CONCEPTO AS EXPEDIENTE, cli.NOMBRECLIENTE, hv.MONTO AS MONTOTOTAL, hv.FECHA_VALOR AS FECHA,
+hv.FECHA_PROCESADO AS FECHAPAGO,
+CASE WHEN CODIGO_TRANSACCION = 3021 THEN 40 ELSE 701 END AS CODIGO,
+CASE WHEN CODIGO_TRANSACCION = 3021 THEN 'DEBEXCE' ELSE 'RECFDOS' END AS CONCEPTO
+FROM HISTORIA_VISTA hv
+JOIN SALDOS s ON hv.SALDO_JTS_OID = s.JTS_OID AND s.TZ_LOCK = 0
+JOIN ASIENTOS a ON hv.ASIENTO = a.ASIENTO AND hv.FECHA_PROCESADO = a.FECHAPROCESO AND hv.SUCURSAL = a.SUCURSAL AND a.ESTADO = 77
+JOIN BS_HISTORIA_PLAZO hp ON hv.ASIENTO = hp.NROASIENTOMOV AND hv.FECHA_PROCESADO = hp.FECHAPROCESOMOV AND hv.SUCURSAL = hp.SUCURSALMOV
+JOIN SALDOS sp ON hp.SALDOS_JTS_OID = sp.JTS_OID AND sp.TZ_LOCK = 0
+JOIN CLI_CLIENTES cli ON sp.C1803 = cli.CODIGOCLIENTE AND cli.TZ_LOCK = 0
+WHERE CODIGO_TRANSACCION IN (3021,3024) AND
+FORMAT(hv.FECHA_VALOR,'MM') = RIGHT('00' + Ltrim(Rtrim($P{MES})),2) AND FORMAT(hv.FECHA_VALOR,'yyyy') = $P{ANIO} AND
+hv.SALDO_JTS_OID = $P{JTS_CUENTA}
+ORDER BY hv.JTS_OID]]>
+	</queryString>
+	<field name="EXPEDIENTE" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="MONTOTOTAL" class="java.math.BigDecimal"/>
+	<field name="FECHA" class="java.sql.Timestamp"/>
+	<field name="FECHAPAGO" class="java.sql.Timestamp"/>
+	<field name="CODIGO" class="java.lang.Integer"/>
+	<field name="CONCEPTO" class="java.lang.String"/>
+	<variable name="MONTOTOTAL_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{CODIGO} == 701 ? $F{MONTOTOTAL} : 0.0]]></variableExpression>
+	</variable>
+	<title>
+		<band height="60" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="11" width="423" height="20" uuid="04875968-e2f2-4b45-95cd-d96e55b4471a"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DETALLE DEL EXTRACTO DE CUENTA CORRIENTE]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="34" width="423" height="20" uuid="dd5e0ca3-85b1-4536-9235-10b0934cc7ac"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PERIODO: " +$P{MES}+"/"+$P{ANIO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="31" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="112" height="29" uuid="d316f66c-43ec-42d6-8843-08371994030c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[EXPTE.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="112" y="0" width="311" height="29" uuid="7ab40059-3687-4623-b537-62c4c802ae51"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[APELLIDO y NOMBRES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="423" y="1" width="112" height="29" uuid="a8a0a820-7564-49da-9998-f525c378b34a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA VALOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="535" y="1" width="112" height="29" uuid="1f299835-31ed-4866-8110-76b3230a2afc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA PROCESO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="779" y="2" width="112" height="29" uuid="df2ea413-be33-418b-abe9-6efe5b70c227"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[MONTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="647" y="2" width="56" height="29" uuid="20d087e6-033c-4f10-999c-ef7c771584c0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CÓDIGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="703" y="2" width="76" height="29" uuid="a2c44ddc-099a-44ca-85c5-b2911fe6d83c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONCEPTO]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="24" splitType="Stretch">
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="112" height="22" uuid="3adc14c5-b122-43b8-b2bf-347378e0be02"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{EXPEDIENTE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="112" y="0" width="311" height="22" uuid="79a80a68-d888-4ed0-9af4-16c781a8450e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOMBRECLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="423" y="0" width="112" height="22" uuid="6369f923-b0da-457f-ae6f-540ec01698a0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="535" y="0" width="112" height="22" uuid="e6a36c91-45e3-4304-88de-513308d37f2a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FECHAPAGO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="779" y="0" width="112" height="22" uuid="7f696fb1-8fe2-413e-8156-ad27e0c4c484"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MONTOTOTAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="647" y="0" width="56" height="22" uuid="48fc2394-4032-45c2-bfb6-b4cd23906c64"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="true">
+				<reportElement x="703" y="0" width="76" height="22" uuid="ebb4c751-6da2-4bea-902c-e36a8cf6ce4b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CONCEPTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="48" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="779" y="8" width="112" height="20" uuid="bf8b380b-5dfe-464e-81ab-ebbac1f2da1b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{MONTOTOTAL_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="648" y="28" width="243" height="20" uuid="26c15ee9-717a-466f-8df3-200a34842b24"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DEPOSITOS DIRECTOS A LA CTA. CTE. C.F.I.]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

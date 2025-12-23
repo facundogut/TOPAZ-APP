@@ -1,0 +1,31 @@
+EXECUTE('
+IF OBJECT_ID (''dbo.VW_MANTENIMIENTO_PAQUETE'') IS NOT NULL
+	DROP VIEW dbo.VW_MANTENIMIENTO_PAQUETE
+')
+EXECUTE('
+CREATE VIEW [dbo].[VW_MANTENIMIENTO_PAQUETE] (
+													   COD_CLIENTE, 
+													   JTS_OID_COBRO, 
+													   GRUPO_TARIFA, 
+													   MONEDA,
+													   USF,
+													   INMOVILIZADO)
+AS 
+
+SELECT --TOP 999999999999999
+		V.COD_CLIENTE, 
+		V.JTS_OID_COBRO, 
+		CAST(ISNULL(RIGHT(''00000'' + Ltrim(Rtrim(v.COD_PAQUETE)),5), '''') + ISNULL(RIGHT(''00000'' + Ltrim(Rtrim(v.COD_CAMPANIA)),5), '''') AS varchar(10)) AS GRUPO_TARIFA, 
+		S.MONEDA,
+		C.USF,
+		S.C1728
+FROM CLI_CLIENTES_PAQUETES  AS V with (nolock)
+inner join SALDOS  AS S with (nolock) on S.JTS_OID = V.JTS_OID_COBRO 
+										AND S.TZ_LOCK = 0
+										AND S.TIPO_SALDO_FONDO=0
+inner join CLI_CLIENTES AS C with (nolock) on V.COD_CLIENTE = C.CODIGOCLIENTE
+										AND C.TZ_LOCK = 0
+WHERE	V.TZ_LOCK = 0
+		AND V.JTS_OID_COBRO <> 0
+	
+')

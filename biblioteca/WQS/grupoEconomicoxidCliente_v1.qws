@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/grupoEconomicoxidCliente/{numero_cliente}</uri>
+    <serviceDescription>Consulta el Grupo Económico y ID de Clientes que integran ese Grupo.</serviceDescription>
+    <title>grupoEconomicoxidCliente</title>
+    <querys>
+        <query id="1" name="grupo1" type="MULTIPLE">
+            <sql>
+            DECLARE @numero_cliente INT
+            SET 	@numero_cliente = ?
+
+			SELECT 'grupos' as Grupo, GE.CÓDIGOGRUPOECONÓMICO,
+			    GE.NOMBRE,GE.CÓDIGOCLIENTE AS integrantes
+			FROM VW_GRUPO_ECONOMICO_CLIENTE GE WHERE GE.CÓDIGOGRUPOECONÓMICO &#13;
+		    IN (SELECT CÓDIGOGRUPOECONÓMICO FROM VW_GRUPO_ECONOMICO_CLIENTE WHERE CÓDIGOCLIENTE = @numero_cliente)</sql>
+            <input>
+                <inParameter description="Id del Cliente" type="INTEGER">numero_cliente</inParameter>
+            </input>
+            <output>
+                <level groupby="CÓDIGOGRUPOECONÓMICO,NOMBRE" name="gruposEconomicos">
+                
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CÓDIGOGRUPOECONÓMICO</queryname>
+                        <servicename>codGrupo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NOMBRE</queryname>
+                        <servicename>nombreGrupo</servicename>
+                    </outParameter>
+                
+                </level>
+                
+                <level groupby="" name="integrantes">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>integrantes</queryname>
+                        <servicename>idCliente</servicename>
+                    </outParameter>
+                </level>
+                
+          
+            </output>
+        </query>
+        <query id="2" name="contenedor" type="SIMPLE">
+            <sql>select '' as dato from parametros where 1=2</sql>
+            <input/>
+            <output>
+                <level groupby="" name="nivell1"/>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

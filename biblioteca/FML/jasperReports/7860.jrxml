@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2023-10-13T17:10:57 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="7860" language="groovy" pageWidth="700" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="660" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cc3ff7ed-807e-4ae7-84a2-1536b6fe89bf">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="pageHeader"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="CLIENTE" class="java.lang.String"/>
+	<parameter name="TIPO" class="java.lang.String"/>
+	<parameter name="DESTINO" class="java.lang.String"/>
+	<parameter name="EXTRAORDINARIO" class="java.lang.String"/>
+	<parameter name="REPORT_DB_TOP_CORE" class="java.sql.Connection" isForPrompting="false"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_INICIALES_USUARIO" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["HAOH"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_FECHA_SISTEMA" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.util.Date()]]></defaultValueExpression>
+	</parameter>
+	<parameter name="TOPAZ_HORA_ACTUAL" class="java.sql.Time" isForPrompting="false">
+		<defaultValueExpression><![CDATA[new java.sql.Time(new java.util.Date().getTime())]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+COUNT(CASE WHEN v.tipo= 'CHEQUE' THEN 1 ELSE NULL END) 
+AS cantidad_Tipo_Cheque,
+SUM(CASE WHEN v.tipo= 'CHEQUE'  THEN v.importe ELSE 0 END) 
+AS importe_Tipo_Cheque,
+COUNT(CASE WHEN v.tipo= 'FACTURA' THEN 1 ELSE NULL END) 
+AS cantidad_Tipo_Factura,
+SUM(CASE WHEN v.tipo= 'FACTURA'  THEN v.importe ELSE 0 END) 
+AS importe_Tipo_Factura,
+COUNT(CASE WHEN v.destino= 'DESCUENTO' THEN 1 ELSE NULL END) 
+AS cantidad_Tipo_Descuento,
+SUM(CASE WHEN v.destino= 'DESCUENTO'  THEN v.importe ELSE 0 END) 
+AS importe_Dest_Descuento,
+COUNT(CASE WHEN v.destino= 'AL COBRO' THEN 1 ELSE NULL END) 
+AS cantidad_Tipo_AlCobro,
+SUM(CASE WHEN v.destino= 'AL COBRO'  THEN v.importe ELSE 0 END) 
+AS importe_Dest_AlCobro,
+COUNT(1) 
+AS Cant_Cliente,
+SUM(v.importe) 
+ AS Importe_Cliente,
+m.C6401, c.TIPODOC, c.NUMERODOC, c.NOMBRECLIENTE,p.C6251 as desc_producto, p.C6250 as producto,  
+v.cliente, v.destino, v.tipo
+FROM VW_CRE_DOCUMENTOS_DESC_O_AL_COBRO_SL v
+INNER JOIN MONEDAS m ON v.moneda = m.C6399 AND m.TZ_LOCK = 0
+INNER JOIN VW_CLI_X_DOC c ON v.cliente = c.CODIGOCLIENTE
+INNER JOIN SALDOS s WITH(NOLOCK)  ON s.jts_oid=v.jts_oid
+INNER JOIN PRODUCTOS p WITH(NOLOCK) ON p.C6250=producto
+LEFT JOIN CRE_FAMILIAS fam WITH(NOLOCK) ON fam.FAMILIAPROD=p.C6283
+LEFT JOIN CRE_TIPOS_RIESGOS ri WITH(NOLOCK) ON ri.CODIGO_RIESGO=fam.RIESGO
+WHERE (v.cliente =  $P{CLIENTE} or  $P{CLIENTE} = 0) and
+(v.destino = $P{DESTINO} or $P{DESTINO}= 'TODOS') and
+(v.tipo =$P{TIPO} or $P{TIPO} = 'TODOS')  and
+(ISNULL(ri.EXTRAORDINARIO,'N')=$P{EXTRAORDINARIO})
+GROUP BY m.C6401, c.TIPODOC, c.NUMERODOC, c.NOMBRECLIENTE,p.C6251,p.C6250,v.cliente, v.destino, v.tipo
+ORDER BY v.cliente, v.destino, v.tipo]]>
+	</queryString>
+	<field name="cantidad_Tipo_Cheque" class="java.lang.Integer"/>
+	<field name="importe_Tipo_Cheque" class="java.math.BigDecimal"/>
+	<field name="cantidad_Tipo_Factura" class="java.lang.Integer"/>
+	<field name="importe_Tipo_Factura" class="java.math.BigDecimal"/>
+	<field name="cantidad_Tipo_Descuento" class="java.lang.Integer"/>
+	<field name="importe_Dest_Descuento" class="java.math.BigDecimal"/>
+	<field name="cantidad_Tipo_AlCobro" class="java.lang.Integer"/>
+	<field name="importe_Dest_AlCobro" class="java.math.BigDecimal"/>
+	<field name="Cant_Cliente" class="java.lang.Integer"/>
+	<field name="Importe_Cliente" class="java.math.BigDecimal"/>
+	<field name="C6401" class="java.lang.String"/>
+	<field name="TIPODOC" class="java.lang.String"/>
+	<field name="NUMERODOC" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="desc_producto" class="java.lang.String"/>
+	<field name="producto" class="java.math.BigDecimal"/>
+	<field name="cliente" class="java.lang.Double"/>
+	<field name="destino" class="java.lang.String"/>
+	<field name="tipo" class="java.lang.String"/>
+	<variable name="importe_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Importe_Cliente}]]></variableExpression>
+	</variable>
+	<variable name="Cantidad_Total" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{Cant_Cliente}]]></variableExpression>
+	</variable>
+	<variable name="cantidad_Tipo_Cheque1" class="java.lang.Integer" resetType="Group" resetGroup="TIPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad_Tipo_Cheque}]]></variableExpression>
+	</variable>
+	<variable name="importe_Tipo_Cheque1" class="java.math.BigDecimal" resetType="Group" resetGroup="TIPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe_Tipo_Cheque}]]></variableExpression>
+	</variable>
+	<variable name="cantidad_Tipo_Descuento1" class="java.lang.Integer" resetType="Group" resetGroup="Destino" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad_Tipo_Descuento}]]></variableExpression>
+	</variable>
+	<variable name="importe_Dest_Descuento1" class="java.math.BigDecimal" resetType="Group" resetGroup="Destino" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe_Dest_Descuento}]]></variableExpression>
+	</variable>
+	<variable name="Cant_Cliente1" class="java.lang.Integer" resetType="Group" resetGroup="Cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad_Tipo_Cheque} + $F{cantidad_Tipo_Factura}]]></variableExpression>
+	</variable>
+	<variable name="Importe_Cliente1" class="java.math.BigDecimal" resetType="Group" resetGroup="Cliente" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe_Tipo_Cheque}+$F{importe_Tipo_Factura}]]></variableExpression>
+	</variable>
+	<variable name="cantidad_Tipo_Factura1" class="java.lang.Integer" resetType="Group" resetGroup="TIPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad_Tipo_Factura}]]></variableExpression>
+	</variable>
+	<variable name="importe_Tipo_Factura1" class="java.math.BigDecimal" resetType="Group" resetGroup="TIPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe_Tipo_Factura}]]></variableExpression>
+	</variable>
+	<variable name="cantidad_Tipo_AlCobro1" class="java.lang.Integer" resetType="Group" resetGroup="Destino" calculation="Sum">
+		<variableExpression><![CDATA[$F{cantidad_Tipo_AlCobro}]]></variableExpression>
+	</variable>
+	<variable name="importe_Dest_AlCobro1" class="java.math.BigDecimal" resetType="Group" resetGroup="Destino" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe_Dest_AlCobro}]]></variableExpression>
+	</variable>
+	<variable name="importe_Tipo_Factura2" class="java.math.BigDecimal" resetType="Group" resetGroup="TIPO" calculation="Sum">
+		<variableExpression><![CDATA[$F{importe_Tipo_Factura}]]></variableExpression>
+	</variable>
+	<group name="Cliente">
+		<groupExpression><![CDATA[$F{cliente}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<textField>
+					<reportElement x="0" y="0" width="660" height="22" uuid="ac13a90a-604c-4910-a93c-71b89eb9ec0e"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Cliente: " + $F{TIPODOC} + " " + $F{NUMERODOC} + " " + $F{NOMBRECLIENTE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="53">
+				<line>
+					<reportElement x="0" y="40" width="660" height="1" uuid="53ef3058-7678-4d25-aa9d-511a4a9e2c4a"/>
+				</line>
+				<textField>
+					<reportElement x="0" y="20" width="138" height="20" uuid="73d175fe-d7eb-4f9c-bf73-907fdcda35a4"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Importe Cliente: "]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="0" width="138" height="20" uuid="ef469cad-cee1-46ec-a5f4-1c9298954315"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Cantidad Cliente: "]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="52" width="660" height="1" uuid="4df7c466-f603-4b93-b846-b14641078041"/>
+				</line>
+				<textField>
+					<reportElement x="138" y="0" width="99" height="20" uuid="679d7610-0d1f-42f9-a4cf-a5c1b8784b65">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$V{Cant_Cliente1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="138" y="20" width="99" height="20" uuid="256c39e2-e5ea-4076-8e23-ebb16121118e">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					</reportElement>
+					<textFieldExpression><![CDATA[$V{Importe_Cliente1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Destino">
+		<groupExpression><![CDATA[$F{destino}]]></groupExpression>
+		<groupHeader>
+			<band height="22">
+				<textField>
+					<reportElement x="0" y="0" width="138" height="22" uuid="2f0cc2fd-3114-44e9-8ef5-92930fe4283a"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Destino: " + $F{destino}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="42">
+				<line>
+					<reportElement x="0" y="41" width="660" height="1" uuid="e0f0e2f7-fa0b-4bb8-85b2-4543fd29a326"/>
+				</line>
+				<textField>
+					<reportElement x="0" y="20" width="138" height="20" uuid="54869eca-443c-4f30-a37d-c1f4cbdd5003"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Importe " + $F{destino}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="0" width="138" height="20" uuid="167535cc-fd23-4ad0-a68c-e8af9f02584e"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Cantidad " + $F{destino}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="138" y="0" width="99" height="20" uuid="3bc91613-7331-4cdb-ac39-c6800f9f7398">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<printWhenExpression><![CDATA[$F{destino}.equals("DESCUENTO") || $F{destino}.equals("TODOS")]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{cantidad_Tipo_Descuento1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="138" y="20" width="99" height="20" uuid="343cbee5-3495-48e0-b9c8-694ffc0226a2">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<printWhenExpression><![CDATA[$F{destino}.equals("DESCUENTO") || $F{destino}.equals("TODOS")]]></printWhenExpression>
+					</reportElement>
+					<textFieldExpression><![CDATA[$V{importe_Dest_Descuento1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="138" y="20" width="99" height="20" uuid="7f5d57f0-8f34-4650-ba8e-76e5d4f2338e">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<printWhenExpression><![CDATA[$F{destino}.equals("AL COBRO") || $F{destino}.equals("TODOS")]]></printWhenExpression>
+					</reportElement>
+					<textFieldExpression><![CDATA[$V{importe_Dest_AlCobro1}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="139" y="0" width="97" height="20" uuid="95a78ea9-0896-4b43-ba7c-e26ffdedeb65">
+						<printWhenExpression><![CDATA[$F{destino}.equals("AL COBRO") || $F{destino}.equals("TODOS")]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{cantidad_Tipo_AlCobro1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="TIPO">
+		<groupExpression><![CDATA[$F{tipo}]]></groupExpression>
+		<groupHeader>
+			<band height="31">
+				<textField>
+					<reportElement x="0" y="0" width="138" height="22" uuid="d4ba8f67-49e2-4c93-8f72-b6dc0b5b41f4"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Tipo: " + $F{tipo}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="42">
+				<line>
+					<reportElement x="0" y="41" width="660" height="1" uuid="d77d2863-b004-40a3-b0bc-1e34e60a0385"/>
+				</line>
+				<textField>
+					<reportElement x="0" y="0" width="138" height="20" uuid="1fb09618-4d55-4d5a-a7c9-590d9535a356"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Cantidad " + $F{tipo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="0" y="20" width="138" height="20" uuid="23314325-f558-4f93-b68f-42ca49c18a42"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA["Importe " + $F{tipo}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="138" y="0" width="99" height="20" uuid="077477d0-a751-4d04-8fad-e4f155a9ca3d">
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<printWhenExpression><![CDATA[$F{tipo}.equals("CHEQUE") || $F{tipo}.equals("TODOS")]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{cantidad_Tipo_Cheque1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement key="" x="138" y="20" width="99" height="20" uuid="d3a99d2a-d70a-4147-a2f8-fec6efe3176a">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<printWhenExpression><![CDATA[$F{tipo}.equals("CHEQUE") || $F{tipo}.equals("TODOS")]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{importe_Tipo_Cheque1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="">
+					<reportElement x="138" y="0" width="98" height="20" uuid="c65da08d-d9f9-4598-bf7a-0390164dbcc8">
+						<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<printWhenExpression><![CDATA[$F{tipo}.equals("FACTURA") || $F{tipo}.equals("TODOS")]]></printWhenExpression>
+					</reportElement>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{cantidad_Tipo_Factura1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="138" y="20" width="99" height="20" uuid="e4eeb3d5-5369-4ab5-a5c8-79b4afb36690">
+						<printWhenExpression><![CDATA[$F{tipo}.equals("FACTURA") || $F{tipo}.equals("TODOS")]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Left" verticalAlignment="Middle"/>
+					<textFieldExpression><![CDATA[$V{importe_Tipo_Factura2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="65" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="0" width="580" height="30" uuid="addd0266-fc8c-4c3d-bcba-e7d7e3240de0"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documentos Al Cobro y Descontados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="30" width="580" height="30" uuid="95927f61-5f1a-4635-aa8f-137dbdd61c9c">
+					<printWhenExpression><![CDATA[$P{EXTRAORDINARIO} == "S" ? new Boolean(true) : new Boolean(false)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="16" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Extraordinarios]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="80" height="60" uuid="aa83fd5c-d00f-43e5-bbd9-0911de8441c9"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<detail>
+		<band height="95" splitType="Stretch">
+			<subreport>
+				<reportElement x="-11" y="0" width="680" height="95" isPrintInFirstWholeBand="true" uuid="33bcfbcc-9081-4098-84c6-dd3eaa1ea4cc">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="DESTINO">
+					<subreportParameterExpression><![CDATA[$F{destino}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="TIPO">
+					<subreportParameterExpression><![CDATA[$F{tipo}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="EXTRAORDINARIO">
+					<subreportParameterExpression><![CDATA[$P{EXTRAORDINARIO}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="CLIENTE">
+					<subreportParameterExpression><![CDATA[$F{cliente}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} +"Subreporte_7860.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="48">
+			<textField evaluationTime="Page">
+				<reportElement x="80" y="34" width="474" height="14" uuid="4cfeae34-fc84-4a5d-9b67-e1daabbb5406"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="80" height="14" uuid="1c8567df-7af9-4335-b874-7e14bb7a7895">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="80" y="20" width="474" height="14" uuid="db07e727-9d49-4081-a174-2c3e505f43e6"/>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_INICIALES_USUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="34" width="80" height="14" uuid="920c9391-7d90-448d-81e7-3263932d5da6">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Pàgina:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="554" y="20" width="35" height="14" uuid="b2e0d8bb-8d5c-4e93-93e0-18b684107ae5"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="589" y="20" width="55" height="14" uuid="2b4c547d-8c03-4a24-937f-152a16d8bee8"/>
+				<box>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_FECHA_SISTEMA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="554" y="34" width="35" height="14" uuid="23999897-f67c-4586-8f08-dc206e1ba253"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora:]]></text>
+			</staticText>
+			<textField pattern="HH:mm:ss">
+				<reportElement x="589" y="34" width="55" height="14" uuid="e3c40aa8-5f6e-43cd-8002-b249de87f5da"/>
+				<box>
+					<topPen lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="6" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{TOPAZ_HORA_ACTUAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="41" splitType="Stretch">
+			<textField pattern="#,##0.00">
+				<reportElement x="138" y="20" width="100" height="20" uuid="6ce012cb-6818-482a-88f6-b11871258585"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{importe_2}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="false">
+				<reportElement x="138" y="0" width="100" height="20" uuid="edc57f55-2118-4456-bced-834441a8f6b7"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Cantidad_Total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="0" width="138" height="20" uuid="8744a6c8-58c5-4722-a41d-6cc1562e7198"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Cantidad Total:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="20" width="138" height="20" uuid="46a877c8-9d63-433f-8601-84216cbc26bb"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Importe Total: "]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="40" width="660" height="1" uuid="a722a6e3-8838-4917-bd89-30aa24464667"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

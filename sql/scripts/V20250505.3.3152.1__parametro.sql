@@ -1,0 +1,26 @@
+﻿EXECUTE('
+INSERT INTO dbo.PARAMETROSGENERALES
+	(
+	CODIGO
+	, DESCRIPCION
+	, ALFA
+	, NUMERICO
+	, FECHA
+	, IMPORTE
+	, TASA
+	, TZ_LOCK
+	, FIRMA
+	)
+VALUES
+	(
+	253
+	, ''Divisor SSD''
+	, ''''
+	, 1000
+	, NULL
+	, 0
+	, 0
+	, 0
+	, NULL
+	)
+')

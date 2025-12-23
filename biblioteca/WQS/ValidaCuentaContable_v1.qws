@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/contabilidad/cuentaContableValida/{idCuentaContable}</uri>
+    <serviceDescription>Valida cuenta contable</serviceDescription>
+    <title>Valida cuenta contable</title>
+    <querys>
+        <query id="1" name="query1" type="SIMPLE">
+            <sql>
+					
+				DECLARE @idCuentaContable NUMERIC(20);
+				SET @idCuentaContable = ?;
+
+				SELECT (CASE WHEN COUNT(*) > 0 THEN 'true' ELSE 'false' END) AS validez,
+						'20991231' AS fechaVigenciaHasta
+						FROM PLANCTAS P
+						WHERE P.TZ_LOCK=0 AND P.C6303 NOT IN('I') AND P.C6301=@idCuentaContable
+			</sql>
+            <input>
+					<inParameter description="" type="LONG">idCuentaContable</inParameter>
+			</input>
+            <output>
+					<level groupby="" name="salida">
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>validez</queryname>
+                        <servicename>validez</servicename>
+                    </outParameter>
+					<outParameter description="" type="STRING">
+                        <queryname>fechaVigenciaHasta</queryname>
+                        <servicename>fechaVigenciaHasta</servicename>
+                    </outParameter>
+                </level>
+			</output>
+        </query>
+    </querys>
+</serviceQuery>

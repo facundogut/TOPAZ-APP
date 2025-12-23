@@ -1,0 +1,13 @@
+﻿EXECUTE('
+-----------------------------------
+--UPDATE LARGO DE CAMPOS PRODUCTO--
+-----------------------------------
+UPDATE DICCIONARIO
+SET LARGO = 5
+WHERE NUMERODECAMPO = 2028
+--
+UPDATE DICCIONARIO
+SET LARGO = 5
+WHERE NUMERODECAMPO = 6322
+----
+')

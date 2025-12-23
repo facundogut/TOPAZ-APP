@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.finishdeferredpostings.AsientosDiferidos</class-name>
+        <query-name>query.CaidaDiferidos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence> 
+		select asiento,
+		       sucursal,
+		       fechaproceso,
+		       asiento_secundario asiento_secundario,
+		       sucursal_secundario sucursal_secundario,
+		       fechaproceso_secundario fechaproceso_secundario,
+		       extorno,
+		       horafin from
+		(select a.asiento,
+		       a.sucursal,
+		       a.fechaproceso,
+		       c.asiento asiento_secundario,
+		       c.sucursal sucursal_secundario,
+		       c.fechaproceso fechaproceso_secundario,
+		       0 as extorno,
+		       a.horafin
+		  from asientos a
+		  left join con_asientos_extornados c on (a.asiento = c.asiento_original and
+							 a.fechaproceso = c.fechaproceso_original and
+							 a.sucursal = c.sucursal_original)
+		 where a.ESTADO = 68 and a.extorno IN (0,2) AND a.FECHAPROCESO = (SELECT FECHAPROCESO FROM PARAMETROS)
+		 union all
+		 select a2.asiento,
+		       a2.sucursal,
+		       a2.fechaproceso,
+		       c2.asiento_original asiento_secundario,
+		       c2.sucursal_original  sucursal_secundario ,
+		       c2.fechaproceso_original fechaproceso_secundario,
+		       a2.extorno,
+		       a2.horafin
+		  from asientos a2
+		  left join con_asientos_extornados c2 on (a2.asiento = c2.asiento and
+							 a2.fechaproceso = c2.fechaproceso  and
+							 a2.sucursal = c2.sucursal )
+		 where a2.ESTADO = 68 and a2.extorno = 1 AND a2.FECHAPROCESO = (SELECT FECHAPROCESO FROM PARAMETROS)) res
+		order by horafin
+            	</sentence>
+        <attribute>
+            <attribute-name>transactionID</attribute-name>
+            <column-name>asiento</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>branch</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>processDate</attribute-name>
+            <column-name>fechaproceso</column-name>
+            <column-type>log</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>transactionIdSecundario</attribute-name>
+            <column-name>asiento_secundario</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>branchSecundario</attribute-name>
+            <column-name>sucursal_secundario</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>processDateSecundario</attribute-name>
+            <column-name>fechaproceso_secundario</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>extorno</attribute-name>
+            <column-name>extorno</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>finishTime</attribute-name>
+            <column-name>HORAFIN</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.topaz.server.objectsdomain.Asientos</class-name>
+        <query-name>query.CaidaDiferidosCtaCapital</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence> 
+				SELECT ASIENTO, FECHAPROCESO, SUCURSAL, HORAFIN FROM ASIENTOS 
+				WHERE ESTADO = 68 AND FECHAPROCESO = (SELECT FECHAPROCESO FROM PARAMETROS) AND OPERACION = 2302 ORDER BY HORAFIN 
+        	</sentence>
+        <attribute>
+            <attribute-name>transactionID</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>log</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>processDate</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>branch</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>log</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>finishTime</attribute-name>
+            <column-name>HORAFIN</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+    </query>
+</map>

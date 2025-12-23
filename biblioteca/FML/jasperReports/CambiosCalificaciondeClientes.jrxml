@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Reporte Inmovilizadas" language="groovy" pageWidth="595" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHA_PROCESO" class="java.util.Date"/>
+	<parameter name="TOPAZ_FECHA_SISTEMA" class="java.util.Date"/>
+	<parameter name="TOPAZ_INICIALES_USUARIO " class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+C.NRO_CLIENTE,
+I.C1000 AS nombre,
+c.FECHA AS FECHA_ACTUAL,
+A.FECHA AS FECHA_ANTERIOR,
+C.CATEGORIA AS CATEGORIA_ACT,
+a.CATEGORIA AS CATEGORIA_ANT
+FROM CR_BITACORA_CALIF_CLI c, CR_BITACORA_CALIF_CLI a, PARAMETROS P , CL_CLIENTES I
+WHERE c.FECHA IN (SELECT P.FECHAPROCESO FROM PARAMETROS)
+AND A.FECHA IN (SELECT P.FECHAPROCESOANTERIOR FROM PARAMETROS)
+AND a.CATEGORIA <>  c.CATEGORIA
+AND a.NRO_CLIENTE=c.NRO_CLIENTE
+AND a.NRO_CLIENTE=I.c0902]]>
+	</queryString>
+	<field name="NRO_CLIENTE" class="java.lang.Double"/>
+	<field name="nombre" class="java.lang.String"/>
+	<field name="FECHA_ACTUAL" class="java.sql.Timestamp"/>
+	<field name="FECHA_ANTERIOR" class="java.sql.Timestamp"/>
+	<field name="CATEGORIA_ACT" class="java.lang.String"/>
+	<field name="CATEGORIA_ANT" class="java.lang.String"/>
+	<variable name="CLIENTE_1" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$F{NRO_CLIENTE}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="75">
+			<staticText>
+				<reportElement x="150" y="11" width="286" height="40"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CAMBIOS DE CALIFICACION DE CLIENTES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="231" y="51" width="23" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AL]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="491" y="11" width="56" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{TOPAZ_FECHA_SISTEMA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="436" y="11" width="55" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="436" y="31" width="55" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[USUARIO:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="491" y="31" width="56" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{TOPAZ_INICIALES_USUARIO }]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="254" y="51" width="126" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+			<image>
+				<reportElement x="3" y="-1" width="94" height="76"/>
+				<imageExpression class="java.lang.String"><![CDATA[System.getProperty("topsystems.images.root") + "logoacacu.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="361" y="17" width="41" height="39"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CALIF ANT]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="16" width="553" height="1"/>
+			</line>
+			<line>
+				<reportElement x="4" y="55" width="551" height="2"/>
+			</line>
+			<staticText>
+				<reportElement x="5" y="16" width="54" height="20"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="59" y="17" width="169" height="20"/>
+				<textElement>
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="402" y="16" width="41" height="39"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CALIF ACT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="446" y="17" width="54" height="38"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA ANT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="17" width="55" height="38"/>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA ACT]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement x="59" y="0" width="169" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nombre}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="5" y="0" width="47" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{NRO_CLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="361" y="0" width="41" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CATEGORIA_ANT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="402" y="0" width="41" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CATEGORIA_ACT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="445" y="0" width="55" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHA_ANTERIOR}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="500" y="0" width="55" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHA_ACTUAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement x="436" y="20" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Pag. "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="516" y="20" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="50">
+			<textField pattern="###0">
+				<reportElement x="109" y="0" width="100" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{CLIENTE_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="2" y="0" width="107" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL CAMBIOS:]]></text>
+			</staticText>
+		</band>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="199" y="14" width="246" height="20"/>
+				<textElement>
+					<font size="11" isBold="true" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[No hay datos para procesar]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

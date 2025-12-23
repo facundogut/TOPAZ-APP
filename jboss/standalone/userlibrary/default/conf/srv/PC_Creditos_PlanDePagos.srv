@@ -1,0 +1,29 @@
+service PlanDePagos; 
+description "Servicio Plan de pagos"; 
+
+action:	SQLQuery Entity ( 
+ IDSALDO: string
+): [ 
+	NUMEROCUOTA: string,
+	FECHAPROGRAMADA: string,
+   	CAPITAL: string,
+	COMPENSATORIO: string,
+	CARGOS: string,
+	TOTALCUOTA: string,
+	CAPITALPAGADO: string,
+	COMPENSATORIOPAGADO: string,
+	GASTOSPAGADOS: string,
+	TOTALPAGADO: string,
+	FECHAPAGO: string,
+	DIASATRASO: string,
+	INTERESMORATORIO: string
+	]
+{ 
+  	properties { 
+  	("statement", "SELECT query.NUMEROCUOTA, query.FECHAPROGRAMADA , REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(query.CAPITAL AS MONEY),1) , '.','p') , ',', '.'),'p',',')  AS CAPITAL, REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(query.INTERESMORATORIO AS MONEY),1) , '.','p') , ',', '.'),'p',',')  AS INTERESMORATORIO, REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(query.COMPENSATORIO AS MONEY),1) , '.','p') , ',', '.'),'p',',')  AS COMPENSATORIO, REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(ISNULL(query.Gastos,0) AS MONEY),1) , '.','p') , ',', '.'),'p',',')   AS CARGOS,  REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(query.Capital+query.Compensatorio+ ISNULL(query.Gastos,0) AS MONEY),1) , '.','p') , ',', '.'),'p',',')   AS TOTALCUOTA,  REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(query.CapitalPagado AS MONEY),1) , '.','p') , ',', '.'),'p',',')  AS CAPITALPAGADO,  REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(query.CompensatorioPagado AS MONEY),1) , '.','p') , ',', '.'),'p',',')  AS COMPENSATORIOPAGADO,  REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(ISNULL(query.GastoPagado,0) AS MONEY),1) , '.','p') , ',', '.'),'p',',')  AS GASTOSPAGADOS,  REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(CapitalPagado+CompensatorioPagado+ISNULL(GastoPagado,0) AS MONEY),1) , '.','p') , ',', '.'),'p',',')  AS TOTALPAGADO,  CASE WHEN query.DIASATRASO < 0 THEN 0 ELSE query.DIASATRASO END AS DIASATRASO,  query.FECHAPAGO  FROM  (SELECT p.C2312 AS INTERESMORATORIO, p.C2300 AS NumeroCuota, CONVERT(VARCHAR(10),p.C2302,103) AS FechaProgramada,  p.C2304 AS Capital, p.C2305 AS Compensatorio,  (SELECT SUM(importe_gasto) FROM GASTOS_POR_CUOTA WHERE SALDOS_JTS_OID = ? AND NUMERO_CUOTA=p.C2300) AS Gastos,  p.C2304-p.C2309 AS CapitalPagado, p.C2305-p.C2310 AS CompensatorioPagado,  (SELECT SUM(importe_gasto-Saldo_Gasto) FROM GASTOS_POR_CUOTA WHERE SALDOS_JTS_OID = ? AND NUMERO_CUOTA=p.C2300) AS GastoPagado,  CASE WHEN C2309>0 THEN ' ' ELSE CONVERT(VARCHAR(10),p.C2313,103) END AS FechaPago,   CASE WHEN (p.c2309+p.c2310=0) THEN DATEDIFF(DAY,p.C2302,p.C2313) ELSE (CASE WHEN DATEDIFF(DAY,p.c2302,(select fechaproceso from parametros))>0 THEN DATEDIFF(DAY,p.c2302,(select fechaproceso from parametros)) ELSE 0 END) end AS DiasAtraso   FROM PLANPAGOS p WHERE p.SALDO_JTS_OID = ?) query "),
+	("0", "IDSALDO"),
+	("1", "IDSALDO"),
+	("2", "IDSALDO")
+	}
+}
+

@@ -1,0 +1,6 @@
+﻿EXECUTE('
+UPDATE dbo.DICCIONARIO
+SET DESCRIPCION = ''AplicaTarjetas''
+	, PROMPT = ''Aplica Tarjetas''
+WHERE NUMERODECAMPO = 45230
+')

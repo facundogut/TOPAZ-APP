@@ -1,0 +1,44 @@
+/****** Object:  View [dbo].[VW_BLOQUEOS]    Script Date: 24/02/2021 17:15:50 ******/
+DROP VIEW [dbo].[VW_BLOQUEOS]
+GO
+
+/****** Object:  View [dbo].[VW_BLOQUEOS]    Script Date: 24/02/2021 17:15:50 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[VW_BLOQUEOS] AS
+
+SELECT 
+		cod.COD_BLOQUEO,
+		cod.DESCRIPCION AS BLOQUEO,
+		bl.USUARIO_INGRESO,
+		bl.FECHA_GRABADA AS FECHAALTA,
+		BL.DESCRIPCION,
+		o.DESCRIPCION AS PORORDEN,
+		BL.SOLICITADOPOR,
+		BL.SALDO_JTS_OID,
+		BL.ORDINAL_BLOQUEO,
+		m.CANT
+FROM
+		GRL_BLOQUEOS bl with (nolock)
+		inner JOIN GRL_COD_BLOQUEOS cod with (nolock)
+                  ON (bl.COD_BLOQUEO=cod.COD_BLOQUEO)
+		LEFT JOIN OPCIONES o with (nolock)
+                  ON (o.NUMERODECAMPO=25098 AND o.IDIOMA='E' AND bl.PORORDEN=o.OPCIONINTERNA)
+		LEFT JOIN
+                (SELECT SALDO_JTS_OID,count(*) AS cant 
+					FROM GRL_BLOQUEOS bl with (nolock)
+					WHERE ESTADO=1
+					GROUP BY bl.SALDO_JTS_OID
+				) m
+					ON (m.SALDO_JTS_OID=bl.SALDO_JTS_OID)
+
+WHERE	bl.TZ_LOCK=0 AND
+		cod.TZ_LOCK=0 AND
+		bl.ESTADO=1
+GO
+
+

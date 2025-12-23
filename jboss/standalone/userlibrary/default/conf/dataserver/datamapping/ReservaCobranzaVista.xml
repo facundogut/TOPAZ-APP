@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.cobranzavista.objectsdomain.SolicitudDefault</class-name>
+        <query-name>query.vo_Solicitud_Vista</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT saldo_jts_oid, k.tz_lock,
+	               fecha_inicio_cobro,
+	               referencia,
+	               importe_a_cobrar,
+	               importe_minimo,
+	               moneda_solicitud,
+	               k.estado,
+	               fecha_estado,
+	               importe_cobrado,
+	               fecha_ingreso,
+	               fecha_efectiva_cobro,
+	               cod_resultado,
+	               txt_resultado,
+	               id_proceso,
+	               jts_oid,
+	               asiento,
+	               sucursal_asiento,
+	               fecha_proceso_asiento,
+	               jts_oid_padre,
+	               k.id_convenio,
+	               servicio_referencia,
+	               notificado_pago,
+	               registro,
+	               tipo_proceso,
+	               k.concepto,
+	               importe_cargos,
+	               k.gestion,
+	               k.tipo_gestion
+	          from (SELECT r.tz_lock,
+	                       r.fecha_inicio_cobro,
+	                       r.referencia,
+	                       r.importe_a_cobrar,
+	                       r.importe_minimo,
+	                       r.moneda_solicitud,
+	                       r.estado,
+	                       r.fecha_estado,
+	                       r.importe_cobrado,
+	                       r.fecha_ingreso,
+	                       r.fecha_efectiva_cobro,
+	                       r.cod_resultado,
+	                       r.txt_resultado,
+	                       r.id_proceso,
+	                       r.jts_oid,
+	                       r.asiento,
+	                       r.sucursal_asiento,
+	                       r.fecha_proceso_asiento,
+	                       r.jts_oid_padre,
+	                       r.saldo_jts_oid,
+	                       r.id_convenio,
+	                       r.servicio_referencia,
+	                       r.notificado_pago,
+	                       r.registro,
+	                       r.tipo_proceso,
+	                       r.concepto,
+	                       r.importe_cargos,
+	                       cr.tipo_gestion,
+	                       cr.prioridad AS prioridad_convenio,
+	                       c.prioridad AS prioridad_concepto,
+	                       r.fechavencimiento,
+	                       r.gestion
+	                  FROM rct_recaudaciones r, rct_convenio_recaud cr, rct_conceptos c, rct_suscripcion_servicio ss--, rct_dosificacion_colegios dm  
+	                 WHERE r.estado = ?
+	                   AND r.fecha_inicio_cobro &lt;= ? 
+	                   AND r.fecha_inicio_cobro IS NOT NULL
+	                   AND r.id_convenio = cr.id_convenio 
+	                   AND r.id_convenio = c.id_convenio
+	                   AND r.concepto = c.concepto
+	                  AND r.id_convenio = ss.id_convenio
+	                   and r.servicio_referencia = ss.servicio_referencia
+	                   AND SS.ESTADO = 1 and cr.GENERA_RESERVA = 'S')k
+	          left join rct_control_gestion cg on cg.ID_CONVENIO = k.ID_CONVENIO
+	                                          and cg.concepto = k.concepto
+	                                          and cg.MONEDA = k.MONEDA_SOLICITUD
+	                                          and cg.GESTION = k.gestion
+	                                          and k.tipo_gestion in (1, 2)
+	                                          and cg.ESTADO = 'A'
+	         where (tipo_gestion = 0 or
+	               (tipo_gestion in (1, 2) and cg.GESTION is not null))
+	         order by saldo_jts_oid, prioridad_convenio,
+	                  k.id_convenio,
+	                  servicio_referencia,
+	                  prioridad_concepto,
+	                  orden,
+	            	to_number(referencia),
+	                fecha_inicio_cobro,
+	                fechavencimiento,concepto
+			</sentence>
+        <attribute>
+            <attribute-name>jtsOidSaldo</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaInicioCobro</attribute-name>
+            <column-name>FECHA_INICIO_COBRO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>referencia</attribute-name>
+            <column-name>REFERENCIA</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeACobrar</attribute-name>
+            <column-name>IMPORTE_A_COBRAR</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeMinimo</attribute-name>
+            <column-name>IMPORTE_MINIMO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monedaSolicitud</attribute-name>
+            <column-name>MONEDA_SOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaEstado</attribute-name>
+            <column-name>FECHA_ESTADO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeCobrado</attribute-name>
+            <column-name>IMPORTE_COBRADO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaIngreso</attribute-name>
+            <column-name>FECHA_INGRESO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaEfectivaCobro</attribute-name>
+            <column-name>FECHA_EFECTIVA_COBRO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codResultado</attribute-name>
+            <column-name>COD_RESULTADO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>txtResultado</attribute-name>
+            <column-name>TXT_RESULTADO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>idProceso</attribute-name>
+            <column-name>ID_PROCESO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroAsiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalAsiento</attribute-name>
+            <column-name>SUCURSAL_ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProcesoAsiento</attribute-name>
+            <column-name>FECHA_PROCESO_ASIENTO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidPadre</attribute-name>
+            <column-name>JTS_OID_PADRE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>idConvenio</attribute-name>
+            <column-name>ID_CONVENIO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>servicioReferencia</attribute-name>
+            <column-name>SERVICIO_REFERENCIA</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>notificadoPago</attribute-name>
+            <column-name>NOTIFICADO_PAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>registro</attribute-name>
+            <column-name>REGISTRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoProceso</attribute-name>
+            <column-name>TIPO_PROCESO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>concepto</attribute-name>
+            <column-name>CONCEPTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importe_cargos</attribute-name>
+            <column-name>IMPORTE_CARGOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>gestion</attribute-name>
+            <column-name>GESTION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoGestion</attribute-name>
+            <column-name>TIPO_GESTION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

@@ -1,0 +1,17 @@
+EXECUTE('delete from AYUDAS where NUMERODEAYUDA = 1301;');
+EXECUTE('
+insert into AYUDAS (NUMERODEARCHIVO,NUMERODEAYUDA,DESCRIPCION,FILTRO,MOSTRARTODOS,CAMPOS,CAMPOSVISTA,BASEVISTA,NOMBREVISTA,AYUDAGRANDE) values
+	 (0,1301,N''Grilla Elegir Restr Usu'',N'''',0,N''7836R;4414;7837;'',N''Clave del Usuario;Nombre Usuario;Días Fecha Valor;'',N''TOP/CLIENTES'',N''VW_RESTR_TRABA_CONTABLE_USU'',0);
+');
+EXECUTE('DROP VIEW dbo.VW_RESTR_TRABA_CONTABLE_USU;');
+EXECUTE('
+CREATE VIEW dbo.VW_RESTR_TRABA_CONTABLE_USU 
+AS
+select 
+rtc.USUARIO as ''Clave del Usuario'', 
+u.NOMBRE as ''Nombre Usuario'', 
+rtc.TRABA_CONTABLE as ''Días Fecha Valor'' 
+from RESTR_TRABA_CONTABLE_USU rtc 
+left join USUARIOS u on u.CLAVE = rtc.USUARIO and u.TZ_LOCK = 0 
+where rtc.TZ_LOCK = 0;
+');

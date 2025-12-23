@@ -1,0 +1,52 @@
+service ACCOUNTINQUIRY; 
+description "Parámetros de entrada al servicio Consulta de Cuentas"; 
+
+action: SQLQuery HAYREGISTROS(
+				
+	Branch: numeric,
+	Product: numeric,     
+	Account:   numeric,      
+	Currency:   numeric,
+	Operation: numeric,
+	Ordinal: numeric
+
+			
+			
+	):[
+			
+	   SERRORCODE: numeric
+	]{ 
+  			
+  	
+	properties {
+			("statement", "select count(*) as SCODERROR from saldos where sucursal=? and producto=? and cuenta=? and moneda=? and operacion=? and ordinal=?"),
+			("0", "Branch"), 
+			("1", "Product"), 
+			("2", "Account"), 
+			("3", "Currency"),
+			("4", "Operation"),
+			("5", "Ordinal")
+	
+	           };
+	           
+	  action:SQLQuery ESTADOCUENTA() : [
+			
+			ValidacionCuenta:string as ACCOUNTVALIDATION,
+			EstadoCuenta: string as ACCOUNTSTATUS
+				
+				       		] 
+		   {
+			
+			condition{"SCODERROR == 1"};           
+			
+	   properties { 
+			("statement", "SELECT (SELECT o.descripcion FROM Opciones o WHERE o.numerodecampo=1679 AND o.idioma='I' AND s.C1679 = o.opcioninterna) as ValidacionCuenta,(SELECT o.descripcion FROM opciones o WHERE o.numerodecampo=1679 AND o.idioma='I' AND s.C1679 = o.opcioninterna) as EstadoCuenta FROM Saldos s WHERE s.sucursal=? and s.producto=? and s.cuenta=? and s.moneda=? and s.operacion=? and s.ordinal=?"),
+			("0", "Branch"), 
+			("1", "Product"), 
+			("2", "Account"), 
+			("3", "Currency"),
+			("4", "Operation"),
+			("5", "Ordinal")
+		    }
+      }			
+}

@@ -1,0 +1,21 @@
+service DocumentoPersona; 
+description "Servicio Datos Documento Persona"; 
+
+action:	SQLQuery Entity ( 
+ NRODOC: string,
+ TIPODOC: string
+): [ 
+	TIPOPERSONA: string
+]
+{ 
+  	properties { 
+  	("statement", "SELECT  r.TIPOPERSONA AS TIPOPERSONA FROM CLI_DOCUMENTOSPFPJ r WHERE r.NUMERODOCUMENTO = ?  AND r.TIPODOCUMENTO = ? AND r.TZ_LOCK = 0 "),
+	("0", "NRODOC"),
+	("1", "TIPODOC"),
+	("4", "out TIPOPERSONA  : string")
+	}
+}
+
+
+
+

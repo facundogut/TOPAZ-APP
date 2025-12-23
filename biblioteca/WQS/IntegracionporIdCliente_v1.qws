@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>clientes/integracionCliente/{idCliente}</uri>
+    <serviceDescription>devuelve datos personas compositoras de un cliente por idCliente</serviceDescription>
+    <querys>
+        <query id="1" name="integracionporIdCliente" type="SIMPLE">
+            <sql>SELECT 
+			c.CODIGOCLIENTE AS 'idCliente',
+			c.NOMBRECLIENTE AS 'nombreCliente',
+			suc.SUCURSAL,
+			suc.NOMBRESUCURSAL,
+			(SELECT DESCRIPCION FROM OPCIONES o WHERE opcioninterna = c.ESTADO AND IDIOMA = 'E' and NUMERODECAMPO = (select NUMERODECAMPO from DICCIONARIO d where campo = 'ESTADO' AND tabla = (select identificacion from DESCRIPTORES where NOMBREFISICO = 'CLI_CLIENTES'))) AS estadoDescripcion,
+			c.ESTADO,
+			COALESCE(CONVERT(varchar, c.FECHAAPERTURA, 23),'') AS 'fechaApertura'		
+FROM CLI_CLIENTES c
+JOIN SUCURSALES suc ON suc.SUCURSAL = c.SUCURSALVINCULADA AND suc.TZ_LOCK = 0
+WHERE c.CODIGOCLIENTE = CAST( ? AS NUMERIC (30) )  AND c.TZ_LOCK = 0</sql>
+            <input>
+                <inParameter description="id del cliente para el cual se mostraran las personas que lo conforman" type="STRING">idCliente</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Cliente">
+                    <outParameter description="idCliente" type="INTEGER">
+                        <queryname>idCliente</queryname>
+                        <servicename>idCliente</servicename>
+                    </outParameter>
+                    <outParameter description="nombreCliente" type="STRING">
+                        <queryname>nombreCliente</queryname>
+                        <servicename>nombre</servicename>
+                    </outParameter>
+					<outParameter description="sucursalId" type="INTEGER">
+                        <queryname>SUCURSAL</queryname>
+                        <servicename>sucursal.id</servicename>
+                    </outParameter>
+					<outParameter description="sucursalNombre" type="STRING">
+                        <queryname>NOMBRESUCURSAL</queryname>
+                        <servicename>sucursal.descripcion</servicename>
+                    </outParameter>
+					<outParameter description="estadoId" type="INTEGER">
+                        <queryname>ESTADO</queryname>
+                        <servicename>estado.id</servicename>
+                    </outParameter>
+					<outParameter description="estadoDescripcion" type="STRING">
+                        <queryname>estadoDescripcion</queryname>
+                        <servicename>estado.descripcion</servicename>
+                    </outParameter>
+					<outParameter description="fechaApertura" type="STRING">
+                        <queryname>fechaApertura</queryname>
+                        <servicename>fechaApertura</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="participantes" type="MULTIPLE">
+            <sql>DECLARE @codcli NUMERIC(30);
+
+SET @codcli =   CAST( ? AS NUMERIC (30))
+
+SELECT 
+	d.TIPODOCUMENTO as tipoDoc,
+    d.TIPODOCUMENTO as descTipoDoc,
+    d.NUMERODOCUMENTO AS numeroDoc,
+   	ISNULL(pf.APELLIDOPATERNO, '')  + ' ' + ISNULL(PF.APELLIDOMATERNO, ' ') + ' ' + ISNULL(PF.PRIMERNOMBRE, ' ') + ' ' + ISNULL(PF.SEGUNDONOMBRE, ' ') AS nombre_completo,
+	pf.NUMEROPERSONAFISICA AS numeroPersona,
+	cp.TITULARIDAD as idTitularidad,
+	(SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO= 1506 and IDIOMA = 'E' AND OPCIONINTERNA = cp.TITULARIDAD) AS descTitularidad,
+    a.TIPO_PODER AS tipoPoder,
+    tp.DESCRIPCION AS descTipoPoder
+
+FROM CLI_CLIENTES (NOLOCK) c 
+
+JOIN CLI_ClientePersona (NOLOCK) cp ON cp.CODIGOCLIENTE = c.CODIGOCLIENTE AND ( (cp.TZ_LOCK &lt; 300000000000000 OR cp.TZ_LOCK &gt;= 400000000000000) AND (cp.TZ_LOCK &lt; 100000000000000 OR cp.TZ_LOCK &gt;= 200000000000000))
+
+JOIN CLI_PERSONASFISICAS (NOLOCK) pf ON pf.NUMEROPERSONAFISICA = cp.NUMEROPERSONA AND pf.ESTADO &lt;&gt; 1 AND ( (pf.TZ_LOCK &lt; 300000000000000 OR pf.TZ_LOCK &gt;= 400000000000000) AND (pf.TZ_LOCK &lt; 100000000000000 OR pf.TZ_LOCK &gt;= 200000000000000))
+
+JOIN CLI_DocumentosPFPJ (NOLOCK) d ON d.NUMEROPERSONAFJ = pf.NUMEROPERSONAFISICA AND ( (d.TZ_LOCK &lt; 300000000000000 OR d.TZ_LOCK &gt;= 400000000000000) AND (d.TZ_LOCK &lt; 100000000000000 OR d.TZ_LOCK &gt;= 200000000000000))
+
+LEFT JOIN PYF_APODERADOS (NOLOCK) a ON a.TIPO_ENTIDAD = 1 AND a.ID_ENTIDAD = CAST( @codcli AS VARCHAR)  AND a.ID_PERSONA = pf.NUMEROPERSONAFISICA AND ( (a.TZ_LOCK &lt; 300000000000000 OR a.TZ_LOCK &gt;= 400000000000000) AND (a.TZ_LOCK &lt; 100000000000000 OR a.TZ_LOCK &gt;= 200000000000000))
+
+LEFT JOIN PYF_TIPOPODERES (NOLOCK) tp ON tp.TIPO_PODER = a.TIPO_PODER AND ( (tp.TZ_LOCK &lt; 300000000000000 OR tp.TZ_LOCK &gt;= 400000000000000) AND (tp.TZ_LOCK &lt; 100000000000000 OR tp.TZ_LOCK &gt;= 200000000000000))
+
+WHERE c.CODIGOCLIENTE = @codcli  AND ( (c.TZ_LOCK &lt; 300000000000000 OR c.TZ_LOCK &gt;= 400000000000000) AND (c.TZ_LOCK &lt; 100000000000000 OR c.TZ_LOCK &gt;= 200000000000000))
+
+UNION ALL 
+
+SELECT 
+	d.TIPODOCUMENTO as tipoDoc,
+    d.TIPODOCUMENTO as descTipoDoc,
+    d.NUMERODOCUMENTO AS numeroDoc,
+   	ISNULL(pj.RAZONSOCIAL, ' ') AS nombre_completo,
+	pj.NUMEROPERSONAJURIDICA AS numeroPersona,
+	cp.TITULARIDAD as idTitularidad,
+	(SELECT DESCRIPCION FROM OPCIONES (NOLOCK) WHERE NUMERODECAMPO= 1506 and IDIOMA = 'E' AND OPCIONINTERNA = cp.TITULARIDAD) AS descTitularida,
+    NULL AS tipoPoder,
+    NULL AS descTipoPoder
+
+FROM CLI_CLIENTES (NOLOCK) c 
+
+JOIN CLI_ClientePersona (NOLOCK) cp ON c.CODIGOCLIENTE = cp.CODIGOCLIENTE  AND ( (cp.TZ_LOCK &lt; 300000000000000 OR cp.TZ_LOCK &gt;= 400000000000000) AND (cp.TZ_LOCK &lt; 100000000000000 OR cp.TZ_LOCK &gt;= 200000000000000))
+
+JOIN CLI_PERSONASJURIDICAS (NOLOCK) pj ON pj.NUMEROPERSONAJURIDICA = cp.NUMEROPERSONA AND ( (pj.TZ_LOCK &lt; 300000000000000 OR pj.TZ_LOCK &gt;= 400000000000000) AND (pj.TZ_LOCK &lt; 100000000000000 OR pj.TZ_LOCK &gt;= 200000000000000))
+
+JOIN CLI_DocumentosPFPJ (NOLOCK) d ON d.NUMEROPERSONAFJ = cp.NUMEROPERSONA AND ( (d.TZ_LOCK &lt; 300000000000000 OR d.TZ_LOCK &gt;= 400000000000000) AND (d.TZ_LOCK &lt; 100000000000000 OR d.TZ_LOCK &gt;= 200000000000000))
+
+
+--JOIN PYF_APODERADOS a ON a.ID_ENTIDAD = CAST( @codcli AS VARCHAR) AND ( (a.TZ_LOCK &lt; 300000000000000 OR a.TZ_LOCK &gt;= 400000000000000) AND (a.TZ_LOCK &lt; 100000000000000 OR a.TZ_LOCK &gt;= 200000000000000))
+
+--JOIN PYF_TIPOPODERES tp ON a.TIPO_PODER=tp.TIPO_PODER AND ( (tp.TZ_LOCK &lt; 300000000000000 OR tp.TZ_LOCK &gt;= 400000000000000) AND (tp.TZ_LOCK &lt; 100000000000000 OR tp.TZ_LOCK &gt;= 200000000000000))
+
+
+
+WHERE c.CODIGOCLIENTE = @codcli AND ( (c.TZ_LOCK &lt; 300000000000000 OR c.TZ_LOCK &gt;= 400000000000000) AND (c.TZ_LOCK &lt; 100000000000000 OR c.TZ_LOCK &gt;= 200000000000000))
+
+</sql>
+            <input>
+                <inParameter description="IdCliente" type="STRING">idCliente</inParameter>
+            </input>
+            <output>
+                <level groupby="numeroDoc" name="participantes">
+                    <outParameter description="" type="STRING">
+                        <queryname>tipoDoc</queryname>
+                        <servicename>documentoIdentificativo.tipoDocumento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descTipoDoc</queryname>
+                        <servicename>documentoIdentificativo.tipoDocumento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>numeroDoc</queryname>
+                        <servicename>numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombre_completo</queryname>
+                        <servicename>nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>numeroPersona</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>idTitularidad</queryname>
+                        <servicename>titularidad.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descTitularidad</queryname>
+                        <servicename>titularidad.descripcion</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="poderes">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>tipoPoder</queryname>
+                        <servicename>id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descTipoPoder</queryname>
+                        <servicename>descripcion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="3" name="apoderados" type="MULTIPLE">
+            <sql>DECLARE @codcli NUMERIC(30)
+
+SET @codcli =   CAST( ? AS NUMERIC (30))
+
+SELECT 
+	d.TIPODOCUMENTO as tipoDoc,
+    d.TIPODOCUMENTO as descTipoDoc,
+    d.NUMERODOCUMENTO AS numeroDoc,
+   	ISNULL(pf.APELLIDOPATERNO, '')  + ' ' + ISNULL(PF.APELLIDOMATERNO, ' ') + ' ' + ISNULL(PF.PRIMERNOMBRE, ' ') + ' ' + ISNULL(PF.SEGUNDONOMBRE, ' ') AS nombre_completo,
+	pf.NUMEROPERSONAFISICA AS numeroPersona,
+	cp.TITULARIDAD as idTitularidad,
+	(SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO= 1506 and IDIOMA = 'E' AND OPCIONINTERNA = cp.TITULARIDAD) AS descTitularidad,
+    a.TIPO_PODER AS tipoPoder,
+    tp.DESCRIPCION AS descTipoPoder,
+	cipj.CODIGOCARGO AS cargoCodigo,
+	ccpp.CARGO AS cargoDescripcion
+	
+
+FROM CLI_CLIENTES c 
+
+JOIN PYF_APODERADOS a ON a.ID_ENTIDAD = CAST( @codcli AS VARCHAR) AND ( (a.TZ_LOCK &lt; 300000000000000 OR a.TZ_LOCK &gt;= 400000000000000) AND (a.TZ_LOCK &lt; 100000000000000 OR a.TZ_LOCK &gt;= 200000000000000))
+
+JOIN PYF_TIPOPODERES tp ON a.TIPO_ENTIDAD = 1 AND a.TIPO_PODER=tp.TIPO_PODER AND ( (tp.TZ_LOCK &lt; 300000000000000 OR tp.TZ_LOCK &gt;= 400000000000000) AND (tp.TZ_LOCK &lt; 100000000000000 OR tp.TZ_LOCK &gt;= 200000000000000))
+
+JOIN CLI_PERSONASFISICAS pf ON pf.NUMEROPERSONAFISICA = a.ID_PERSONA AND pf.ESTADO &lt;&gt; 1 AND ( (pf.TZ_LOCK &lt; 300000000000000 OR pf.TZ_LOCK &gt;= 400000000000000) AND (pf.TZ_LOCK &lt; 100000000000000 OR pf.TZ_LOCK &gt;= 200000000000000))
+
+JOIN CLI_DocumentosPFPJ d ON d.NUMEROPERSONAFJ = pf.NUMEROPERSONAFISICA AND ( (d.TZ_LOCK &lt; 300000000000000 OR d.TZ_LOCK &gt;= 400000000000000) AND (d.TZ_LOCK &lt; 100000000000000 OR d.TZ_LOCK &gt;= 200000000000000))
+
+LEFT JOIN CLI_INTEGRANTESPJ cipj ON cipj.NUMEROPERSONAFISICA = d.NUMEROPERSONAFJ AND LEFT(cipj.TZ_LOCK, 1) IN (0,2,4)
+
+LEFT JOIN CLI_CARGOS_PERSONAS ccpp ON ccpp.CODIGO = cipj.CODIGOCARGO AND LEFT(ccpp.TZ_LOCK, 1) IN (0,2,4)
+
+LEFT JOIN CLI_ClientePersona cp ON c.CODIGOCLIENTE = cp.CODIGOCLIENTE AND cp.NUMEROPERSONA = a.ID_PERSONA AND( (cp.TZ_LOCK &lt; 300000000000000 OR cp.TZ_LOCK &gt;= 400000000000000) AND (cp.TZ_LOCK &lt; 100000000000000 OR cp.TZ_LOCK &gt;= 200000000000000))
+
+WHERE cp.TITULARIDAD IS NULL  AND c.CODIGOCLIENTE = @codcli  AND ( (c.TZ_LOCK &lt; 300000000000000 OR c.TZ_LOCK &gt;= 400000000000000) AND (c.TZ_LOCK &lt; 100000000000000 OR c.TZ_LOCK &gt;= 200000000000000))
+</sql>
+            <input>
+                <inParameter description="" type="STRING">idCliente</inParameter>
+            </input>
+            <output>
+                <level groupby="numeroDoc" name="apoderados">
+                    <outParameter description="" type="STRING">
+                        <queryname>tipoDoc</queryname>
+                        <servicename>documentoIdentificativo.tipoDocumento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descTipoDoc</queryname>
+                        <servicename>documentoIdentificativo.tipoDocumento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>numeroDoc</queryname>
+                        <servicename>numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombre_completo</queryname>
+                        <servicename>nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>numeroPersona</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+					<outParameter description="" type="STRING">
+                        <queryname>cargoDescripcion</queryname>
+                        <servicename>cargo.descripcion</servicename>
+                    </outParameter>
+					<outParameter description="" type="STRING">
+                        <queryname>cargoCodigo</queryname>
+                        <servicename>cargo.id</servicename>
+                    </outParameter>
+					
+                </level>
+				 <level groupby="" name="poderes">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>tipoPoder</queryname>
+                        <servicename>id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descTipoPoder</queryname>
+                        <servicename>descripcion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

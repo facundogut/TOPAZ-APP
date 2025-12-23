@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Referencia Bancaria" language="groovy" pageWidth="544" pageHeight="792" columnWidth="504" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.4641000000000008"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idReferencia" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT idpersonaori,NombreBanco,isnull(FechaApertura, CONVERT(DATETIME, '2999-01-01', 111))FechaApertura ,Cta,Monto,Saldo,TipoProducto,isnull(Moneda,'N/A') Moneda FROM
+
+(SELECT idpersonaori, C2787 NombreBanco, C2778 FechaApertura, C2776 Cta, C8424,
+	   C2780 Monto, C2781 Saldo,
+	   CASE  C2779
+		WHEN 'A' THEN 'Ahorro'
+		WHEN 'B' THEN 'Corriente'
+		WHEN 'C' THEN 'Credito'
+		WHEN 'G' THEN 'Carta de Garantia'
+		ELSE 'Inversiones' END AS TipoProducto
+ 		FROM CL_REFERENCIAS where C2773='B') r
+		Left JOIN (SELECT c6399,c6400 Moneda FROM CO_MONEDAS ) m  ON r.C8424 = m.C6399 RIGHT JOIN (SELECT $P{idReferencia} AS numero) b ON r.IDPERSONAORI =b.numero]]>
+	</queryString>
+	<field name="idpersonaori" class="java.math.BigDecimal"/>
+	<field name="NombreBanco" class="java.lang.String"/>
+	<field name="FechaApertura" class="java.sql.Timestamp"/>
+	<field name="Cta" class="java.lang.String"/>
+	<field name="Monto" class="java.math.BigDecimal"/>
+	<field name="Saldo" class="java.math.BigDecimal"/>
+	<field name="TipoProducto" class="java.lang.String"/>
+	<field name="Moneda" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="27" splitType="Stretch">
+			<rectangle>
+				<reportElement x="2" y="2" width="498" height="24"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="3" y="4" width="158" height="20"/>
+				<textElement>
+					<font fontName="Arial" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos del Referente:]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="123" splitType="Stretch">
+			<rectangle>
+				<reportElement x="2" y="2" width="498" height="115"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="98" y="65" width="158" height="20">
+					<printWhenExpression><![CDATA[$F{TipoProducto} == "Credito"&&$F{Cta}=='V']]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[VIVIENDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="49" width="91" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Moneda:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="33" width="91" height="20">
+					<printWhenExpression><![CDATA[$F{TipoProducto} == "Ahorro" ||$F{TipoProducto} == "Corriente"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha de apertura:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="33" width="91" height="20">
+					<printWhenExpression><![CDATA[$F{TipoProducto} == "Credito"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha de Crédito:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="33" width="91" height="20">
+					<printWhenExpression><![CDATA[$F{TipoProducto} == "Carta de Garantia" ||$F{TipoProducto} == "Inversiones"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Fecha de emisión:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="65" width="91" height="20">
+					<printWhenExpression><![CDATA[$F{TipoProducto} == "Ahorro"  || $F{TipoProducto} == "Corriente"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Numero de cuenta:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="98" y="2" width="392" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NombreBanco}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="98" y="17" width="392" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TipoProducto}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="98" y="33" width="392" height="20">
+					<printWhenExpression><![CDATA[$F{idpersonaori} > 0]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{FechaApertura}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="98" y="49" width="392" height="20">
+					<printWhenExpression><![CDATA[$F{idpersonaori} > 0]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Moneda}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="65" width="91" height="20">
+					<printWhenExpression><![CDATA[$F{TipoProducto} == "Credito"]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tipo de crédito:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="99" y="65" width="392" height="20">
+					<printWhenExpression><![CDATA[$F{TipoProducto} == "Ahorro"  || $F{TipoProducto} == "Corriente"]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Cta}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="82" width="91" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Monto:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="98" y="82" width="392" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Monto}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="97" width="91" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Saldo:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="98" y="97" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Saldo}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="2" width="91" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Nombre del banco:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="98" y="65" width="158" height="20">
+					<printWhenExpression><![CDATA[$F{TipoProducto} == "Credito"&&$F{Cta}=='H']]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Arial" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[HIPOTECARIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="17" width="91" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Arial" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tipo de Producto:]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,3 @@
+EXECUTE ('
+UPDATE OPERACIONES SET NOMBRE = ''Reapertura de Caja de Ahorro'' WHERE IDENTIFICACION = 3545
+')

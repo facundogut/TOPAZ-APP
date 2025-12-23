@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/getCastigoCreditobyIdPersona/{idPersona}/{fechaConsulta}</uri>
+    <serviceDescription>Mediante el consumo de este servicio se espera retornar el estado actual en cuanto a la situacion de "Cuentas de Orden" de un cliente. El servicio tomara como parametro de entrada el Id Persona y una fecha de consulta y devolvera si la persona consultada esta con castigo de credito, es decir, si se 
+volvia un cliente incobrable y por consiguiente a quien no se le otorgara mas credito.</serviceDescription>
+    <title>CONT005 - Clientes en Castigo de credito por ID Persona</title>
+    <querys>
+        <query id="1" name="data" type="SIMPLE">
+            <sql>DECLARE 
+@idPersona NUMERIC(12) = ? ,
+@fechaConsulta VARCHAR(8) = ? ;
+
+IF @fechaConsulta = 0
+BEGIN
+    SELECT @fechaConsulta = FECHAPROCESO 
+    FROM PARAMETROS;
+END;
+
+SELECT
+    cliper.NUMEROPERSONA AS idPersona,
+    '' AS fechaNovedad,
+    '' AS fechaAltaNovedad,
+    S.c1728 AS tipoNovedad
+FROM VW_CLIENTES_PERSONAS (NOLOCK) cliper
+JOIN SALDOS (NOLOCK) S ON cliper.CODIGOCLIENTE = S.C1803
+WHERE 
+	cliper.NUMEROPERSONA = @idPersona
+	AND S.C1728 = 'C'
+
+/*
+SELECT
+    cliper.NUMEROPERSONA AS idPersona,
+    FORMAT(CONVERT(DATETIME, crecab.FECHA_ALTA , 103), 'yyyy-MM-ddTHH:mm:ss.fff') + 'Z' AS fechaNovedad,
+    FORMAT(CONVERT(DATETIME, crecab.FECHA_CONFIRMACION , 103), 'yyyy-MM-ddTHH:mm:ss.fff') + 'Z' AS fechaAltaNovedad,
+    crecab.ESTADO AS tipoNovedad
+FROM VW_CLIENTES_PERSONAS (NOLOCK) cliper
+JOIN SALDOS (NOLOCK) S ON cliper.CODIGOCLIENTE = S.C1803
+JOIN CRE_DET_CASTIGOCARTERA (NOLOCK) credet ON cliper.CODIGOCLIENTE = credet.CLIENTE
+JOIN CRE_CAB_CASTIGOCARTERA (NOLOCK) crecab ON credet.NUMERO_LISTA = crecab.NUMERO_LISTA
+WHERE crecab.ESTADO = 'C'
+AND cliper.NUMEROPERSONA = @idPersona
+AND S.C1728 = 'C'
+AND crecab.FECHA_CONFIRMACION &gt;= CAST(@fechaConsulta AS DATE)
+AND crecab.FECHA_CONFIRMACION &gt; (
+    SELECT ISNULL(
+        (SELECT TOP 1
+            CONVERT(DATETIME, crecab.FECHA_CONFIRMACION, 103)
+            FROM VW_CLIENTES_PERSONAS (NOLOCK) cliper
+            JOIN SALDOS (NOLOCK) S ON cliper.CODIGOCLIENTE = S.C1803
+            JOIN CRE_DET_CASTIGOCARTERA (NOLOCK) credet ON cliper.CODIGOCLIENTE = credet.CLIENTE
+            JOIN CRE_CAB_CASTIGOCARTERA (NOLOCK) crecab ON credet.NUMERO_LISTA = crecab.NUMERO_LISTA
+        WHERE 
+        crecab.ESTADO = 'R'
+        AND S.C1728 = 'C'
+        AND cliper.NUMEROPERSONA = @idPersona
+        ORDER BY crecab.FECHA_CONFIRMACION DESC), 
+    '19000101')
+);*/</sql>
+            <input>
+                <inParameter description="" type="LONG">idPersona</inParameter>
+                <inParameter description="" type="STRING">fechaConsulta</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="clienteCastigo">
+                    <outParameter description="" type="LONG">
+                        <queryname>idPersona</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaNovedad</queryname>
+                        <servicename>fechaNovedad</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaAltaNovedad</queryname>
+                        <servicename>fechaAltaNovedad</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tipoNovedad</queryname>
+                        <servicename>tipoNovedad</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

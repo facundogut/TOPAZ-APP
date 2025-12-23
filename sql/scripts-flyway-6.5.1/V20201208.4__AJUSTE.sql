@@ -1,0 +1,8 @@
+﻿
+EXECUTE('
+
+UPDATE REPORTES
+SET DESCRIPCION=''Aviso Contrato Caja de Seguridad Vencida''
+WHERE TITULO=9000 AND IDENTIFICACION=7141;
+
+')

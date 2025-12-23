@@ -1,0 +1,27 @@
+service NegociosPersona; 
+description "Servicio Negocios Persona"; 
+
+action:	SQLQuery Entity ( 
+ NRODOC: string,
+ TIPODOC: string
+): [ 
+   	CARGO: string,
+	EMPRESA: string,
+   	FECHAINI: string,
+	ANTIGUEDAD: string,
+   	INGRESOS: string,
+	MONEDA: string,
+	ESTADO: string 
+	
+]
+{ 
+  	properties { 
+  	("statement", "SELECT n.CARGO AS CARGO, n.EMPRESA AS EMPRESA, TO_CHAR(n.FECHAINGRESO,'DD/MM/YYYY') AS FECHAINI, round((SYSDATE-(n.FECHAINGRESO))/365) AS ANTIGUEDAD, n.INGRESO_LIQUIDO_PESOS AS INGRESOS, m.C6400 AS MONEDA, CASE WHEN n.FECHAEGRESO IS NULL THEN 'ACTIVO' ELSE 'INACTIVO' END AS ESTADO FROM CLI_ACTIVIDAD_ECONOMICA n JOIN CLI_DOCUMENTOSPFPJ r ON r.NUMEROPERSONAFJ = n.NUMEROPERSONAFISICA JOIN MONEDAS m ON m.C6399 = n.MONEDA WHERE r.NUMERODOCUMENTO = ? AND  r.TIPODOCUMENTO = ? AND  n.TZ_LOCK = 0 "),
+	("0", "NRODOC"),
+	("1", "TIPODOC")
+	}
+}
+
+
+
+

@@ -1,0 +1,8 @@
+EXECUTE('CREATE PROCEDURE sp_dj_limpia_poderes_temp
+@pUsuario VARCHAR(8)
+AS
+BEGIN
+	
+	DELETE FROM DJ_TEMP_PODERES WHERE USUARIO=@pUsuario
+END
+');

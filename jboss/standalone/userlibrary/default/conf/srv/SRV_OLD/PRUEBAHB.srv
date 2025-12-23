@@ -1,0 +1,55 @@
+service PRUEBAHB;
+description "Consulta de Productos de Primer Nivel HB";
+
+action: SQLQuery ejecutarOperacion(
+ 
+ NroPersona:	numeric
+  ): [ 
+   
+    STOTAL : numeric,
+    CODERROR: numeric as CODERROR,
+    DESCERROR: string as DESCERROR
+			 	
+]
+{ 
+  	properties { 
+  	("statement", "SELECT  0 AS CODERROR, 'N/A' AS DESCERROR,count(*) AS STOTAL from CLI_PERSONASFISICAS WHERE NUMEROPERSONAFISICA=?"),
+	 ("0", "NroPersona")
+	 
+
+	 
+	 
+	 
+	 
+   };
+	action:	SQLQuery RESULTADO() : [
+			
+			APELLIDOPATERNO            :string
+	                
+			
+		] {
+	            condition { "STOTAL == 0" };
+	
+			properties {
+				("statement", " SELECT ' ' as APELLIDOPATERNO from DUAL"),
+				("0", "NroPersona")
+			
+			}
+		};
+
+	action:	SQLQuery RESULTADO1() : [
+			
+			
+			APELLIDOPATERNO            :string
+			
+		] {
+	            condition { "STOTAL != 0" };
+	
+			properties {
+				("statement", " SELECT APELLIDOPATERNO from CLI_PERSONASFISICAS WHERE NUMEROPERSONAFISICA=?"),
+				("0", "NroPersona")
+			
+			}
+		}
+		
+}

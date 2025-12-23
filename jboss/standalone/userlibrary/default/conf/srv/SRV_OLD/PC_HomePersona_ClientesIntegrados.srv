@@ -1,0 +1,22 @@
+service ClientesIntegrados; 
+description "Servicio Clientes Integrados"; 
+
+action:	SQLQuery Entity ( 
+ NRODOC: string,
+ TIPODOC: string
+): [ 
+ 	IDCLIENTE: string,
+   	TITULARIDAD: string,
+	FECHAALTA: string
+]
+{ 
+  	properties { 
+  	("statement", "SELECT c.CODIGOCLIENTE AS IDCLIENTE, c.TITULARIDAD AS TITULARIDAD, c.FECHAALTARELACION AS FECHAALTA FROM CLI_CLIENTEPERSONA c JOIN CLI_DOCUMENTOSPFPJ r ON r.NUMEROPERSONAFJ = c.NUMEROPERSONA AND r.TZ_LOCK = 0 WHERE r.NUMERODOCUMENTO = ? AND r.TIPODOCUMENTO = ? "),
+	("0", "NRODOC"),
+	("1", "TIPODOC")
+	}
+}
+
+
+
+

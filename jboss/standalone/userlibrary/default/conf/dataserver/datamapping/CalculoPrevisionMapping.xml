@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.previsiones.objectsdomain.CalculoPrevision</class-name>
+        <query-name>query.CalculoPrevisiones</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+		SELECT SALDO_JTS_OID,
+       CATEGORIARESULTANTE,
+       DIAS_PERMANENCIA,
+       CATEGORIA_COMERCIAL,
+       TIPO_BCRA,
+       MONTO_GARANTIZADO,
+       C1695,
+       MONEDA,
+       TIPO_ASISTENCIA,
+       NRO_GARANTIA,
+       C50007,
+       OBJETIVA_REFINANCIADO
+FROM (--Sin CC con acuerdos
+	  SELECT G.SALDO_JTS_OID, 
+	          C.CATEGORIARESULTANTE,
+	          (CASE WHEN (DATEDIFF(DAY,H.FECHA_SITUACION,?)) &lt;= 0 THEN 0
+	                WHEN (DATEDIFF(DAY,H.FECHA_SITUACION,?)) IS NULL THEN 0
+	                ELSE (DATEDIFF(DAY,H.FECHA_SITUACION,?))
+	           END) AS DIAS_PERMANENCIA, 
+	          (CASE WHEN C.CATEGORIA_COMERCIAL = 'S' THEN 'C'
+	                WHEN C.CATEGORIA_COMERCIAL IS NULL THEN 'C'
+	                WHEN C.CATEGORIA_COMERCIAL = ' ' THEN 'C'
+	                WHEN C.CATEGORIA_COMERCIAL = '' THEN 'C'
+	      	       ELSE C.CATEGORIA_COMERCIAL
+	           END) AS CATEGORIA_COMERCIAL,
+	          G.TIPO_BCRA, 
+	          G.MONTO_GARANTIZADO, 
+	          S.C1695, 
+	          S.MONEDA,
+	          G.TIPO_ASISTENCIA, 
+	          G.NRO_GARANTIA,
+	          S.C50007, 
+	          S.OBJETIVA_REFINANCIADO
+	   FROM CRE_HISTORICO_DEUDA_GARANTIAS G
+	        INNER JOIN SALDOS S ON S.JTS_OID=G.SALDO_JTS_OID 
+	                            AND G.FECHA_PROCESO = ?
+	                            AND S.TZ_LOCK = 0
+            INNER JOIN CLI_CLIENTES C ON C.CODIGOCLIENTE=S.C1803
+	                                 AND C.TZ_LOCK = 0
+	        INNER JOIN PLANCTAS P ON P.C6326 = S.C1730 and P.PREVISIONA &gt; 0
+	        LEFT JOIN HISTORICO_CALIF_X_CLIENTE H ON H.CLIENTE=S.C1803
+	                                              AND H.TZ_LOCK = 0 
+	                                              AND FECHA = (SELECT MAX(FECHA) AS FECHA 
+	                                                           FROM HISTORICO_CALIF_X_CLIENTE                                                                             
+	                                                           WHERE CLIENTE=S.C1803
+	                                                           AND TZ_LOCK = 0
+	                                                           GROUP BY CLIENTE)
+	   WHERE G.TIPO_ASISTENCIA &lt;&gt; 'A'
+	   UNION ALL
+       --CC con acuerdos
+		SELECT G.SALDO_JTS_OID , 
+		       C.CATEGORIARESULTANTE,
+		       (CASE WHEN (DATEDIFF(DAY,H.FECHA_SITUACION,(SELECT FECHAPROCESO FROM PARAMETROS))) &lt;= 0 THEN 0
+		             WHEN (DATEDIFF(DAY,H.FECHA_SITUACION,(SELECT FECHAPROCESO FROM PARAMETROS))) IS NULL THEN 0
+		             ELSE (DATEDIFF(DAY,H.FECHA_SITUACION,(SELECT FECHAPROCESO FROM PARAMETROS)))
+		             END) AS DIAS_PERMANENCIA, 
+			   (CASE WHEN C.CATEGORIA_COMERCIAL = 'S' THEN 'C'
+				     WHEN C.CATEGORIA_COMERCIAL IS NULL THEN 'C'
+					 WHEN C.CATEGORIA_COMERCIAL = ' ' THEN 'C'
+					 WHEN C.CATEGORIA_COMERCIAL = '' THEN 'C'
+				     ELSE C.CATEGORIA_COMERCIAL
+			    END) AS CATEGORIA_COMERCIAL,
+		       G.TIPO_BCRA, 
+		       G.MONTO_GARANTIZADO, 
+		       S.C1695, 
+		       S.MONEDA,
+		       G.TIPO_ASISTENCIA, 
+		       G.NRO_GARANTIA,
+		       S.C50007, 
+		       S.OBJETIVA_REFINANCIADO
+		FROM CRE_HISTORICO_DEUDA_GARANTIAS G
+		     INNER JOIN VTA_SOBREGIROS VTA ON G.SALDO_JTS_OID = VTA.NRO_AUTORIZACION AND VTA.TZ_LOCK = 0 AND VTA.ESTADO=1
+			 INNER JOIN SALDOS S ON S.JTS_OID=VTA.JTS_OID_SALDO 
+		                         AND G.FECHA_PROCESO = (SELECT FECHAPROCESO FROM PARAMETROS)
+		                         AND S.TZ_LOCK = 0
+		     INNER JOIN CLI_CLIENTES C ON C.CODIGOCLIENTE=S.C1803
+		                               AND C.TZ_LOCK = 0
+			 INNER JOIN PLANCTAS P ON P.C6326 = S.C1730 and P.PREVISIONA &gt; 0
+		     LEFT JOIN HISTORICO_CALIF_X_CLIENTE H ON H.CLIENTE=S.C1803
+		                                           AND H.TZ_LOCK = 0 
+		                                           AND FECHA = (SELECT MAX(FECHA) AS FECHA 
+		                                                        FROM HISTORICO_CALIF_X_CLIENTE                                                                             
+		                                                        WHERE CLIENTE=S.C1803
+		                                                        AND TZ_LOCK = 0
+		                                                        GROUP BY CLIENTE)
+		WHERE G.TIPO_ASISTENCIA='A') Q
+ORDER BY SALDO_JTS_OID
+		</sentence>
+        <attribute>
+            <attribute-name>saldoJTSOID</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>categoriaResultante</attribute-name>
+            <column-name>CATEGORIARESULTANTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasPermanencia</attribute-name>
+            <column-name>DIAS_PERMANENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoBCRA</attribute-name>
+            <column-name>TIPO_BCRA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoGarantizado</attribute-name>
+            <column-name>MONTO_GARANTIZADO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>bloqueoDistribucion</attribute-name>
+            <column-name>C1695</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoAsistencvia</attribute-name>
+            <column-name>TIPO_ASISTENCIA</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroGarantia</attribute-name>
+            <column-name>NRO_GARANTIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>califObjPrest</attribute-name>
+            <column-name>C50007</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>objetivaRefinanciado</attribute-name>
+            <column-name>OBJETIVA_REFINANCIADO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>categoriaComercial</attribute-name>
+            <column-name>CATEGORIA_COMERCIAL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.previsiones.objectsdomain.PrevisionCategoria</class-name>
+        <query-name>query.PrevisionCategoria</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT CATEGORIA, 
+						   TIPO_BCRA, 
+						   PORCENTAJE, 
+						   DIAS_TOP,
+						   MODALIDAD 
+					FROM PREV_CATEG_A
+					WHERE TZ_LOCK = 0
+				</sentence>
+        <attribute>
+            <attribute-name>categoria</attribute-name>
+            <column-name>CATEGORIA</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoBCRA</attribute-name>
+            <column-name>TIPO_BCRA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>porcentaje</attribute-name>
+            <column-name>PORCENTAJE</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasTop</attribute-name>
+            <column-name>DIAS_TOP</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>MODALIDAD</attribute-name>
+            <column-name>MODALIDAD</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.previsiones.objectsdomain.PrevisionContabilizacion</class-name>
+        <query-name>query.contablizacionPrevision</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT G.SALDO_JTS_OID,
+						   G.PREVISION
+					FROM CRE_HISTORICO_DEUDA_GARANTIAS G 
+						 INNER JOIN  SALDOS S ON G.SALDO_JTS_OID=S.JTS_OID
+											  AND S.TZ_LOCK = 0 
+						 INNER JOIN PLANCTAS C ON S.C1730=C.C6326
+											  AND C.TZ_LOCK = 0 
+					WHERE G.FECHA_PROCESO = (SELECT FECHAPROCESO FROM PARAMETROS)
+					AND C.PREVISIONA &gt; 0
+					AND G.PREVISION &gt; 0
+				</sentence>
+        <attribute>
+            <attribute-name>saldoJTSOID</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>prevision</attribute-name>
+            <column-name>PREVISION</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.previsiones.objectsdomain.PondClasSubj</class-name>
+        <query-name>query.PondClasSubj</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT CATEGORIASUB,
+						   PONDERACION 
+					FROM CLI_CLASUBJETIVA
+					WHERE TZ_LOCK = 0
+				</sentence>
+        <attribute>
+            <attribute-name>catSubjetiva</attribute-name>
+            <column-name>CATEGORIASUB</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ponderacion</attribute-name>
+            <column-name>PONDERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

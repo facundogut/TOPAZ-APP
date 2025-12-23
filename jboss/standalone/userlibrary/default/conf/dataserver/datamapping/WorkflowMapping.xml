@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.bpm.server.taskhandling.TareaXFlujoVo</class-name>
+        <entity-name>wf.vo_TareasXFlujo</entity-name>
+        <table-name>TAREASXFLUJO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>flujo</attribute-name>
+            <column-name>FLUJO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>tarea</attribute-name>
+            <column-name>TAREA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>producto</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoGarantia</attribute-name>
+            <column-name>TIPOGARANTIA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>plaza</attribute-name>
+            <column-name>PLAZA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>conLinea</attribute-name>
+            <column-name>CONLINEA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>ejecutable</attribute-name>
+            <column-name>EJECUTABLE</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.bpm.server.automaticprocess.objectsdomain.ExpirationTimeVO</class-name>
+        <query-name>query.ExpirationTime</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT PROCESS_NAME, STATE_NAME, CONDITION, CANT_HOURS FROM JBPM_EXPIRATION_TIME 
+				ORDER BY PROCESS_NAME, STATE_NAME, ORDINAL
+			</sentence>
+        <attribute>
+            <attribute-name>processName</attribute-name>
+            <column-name>PROCESS_NAME</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>stateName</attribute-name>
+            <column-name>STATE_NAME</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>condition</attribute-name>
+            <column-name>CONDITION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cantHours</attribute-name>
+            <column-name>CANT_HOURS</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.bpm.server.roles.QueryTopazUsuarioRoles</class-name>
+        <query-name>query.QueryTopazUsuarioRoles</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT R.ROLE_NAME, R.DATA_TYPE, R.DATA
+				FROM TOPAZ_ROLES_ASSIGNMENT R
+				INNER JOIN TOPAZ_USUARIO_ROLES T ON R.ROLE_NAME = T.ROLE_NAME			           
+	                       AND R.TZ_LOCK = 0
+	                       AND T.TZ_LOCK = 0
+						   AND T.USUARIO = ?					   
+			</sentence>
+        <attribute>
+            <attribute-name>roleName</attribute-name>
+            <column-name>ROLE_NAME</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo</attribute-name>
+            <column-name>DATA_TYPE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>usuarioGrupo</attribute-name>
+            <column-name>DATA</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+</map>

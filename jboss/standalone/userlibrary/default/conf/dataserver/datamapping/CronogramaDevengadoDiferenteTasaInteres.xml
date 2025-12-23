@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.automaticprocess.cronogramatasamercado.objectsdomain.CronogramaTasaMercado</class-name>
+        <entity-name>core.CronogramaTasaMercado</entity-name>
+        <table-name>BS_PLANPAGO_TASAMERCADO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>jtsOid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroCuota</attribute-name>
+            <column-name>NUMERO_DE_CUOTA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>capitalPrestamo</attribute-name>
+            <column-name>CAPITAL_PRESTAMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>interesPrestamo</attribute-name>
+            <column-name>INTERES_PRESTAMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>remanentePrestamo</attribute-name>
+            <column-name>REMANENTE_PRESTAMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>capitalTasaMercado</attribute-name>
+            <column-name>CAPITAL_TASA_MERCADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>interesTasaMercado</attribute-name>
+            <column-name>INTERES_TASA_MERCADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>remanenteTasaMercado</attribute-name>
+            <column-name>REMANENTE_TASA_MERCADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>contabilizado</attribute-name>
+            <column-name>CONTABILIZADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDevengado</attribute-name>
+            <column-name>FECHA_DEVENGADO</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.CronogramaCreaTasaEfectivaMercado</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT S.JTS_OID FROM SALDOS S
+					WHERE S.TZ_LOCK = 0 AND S.C1785 = 5
+					AND S.PRODUCTO NOT IN (12311,12321)
+					AND S.C1604 &lt;&gt; 0
+					AND S.TASA_INT_MERCADO &gt; 0 AND C1827 NOT IN ('PRE','SOB')
+					AND S.JTS_OID NOT IN 
+					(SELECT C.SALDOS_JTS_OID
+					FROM BS_PLANPAGO_TASAMERCADO C
+					INNER JOIN SALDOS S2 ON (S2.JTS_OID = C.SALDOS_JTS_OID)
+					GROUP BY C.SALDOS_JTS_OID)
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+</map>

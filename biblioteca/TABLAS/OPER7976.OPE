@@ -1,0 +1,731 @@
+VERSION:054_5
+TN  NN 1006TDatos Aux. de la solicitud              C00001 00
+ NNNNN 03885   Nombre         INNSNL00000701500027057000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00700   Importe        INNSNL00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06250   Nro. Producto  INNSNL00000701360027037602001100000000700070027011200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00971   Moneda         INNSNL00000701360027037602001100000000700070027011200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02616   Solicitud      INNSNL00000701500027057000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00002   Cliente        INNSNL00000701500027057000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Obtengo Cargos e impuestos
+ NNNNN 00889   Total de cargosINNSNL00000701520030030202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00890   Total impuestosINNSNL00000701520030030202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Se deja por si a futuro se quisiera agregar sector
+ NNNNN 00065   Sector         INNSNK00000701520030020202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TCons.sec. Metodologia por producto      S07221 00
+/O=C3227 ASC
+/F=C2271=0 and C3225=C6250.1 and C3226=C065.1 and C3227>=C700.1
+ NNNNN 03231   Usuario        INNSN 00000701500027027000001100000000700070027012600
+/F=0012700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 03228   Id. MetodologiaINNSN 00000701500027027000001100000000700070027012600
+/F=0012700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+CNNNNN   00000000000000000000100
+/F=C3228=0
+/P=I36
+/M=No hay metodología por producto
+TN  NN 1008TCons.sec. Metodologia por familia       S07221 00
+/?=I36
+/O=C3227 ASC
+/F=C2271=C6283.1 and C3225=0 and C3226=C065.1 and C3227>=C700.1
+ NNNNN 03231   Usuario        INNSN 00000701500027027000001100000000700070027012600
+/F=0012700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 03228   Id. MetodologiaINNSN 00000701500027027000001100000000700070027012600
+/F=0012700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+CNNNNN M 00000000000000000000100
+/?=1=0
+/F=C3228=0
+/M=NO hay reglas para evaluar a la solicitud. ¿Continúa?
+TN  NN 1009TModificación al alta por Metodologia    M05611 00
+ NNNNN 07300   Nro. Solicitud INNSNA01003001350052023301101100010003000160052013000
+/V=C2616.1
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 07301   Nro. Cliente   INNSNA01003001350052023301101100010003000160052013000
+/V=C002.1
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 07302   Moneda         INNSNA01003001350052023301101100010003000160052013000
+/V=C971.1
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 07344   Id.Metodología INNSNA00000701500027033000001100000000700070027012600
+/?=!I36
+/V=C3228.2
+/F=0012700NNN000000000Arial                                   
+/f=0012700NNN255255255Arial                                   
+ NNNNN 07344   Id.Metodología INNSNA00000701500027033000001100000000700070027012600
+/?=I36
+/V=C3228.3
+/F=0012700NNN000000000Arial                                   
+/f=0012700NNN255255255Arial                                   
+TN  NN 1008TBusca si hay solicitud anterior         S05611 00
+/O=C7300 DESC
+/F=C7300 <> C2616.1 and C7301=C002.1
+*N  NN *** Busco Solicitud anterior 
+*N  NN Por numero de solicitud descendiente
+*N  NN y estado NO rechasado
+ SNNNN 03086   Puntaje        INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CSNNNN  000000000000000000000100
+/F=C9509=0
+*N  NN *** Si hay solicitud anterior paro la busqueda y enciendo Ind.65
+CSNNNN M 00000000000000000000110
+/?=!I65YC9509=1
+/F=A(C7333="A")YC7344#0
+/P=I65
+/M="Se Recuperan Datos ya Ingresados de la Solicitud: "+C7300
+CSNNNN  000000000000000000000100
+/?=C9509=1
+/F=A(C7333="A")
+/P=I65
+TN  NN 1008TSe identifican todas las alternativas   S07471 00
+/O=C2198,C2197,C2196
+*N  NN #####################################################################
+*N  NN Se identifican todas las alternativas existentes sin importar a que metodologia
+*N  NN pertenecen y se dan de alta en la tabla SL_Analisiscualitativo con el numero de solicitud
+*N  NN Si se hace un cambio de metodología la alternativa ya existirá en esta tabla
+*N  NN #####################################################################
+ NNNNN 02199   Descripcion    INNNN 00012501160148042300101100010012500150148011200
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+CN  NN   00000000000000000000100
+/F=C9509=1
+/P=I90
+ NNNNN 02196   Cod. AlternativINNSN 00000701500027021000001100000000700070027012600
+/?=I90
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02197   Cod. Elemento  INNSN 00000701500027021000001100000000700070027012600
+/?=I90
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02198   Cod. Criterio  INNSN 00000701500027021000001100000000700070027012600
+/?=I90
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02198   Cod. Criterio  INNSN 00000701500027021000001100000000700070027012600
+/?=I90
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TAlta de las alternativas actuales       C05031 00
+/?=I90YI65
+ NNNNN 02160   Criterio       INNSNA00000701500027033000001100000000700070027012600
+/V=C2198.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02161   Elemento       INNSNA00000701500027033000001100000000700070027012600
+/V=C2197.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02162   Alternativa    INNSNA00000701500027033000001100000000700070027012600
+/V=C2196.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02163   Solicitud      INNSNA00000701500027033000001100000000700070027012600
+/V=C2616.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03080   Cliente        INNSNA00000701500027033000001100000000700070027012600
+/V=C002.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 03081   Moneda         INNSNA00000701500027033000001100000000700070027012600
+/V=C971.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 02159   Aplica         INNSN 00000701500027033000001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=1
+/P=I66
+TN  NN 1003TAlta de las alternativas actuales       T05031 00
+/?=I90
+ NNNNN 02160   Criterio       INNSNA00000701500027033000001100000000700070027012600
+/V=C2198.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02161   Elemento       INNSNA00000701500027033000001100000000700070027012600
+/V=C2197.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02162   Alternativa    INNSNA00000701500027033000001100000000700070027012600
+/V=C2196.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02163   Solicitud      INNSNA00000701500027033000001100000000700070027012600
+/V=C2616.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03080   Cliente        INNSNA00000701500027033000001100000000700070027012600
+/V=C002.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 03081   Moneda         INNSNA00000701500027033000001100000000700070027012600
+/V=C971.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 02159   Aplica         INNSNA00000701500027033000001100000000700070027012600
+/?=I66
+/V=C2159.7
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*N  NN Se vuelve a la transaccion 6 a buscar otra alternativa
+CNNNNN  I00000000000000000000100
+/R=6
+TN  NN 1008TIdentifica la metodologia y la copia    S07271 00
+ NNNNN 02179   Id Metodologia INNSNA00000701500027033000001100000000700070027012600
+/V=C7344.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02183   Puntaje        INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=1
+/P=I150
+ NNNNN 02184   Habilitado     INNSN 00000701500027021000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=I150
+/F=A(C2184="S")
+/P=I151
+CNNNNN   00000000000000000000100
+/F=C0490.0#C2180.0
+/P=I160
+CNNNNN   00000000000000000000100
+/F=C2573.0#C2181.0
+/P=I161
+ NNNNN 00490   Criterio       INNSNF00000701500027021000001100000000700070027012600
+/V=C2180.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02573   Elemento       INNSNF00000701500027021000001100000000700070027012600
+/V=C2181.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/A=I150I160I161
+TN  NN 1003TVincula la metodologia con  la solicitudT02211 00
+/?=I150YI151
+*N  NN Esta tabla es una copia de ME_A_Cualitativo pero para cada solicitud
+*N  NN Esto permite hacer mantenimiento de metodologías sin que las solicitudes en curso
+*N  NN se vean afectadas
+ NNNNN 02165   Nro Solicitud  INNNNA00000701330027024300001100000000700070027012600
+/V=C2616.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 03082   Cliente        INNSNA00000701500027033000001100000000700070027012600
+/V=C002.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03083   Moneda         INNSNA00000701500027033000001100000000700070027012600
+/V=C971.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02170   Id Metodología INNNNA00000701330027024300001100000000700070027012600
+/V=C7344.4
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 02166   Cod_Criterio   INNNNA00002001160043015401101000010002000150043011200
+/V=C2180.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02167   Cod_Elemento   INNNNA00005001170073015502101000010005000160073011300
+/V=C2181.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02168   Cod_AlternativaINNNNA00008101160104015401101000010008100150104011200
+/V=C2182.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02169   Puntaje        INNNNA00008101160104015401101000010008100150104011200
+/V=C2183.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02196   Cod. AlternativINNNNA00008101160104015401101000010008100150104011200
+/V=C2182.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02197   Cod. Elemento  INNNNA00008101160104015401101000010008100150104011200
+/V=C2181.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02198   Cod. Criterio  INNNNA00008101160104015401101000010008100150104011200
+/V=C2180.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02199   Descripcion    INNNN 00008101160104015401101000010008100150104011200
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02164   Descripcion    INNSNF00000701500027033000001100000000700070027012600
+/V="              "+C2199.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Se vuelve a buscar otro registro para dar de alta la vinculación de esa metodología
+*N  NN con la solicitud
+TN  NN 1003TAlta de criterio en la misma tabla      T02211 00
+/?=I160YI150YI151
+ NNNNN 02165   Nro Solicitud  INNNNA00000701330027024300001100000000700070027012600
+/V=C2616.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 03082   Cliente        INNSNA00000701500027033000001100000000700070027012600
+/V=C002.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03083   Moneda         INNSNA00000701500027033000001100000000700070027012600
+/V=C971.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02170   Id Metodología INNNNA00000701330027024300001100000000700070027012600
+/V=C7344.4
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 02166   Cod_Criterio   INNNNA00002001160043015401101000010002000150043011200
+/V=C2180.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02167   Cod_Elemento   INNNNK00005001170073015502101000010005000160073011300
+/V=0
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02168   Cod_AlternativaINNNNK00008101160104015401101000010008100150104011200
+/V=0
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02164   Descripcion    INNNN 00008101160104015401101000010008100150104011200
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02169   Puntaje        INNNNK00008101160104015401101000010008100150104011200
+/V=  
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02185   Codigo CriterioINNNNA00008101160104015401101000010008100150104011200
+/V=C2166.0
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02186   Descripcion    INNNN 00008101160104015401101000010008100150104011200
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02164   Descripcion    INNSNF00000701500027033000001100000000700070027012600
+/V=F(TOUPPER,C2186.0)
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1003TAlta de elemento en la misma tabla      T02211 00
+/?=I161YI150YI151
+ NNNNN 02165   Nro Solicitud  INNNNA00000701330027024300001100000000700070027012600
+/V=C2616.1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 03082   Cliente        INNSNA00000701500027033000001100000000700070027012600
+/V=C002.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03083   Moneda         INNSNA00000701500027033000001100000000700070027012600
+/V=C971.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02170   Id Metodología INNNNA00000701330027024300001100000000700070027012600
+/V=C7344.4
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 02166   Cod_Criterio   INNNNA00002001160043015401101000010002000150043011200
+/V=C2180.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02167   Cod_Elemento   INNNNA00005001170073015502101000010005000160073011300
+/V=C2181.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 021680  Cod_AlternativaINNNNK00008101160104015401101000010008100150104011200
+/V=0
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02169   Puntaje        INNNNK00008101160104015401101000010008100150104011200
+/V=  
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02191   Codigo CriterioINNNNA00008101160104015401101000010008100150104011200
+/V=C2180.9
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02190   Codigo ElementoINNNNA00008101160104015401101000010008100150104011200
+/V=C2167.0
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02192   Descripcion    INNNN 00008101160104015401101000010008100150104011200
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 02164   Descripcion    INNSNF00000701500027033000001100000000700070027012600
+/V="     "+C2192.0
+/m=>
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TIteracion                               C00001 00
+/?=I150YI151
+CNNNNN  I00000000000000000000100
+/?=1=0
+/R=5
+CNNNNN  I00000000000000000000100
+/R=9
+TN  NN 1006TNo está habilitado                      C00001 00
+/?=I150Y!I151
+*N  NN Cuando es un registro no habilitado se salta y va a buscar otro
+CNNNNN  I00000000000000000000100
+/R=2
+TN  NN 1006TImprimir Formulario                     C05611 00
+ NNNNN 07300   Nro. Solicitud INNSNA01003001350052023301101100010003000160052013000
+/V=C2616.1
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 07301   Nro. Cliente   INNSNA01003001350052023301101100010003000160052013000
+/V=C002.1
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN 07302   Moneda         INNSNA01003001350052023301101100010003000160052013000
+/V=C971.1
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NSSNN 07319   Tasa de InterésINNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 07689   Cód. Act. CIIU INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 02011   Cod Activ. CIIUINNSNF00000701520030020202101100000000700070030013700
+/V=C7689.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 02012   Descripcion    INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ N  NN 07307   Cod Prod Solic INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 06250   Nro. Producto  INNSNF00000701520030020202101100000000700070030013700
+/V=C7307.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 06259   Tipo Calc.Canc.INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 06252   Tipo Producto  INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 06251   Descripcion    INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=C6252=5Y(A(C6259=" ")OA(C6259=""))
+/P=I72
+/M=Plazo Fijo
+/R=Plazo Fijo
+TN  NN 1008TConsulta Sec.Persona-Cliente            S00161 00
+/?=I72
+*N  NN oooooooooooooooooooooooooooooooooo
+ NSSNS 01504   Cód. Cliente   INNNNA00005001570073045800101000000005000260070014500
+/V=C7301.15
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 01509   Usuario Modif  INNNN 00007801570101045800101000000007800260098014500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=1
+/P=I109
+TN  NN 1006TConsulta Generica                       C00001 00
+/?=I72YI109
+*N  NN Se obtiene tipo de doc. y número de doc.
+ NNNNN 01504   Cód. Cliente   INNSNA00000701500027021000001100000000700070027012600
+/V=C1504.16
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 01505   Nro Persona    INNSNA00000701500027021000001100000000700070027012600
+/V=C1505.16
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 01506   Titularidad    INNSNA00000701500027021000001100000000700070027012600
+/V=C1506.16
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 01854   Nro Persona    INSSNA00007401870097031300101100000007400730097017200
+/V=C1505.16
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01857   País Documento INSSN 00013201870155031300101100000013200730155017200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01855   Tipo Documento INSSN 00010301870126031300101100000010300730126017200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01856   Nro. Documento INSSN 00013201870155031300101100000013200730155017200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01861   Tipo Persona   INSSN 00013201870155031300101100000013200730155017200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C1861='F'
+/P=I111
+CNNNNN   00000000000000000000100
+/F=C1861='J'
+/A=I111
+*N  NN Persona tipo 'Jurídica'
+ NNNNN 01451   Nro. Persona   INNSNA00006701480090027400001100000006700360090013500
+/?=!I111
+/V=C1505.16
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01453   Calle          INSSN 00003805210061074200101100000003804090061050800
+/?=!I111
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01452   Razon Social   INSSN 00011001530133067000101000000011000410133014000
+/?=!I111
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Persona tipo 'Física'
+ NNNNN 01401   Número Persona INSSNA00007501480098027400101100000007500360098013300
+/?=I111
+/V=C1505.16
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01421   Primer Nombre  INSSN 00013801530161037400101000000013800390161013800
+/?=I111
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01422   Segundo Nombre INSSN 00013805320161075300101000000013804190161051800
+/?=I111
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01418   Apell. Paterno INSSN 00011001530133037400101000000011000390133013800
+/?=I111
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01420   Apell. Materno INSSN 00011005320133075300101000000011004190133051800
+/?=I111
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ******************************************
+*N  NN Consulta de dirección del Cliente xa Form
+ NNNNN 00912   Número Cliente INNSNA00018202050205033102101100000020900600232016400
+/V=C7301.15
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01249   Tipo Dirección INNSNK00018202050205033102101100000020900600232016400
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01250   Calle          INNSN 00018202050205033102101100000020900600232016400
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01251   Nro. de Puerta INNSN 00018202050205033102101100000020900600232016400
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01252   Apartamento    INNSN 00018202050205033102101100000020900600232016400
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01259   Teléfonos      INNSN 00018202050205033102101100000020900600232016400
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ******************************************
+FNNNNN 7415001    C N   
+FNNNNN 7416002    C N   
+CNSNNS  I00000000000000000000100
+/R=16
+*N  NN oooooooooooooooooooooooooooooooooo
+TN  NN 1006TImprimir Formulario                     C00001 00
+/?=I72
+CNNNNN   00000000000000000000100
+/A=I135
+FNNNNN 7417001    C N   
+FNNNNN 7418001      N   
+FNNNNN 7517001    C N   
+FNNNNN 7518001      N   
+TN  NN 1008TConsulta Sec. Generica                  S05581 00
+/?=I72
+/F=C6139=C7300.15 and C9087="E"
+CNNNNN   00000000000000000000100
+/F=C9509=1
+/P=I135
+TN  NN 1006TConsulta Generica                       C00001 00
+/?=I72YI135
+ NNNNN 06139   Nro. Solicitud INNSNA00000701520030030202101100000000700070030013700
+/V=C6139.19
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09082   Tipo garantía  INNSNA00000701520030030202101100000000700070030013700
+/V=C9082.19
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09083   Subtipo gtía   INNSNA00000701520030030202101100000000700070030013700
+/V=C9083.19
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09084   SubclasificacióINNSNA00000701520030030202101100000000700070030013700
+/V=C9084.19
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09085   País           INNSNA00000701520030030202101100000000700070030013700
+/V=C9085.19
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09088   Valor RealizaciINNSN 00000701520030030202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06952   Tipo Garantía  INNSNF00000701520030020202101100000000700070030013700
+/V=C9082.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06953   Dsc. Tipo Gtia.INNSN 00019103080214072600101100000000700070030013700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06946   Subclas. Gtía. INNSNF00000701520030020202101100000000700070030013700
+/V=C9084
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06947   Dsc. Subclas.  INNSN 00025503080278072600101100000000700070030013700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06944   Subtipo Gtía.  INNSNF00000701520030020202101100000000700070030013700
+/V=C9083.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06945   Dsc Subtipo GtaINNSN 00022303080246072600101100000000700070030013700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06870   País Gtía.     INNSNF00028701540310028000101100000028700250310013300
+/V=C9085.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06873   Tipo Garantía  INNSNF00028701540310028000101100000028700250310013300
+/V=C9082.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06874   SubTipo Gtía   INNSNF00028701540310028000101100000028700250310013300
+/V=C9083.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06871   Subclas. Gtía. INNSNF00028701540310028000101100000028700250310013300
+/V=C9084.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06876   Computable     INNSN 00028701540310028000101100000028700250310013300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06889   Gtia Autoliq   INNSN 00028706000310072600101100000058008470603097700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+FNNNNN 7417001    C N   
+FNNNNN 7517001    C N   
+CNNNNN  I00000000000000000000100
+/R=19
+TN  NN 1006TEvaluacion                              C00001 00
+ NNNNN 02616   Solicitud      INNSNA00000701500027057000001100000000700070027012600
+/V=C2616.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03885   Nombre         INNSNA00000701500027057000001100000000700070027012600
+/V=C3885.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+DN  NN 7974Ov00
+*$2017-03-30 14:34:18TOP
+*#I72#Producto Plazo Fijo
+*#I190#I190
+*#I218#Nueva Persona
+*#I109#Tiene registros
+*#I191#I191
+*#I211#Requiere Garantes
+*#I200#Nueva
+*#I135#Imprime Garantía
+*#I212#Persona Física
+*#I213#Persona Jurídica
+*#I202#Renovación de Préstamo
+*#I214# Nuevo Cliente
+*#I203#Renovación de préstamo con bonificación y quita
+*#I215#Aceptar
+*#I216#Tarjetas Adicionales

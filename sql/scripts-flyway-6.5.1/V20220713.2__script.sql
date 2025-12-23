@@ -1,0 +1,7 @@
+﻿execute('
+
+UPDATE CI_FORMULAS SET FORMULA = ''(C44838#''''MN'''')Y(C33360#''''S'''')Y(C1728#''''I'''')'' WHERE ID_FORMULA = 2200
+
+UPDATE CI_FORMULAS SET FORMULA = ''(C34095=''''AC'''')Y(C58400#''''S'''')Y(C58402#''''S'''')Y(C58403#''''S'''')Y(C58404#''''S'''')Y(C33360#''''S'''')Y(C1728#''''I'''')'' WHERE ID_FORMULA = 400
+
+')

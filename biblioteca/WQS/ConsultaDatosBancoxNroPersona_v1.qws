@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/datosBancobyNroPersona/{idPersona}</uri>
+    <serviceDescription>Consulta datos del banco por Nro. de Persona</serviceDescription>
+    <title>Consulta datos del banco por Nro. de Persona</title>
+    <querys>
+        <query id="1" name="DatosBanco" type="SIMPLE">
+            <sql>
+			DECLARE @idPersona NUMERIC(12)
+			SET @idPersona = ?
+			
+			SELECT 
+			C.CODIGOCLIENTE AS codigoCliente,
+			F.NOMBRE AS nombreBanco,
+			(SELECT SU.NOMBRESUCURSAL FROM SUCURSALES SU, CLI_PERSONASJURIDICAS PJ WHERE PJ.SUC_ALTA=SU.SUCURSAL
+			AND PJ.NUMEROPERSONAJURIDICA = C.NUMEROPERSONA) AS descripcionsucursal,--sucursal
+			(SELECT PJ.SUC_ALTA FROM CLI_PERSONASJURIDICAS PJ WHERE PJ.NUMEROPERSONAJURIDICA=C.NUMEROPERSONA) AS idsucursal,--sucursal
+			F.CODIGOBCOCENTRAL AS codigoBCRA,
+			F.CODIGOSWIFT AS codigoSwift,
+			F.CIUDAD AS descripcionciudad, --codigoCiudad
+			ISNULL((SELECT PR.DESCRIPCION FROM CLI_PROVINCIAS PR WHERE TRIM(PR.DESCRIPCION)=TRIM(F.CIUDAD)),0) AS idciudad,--codigoCiudad
+			(SELECT PA.NOMBREPAIS FROM CLI_PAISES PA WHERE PA.CODIGOPAIS=F.CODIGOPAIS AND PA.TZ_LOCK=0) AS descripcionpais,--codigoPais
+			CAST(F.CODIGOPAIS AS VARCHAR(5)) AS idpais, --codigoPais
+			F.EMAIL AS email,
+			(SELECT MO.C6400 FROM MONEDAS MO WHERE MO.C6399=F.MONEDALIMITECREDITO) AS descripcionmoneda, --monedaLimiteCredito
+			F.MONEDALIMITECREDITO AS idmoneda, --monedaLimiteCredito
+			(SELECT PA.NOMBREPAIS FROM CLI_PAISES PA WHERE PA.CODIGOPAIS=F.PAIS_CASAMATRIZ AND PA.TZ_LOCK=0) AS descripcionpaismatriz, --paisCasaMatriz
+			F.PAIS_CASAMATRIZ AS idpaismatriz --paisCasaMatriz
+
+			FROM VW_CLI_X_DOC C INNER JOIN CLI_INSTITUCIONFINANCIERA F 
+				ON C.CODIGOCLIENTE = F.CODIGOCLIENTE
+					AND C.NUMEROPERSONA=@idPersona</sql>
+            <input>
+                <inParameter description="idPersona" type="INTEGER">idPersona</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Datos">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>codigoCliente</queryname>
+                        <servicename>codigoCliente</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombreBanco</queryname>
+                        <servicename>nombreBanco</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionsucursal</queryname>
+                        <servicename>sucursal.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>idsucursal</queryname>
+                        <servicename>sucursal.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>codigoBCRA</queryname>
+                        <servicename>codigoBCRA</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>codigoSwift</queryname>
+                        <servicename>codigoSwift</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionciudad</queryname>
+                        <servicename>codigoCiudad.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>idciudad</queryname>
+                        <servicename>codigoCiudad.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionpais</queryname>
+                        <servicename>codigoPais.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>idpais</queryname>
+                        <servicename>codigoPais.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>email</queryname>
+                        <servicename>email</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionmoneda</queryname>
+                        <servicename>monedaLimiteCredito.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>idmoneda</queryname>
+                        <servicename>monedaLimiteCredito.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionpaismatriz</queryname>
+                        <servicename>paisCasaMatriz.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>idpaismatriz</queryname>
+                        <servicename>paisCasaMatriz.id</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

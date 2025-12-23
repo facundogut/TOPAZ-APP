@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2023-03-22T10:53:14 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="7861_Subreporte" pageWidth="555" pageHeight="800" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="246aa320-4801-4329-9d59-696f68251932">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="sucursal_banco_girado" class="java.math.BigDecimal"/>
+	<parameter name="banco_girado" class="java.math.BigDecimal"/>
+	<parameter name="numerico_cuenta_giradora" class="java.math.BigDecimal"/>
+	<parameter name="numero" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT tipo_documento,documento_librador, NOMBRE_CHEQUE FROM VW_CRE_DOCUMENTOS_DESC_O_AL_COBRO v
+WHERE v.sucursal_banco_girado=$P{sucursal_banco_girado} AND v.banco_girado=$P{banco_girado} 
+AND v.numerico_cuenta_giradora=$P{numerico_cuenta_giradora} AND v.numero=$P{numero}]]>
+	</queryString>
+	<field name="tipo_documento" class="java.lang.String"/>
+	<field name="documento_librador" class="java.lang.String"/>
+	<field name="NOMBRE_CHEQUE" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="36">
+			<staticText>
+				<reportElement x="370" y="1" width="185" height="30" uuid="657fe2c3-98cb-4580-ac5c-fa67737fe62a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nombre Librador]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="1" width="185" height="30" uuid="bbfe3cf5-db82-4276-a98c-6b4983b96a89">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="185" y="1" width="185" height="30" uuid="f5b664ea-1bd6-4778-9425-f58683430ddf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Documento]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<textField>
+				<reportElement x="0" y="-5" width="185" height="26" uuid="9a562259-753f-4e76-9a80-93dd14ec9176">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tipo_documento}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="-5" width="185" height="27" uuid="7de00abc-4e8a-4a6d-872c-1d9cd89e50e5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{documento_librador}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="370" y="-5" width="185" height="27" uuid="679cc709-1c57-4475-a84a-69237869af4f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOMBRE_CHEQUE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

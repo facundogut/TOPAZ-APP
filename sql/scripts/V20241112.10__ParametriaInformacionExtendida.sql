@@ -1,0 +1,31 @@
+EXEC('
+	DELETE FROM TTR_CODIGO_TRANSACCION_INFO_EXTENDIDA WHERE infoExtendidaTipo in (4,5,6,7,8,9);
+	');
+
+EXEC('
+	DELETE FROM TTR_CODIGO_PROGRAMA_TRANSACCION WHERE codigoPrograma in (4,5,6,7,8,9);
+	');
+
+EXEC('
+	INSERT INTO TTR_CODIGO_TRANSACCION_INFO_EXTENDIDA (codigoTransaccion,infoExtendidaTipo,descripcion,TZ_LOCK) VALUES
+		(2,5,''POS: Extracciones por ATM'',0),
+		(4,4,''POS: Depósitos en ATM'',0),
+		(300,6,''POS: Compra en Comercios'',0),
+		(421,9,''POS: Debitos / Creditos por Transferencias'',0),
+		(422,7,''POS: Debin / Credin'',0),
+		(423,8,''POS: Transferencias Diferidas'',0);
+	');
+
+EXEC('
+	INSERT INTO TTR_CODIGO_PROGRAMA_TRANSACCION (codigoPrograma,nombrePrograma,descripcion,TZ_LOCK) VALUES
+		(4,''MP_INFO_EXTENDIDA_POS_ATM_DEP'',''POS ATM DEPOSITOS'',0),
+		(5,''MP_INFO_EXTENDIDA_POS_ATM_EXT'',''POS ATM EXTRACCION'',0),
+		(6,''MP_INFO_EXTENDIDA_POS_COMERCIOS'',''POS COMPRA EN COMERCIOS'',0),
+		(7,''MP_INFO_EXTENDIDA_POS_DEBIN_CREDIN'',''POS DEBIN CREDIN'',0),
+		(8,''MP_INFO_EXTENDIDA_POS_DIFERIDAS'',''POS TRANSFERENCIAS DIFERIDAS'',0),
+		(9,''MP_INFO_EXTENDIDA_POS_TRANSFERENCIAS'',''POS CREDITO DEBITO POR TRANSFERENCIA'',0);
+	');
+
+EXEC('
+	ALTER TABLE dbo.HISTORICO_MOVIMIENTOS ALTER COLUMN infoExtendida varchar(500) COLLATE Modern_Spanish_CI_AS NOT NULL;
+	');

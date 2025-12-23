@@ -1,0 +1,222 @@
+VERSION:051
+TN  NN 1008TConsulta Sec. tipo moneda dólar         S0641 00
+/F=A(C6403="D")
+ NSSNS 6404   Cant.Decimales INSSN 00008100860247059900101100000010900640129022000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6399   Moneda         INSSN 00008100860247059900101160000010900640129022000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6440   T.cambio BC    INSSN 00008100860247059900101100000010900640129022000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TConsulta Sec. Monedas                   S0641 00
+/F=C6403<>"N" and C6403<>"D" and C6440<>0
+ NNNNN 6887   Cierre oficial INNSN 00000701500027021002001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/A=I12
+/M=Fin iteración
+*N  NN se prende I13 cuando el cierre oficial  es 0 (C6887=0)
+CNNNNN   00000000000000000000110
+/?=I12
+/F=C6887#0
+/A=I13
+/M="la moneda "+C6399+" tiene cierre oficial = 0"
+TN  NN 1009TModificacion Generica                   M0641 00
+/?=I12Y!I13
+*N  NN acá se graban los t.cbio.bcu de las monedas
+ NNNNN 6399   Moneda         INNSNA00000701500027021002001100000000700070027012600
+/V=C6399.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 6400   Descripcion    INNSN 00000701500027021002001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NSSNS 0320   Tipo Cambio BCUINNSNA00027702370297035500101000000027700370300014600
+/?=C6403.2#'N'
+/V=C6440.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 8979   Importe        INNNNF00020401580227030202101000000020400430227014800
+/?=A(C6403.2#"N")Y(C6442.2='D')
+/V=C320/C6887.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 8979   Importe        INNNNF00020401580227030202101000000020400430227014800
+/?=A(C6403.2#"N")Y(C6442.2='M')
+/V=C320*C6887.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0324   Alfa de 35     INNNNA00020401580227030202101000000020400430227014800
+/V=C8979
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0324   Alfa de 35     INNNNF00020401580227030202101000000020400430227014800
+/V=F(LEFT,C324,F(LEN,C324)-5)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6440   T.cambio BC    INNNNF00015004850173062902001000000015003710173047600
+/V=C324
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6455   Arb.Cierre BCU INNNNF00015004850173062902001000000015003710173047600
+/V=C6887.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1001TAlta Generica                           A9291 00
+/?=I12Y!I13
+*N  NN registrar el historico de las monedas actualiz.
+ NNNNN 9475   Cod Tipo CambioINNSNK00000701500027021002001100000000700070027012600
+/V=0
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9476   Moneda         INNSNA00000701500027021002001100000000700070027012600
+/V=C6399.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9506   Hora del SistemINNSN 00000701520030030200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9477   Hora           INNSNA00000701500027021002001100000000700070027012600
+/V=C9506
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9478   Fcha CotizacionINNSNA00000701500027021002001100000000700070027012600
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9479   TC Comp Comun  INNSNA00000701500027021002001100000000700070027012600
+/V=C6415.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9480   TC Venta Comun INNSNA00000701500027021002001100000000700070027012600
+/V=C6417.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9481   TC Com PersonalINNSNA00000701500027021002001100000000700070027012600
+/V=C6421.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9482   TC Vta PersonalINNSNA00000701500027021002001100000000700070027012600
+/V=C6422.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9483   Tipo Cambio BCUINNSNA00000701500027021002001100000000700070027012600
+/V=C6440.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 6456   Arb.Cierre BCU INNSNA00000701500027021002001100000000700070027012600
+/V=C6455.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9455   TC Comp Cobert INNSNA00000701500027021002001100000000700070027012600
+/V=C6424.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9456   TC Vta Cobert  INNSNA00000701500027021002001100000000700070027012600
+/V=C6424.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9488   Cod. Usuario   INNSNA00000701500027021002001100000000700070027012600
+/V=C9505
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN  I00000000000000000000100
+/M=volver
+/R=2
+TN  NN 1009TModificacion Generica                   M0641 00
+/?=I12YI13
+*N  NN acá se graban los t.cbio.bcu de las monedas
+ NNNNN 6399   Moneda         INNSNA00000701500027021002001100000000700070027012600
+/V=C6399.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 6400   Descripcion    INNSN 00000701500027021002001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NSSNS 6440   T.cambio BC    INNNNF00015004850173062902001000000015003710173047600
+/V=C6887.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6455   Arb.Cierre BCU INNNNF00015004850173062902001000000015003710173047600
+/V=C6887.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1001TAlta Generica                           A9291 00
+/?=I12YI13
+*N  NN registrar el historico de las monedas actualiz.
+ NNNNN 9475   Cod Tipo CambioINNSNK00000701500027021002001100000000700070027012600
+/V=0
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9476   Moneda         INNSNA00000701500027021002001100000000700070027012600
+/V=C6399.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9506   Hora del SistemINNSN 00000701520030030200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9477   Hora           INNSNA00000701500027021002001100000000700070027012600
+/V=C9506
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9478   Fcha CotizacionINNSNA00000701500027021002001100000000700070027012600
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9479   TC Comp Comun  INNSNA00000701500027021002001100000000700070027012600
+/V=C6415.5
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9480   TC Venta Comun INNSNA00000701500027021002001100000000700070027012600
+/V=C6417.5
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9481   TC Com PersonalINNSNA00000701500027021002001100000000700070027012600
+/V=C6421.5
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9482   TC Vta PersonalINNSNA00000701500027021002001100000000700070027012600
+/V=C6422.5
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9483   Tipo Cambio BCUINNSNA00000701500027021002001100000000700070027012600
+/V=C6440.5
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 6456   Arb.Cierre BCU INNSNA00000701500027021002001100000000700070027012600
+/V=C6455.5
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9455   TC Comp Cobert INNSNA00000701500027021002001100000000700070027012600
+/V=C6424.5
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9456   TC Vta Cobert  INNSNA00000701500027021002001100000000700070027012600
+/V=C6424.5
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 9488   Cod. Usuario   INNSNA00000701500027021002001100000000700070027012600
+/V=C9505
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN  I00000000000000000000100
+/M=volver
+/R=2
+TN  NN 1006TConsulta Generica                       C0000 00
+DN  NN 2509Ov00
+*#I12#no hay más registros
+*#I13#cierre oficial = 0

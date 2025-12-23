@@ -1,0 +1,5 @@
+EXECUTE('
+UPDATE dbo.AYUDAS
+SET DESCRIPCION = ''Ayuda de fórmulas''
+WHERE NUMERODEAYUDA = 2172
+')

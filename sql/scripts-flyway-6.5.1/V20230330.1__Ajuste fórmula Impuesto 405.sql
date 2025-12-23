@@ -1,0 +1,7 @@
+﻿EXECUTE('
+
+UPDATE dbo.CI_FORMULAS
+SET FORMULA = ''(C34095=''''AC'''')Y(C58407#''''S'''')''
+WHERE ID_FORMULA = 405
+
+')

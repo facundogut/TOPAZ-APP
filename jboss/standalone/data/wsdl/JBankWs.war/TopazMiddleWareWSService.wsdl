@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://middleware.jbank.topsystems/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="TopazMiddleWareWSService" targetNamespace="http://middleware.jbank.topsystems/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://middleware.jbank.topsystems/" elementFormDefault="unqualified" targetNamespace="http://middleware.jbank.topsystems/" version="1.0">
+
+  <xs:element name="execute" type="tns:execute"/>
+
+  <xs:element name="executeResponse" type="tns:executeResponse"/>
+
+  <xs:element name="undo" type="tns:undo"/>
+
+  <xs:element name="undoResponse" type="tns:undoResponse"/>
+
+  <xs:complexType name="undo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="executionInfo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="undoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="undoResult" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="execute">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="executionInfo" type="xs:string"/>
+      <xs:element minOccurs="0" name="request" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="executeResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="executeResult" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="execute">
+    <wsdl:part element="tns:execute" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeResponse">
+    <wsdl:part element="tns:executeResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="undo">
+    <wsdl:part element="tns:undo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="undoResponse">
+    <wsdl:part element="tns:undoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="TopazMiddleWareWS">
+    <wsdl:operation name="undo">
+      <wsdl:input message="tns:undo" name="undo">
+    </wsdl:input>
+      <wsdl:output message="tns:undoResponse" name="undoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="execute">
+      <wsdl:input message="tns:execute" name="execute">
+    </wsdl:input>
+      <wsdl:output message="tns:executeResponse" name="executeResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="TopazMiddleWareWSServiceSoapBinding" type="tns:TopazMiddleWareWS">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="undo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="undo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="undoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="execute">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="execute">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="executeResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="TopazMiddleWareWSService">
+    <wsdl:port binding="tns:TopazMiddleWareWSServiceSoapBinding" name="TopazMiddleWareWSPort">
+      <soap:address location="http://10.70.0.31:8080/jbankws/services/TopazMiddleWareWS"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

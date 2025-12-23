@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.automaticprocess.numeradormovimientoscontables.NumeracionLibroDiario</class-name>
+        <entity-name>core.vo_NumeracionLibroDiario</entity-name>
+        <table-name>NUMERACION_LIBRO_DIARIO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>numeroLibroDiario</attribute-name>
+            <column-name>NUMERO_LIBRO_DIARIO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaContable</attribute-name>
+            <column-name>FECHACONTABLE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <key>primary</key>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.numeradormovimientoscontables.QueryMovimientosParaNumerar</class-name>
+        <query-name>query.MovimientosParaNumerar</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT 
+						a.ASIENTO,
+						a.SUCURSAL,
+						a.FECHAPROCESO,
+						mc.FECHACONTABLE
+					FROM ASIENTOS a 
+					INNER JOIN MOVIMIENTOS_CONTABLES mc ON a.ASIENTO = mc.ASIENTO AND a.SUCURSAL = mc.SUCURSAL AND a.FECHAPROCESO = mc.FECHAPROCESO
+					WHERE mc.FECHACONTABLE &gt;= ? AND mc.FECHACONTABLE &lt;= ?
+					AND a.ESTADO = 77
+					GROUP BY a.ASIENTO, a.SUCURSAL, a.FECHAPROCESO, mc.FECHACONTABLE, mc.FECHAVALOR, a.HORAINICIO
+					ORDER BY mc.FECHACONTABLE, a.SUCURSAL, a.FECHAPROCESO, mc.FECHAVALOR, a.HORAINICIO
+				</sentence>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaContable</attribute-name>
+            <column-name>FECHACONTABLE</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+    </query>
+</map>

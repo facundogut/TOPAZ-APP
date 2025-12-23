@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map>
+	<!--CLASES-->
+	<!--QUERYS-->
+	<query>
+		<class-name>topsystems.topaz.server.objectsdomain.CuotaAtrasoImpl</class-name>
+		<query-name>query_CuotaAtraso</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence> 
+					select count(*) cantCuotas
+				  from cl_clientes cl, saldos s, productos p, bs_planpagos pl
+				 where c0902 = ? -- cliente elegido
+				   and cl.c0902 = s.c1803 -- saldos con clientes
+				   and s.producto = p.c6250 -- saldos con productos
+				   and s.jts_oid = pl.saldo_jts_oid -- saldos con plan de pagos
+				   and p.c6252 = 5 -- producto prestamo
+				   and (pl.fechacancelacion - pl.c2302) &gt;= ? -- dias de atraso = cancelacion menos vencimiento
+				and(pl.c2302 
+				 between ? and ?) -- fin comprendido dentro del periodo
+		</sentence>
+		<attribute>
+			<attribute-name>cuotasAtrasadas</attribute-name>
+			<column-name>cantCuotas</column-name>
+			<column-type>long</column-type>
+		</attribute>
+	</query>
+</map>

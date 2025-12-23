@@ -1,0 +1,351 @@
+{
+	"page":{
+		"attributes":[
+			{
+				"label" : "NÚMERO DE CLIENTE",
+				"key" : "IDCLIENTE",
+				"tooltip" : "Código de Cliente",
+				"help" : {
+					"input":{
+						"service":"AyudaNroCliente",
+						"parameters":[]
+					},
+					"columns":[
+						{
+							"header":"IDCLIENTE",
+							"value":"IDCLIENTE",
+                            "columnSpan":3,
+                            "filter":true
+						},
+						{
+							"header":"NOMBRE CLIENTE",
+							"value":"NOMBRE",
+                            "columnSpan":6,
+                            "filter":true
+						},
+						{
+							"header":"TIPO DE CLIENTE",
+							"value":"TIPOCLIENTE"
+						}
+					],
+					"valueColumns" : ["IDCLIENTE"]
+				}
+			}
+		],
+		
+		"frames":[			
+			{
+				"id":"datosCliente",
+				"title":"Datos Cliente",
+				"icon":"client.png",
+				"type":"Form",
+				"input":{
+					"type":"service",
+					"service":"ClienteDatos",
+					"parameters":["IDCLIENTE"]
+				},
+                "formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Nro Cliente",
+	                            "key":"CODIGOCLIENTE"
+	                        },
+	                        {  
+	                            "label":"Nombre",
+	                            "key":"NOMBRE",
+								"columnSpan":4
+	                        },
+	                        {  
+	                            "label":"Estado",
+	                            "key":"ESTADO"
+	                        },
+							{  
+	                            "label":"F.Apertura",
+	                            "key":"FECHAAPERTURA"
+	                        },
+							{  
+	                            "label":"Naturaleza",
+	                            "key":"NATURALEZA"
+	                        },
+							{  
+	                            "label":"Grupo Económico",
+	                            "key":"GRUPOECONOMICO"
+	                        },
+							{  
+	                            "label":"Tamaño Empresa",
+	                            "key":"TAMANIO_EMPRESA"
+	                        },
+							{  
+	                            "label":"Cantidad Empleados",
+	                            "key":"CANTIDAD_EMPLEADOS"
+	                        }
+                        ]                                                               
+                    ]
+                }
+			},
+			{
+				"id":"IntegrantesGrupoEconomico",
+				"title":"Integrantes Grupo Económico",
+				"icon":"client.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"IntegrantesGrupoEconomico",
+					"parameters":["IDCLIENTE"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Cliente",
+							"value":"CODIGOCLIENTE"
+						},
+						{
+							"header":"Nombre Cliente",
+							"value":"NOMBRECLIENTE"
+						},
+						{
+							"header":"Tipo Doc",
+							"value":"TIPODOCUMENTO"
+						},
+						{
+							"header":"Pais Doc",
+							"value":"NOMBREPAIS"
+						},
+						{
+							"header":"Nro Doc",
+							"value":"NUMERODOCUMENTO"
+						}
+					]
+				}			
+                
+			},
+			{
+				"id":"Emergencias Agropecuarias",
+				"title":"Emergencias Agropecuarias",
+				"icon":"client.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"EmergenciasAgroCliente",
+					"parameters":["IDCLIENTE"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"CUIT/CUIL",
+							"value":"CUIT_CUIL"
+						},
+						{
+							"header":"Emisor Certificado",
+							"value":"EMISOR_CERTIFICADO"
+						},
+						{
+							"header":"Motivo",
+							"value":"MOTIVO"
+						},
+						{
+							"header":"Fecha Desde",
+							"value":"DESDE"
+						},
+						{
+							"header":"Fecha Hasta",
+							"value":"HASTA"
+						}
+					]
+				}			
+                
+			},
+			{
+				"id":"PersonasQueIntegranCliente",
+				"title":"Personas Integradas",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"PersonasQueIntegranCliente",
+					"parameters":["IDCLIENTE"]
+				},
+				"links":[
+					{
+						"name":"Datos de Persona",
+						"to":"homePersona",
+						"parameters":["TIPODOC","NRODOC","CODPAIS"]
+					}
+				],
+				"gridProperties":{
+					"pageLength":"10",				
+					"columns":[
+						{
+							"header":"Pais Doc",
+							"value":"CODPAIS"
+						},
+						{
+							"header":"Nombre Pais Doc",
+							"value":"NOMBREPAIS"
+						},
+						{
+							"header":"Tipo Doc",
+							"value":"TIPODOC"
+						},
+						{
+							"header":"Nro Doc",
+							"value":"NRODOC"
+						},
+						{
+							"header":"Nombre",
+							"value":"NOMBREPERSONA"
+						},
+						{
+							"header":"Tipo Persona",
+							"value":"TIPOPERSONA"
+						},
+						{
+							"header":"Titularidad",
+							"value":"TITULARIDAD"
+						},
+						{
+							"header":"Fecha Relación",
+							"value":"FECHAALTA"
+						}							
+					]
+				}
+			},
+			{
+				"id":"PaquetesCliente",
+				"title":"Paquetes del Cliente",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"PaquetesCliente",
+					"parameters":["IDCLIENTE"]
+				},
+				"gridProperties":{
+					"pageLength":"10",				
+					"columns":[
+						{
+							"header":"Código",
+							"value":"COD_PAQUETE"
+						},
+						{
+							"header":"Nombre",
+							"value":"DESCRIPCION_PAQUETE"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADOPAQUETE"
+						}							
+					]
+				}
+			},
+			{
+				"id":"consolidadoCliente",
+				"title":"Consolidado Cliente",
+				"icon":"people.png",
+				"type":"Grid",
+				"links":[
+					{
+						"name":"Datos Cuenta Vista",
+						"to":"datosAhorros",
+						"parameters":["IDCLIENTE","IDMONEDA","TIPOPRODNRO"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '1 - Contabilidad'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},
+					{
+						"name":"Datos Cuenta Vista",
+						"to":"datosAhorros",
+						"parameters":["IDCLIENTE","IDMONEDA","TIPOPRODNRO"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '2 - Cuenta Corriente'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},
+					{
+						"name":"Datos Cuenta Vista",
+						"to":"datosAhorros",
+						"parameters":["IDCLIENTE","IDMONEDA","TIPOPRODNRO"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '3 - Caja de Ahorros'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},
+					{
+						"name":"Datos DPFs",
+						"to":"datosDPF",
+						"parameters":["IDCLIENTE","IDMONEDA"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '4 - Depositos Pzo. Fijo'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},					
+					{
+						"name":"Datos Créditos",
+						"to":"datosCreditos",
+						"parameters":["IDCLIENTE","IDMONEDA"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '5 - Prestamos'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},					
+					{
+						"name":"Datos Créditos",
+						"to":"datosCreditos",
+						"parameters":["IDCLIENTE","IDMONEDA"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '6 - Descuentos'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					}
+				],				
+				"input":{
+					"type":"service",
+					"service":"ConsolidadoCliente",
+					"parameters":["IDCLIENTE","RESTRICTION"]
+				},	
+				"gridProperties":{
+					"pageLength":"3",
+					"columns":[
+						{
+							"header":"Tipo Producto",
+							"value":"TIPOPRODUCTO"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"MonedaId",
+							"value":"IDMONEDA",
+							"hidden":"true"							
+						},						
+						{
+							"header":"Saldo Consolidado",
+							"value":"SALDOCONSOLIDADO",
+                            "textAlign":"right"
+						},
+						{
+							"header":"F. aper. antiguo",
+							"value":"APERTURAMASANTIGUA"
+						},
+						{
+							"header":"F. aper. nuevo",
+							"value":"APERTURAMASNUEVA"
+						},
+						{
+							"header":"F. Último mov.",
+							"value":"ULTIMOMOVIMIENTO"
+						},
+						{
+							"header":"TIPOPRODNRO",
+							"value":"TIPOPRODNRO",
+							"hidden": "true"
+						}
+					]
+				}
+			}
+		]
+	}
+}

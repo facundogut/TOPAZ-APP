@@ -1,0 +1,126 @@
+EXECUTE('
+UPDATE dbo.OPCIONES
+SET DESCRIPCION = ''Garantía Preferida A''
+WHERE NUMERODECAMPO = 43306 AND IDIOMA = ''E'' AND OPCIONINTERNA = ''1''
+')
+
+EXECUTE('
+INSERT INTO dbo.OPCIONES
+	(
+	NUMERODECAMPO
+	, IDIOMA
+	, DESCRIPCION
+	, OPCIONINTERNA
+	, OPCIONDEPANTALLA
+	)
+VALUES
+	(
+	43306
+	, ''E''
+	, ''Garantía Preferida B''
+	, ''2''
+	, ''2''
+	)
+
+INSERT INTO dbo.OPCIONES
+	(
+	NUMERODECAMPO
+	, IDIOMA
+	, DESCRIPCION
+	, OPCIONINTERNA
+	, OPCIONDEPANTALLA
+	)
+VALUES
+	(
+	43306
+	, ''E''
+	, ''Otras Garantías''
+	, ''3''
+	, ''3''
+	)
+')
+
+EXECUTE('
+INSERT INTO dbo.DICCIONARIO
+	(
+	NUMERODECAMPO
+	, USODELCAMPO
+	, REFERENCIA
+	, DESCRIPCION
+	, PROMPT
+	, LARGO
+	, TIPODECAMPO
+	, DECIMALES
+	, EDICION
+	, CONTABILIZA
+	, CONCEPTO
+	, CALCULO
+	, VALIDACION
+	, TABLADEVALIDACION
+	, TABLADEAYUDA
+	, OPCIONES
+	, TABLA
+	, CAMPO
+	, BASICO
+	, MASCARA
+	)
+VALUES
+	(
+	44200
+	, '' ''
+	, 0
+	, ''Tarifa''
+	, ''Tarifa''
+	, 1
+	, ''N''
+	, 0
+	, NULL
+	, 0
+	, 0
+	, 0
+	, 0
+	, 0
+	, 0
+	, 1
+	, 0
+	, ''C44200''
+	, 0
+	, NULL
+	)
+')
+
+EXECUTE('
+INSERT INTO dbo.OPCIONES
+	(
+	NUMERODECAMPO
+	, IDIOMA
+	, DESCRIPCION
+	, OPCIONINTERNA
+	, OPCIONDEPANTALLA
+	)
+VALUES
+	(
+	44200
+	, ''E''
+	, ''Tasa Fija''
+	, ''0''
+	, ''0''
+	)
+
+INSERT INTO dbo.OPCIONES
+	(
+	NUMERODECAMPO
+	, IDIOMA
+	, DESCRIPCION
+	, OPCIONINTERNA
+	, OPCIONDEPANTALLA
+	)
+VALUES
+	(
+	44200
+	, ''E''
+	, ''Tasa Variable''
+	, ''1''
+	, ''1''
+	)
+')

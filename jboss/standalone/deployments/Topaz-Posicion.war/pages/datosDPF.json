@@ -1,0 +1,285 @@
+{
+	"page":{
+		
+		"attributes":[
+			{
+				"label" : "ID CLIENTE",
+				"key" : "IDCLIENTE"
+			},
+			{
+				"label" : "ID MONEDA",
+				"key" : "IDMONEDA"
+			}
+		],
+		
+		"frames":[
+			{
+				"id":"listaDPF",
+				"title":"Lista DPFs",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"ListaDPF",
+					"parameters":["IDCLIENTE","IDMONEDA"]
+				},
+				"gridProperties":{
+					"pageLength": "4",				
+					"columns":[
+						{
+							"header":"Producto",
+							"value":"PRODUCTO"
+						},
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"Saldo Original",
+							"value":"SALDOORIGINAL"
+						},
+						{
+							"header":"Saldo Actual",
+							"value":"SALDOACTUAL"
+						},
+						{
+							"header":"F.Apertura",
+							"value":"FECHAAPERTURA"
+						},
+						{
+							"header":"F.Vencimiento",
+							"value":"FECHAVENCIMIENTO"
+						},
+						{
+							"header":"Plazo",
+							"value":"PLAZO"
+						},
+						{
+							"header":"F.Ult.Mov.",
+							"value":"ULTIMOMOV"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						},
+						{
+							"header":"Cuenta",
+							"value":"CUENTA"
+						},
+						{
+							"header":"Operación",
+							"value":"OPERACION"
+						},
+						{
+							"header":"Tasa %",
+							"value":"TASA"
+						},
+						{
+							"header":"Idsaldo",
+							"value":"IDSALDO",
+							"hidden":"true"
+						}						
+					]
+				}
+			},
+			{
+				"id":"datosDPF",
+				"title":"Datos de DPF",
+				"icon":"client.png",
+				"type":"Form",
+				"input":{
+					"type":"nested",
+					"frameId":"listaDPF",
+					"service":"DatosDPF",
+					"parameters":["IDSALDO"]
+				},
+				"links":[
+					{
+						"name":"Ver todos los movimientos",
+						"to":"datosMovimientoDPF",
+						"parameters":["IDSALDO"]
+					}
+				],			
+                "formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Producto",
+	                            "key":"PRODUCTO"
+	                        },
+	                        {  
+	                            "label":"Nro Cuenta",
+	                            "key":"NROCUENTA"
+	                        },
+	                        {  
+	                            "label":"Sucursal",
+	                            "key":"SUCURSAL"
+	                        },
+	                        {  
+	                            "label":"Moneda",
+	                            "key":"MONEDA"
+	                        },
+							{  
+	                            "label":"Operación",
+	                            "key":"OPERACION"
+	                        }
+                        ],                        
+                    	[
+	                        {  
+	                            "label":"Saldo Original",
+	                            "key":"SALDOORIGINAL"
+	                        },
+	                        {  
+	                            "label":"Saldo Actual",
+	                            "key":"SALDOACTUAL"
+	                        },
+	                        {  
+	                            "label":"Fecha Apertura",
+	                            "key":"FECHAAPERTURA"
+	                        },
+	                        {  
+	                            "label":"Fecha Vencimiento",
+	                            "key":"FECHAVENCIMIENTO"
+	                        },
+	                        {  
+	                            "label":"Plazo",
+	                            "key":"PLAZO"
+	                        },
+	                        {  
+	                            "label":"Ultimo Mov",
+	                            "key":"ULTIMOMOV"
+	                        }
+                        ],                        
+                    	[	                        
+	                        {  
+	                            "label":"Cuenta Abono",
+	                            "key":"CUENTAABONO"
+	                        },
+	                        {  
+	                            "label":"Tasa %",
+	                            "key":"TASA"
+	                        },
+	                        {  
+	                            "label":"Estado",
+	                            "key":"ESTADO"
+	                        },
+							{  
+	                            "label":"Idsaldo",
+	                            "key":"IDSALDO",
+								"hidden":"true"
+	                        }
+                        ]
+                    ]
+                }
+			},			
+			{
+				"id":"movimientos",
+				"title":"Movimientos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaDPF",
+					"service":"MovimientosHistoriaPlazo10",
+					"parameters":["IDSALDO"]
+				},				
+				"links":[
+					{
+						"name":"Datos Movimiento",
+						"to":"datosMovimientos",
+						"parameters":["ASIENTO","FECHAPROCESO","SUCURSAL"]
+					}
+				],				
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"F.Proceso",
+							"value":"FECHAPROCESO"
+						},
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL",
+							"hidden":true
+						},						
+						{
+							"header":"Sucursal",
+							"value":"SUCURSALDESC"
+						},
+						{
+							"header":"Asiento",
+							"value":"ASIENTO"
+						},
+						{
+							"header":"F.Valor",
+							"value":"FECHAVALOR"
+						},
+						{
+							"header":"Capital Pagado",
+							"value":"CAPITALPAGADO"
+						},
+						{
+							"header":"Interes Pagado",
+							"value":"INTERESPAGADO"
+						},
+						{
+							"header":"Mora Pagada",
+							"value":"MORAPAGADA"
+						},
+						{
+							"header":"Compensat. Mora",
+							"value":"ICMORA_PAGADO"
+						},						
+						{
+							"header":"Cargo",
+							"value":"IMPORTE_GASTO"
+						},
+						{
+							"header":"Total Pagado",
+							"value":"TOTALPAGADO"
+						},
+						{
+							"header":"Evento",
+							"value":"EVENTO"
+						}
+					]
+				}
+			},
+			{
+				"id":"RenovacionesDPF",
+				"title":"Renovaciones DPF",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"nested",
+					"frameId":"listaDPF",
+					"service":"RenovacionesDPF",
+					"parameters":["IDSALDO"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"F.Inicial",
+							"value":"FECHAINICIAL"
+						},
+						{
+							"header":"F.Vencimiento",
+							"value":"FECHAVENCIMIENTO"
+						},
+						{
+							"header":"Capital",
+							"value":"CAPITALRENOVACION"
+						},
+						{
+							"header":"Interes",
+							"value":"INTERESRENOVACION"
+						}
+					]
+				}
+			}
+		]
+	}
+}

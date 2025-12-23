@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2025-06-11T16:34:48 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="7717_Subreport1" pageWidth="555" pageHeight="842" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="20" bottomMargin="20" uuid="e78e09e0-e145-44e3-b411-dbdcc8db4405">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="CLIENTE" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[Cliente:]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+CP.CODIGOCLIENTE,
+CP.NUMEROPERSONA,
+CONCAT(PF.PRIMERNOMBRE + ' ', PF.APELLIDOPATERNO) AS NOMBRE,
+PJ.RAZONSOCIAL,
+D.TIPODOCUMENTO,
+D.NUMERODOCUMENTO,
+CONCAT(DI.CALLE, ' ' + CAST(DI.NUMERO AS VARCHAR)) AS DIRECCION
+FROM CLI_ClientePersona AS CP
+LEFT JOIN CLI_PERSONASFISICAS AS PF ON CP.NUMEROPERSONA = PF.NUMEROPERSONAFISICA AND PF.TZ_LOCK = 0
+LEFT JOIN CLI_PERSONASJURIDICAS AS PJ ON CP.NUMEROPERSONA = PJ.NUMEROPERSONAJURIDICA AND PJ.TZ_LOCK = 0
+LEFT JOIN CLI_DOCUMENTOSPFPJ AS D ON CP.NUMEROPERSONA = D.NUMEROPERSONAFJ AND D.TZ_LOCK = 0
+AND D.TIPODOCUMENTO = (SELECT TOP 1 TIPODOCUMENTO FROM CLI_DocumentosPFPJ WHERE NUMEROPERSONAFJ = D.NUMEROPERSONAFJ)
+LEFT JOIN CLI_DIRECCIONES AS DI ON CP.NUMEROPERSONA = DI.ID AND DI.TZ_LOCK = 0
+AND DI.TIPODIRECCION = (SELECT TOP 1 TIPODIRECCION FROM CLI_DIRECCIONES WHERE ID = DI.ID)
+AND DI.ORDINAL_DIR = (SELECT TOP 1 ORDINAL_DIR FROM CLI_DIRECCIONES WHERE ID = DI.ID)
+WHERE CP.TZ_LOCK = 0
+AND CP.CODIGOCLIENTE = $P{CLIENTE}]]>
+	</queryString>
+	<field name="CODIGOCLIENTE" class="java.math.BigDecimal"/>
+	<field name="NUMEROPERSONA" class="java.math.BigDecimal"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="RAZONSOCIAL" class="java.lang.String"/>
+	<field name="TIPODOCUMENTO" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="DIRECCION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="32">
+			<staticText>
+				<reportElement x="0" y="0" width="401" height="16" uuid="2336f7ea-6546-4f6b-8606-096b6e6360b0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacing="Fixed" lineSpacingSize="12.0"/>
+				</textElement>
+				<text><![CDATA[Titulares de la Cuenta:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="16" width="130" height="16" uuid="103626af-fa89-4b53-bb44-ecb0e9046c76">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="16" width="215" height="16" uuid="be655835-3b5e-4c64-b9c7-7f98c3f0f853">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacingSize="1.0" leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Dirección]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="16" width="210" height="16" uuid="6e89d3a4-842a-46eb-af92-9b5ccfa67f84">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Nombre / Razón Social]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="210" height="16" uuid="83232791-a1ad-4042-8cc0-5781bd441fa3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RAZONSOCIAL} != null ? $F{RAZONSOCIAL} : $F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="40" height="16" uuid="7e3e3b60-e2e1-47e8-bf8d-4790919457a4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="0" width="90" height="16" uuid="3b65a994-fa0c-42d0-b9d1-cf41d809e89d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="12"/>
+					<paragraph rightIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="0" width="215" height="16" uuid="09573350-4386-4458-a117-8fd3a36e169e">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="12"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<noData>
+		<band height="100">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="0" width="400" height="20" uuid="35dde4fa-d7e5-417b-8cd7-d38298021118"/>
+				<textElement markup="styled">
+					<font fontName="SansSerif" size="12" isBold="false"/>
+					<paragraph lineSpacingSize="1.0"/>
+				</textElement>
+				<text><![CDATA[Titulares de la Cuenta:]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

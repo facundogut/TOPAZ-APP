@@ -1,0 +1,185 @@
+Execute('DROP TABLE IF EXISTS ITF_ECHEQ_EXTRACT_DETALLE;
+
+
+
+DELETE FROM ITF_MASTER WHERE ID = 296;
+DROP TABLE IF EXISTS ITF_ECHEQ_EXTRACT_CABECERA;
+CREATE TABLE
+ITF_ECHEQ_EXTRACT_CABECERA
+(
+ID_ARCHIVO 											  			 VARCHAR(60) NOT NULL,
+CANTIDAD_TOTAL_REGISTROS							NUMERIC(9),
+IMPORTE_TOTAL					   							  NUMERIC(15,2),
+ESTADO																VARCHAR(2),
+DESCRIPCION 													VARCHAR(70),
+CANTIDAD_REGISTROS_DEPOSITOS					NUMERIC(9),
+MONTO_TOTAL_REGISTROS_DEPOSITOS				NUMERIC(15,2),
+CANTIDAD_REGISTROS_CUSTODIA						 NUMERIC(9),
+MONTO_TOTAL_REGISTROS_CUSTODIA				 NUMERIC(15,2),
+CANTIDAD_REGISTROS_RESCATE					  	   NUMERIC(9),
+MONTO_TOTAL_REGISTROS_RESCATE				   NUMERIC(15,2),
+CANTIDAD_REGISTROS_NEGOCIACIONES			NUMERIC(9),
+MONTO_TOTAL_REGISTROS_NEGOCIACIONES		NUMERIC(15,2),
+CANTIDAD_REGISTROS_CAMARA						  NUMERIC(9),
+MONTO_TOTAL_REGISTROS_CAMARA				  NUMERIC(15,2),
+USUARIO    															VARCHAR(10),
+TERMINAL 														    VARCHAR(10),
+FECHA					 										      DATE,
+HORA															       VARCHAR(8),
+USUARIO_PROCESO				   						       VARCHAR(10) DEFAULT (''''),
+TERMINAL_DE_PROCESO									    VARCHAR(10) DEFAULT (''''),
+FECHA_PROCESO					  						     DATE  DEFAULT NULL,
+HORA_PROCESO				   							     VARCHAR(8) DEFAULT (0) 
+CONSTRAINT PK_ECHEQ_EXTRACT_ACUM PRIMARY KEY (ID_ARCHIVO)
+	
+	
+)
+
+
+CREATE TABLE
+ITF_ECHEQ_EXTRACT_DETALLE
+(
+ID_ARCHIVO 										    VARCHAR(60) NOT NULL,
+NRO_SECUENCIA								        INT IDENTITY,
+EDO_REGISTRO									    VARCHAR(2),
+DESCRIPCION										    VARCHAR(70),
+ID_TIPO_REG										    VARCHAR(1),
+CHEQ_ID										   		VARCHAR(19),
+CHEQ_NRO										    VARCHAR(8),
+CHEQ_TIPO											VARCHAR(1),
+CHEQ_MODO										    VARCHAR(1),
+CHEQ_CARAC										    VARCHAR(1),
+CHEQRA_NRO										    VARCHAR(19),
+CMC7											    VARCHAR(29),
+VISUALIZ_COD									    VARCHAR(22),
+REG_TIPO											VARCHAR(1),
+EMI_FIID											VARCHAR(5),
+EMI_SUC											    VARCHAR(3),
+EMI_CUE											    VARCHAR(19),
+EMI_SUBCUE									    	VARCHAR(19),
+EMI_CBU										     	VARCHAR(22),
+EMI_CUIT											VARCHAR(11),
+MONEDA											    VARCHAR(3),
+MONTO											    VARCHAR(20),
+FECHA_EMIS											VARCHAR(6),
+HORA_EMIS											VARCHAR(6),
+FECHA_PAGO											VARCHAR(6),
+HORA_PAGO											VARCHAR(6),
+FECHA_TRAN											VARCHAR(6),
+HORA_TRAN											VARCHAR(6),
+BENEF_FIID											VARCHAR(5),
+BENEF_SUC											VARCHAR(3),
+BENEF_CUE											VARCHAR(19),
+BENEF_CBU											VARCHAR(22),
+BENEF_CUIT											VARCHAR(11),
+FILLER										  		VARCHAR(50),
+REGISTRO											VARCHAR(350)
+CONSTRAINT PK_ECHEQ_EXTRACT_DET PRIMARY KEY (ID_ARCHIVO,NRO_SECUENCIA)
+)
+
+INSERT INTO dbo.ITF_MASTER
+	(
+	TZ_LOCK
+	, ID
+	, DESCRIPCION
+	, OBJ_KETTLE
+	, P0_MODO
+	, P0_TIPO
+	, P0_CAPTION
+	, P0_CONSTANTE
+	, P1_MODO
+	, P1_TIPO
+	, P1_CAPTION
+	, P1_CONSTANTE
+	, P2_MODO
+	, P2_TIPO
+	, P2_CAPTION
+	, P2_CONSTANTE
+	, P3_MODO
+	, P3_TIPO
+	, P3_CAPTION
+	, P3_CONSTANTE
+	, P4_MODO
+	, P4_TIPO
+	, P4_CAPTION
+	, P4_CONSTANTE
+	, P5_MODO
+	, P5_TIPO
+	, P5_CAPTION
+	, P5_CONSTANTE
+	, P6_MODO
+	, P6_TIPO
+	, P6_CAPTION
+	, P6_CONSTANTE
+	, P7_MODO
+	, P7_TIPO
+	, P7_CAPTION
+	, P7_CONSTANTE
+	, P8_MODO
+	, P8_TIPO
+	, P8_CONSTANTE
+	, P8_CAPTION
+	, P9_MODO
+	, P9_TIPO
+	, P9_CAPTION
+	, P9_CONSTANTE
+	, TIPO_OBJ
+	, COMENTARIO
+	, ID_REPORTE
+	, MODO_EJECUCION
+	, KETTLE_NAME
+	)
+VALUES
+	(
+	0
+	, 296
+	, ''LK - ECHEQ EXTRACT''
+	, ''ITF_LK_EXTRACT_ECHEQ.kjb''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, '' ''
+	, ''J''
+	, '' ''
+	, 0
+	, ''M''
+	, NULL
+	)
+
+')

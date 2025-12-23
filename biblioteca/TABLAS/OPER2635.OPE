@@ -1,0 +1,1800 @@
+VERSION:055_5
+TN  NN 1006TReversa de órdenes débito directo       C00001 00
+*$2024-01-11 16:00:54JBENTANCOU
+VNNNNN 010002000202870541NNND000000000000000000000000000000000000000
+/T=Selección de tipo de órdenes
+/C=192192192
+*$2024-01-11 16:03:45JBENTANCOU
+KNNNNN 010010001502100510000101
+/T=Selección de órdenes emitidas o recibidas
+/F=0012700NNN000000000Arial                                   
+*$2024-01-11 16:06:48JBENTANCOU
+ NNNNN 45670   Selección tipo de órden                           I NSNK010095020401180466001011110000098005701180200000
+/V=E
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-11 16:10:50JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C45670.0="E")
+/P=I10
+/M=Orden de reversa anticipada a emitida por empresa originante
+*$2024-01-11 16:18:45JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C45670.0="D")
+/P=I11
+/M=Orden de reversa a orden debitada a cliente adherido
+*$2024-01-11 16:21:02JBENTANCOU
+TN  NN 1006TConsulta fecha 30 días + 1 hábil        C00000 00
+/?=(I10)O(I11)
+*$2024-07-23 17:51:36JBENTANCOU
+*N  NN *** Cálculo de Fecha para control de vencimiento 30 días + 1 día hábil ***
+*$2024-07-23 17:51:38JBENTANCOU
+*N  NN *** Campo con concepto 203 en D para que calcule días Civiles ***
+*$2024-07-23 17:51:38JBENTANCOU
+ NNNNN 06254   Dias Calc.Ints                                    INNSNK000007015200300202001011000000007000700300137000
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 17:51:38JBENTANCOU
+ NNNNN 03047   Fecha de Proceso - 1 día hábil                    INNSNF000007015200300302011011000000007000700300137000
+/V=F(prevWorkingDay,C9500,1,0,C9502,0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-25 10:32:17JBENTANCOU
+ NNNNN 03048   Fecha Proceso - 1 día hábil - 30 días             INNSNF000007015200300302011011000000007000700300137000
+/V=C3047 - 30
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-25 10:31:48JBENTANCOU
+ NNNNN 00753   Fecha convertida YYYYMMDD                         INNNNF000007015200300302001011000000007000700300137000
+/V=C3048.0[7,4] + C3048.0[4,2] + C3048.0[1,2]
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 17:51:38JBENTANCOU
+TN  NN 1006TReversa de órdenes débito directo       C00000 00
+/?=(I10)
+*$2024-01-18 17:15:35JBENTANCOU
+*N  NN *** Para ordenes de débito directo donde la entidad originante es NBCH ***
+*$2024-01-16 17:55:24JBENTANCOU
+*N  NN *** Son los registros de SNP_MSG_ORDENES ***
+*$2024-01-16 17:55:40JBENTANCOU
+VNNNNN 020002000204500800NNND000000000000000000000000000000000000000
+/T=Listado de órdenes por empresa
+/C=192192192
+*$2024-01-11 16:01:26JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNNNF000007015200300452001011000000007000700300137000
+/V="LEFT(ENTIDAD_ORIGINANTE,LEN(ENTIDAD_ORIGINANTE)-4) = (SELECT NUMERICO FROM PARAMETROSGENERALES WHERE CODIGO = 2)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-16 17:30:40JBENTANCOU
+ NSSNS 45635   Empresa Originante                                I NSN 020025018500480295021010000000028005000480180000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-16 17:53:29JBENTANCOU
+ NNNNN 45631   CUIT Empresa                                      INNSNA000007015200300302021011000000007000700300137000
+/V=C45635.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-11-14 13:23:16JBENTANCOU
+ NSSNS 45632   Nombre Empresa                                    ICNSN 020025032500480730001010500000007000700300137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-16 17:53:32JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=Error en la selección de empresa originante
+*$2023-07-03 15:33:50JBENTANCOU
+ NNNNN 43759   Descriptor VW_SNP_EMPRESAS_HOMOLOGADAS            INNSNK000007015200300202021011000000007000700300137000
+/V=4563
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-16 17:50:11JBENTANCOU
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/V="CUIT_EO = "+C45631.0+" AND LEFT(ENTIDAD_ORIGINANTE,LEN(ENTIDAD_ORIGINANTE)-4) = (SELECT NUMERICO FROM PARAMETROSGENERALES WHERE CODIGO = 2)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-16 17:53:12JBENTANCOU
+ NNNNN 43761   Cantidad de reversiones aplicadas a esa orden     INNSNF000007015200300202021011000000007000700300137000
+/V=F(CANTIDAD,C43759,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-16 17:49:53JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C43761.0 = 0
+/M=Error - Empresa seleccionada no originada en NBCH
+*$2024-01-16 17:52:33JBENTANCOU
+*N  NN *** Filtro por CUIT Empresa Originante ***
+*$2024-01-18 15:56:11JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="CUIT_EO=" + C45631.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-12 12:25:00JBENTANCOU
+*N  NN *** Not exists con claves de SNP_MSG_ORDENES ***
+*$2024-01-18 15:56:11JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010+" AND NOT EXISTS (SELECT * FROM SNP_MSG_ORDENES O WHERE (O.TZ_LOCK<300000000000000 OR O.TZ_LOCK>=400000000000000) AND O.CUIT_EO=VW_SNP_MSG_ORDENES.CUIT_EO AND O.ID_ARCHIVO=VW_SNP_MSG_ORDENES.ID_ARCHIVO AND O.NRO_ARCHIVO=VW_SNP_MSG_ORDENES.NRO_ARCHIVO"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-12 12:27:21JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010.0+" AND O.CORRELATIVO=VW_SNP_MSG_ORDENES.CORRELATIVO"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-12 12:27:38JBENTANCOU
+*N  NN *** Filtro de Estado Anulado o Estado Rechazado y Fecha posterior a segunda presentación ***
+*$2024-01-18 15:57:39JBENTANCOU
+*N  NN *** es decir, Rechazo Final ***
+*$2024-01-18 15:57:39JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010+" AND (O.ESTADO='AN' OR (O.ESTADO='RC' AND O.PRESENTACION_SEGUNDO_VTO<=(SELECT FECHAPROCESO FROM PARAMETROS))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-12 12:28:05JBENTANCOU
+*N  NN *** Filtro de vencimiento menor o igual a 30 días + 1 hábil ***
+*$2024-07-23 17:55:36JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010+" OR (O.TRACE_N_2PRE IS NULL AND O.FECHA_VENCIMIENTO<'"+C753.2+"')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-13 10:09:27JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010+" OR (O.SEGUNDO_VTO<'"+C753.2+"')))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-12 12:28:31JBENTANCOU
+*N  NN *** Filtro de instrucción no reversada aún ***
+*$2024-01-18 16:00:21JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010.0+" AND NOT EXISTS (SELECT * FROM SNP_MSG_ORDENES WHERE (TZ_LOCK<300000000000000 OR TZ_LOCK>=400000000000000) AND LEN(ID_ARCHIVO_REVERSADO)>=24 AND LEFT(ID_ARCHIVO_REVERSADO,LEN(ID_ARCHIVO_REVERSADO)-24)=VW_SNP_MSG_ORDENES.ID_ARCHIVO"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-12 12:32:29JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010.0+" AND CONVERT(NUMERIC(15),SUBSTRING(ID_ARCHIVO_REVERSADO,LEN(ID_ARCHIVO_REVERSADO)-24+1,15))=VW_SNP_MSG_ORDENES.NRO_ARCHIVO AND CONVERT(NUMERIC(15),RIGHT(ID_ARCHIVO_REVERSADO,9))=VW_SNP_MSG_ORDENES.CORRELATIVO)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-12 12:30:00JBENTANCOU
+KNNNNN 020065002503650755000101
+/T=Órdenes de débito directo
+/F=0012700NNN000000000Arial                                   
+*$2024-01-11 16:01:36JBENTANCOU
+ NSSNN 45476   Listado ordenes débito directo empresas           IENNN 020090005003450730021011600000007000700300137000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-11 16:01:38JBENTANCOU
+ NNNNN 45387   Cuit Empresa                                      INNSNA000007015200300302021011000000007000700300137000
+/V=C45476.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 16:10:03JBENTANCOU
+ NNNNN 45473   ID Archivo                                        INNSNA000007015200300452001011000000007000700300137000
+/V=C45473.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 16:10:04JBENTANCOU
+ NNNNN 45474   Nro. Archivo                                      INNSNA000007015200300302021011000000007000700300137000
+/V=C45474.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 16:10:05JBENTANCOU
+ NNNNN 45475   Correlativo                                       INNSNA000007015200300302021011000000007000700300137000
+/V=C45475.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 16:10:06JBENTANCOU
+ NNNNN 45397   Importe                                           INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 16:10:31JBENTANCOU
+ NNNNN 45744   F.Compensación                                    INNSN 000007015200300302011011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-28 10:38:52LUIGIDA
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=Error - No se pudo leer la orden correctamente
+*$2023-07-03 16:11:15JBENTANCOU
+ NNNNN 44581   CUIT Empresa Originante                           INNSNA000007015200300302021011000000007000700300137000
+/V=C45387.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 18:16:23JBENTANCOU
+ NNNNN 44582   ID Archivo                                        INNSNA000007015200300302001011000000007000700300137000
+/V=C45473.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 18:09:29JBENTANCOU
+ NNNNN 44583   Nro. Archivo                                      INNSNA000007015200300302021011000000007000700300137000
+/V=C45474.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 18:09:47JBENTANCOU
+ NNNNN 44584   Correlativo                                       INNSNA000007015200300302021011000000007000700300137000
+/V=C45475.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 18:10:14JBENTANCOU
+ NNNNN 44591   Fecha Vencimiento                                 INNSN 000007015200300302011011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 18:10:48JBENTANCOU
+ NNNNN 44601   Seg.Vto.:                                         INNNN 000007015200300302011011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 18:21:30JBENTANCOU
+ NNNNN 44613   Estado                                            INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-03 18:18:54JBENTANCOU
+ NNNNN 44684   ID Archivo Reversado                              INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-02-16 12:53:39JBENTANCOU
+ NNNNN 45736   Trace 2da presentación                            INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-13 10:14:10JBENTANCOU
+ NNNNN 44592   Fec. Comp.:                                       INNSN 000007015200300302011011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-28 10:42:57LUIGIDA
+*N  NN *** Aplico controles de filtros dinámicos ***
+*$2023-07-03 17:53:41JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C44581.0#C45631.0
+/M=CUIT de empresa originante no es la aplicada en el filtro
+*$2023-11-14 13:24:19JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=A(C44613="AN")
+/M=Error - La orden de débito está en estado Anulada
+*$2023-07-03 18:19:51JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=A(C44613="RC") Y ((C45286.0<C9500)O(C45286.0=C9500))
+/M=Error - La orden de débito está en estado de Rechazo Final
+*$2024-01-18 16:02:01JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=(C45736.0=0)Y(C44591.0<C3048.2)
+/M=Error. Fecha de vencimiento es mayor a 30 días más uno
+*$2024-08-13 10:17:42JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=(C45736.0#0)Y(C44601.0<C3048.2)
+/M=Error. Fecha de 2do vencimiento es mayor a 30 días más uno
+*$2024-08-13 10:17:49JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C44592.0=C9500
+/M=No se puede reversar una orden en su fecha de compensación
+*$2025-03-28 10:43:07LUIGIDA
+CNNNNN ME00000000000000000000100
+/F=A(C44684#"")
+/M=Error - Registro seleccionado ya es una orden de reversa
+*$2024-02-16 12:54:54JBENTANCOU
+ NNNNN 43759   Descriptor SNP_MSG_ORDENES                        INNSNK000007015200300202021011000000007000700300137000
+/V=4459
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 15:21:06JBENTANCOU
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/V="(TZ_LOCK>=400000000000000 OR TZ_LOCK<300000000000000)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 15:21:08JBENTANCOU
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/V=C43760.0+" AND ID_ARCHIVO_REVERSADO = '"+C44582.0+F(PAD,C44583.0,15)+F(PAD,C44584.0,9)+"'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-06-17 11:40:38JBENTANCOU
+ NNNNN 43761   Cantidad de reversiones aplicadas a esa orden     INNSNF000007015200300202021011000000007000700300137000
+/V=F(CANTIDAD,C43759,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 15:23:58JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C43761.0 > 0
+/M=Error - La Orden de débito ya tiene instrucción de reversa
+*$2023-07-04 15:30:46JBENTANCOU
+*N  NN *** Si la orden está Pendiente de procesar o de volver a procesar, entonces anulamos ***
+*$2023-07-04 15:57:24JBENTANCOU
+*N  NN *** No se volverá a presentar la orden, ni la de reversa, ya que quedarán en estado Anulado ***
+*$2023-07-04 15:57:56JBENTANCOU
+*N  NN *** Estado RC final ya fue controlado previamente. Aquí es rechazo en 1ra presentación ***
+*$2023-07-04 16:00:06JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C44613="PP")OA(C44613="RC")
+/P=I12
+/M=Orden de reversa anterior a la presentación
+*$2024-01-18 16:08:58JBENTANCOU
+*N  NN *** Si ya está presentada, entonces se presenta orden de reversa común ***
+*$2023-07-04 16:03:47JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C44613="PR")
+/P=I13
+/M=Orden de reversa común posterior a presentación
+*$2024-01-18 16:09:21JBENTANCOU
+TN  NN 1001TAlta orden de reversa débito directo    A44591 00
+/?=(I10)Y(I12OI13)
+*$2024-01-18 16:11:24JBENTANCOU
+ NNNNN 44581   CUIT Empresa Originante                           INNSNA000007015200300302021011000000007000700300137000
+/V=C44581.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:11:02JBENTANCOU
+ NNNNN 44582   ID Archivo                                        INNSNA000007015200300302001011000000007000700300137000
+/V=C44582.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:11:07JBENTANCOU
+ NNNNN 44583   Nro. Archivo                                      INNSNA000007015200300302021011000000007000700300137000
+/V=C44583.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:11:12JBENTANCOU
+*N  NN *** Buscamos siguiente correlativo ***
+*$2023-07-04 16:16:02JBENTANCOU
+ NNNNN 43759   Descriptor SNP_MSG_ORDENES                        INNSNK000007015200300202021011000000007000700300137000
+/V=4459
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:12:12JBENTANCOU
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/V="CUIT_EO="+C44581.0+" AND ID_ARCHIVO='"+C44582.0+"' AND NRO_ARCHIVO="+C44583.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-02-16 12:36:25JBENTANCOU
+ NNNNN 43769   Número de Campo CORRELATIVO                       INNSNK000007015200300202021011000000007000700300137000
+/V=44584
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:14:35JBENTANCOU
+ NNNNN 43761   último correlativo para ordenes de ID y Nro ArchivINNSNF000007015200300202021011000000007000700300137000
+/V=F(MAXIMO,C43759,C43769,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-06-17 11:46:24JBENTANCOU
+*N  NN ***
+*$2023-07-04 16:16:17JBENTANCOU
+ NNNNN 44584   Correlativo                                       INNSNF000007015200300302021011000000007000700300137000
+/V=C43761.0+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:15:15JBENTANCOU
+ NNNNN 44586   Cod. Trn.                                         INNSNA000007015200300202021011000000007000700300137000
+/V=C44586.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:54:53JBENTANCOU
+ NNNNN 44587   Inf. Adicional                                    INNSNA000007015200300202001011000000007000700300137000
+/V=C44587.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:55:13JBENTANCOU
+ NNNNN 44588   Prestación                                        INNSNA000007015200300302001011000000007000700300137000
+/V=C44588.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:55:34JBENTANCOU
+ NNNNN 44589   Id Cliente                                        INNSNA000007015200300302021011000000007000700300137000
+/V=C44589.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:55:57JBENTANCOU
+ NNNNN 44590   CBU                                               INNSNA000007015200300452001011000000007000700300137000
+/V=C44590.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:56:11JBENTANCOU
+ NNNNN 44593   Referencia                                        INNSNA000007015200300302001011000000007000700300137000
+/V=C44593.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 16:57:35JBENTANCOU
+ NNNNN 44594   Moneda                                            INNNNA000007015200300202021011000000007000700300137000
+/V=C44594.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:00:15JBENTANCOU
+ NNNNN 44595   Importe                                           INNNNA000007015200300302021011000000007000700300137000
+/V=C44595.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:00:29JBENTANCOU
+ NNNNN 44596   Tipo Doc.                                         INNSNA000007015200300202001011000000007000700300137000
+/V=C44596.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:00:48JBENTANCOU
+ NNNNN 44597   Nro. Doc.                                         INNSNA000007015200300452001011000000007000700300137000
+/V=C44597.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:01:04JBENTANCOU
+*N  NN *** Se contabilizará y rendirá por flujo general, o será anulada
+*$2023-07-04 17:23:14JBENTANCOU
+ NNNNN 44598   Orden Contabilizada                               INNSNK000007015200300202001011000000007000700300137000
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:01:45JBENTANCOU
+ NNNNN 44599   Orden rendida                                     INNSNK000007015200300202001011000000007000700300137000
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:01:54JBENTANCOU
+ NNNNN 44600   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/V="Reversa de orden "+C44582.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:30:27JBENTANCOU
+ NNNNN 44602   Segundo Imp.                                      INNNNA000007015200300302021011000000007000700300137000
+/V=C44602.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:03:17JBENTANCOU
+ NNNNN 44605   Convenio                                          INNSNA000007015200300302021011000000007000700300137000
+/V=C44605.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:11:07JBENTANCOU
+ NNNNN 44611   Fecha Asiento                                     INNSNA000007015200300302011011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:04:40JBENTANCOU
+ NNNNN 44612   Nro. Asiento:                                     INNSNA000007015200300302021011000000007000700300137000
+/V=C9501
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:06:51JBENTANCOU
+ NNNNN 44501   Sucursal Asiento                                  INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:12:19JBENTANCOU
+ NNNNN 44613   Estado                                            INNSNK000007015200300202001011000000007000700300137000
+/?=I12
+/V=AN
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-18 16:11:30JBENTANCOU
+ NNNNN 44613   Estado                                            INNSNK000007015200300202001011000000007000700300137000
+/?=I13
+/V=PP
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-18 16:11:33JBENTANCOU
+ NNNNN 44683   Tipo Orden                                        INNNNA000007015200300302001011000000007000700300137000
+/V=C44683.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:14:16JBENTANCOU
+ NNNNN 44684   ID Archivo Reversado                              INNSNF000007015200300302021011000000007000700300137000
+/V=C44582.3+F(PAD,C44583.3,15)+F(PAD,C44584.3,9)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-06-17 11:49:11JBENTANCOU
+ NNNNN 45349   Presentación primer Vto.                          INNNNA000007015200300302011011000000007000700300137000
+/?=I12
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 14:50:02JBENTANCOU
+ NNNNN 45349   Presentación primer Vto.                          INNNNA000007015200300302011011000000007000700300137000
+/?=I13
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-09-27 09:59:42JBENTANCOU
+ NNNNN 44591   Fecha Vto.                                        INNSNF000007015200300302011011000000007000700300137000
+/V=F(nextWorkingDay,C45349.0,2,0,C9502,0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:08:02JBENTANCOU
+ NNNNN 44592   Fecha Comp.                                       INNSNF000007015200300302011011000000007000700300137000
+/V=F(nextWorkingDay,C45349.0,3,0,C9502,0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:09:02JBENTANCOU
+ NNNNN 45789   ID Cliente Pagador                                INNSNA000007015200300452001011000000007000700300137000
+/V=C45789.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:35:29JBENTANCOU
+ NNNNN 49201   Cuenta                                            INNNNA000007015200300302021011000000007000700300137000
+/V=C49201.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:15:35JBENTANCOU
+ NNNNN 49202   Tipo de Reversa                                   INNNNA000007015200300302021011000000007000700300137000
+/V=C45670.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 10:57:03JBENTANCOU
+ NNNNN 45794   CUIT / CUIL Titutal Cuenta                        INNSNA000007015200300302021011000000007000700300137000
+/V=C45794.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 10:57:29JBENTANCOU
+ NNNNN 45796   Apellido Nombre o Denominación TC                 INNSNA000007015200300452001011000000007000700300137000
+/V=C45796.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 11:01:30JBENTANCOU
+TN  NN 1009TModificación Orden reversada            M44591 00
+/?=(I10)Y(I12)
+*$2024-01-18 16:11:48JBENTANCOU
+ NNNNN 44581   CUIT Empresa Originante                           INNSNA000007015200300302021011000000007000700300137000
+/V=C44581.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:16:56JBENTANCOU
+ NNNNN 44582   ID Archivo                                        INNSNA000007015200300302001011000000007000700300137000
+/V=C44582.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:16:56JBENTANCOU
+ NNNNN 44583   Nro. Archivo                                      INNSNA000007015200300302021011000000007000700300137000
+/V=C44583.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:16:56JBENTANCOU
+ NNNNN 44584   Correlativo                                       INNSNA000007015200300302021011000000007000700300137000
+/V=C44584.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:17:06JBENTANCOU
+ NNNNN 44613   Estado                                            INNSNK000007015200300202001011000000007000700300137000
+/V=AN
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-04 17:20:15JBENTANCOU
+TN  NN 1006TSelección de Cuenta de Cliente          C00000 00
+/?=(I11)
+*$2024-01-19 15:28:17JBENTANCOU
+VNNNNN 030002000203580593SSSD000000000000000000000000000000000000000
+/T=Selección de Cuenta de Cliente
+/C=192192192
+*$2024-01-19 15:28:01JBENTANCOU
+*N  NN *** Inicio GAP 01 ***
+*$2024-01-19 15:27:37JBENTANCOU
+KNNNNN 030012002500930545000101
+/T=Selección
+/F=0012700NNN000000000Arial                                   
+*$2024-01-19 15:34:20JBENTANCOU
+ NNNNN 34320   Opción Cliente/Cuenta                             I NSNK030033003900840153021211303010007000700300137000
+/V=1
+/F=0012700NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 16:14:06JBENTANCOU
+*N  NN Enciende indicador por cliente
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=C34320.0=1
+/P=I200
+/M=Buscar por cliente
+*$2024-01-19 15:27:37JBENTANCOU
+*N  NN Enciende indicador por cuenta
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=C34320.0=2
+/P=I201
+/M=Buscar por cuenta
+*$2024-01-19 15:27:37JBENTANCOU
+KNNNNN 030102002502610545000101
+/T=Datos del Cliente
+/F=0012700NNN000000000Arial                                   
+*$2024-01-19 15:34:27JBENTANCOU
+ NNNNN 34151   Cliente                                           I SSN 030135012501580249021010000000135003901550118000
+/?=I200Y!I201
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:28:21JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=I200
+/F=C34151=0
+/M=Cliente ingresado con valor = 0
+*$2024-01-19 15:27:37JBENTANCOU
+*N  NN *** Inicio GAP 33 ***
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34513   Código del Cliente                                INNSNA000007015200300302021011000000007000700300137000
+/?=I200
+/V=C34151
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34510   Tipo de documento                                 INNNN 000007015200300202001011000000007000700300137000
+/?=I200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=I200YC9509=0
+/M=Cliente inexistente
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34511   Nro. Documento                                    INNSN 000007015200300452001011000000007000700300137000
+/?=I200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34515   Nro. Persona                                      INNSN 000007015200300302021011000000007000700300137000
+/?=I200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01401   Numero Persona                                    INNSNA000007015200300302021011000000007000700300137000
+/?=I200
+/V=C34515
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN  R00000000000000000000100
+/?=I200
+/R=221
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN   00000000000000000000100
+/?=I200
+/F=C535=1
+/P=I300
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01404   Sexo                                              INNNN 000007015200300202001011000000007000700300137000
+/?=I200YI300
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01854   Nro. Persona                                      INNSNA000007015200300302021011000000007000700300137000
+/?=I200
+/V=C34515
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01855   Tipo Documento                                    INNNNA000007015200300202001011000000007000700300137000
+/?=I200
+/V=C34510
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01856   Nro. Documento                                    INNSNA000007015200300452001011000000007000700300137000
+/?=I200
+/V=C34511
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 33324   NRO_TRAMITE                                       INNSN 000007015200300302021011000000007000700300137000
+/?=I200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 33320   TIPO_DOC_FISICO                                   INNSN 000007015200300202001011000000007000700300137000
+/?=I200YI300
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 33322   NUM_DOC_FISICO                                    INNSN 000007015200300452001011000000007000700300137000
+/?=I200YI300
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 03895                                                     INNNNA000007015200300452001011000000007000700300137000
+/?=I200YI300
+/V=C1404
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 03894                                                     INNNNA000007015200300452001011000000007000700300137000
+/?=I200YI300
+/V=C33324
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 03893                                                     INNNNA000007015200300452001011000000007000700300137000
+/?=I200YI300
+/V=C33322
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+DN  NN 1000SS
+/?=I200YI300
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 00902   Código Cliente                                    INNNNA000123015701460262020011000000123004201460142000
+/?=I200
+/V=C34151
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01002   Nomb.Reducido                                     INNSN 000007015000270330000011000000007000700270126000
+/?=I200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01000   Nombre Cliente                                    ICNNN 030135027901580534001010500000071007500910185000
+/?=I200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0011700SNN000000000Arial                                   
+*$2024-01-19 15:28:27JBENTANCOU
+ NNNNN 01803   Nro. Cliente                                      INNSNA000007015000270210000211003000007000700270126000
+/?=I200
+/V=C0902
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001211003000007000700300137000
+/?=I200
+/V="C1651 <> '1' AND TIPOPROD IN (2,3) AND CLIENTE = "+C1803
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001211003000007000700300137000
+/?=I201
+/V="C1651 <> '1' AND TIPOPROD IN (2,3)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34401   Cuenta                                            I NSN 030173012501960249021210003000173003901930118000
+/?=C34151.0>0OI201
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:28:29JBENTANCOU
+ NNNNN 34408   Operación                                         INNSNK000007015200300302021211003000007000700300137000
+/?=C34151.0>0OI201
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34407   Ordinal                                           INNNNK000007015200300302021211003000007000700300137000
+/?=C34151.0>0OI201
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34402   Denominación de la Cuenta                         ICSNN 030173027901960534001210503000007000700300137000
+/?=C34151.0>0OI201
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:28:34JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=C34151.0>0OI201
+/F=C34401=0
+/M=Registro Inexistente en Saldos
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 00902   Cliente                                           IDNNNA030211012502340268021010500000211003902310118000
+/?=I201
+/V=C34409
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:28:35JBENTANCOU
+ NNNNN 01002   Nomb.Reducido                                     INNSN 000007015000270330000011000000007000700270126000
+/?=I201
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01000   Nombre Cliente                                    ICNNN 030211027902340534001010500000071007500910185000
+/?=I201
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0011700SNN000000000Arial                                   
+*$2024-01-19 15:28:37JBENTANCOU
+ NNNNN 01803   Nro. Cliente                                      INNSNA000007015000270210000211003000007000700270126000
+/?=I201
+/V=C0902
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+*N  NN *** Fin GAP 01 ***
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34513   Código del Cliente                                INNSNA000007015200300302021011000000007000700300137000
+/?=I201
+/V=C902
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34510   Tipo de documento                                 INNNN 000007015200300202001011000000007000700300137000
+/?=I201
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34511   Nro. Documento                                    INNSN 000007015200300452001011000000007000700300137000
+/?=I201
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 34515   Nro. Persona                                      INNSN 000007015200300302021011000000007000700300137000
+/?=I201
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01401   Numero Persona                                    INNSNA000007015200300302021011000000007000700300137000
+/?=I201
+/V=C34515
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN  R00000000000000000000100
+/?=I201
+/R=221
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN   00000000000000000000100
+/?=I201
+/F=C535=1
+/P=I300
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01404   Sexo                                              INNNN 000007015200300202001011000000007000700300137000
+/?=I201YI300
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01854   Nro. Persona                                      INNSNA000007015200300302021011000000007000700300137000
+/?=I201
+/V=C34515
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01855   Tipo Documento                                    INNNNA000007015200300202001011000000007000700300137000
+/?=I201
+/V=C34510
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01856   Nro. Documento                                    INNSNA000007015200300452001011000000007000700300137000
+/?=I201
+/V=C34511
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 33324   NRO_TRAMITE                                       INNSN 000007015200300302021011000000007000700300137000
+/?=I201
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 33320   TIPO_DOC_FISICO                                   INNSN 000007015200300202001011000000007000700300137000
+/?=I201YI300
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 33322   NUM_DOC_FISICO                                    INNSN 000007015200300452001011000000007000700300137000
+/?=I201YI300
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 03895                                                     INNNNA000007015200300452001011000000007000700300137000
+/?=I201YI300
+/V=C1404
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 03894                                                     INNNNA000007015200300452001011000000007000700300137000
+/?=I201YI300
+/V=C33324
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 03893                                                     INNNNA000007015200300452001011000000007000700300137000
+/?=I201YI300
+/V=C33322
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+DN  NN 1000SS
+/?=I201YI300
+*$2024-01-19 15:27:37JBENTANCOU
+*N  NN *** Fin GAP 33 ***
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=C34406=0
+/M=Registro no seleccionado de la ayuda
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 00001   Sucursal                                          INNNNA000024014600440230021011000000024003400440123000
+/V=C34406
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 00007   Producto                                          INNNNA000052014600720230021011000000052003400720123000
+/V=C34403
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 00003   Moneda                                            INNNNA000077014600970230021011000000077003400970123000
+/V=C34405
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 00005   Cuenta                                            INNNNA000103038001230464021011000000103026801230357000
+/V=C34401
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 00006   Referencia                                        INNNNK000103014601230230021011000000102003401220123000
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 00008   Ordinal                                           INNNNK000007012600270147020011000000007000700270119000
+/V=0
+/F=0013700NNN000000128Arial                                   
+/f=0013700NNN000000128Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01611   Intereses Dev                                     INNNN 000000012600200238020011000000000000000200112000
+/F=0013700NNN000000128Arial                                   
+/f=0013700NNN000000128Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01810   OID Saldo                                         INNSN 000046037200690522021011000000046022700690357000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=Registro Inexistente
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN M 00000000000000000000100
+/F=A(C1728="I")
+/M=Atención! La cuenta está inmovilizada.
+*$2024-01-19 15:29:21JBENTANCOU
+*N  NN ************** ANALIZO BLOQUEO PRODUCTO ************** 
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 00024   Debito/Credito                                    INNSNK000007015200300202001011000000007000700300137000
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+ NNNNN 01679   Bloqueo/Afect                                     INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN  S00000000000000000000100
+/R=jts:service=lockSaldo,lockSaldo,C24 I, C1810 I, C005 I,C1803 I , C1679 I, C593 O, C3891 O, C594 O
+*$2024-01-19 15:27:37JBENTANCOU
+CNNNNN M 00000000000000000000100
+/F=C593#0YC594=3
+/M=Atención! Cuenta bloqueada
+*$2024-01-19 15:33:09JBENTANCOU
+CNNNNN M 00000000000000000000100
+/F=C593#0Y(C594=1OC594=2)
+/M=Atención! Cuenta bloqueada, pendiente de autorización
+*$2024-01-19 15:33:26JBENTANCOU
+*N  NN ************ FIN ANALIZO BLOQUEO PRODUCTO ************
+*$2024-01-19 15:27:37JBENTANCOU
+TN  NN 1006TSelección de órdenes debitadas a clienteC00000 00
+/?=(I11)
+*$2024-01-18 17:16:42JBENTANCOU
+*N  NN *** Campo con concepto 203 en D para que calcule días Civiles ***
+*$2025-02-14 11:06:08JBENTANCOU
+ NNNNN 06254   Dias Calc.Ints                                    INNSNK000007015200300202001011000000007000700300137000
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 11:06:08JBENTANCOU
+*N  NN *** Para ordenes de débito directo donde la cuenta debitada es de un cliente de NBCH ***
+*$2024-01-18 17:17:46JBENTANCOU
+*N  NN *** Son los registros de SNP_DEBITOS ***
+*$2024-01-18 17:17:53JBENTANCOU
+VNNNNN 040002000204500800NNND000000000000000000000000000000000000000
+/T=Listado de órdenes debitadas a un cliente
+/C=192192192
+*$2024-01-19 12:52:17JBENTANCOU
+ NNNNN 01803   Cliente                                           IDNSNA040010017200330289021011500000013005000330165000
+/V=C1803.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 16:57:42JBENTANCOU
+ NNNNN 00902   Codigo Cliente                                    INNSNA000007015200300302021011000000007000700300137000
+/V=C1803.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 16:17:11JBENTANCOU
+ NNNNN 01000   Nombre Cliente                                    ICNSN 040010029900330730001011500000007000700300137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 16:56:27JBENTANCOU
+ NNNNN 01593   Cuenta Corriente                                  IDNNNA040047017200700289021010500000050005000700165000
+/?=C1785.6 = 2
+/V=C1593.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 16:58:02JBENTANCOU
+ NNNNN 01593   Caja de Ahorro                                    IDNNNA040047017200700289021010500000050005000700165000
+/?=C1785.6 = 3
+/V=C1593.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:21:55JBENTANCOU
+ NNNNN 06399   Moneda                                            INNSNA000007015200300202021011000000007000700300137000
+/V=C1594.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 16:53:30JBENTANCOU
+ NNNNN 06400   Descripción Monedas                               INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 16:53:49JBENTANCOU
+KNNNNN 040050029900700479000110
+/T="En "+C6400.0
+/F=0012700NNN000000000Arial                                   
+*$2024-01-19 17:04:53JBENTANCOU
+KNNNNN 040085002503720755000101
+/T=Órdenes de débito directo
+/F=0012700NNN000000000Arial                                   
+*$2024-01-19 16:46:02JBENTANCOU
+*N  NN *** Filtro por Saldo del Cliente ***
+*$2024-01-19 17:00:21JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="SALDO_JTS_OID = " + C1810.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 17:00:45JBENTANCOU
+*N  NN *** Exists con claves de SNP_DEBITOS ***
+*$2024-01-19 11:46:33JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010.0+" AND EXISTS (SELECT * FROM SNP_DEBITOS AS D WHERE (D.TZ_LOCK < 300000000000000 OR D.TZ_LOCK >= 400000000000000) AND D.ID_DEBITO = VW_SNP_DEBITOS.ID_DEBITO"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 17:02:18JBENTANCOU
+*N  NN *** Filtro de Estado Procesado ***
+*$2024-01-19 11:49:25JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010+" AND D.ESTADO IN ('PR')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 11:49:01JBENTANCOU
+*N  NN *** Filtro de vencimiento no mayor a 30 días corridos más un día hábil ***
+*$2024-01-19 11:44:53JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010+" AND D.FECHA_VTO >= '"+C753.2+"'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 17:51:56JBENTANCOU
+*N  NN *** Filtro de instrucción no reversada aún ***
+*$2024-01-19 11:44:53JBENTANCOU
+*N  NN        *** entre SNP_DEBITOS ***
+*$2024-01-19 12:14:20JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010.0+" AND D.TRACKNUMBER NOT IN (SELECT TRACKNUMBER_REVERSA FROM SNP_DEBITOS WHERE TRACKNUMBER_REVERSA IS NOT NULL AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000) AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000)))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 12:19:04JBENTANCOU
+*N  NN        *** entre SNP_MSG_ORDENES ***
+*$2024-01-19 12:24:58JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010.0+" AND D.TRACKNUMBER NOT IN (SELECT ID_ARCHIVO_REVERSADO FROM SNP_MSG_ORDENES WHERE ID_ARCHIVO_REVERSADO IS NOT NULL AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000) AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000))))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 12:24:34JBENTANCOU
+ NSSNN 45565   Listado órdenes débitos directos                  IENNN 040113005003520730021011600000007000700300137000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 16:46:15JBENTANCOU
+ NNNNN 44685   Id Débito                                         INNSNA000007015200300302021011000000007000700300137000
+/V=C45565.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 17:13:32JBENTANCOU
+ NNNNN 44697   JTS_OID Cuenta                                    INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 17:13:56JBENTANCOU
+ NNNNN 44701   Estado                                            INNNN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 17:14:32JBENTANCOU
+ NNNNN 44689   Fecha Vencimiento                                 INNSN 000007015200300302011011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 17:15:31JBENTANCOU
+ NNNNN 44687   Empresa:                                          INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:16:24JBENTANCOU
+ NNNNN 44688   Prestación:                                       INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:16:31JBENTANCOU
+ NNNNN 45637   Tracknumber                                       INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 11:04:56JBENTANCOU
+ NNNNN 44691   Referencia:                                       INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:28:42JBENTANCOU
+ NNNNN 45802   ID Cliente Pagador                                INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-31 11:39:32JBENTANCOU
+ NNNNN 44693   Fecha Compensación                                INNSN 000007015200300302011011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-28 10:43:58LUIGIDA
+CNNNNN ME00000000000000000000100
+/F=C44697.0#C1810.6
+/M=Error. Cuenta seleccionada no corresponde a la del débito
+*$2024-01-19 17:20:14JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C44693.0=C9500
+/M=No se puede reversar una orden en su fecha de compensación
+*$2025-03-28 12:32:51LUIGIDA
+CNNNNN ME00000000000000000000100
+/F=A(C44701.0#"PR")
+/M=Error. Estado de la instrucción no es Procesada
+*$2024-01-19 17:20:59JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C44689.0 < C3048.2
+/M=Error. Fecha de vencimiento es mayor a 30 días más uno
+*$2024-07-23 18:20:12JBENTANCOU
+ NNNNN 43759   Descriptor SNP_DEBITOS                            INNSNK000007015200300202021011000000007000700300137000
+/V=4466
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 17:46:27JBENTANCOU
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/V="(TZ_LOCK>=400000000000000 OR TZ_LOCK<300000000000000)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 17:44:52JBENTANCOU
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/V=C43760.0+" AND TRACKNUMBER_REVERSA = '"+C45637.0+"'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-02-16 12:38:08JBENTANCOU
+ NNNNN 43761   Cantidad de reversiones aplicadas a esa orden     INNSNF000007015200300202021011000000007000700300137000
+/V=F(CANTIDAD,C43759,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-19 17:44:52JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C43761.0 > 0
+/M=Error - La Orden de débito ya tiene instrucción de reversa
+*$2024-01-19 17:44:52JBENTANCOU
+ NNNNN 43759   Descriptor SNP_MSG_ORDENES                        INNSNK000007015200300202021011000000007000700300137000
+/V=4459
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-23 12:40:00JBENTANCOU
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/V="(TZ_LOCK>=400000000000000 OR TZ_LOCK<300000000000000)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-23 12:39:11JBENTANCOU
+ NNNNN 43760   where                                             INNSNF000007015200300202021011000000007000700300137000
+/V=C43760.0+" AND ID_ARCHIVO_REVERSADO = '"+C44685.0+"'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-02-16 12:38:47JBENTANCOU
+ NNNNN 43761   Cantidad de reversiones aplicadas a esa orden     INNSNF000007015200300202021011000000007000700300137000
+/V=F(CANTIDAD,C43759,C43760)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-23 12:39:11JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C43761.0 > 0
+/M=Error - La Orden de débito ya tiene instrucción de reversa
+*$2024-01-23 12:39:11JBENTANCOU
+*N  NN *** Para este tipo de órdenes (ya procesadas), siempre se emite una orden de reversa ***
+*$2024-01-25 15:46:51JBENTANCOU
+CNNNNN   00000000000000000000100
+/P=I13
+/M=Orden de reversa común posterior a presentación
+*$2024-01-25 15:55:13JBENTANCOU
+*N  NN *** Lectura de Prestación y su convenio ***
+*$2024-07-23 15:17:25JBENTANCOU
+ NNNNN 44507   Cuit:                                             INNSNA000007015200300302021011000000007000700300137000
+/V=C44687.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:17:44JBENTANCOU
+ NNNNN 44508   Prestación:                                       INNSNA000007015200300302001011000000007000700300137000
+/V=C44688.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:17:53JBENTANCOU
+ NNNNN 45082   Número Convenio                                   INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:18:06JBENTANCOU
+ NNNNN 44509   Entidad:                                          INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-31 11:36:28JBENTANCOU
+ NNNNN 00798   Entidad en formato alfanumérico                   INNSNA000007015200300302001011000000007000700300137000
+/V=C44509.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-31 11:48:40JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=Error al leer prestación de la órden original
+*$2024-07-23 15:18:50JBENTANCOU
+ NNNNN 33800   Código Cód Banco NBCH                             INNNNK000007015200300302021011000000007000700300137000
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-31 11:40:26JBENTANCOU
+ NNNNN 33803   Código Banco NBCH                                 INNSN 000007015200300452021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-31 11:40:40JBENTANCOU
+ NNNNN 03842   Código Banco en formato alfanumérico              INNSNA000007015200300202001011000000007000700300137000
+/V=C33803.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-31 11:51:25JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(F(LEFT,C798.0,F(LEN,C798.0)-4)#C3842.0)
+/P=I20
+/M=Prestación empresa es de otra entidad (no NBCH)
+*$2024-07-31 11:52:33JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=!I20
+/F=C45082.0=0
+/M=Error - Prestación empresa sin convenio
+*$2024-07-31 11:45:51JBENTANCOU
+TN  NN 1008TConsulta de Orden enviada 2da sesión    S44590 00
+/?=(I11)Y(I13)Y(!I20)
+/F=C44588=C44688.7 AND C44593=C44691.7 AND C45789=C45802.7 AND C44601=C44689.7 AND C45736=C45637.7
+*$2025-02-14 17:07:27JBENTANCOU
+ NNNNN 44581   Empresa:                                          INNSNA000007015200300302021011000000007000700300137000
+/V=C44687.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:29:38JBENTANCOU
+ NNNNN 44595   Importe:                                          INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:37:13JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=C9509#0
+/P=I30
+/M=Existe orden enviada correspondiente a recibida 2da sesión
+*$2025-02-14 16:40:00JBENTANCOU
+ NNNNN 44596   Tipo Doc.                                         INNSN 000007015200300202001011000000007000700300137000
+/?=I30
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:52:44JBENTANCOU
+ NNNNN 44597   Nro. Doc.                                         INNSN 000007015200300452001011000000007000700300137000
+/?=I30
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:52:44JBENTANCOU
+ NNNNN 45794   CUIT / CUIL Titutal Cuenta                        INNSN 000007015200300302021011000000007000700300137000
+/?=I30
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:52:44JBENTANCOU
+ NNNNN 45796   Apellido Nombre o Denominación TC                 INNSN 000007015200300452001011000000007000700300137000
+/?=I30
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:52:44JBENTANCOU
+TN  NN 1008TConsulta de Orden enviada 1ra sesión    S44590 00
+/?=(I11)Y(I13)Y(!I20)Y(!I30)
+/F=C44588=C44688.7 AND C44593=C44691.7 AND C45789=C45802.7 AND C44591=C44689.7 AND C45735=C45637.7
+*$2025-02-14 17:07:39JBENTANCOU
+ NNNNN 44581   Empresa:                                          INNSNA000007015200300302021011000000007000700300137000
+/V=C44687.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:51:15JBENTANCOU
+ NNNNN 44595   Importe:                                          INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:51:15JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=C9509#0
+/P=I31
+/M=Existe orden enviada correspondiente a recibida 1ra sesión
+*$2025-02-14 16:51:47JBENTANCOU
+ NNNNN 44596   Tipo Doc.                                         INNSN 000007015200300202001011000000007000700300137000
+/?=I31
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:52:54JBENTANCOU
+ NNNNN 44597   Nro. Doc.                                         INNSN 000007015200300452001011000000007000700300137000
+/?=I31
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:52:54JBENTANCOU
+ NNNNN 45794   CUIT / CUIL Titutal Cuenta                        INNSN 000007015200300302021011000000007000700300137000
+/?=I31
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:52:54JBENTANCOU
+ NNNNN 45796   Apellido Nombre o Denominación TC                 INNSN 000007015200300452001011000000007000700300137000
+/?=I31
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:52:54JBENTANCOU
+TN  NN 1001TAlta Cabezal orden de reversa           A44581 00
+/?=(I11)Y(I13)
+*$2024-01-25 17:15:45JBENTANCOU
+ NNNNN 44573   Empresa:                                          INNSNA000007015200300302021011000000007000700300137000
+/V=C44687.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:17:50JBENTANCOU
+ NNNNN 44574   Id Archivo:                                       INNSNA000007015200300452001011000000007000700300137000
+/V=C44685.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:17:57JBENTANCOU
+ NNNNN 44575   Nro. Archivo:                                     INNSNA000007015200300302021011000000007000700300137000
+/V=C45637.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:18:05JBENTANCOU
+ NNNNN 44576   Fecha recibido:                                   INNSNA000007015200300302011011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:18:18JBENTANCOU
+ NNNNN 44577   Hora:                                             INNSNA000007015200300302001011000000007000700300137000
+/V=C9506
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:18:45JBENTANCOU
+ NNNNN 44578   Estado:                                           INNNNK000007015200300202001011000000007000700300137000
+/V=PP
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:18:56JBENTANCOU
+ NNNNN 44579   Usuario Ing.:                                     INNNNA000007015200300452001011000000007000700300137000
+/V=C9505
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:19:08JBENTANCOU
+ NNNNN 44580   Estación:                                         INNSNA000007015200300452001011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:19:24JBENTANCOU
+ NNNNN 44505   Lote ID                                           INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:17:34JBENTANCOU
+TN  NN 1001TAlta orden de reversa débito directo    A44591 00
+/?=(I11)Y(I13)
+*$2024-01-25 16:05:24JBENTANCOU
+ NNNNN 44581   CUIT Empresa Originante                           INNSNA000007015200300302021011000000007000700300137000
+/V=C44687.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:08:25JBENTANCOU
+ NNNNN 44582   ID Archivo                                        INNSNA000007015200300302001011000000007000700300137000
+/V=C44685.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:14:43JBENTANCOU
+ NNNNN 44583   Nro. Archivo                                      INNSNA000007015200300302021011000000007000700300137000
+/V=C45637.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:14:54JBENTANCOU
+ NNNNN 44584   Correlativo                                       INNSNK000007015200300302021011000000007000700300137000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:07:37JBENTANCOU
+ NNNNN 44586   Cod. Trn.                                         INNSNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:15:56JBENTANCOU
+ NNNNN 44587   Inf. Adicional                                    INNSNK000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:16:41JBENTANCOU
+ NNNNN 44588   Prestación                                        INNSNA000007015200300302001011000000007000700300137000
+/V=C44688.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:17:15JBENTANCOU
+ NNNNN 44589   Id Cliente                                        INNSNA000007015200300302021011000000007000700300137000
+/V=C44690.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:17:27JBENTANCOU
+ NNNNN 44590   CBU                                               INNSNA000007015200300452001011000000007000700300137000
+/V=C44696.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:17:38JBENTANCOU
+ NNNNN 44593   Referencia                                        INNSNA000007015200300302001011000000007000700300137000
+/V=C44691.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:18:35JBENTANCOU
+ NNNNN 44594   Moneda                                            INNNNA000007015200300202021011000000007000700300137000
+/V=C44694.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:18:44JBENTANCOU
+ NNNNN 44595   Importe                                           INNNNA000007015200300302021011000000007000700300137000
+/V=C44695.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:18:53JBENTANCOU
+ NNNNN 44596   Tipo Doc.                                         INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:20:40JBENTANCOU
+ NNNNN 44596   Tipo Doc.                                         INNSNA000007015200300202001011000000007000700300137000
+/?=(!I20)Y(I30)
+/V=C44596.8
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:53:30JBENTANCOU
+ NNNNN 44596   Tipo Doc.                                         INNSNA000007015200300202001011000000007000700300137000
+/?=(!I20)Y(I31)
+/V=C44596.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:53:49JBENTANCOU
+ NNNNN 44597   Nro. Doc.                                         INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:20:43JBENTANCOU
+ NNNNN 44597   Nro. Doc.                                         INNSNA000007015200300452001011000000007000700300137000
+/?=(!I20)Y(I30)
+/V=C44597.8
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:54:50JBENTANCOU
+ NNNNN 44597   Nro. Doc.                                         INNSNA000007015200300452001011000000007000700300137000
+/?=(!I20)Y(I31)
+/V=C44597.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:55:01JBENTANCOU
+*N  NN *** Se contabilizará y rendirá por flujo general, o será anulada
+*$2024-01-25 16:07:27JBENTANCOU
+ NNNNN 44598   Orden Contabilizada                               INNSNK000007015200300202001011000000007000700300137000
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:07:27JBENTANCOU
+ NNNNN 44599   Orden rendida                                     INNSNK000007015200300202001011000000007000700300137000
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:07:27JBENTANCOU
+ NNNNN 44600   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/V="Reversa de orden "+C44685.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:21:07JBENTANCOU
+ NNNNN 44602   Segundo Imp.                                      INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:00:41JBENTANCOU
+ NNNNN 44605   Convenio                                          INNSNA000007015200300302021011000000007000700300137010
+/V=C45082.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-31 11:46:07JBENTANCOU
+ NNNNN 44611   Fecha Asiento                                     INNSNA000007015200300302011011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:07:27JBENTANCOU
+ NNNNN 44612   Nro. Asiento:                                     INNSNA000007015200300302021011000000007000700300137000
+/V=C9501
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:07:27JBENTANCOU
+ NNNNN 44501   Sucursal Asiento                                  INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 16:07:27JBENTANCOU
+ NNNNN 44613   Estado                                            INNSNK000007015200300202001011000000007000700300137000
+/V=PP
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:00:48JBENTANCOU
+ NNNNN 44683   Tipo Orden                                        INNNNK000007015200300302001011000000007000700300137000
+/?=I20
+/V=DEBREC
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-31 11:44:04JBENTANCOU
+ NNNNN 44683   Tipo Orden                                        INNNNK000007015200300302001011000000007000700300137000
+/?=!I20
+/V=DEBENV
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-31 11:44:08JBENTANCOU
+ NNNNN 44684   ID Archivo Reversado                              INNSNA000007015200300302021011000000007000700300137000
+/V=C44685.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:01:37JBENTANCOU
+ NNNNN 45349   Presentación primer Vto.                          INNNNA000007015200300302011011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-09-27 10:00:01JBENTANCOU
+ NNNNN 44591   Fecha Vto.                                        INNSNF000007015200300302011011000000007000700300137000
+/V=F(nextWorkingDay,C45349.0,2,0,C9502,0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:08:09JBENTANCOU
+ NNNNN 44592   Fecha Comp.                                       INNSNF000007015200300302011011000000007000700300137000
+/V=F(nextWorkingDay,C45349.0,3,0,C9502,0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 15:09:15JBENTANCOU
+ NNNNN 45789   ID Cliente Pagador                                INNSNA000007015200300452001011000000007000700300137000
+/V=C45802.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-23 16:10:44JBENTANCOU
+ NNNNN 49201   Cuenta                                            INNNNA000007015200300302021011000000007000700300137000
+/V=C1593.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 17:02:11JBENTANCOU
+ NNNNN 49202   Tipo de Reversa                                   INNNNA000007015200300302021011000000007000700300137000
+/V=C45670.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 15:51:50JBENTANCOU
+ NNNNN 45794   CUIT / CUIL Titutal Cuenta                        INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 15:51:37JBENTANCOU
+ NNNNN 45794   CUIT / CUIL Titutal Cuenta                        INNSNA000007015200300302021011000000007000700300137000
+/?=(!I20)Y(I30)
+/V=C45794.8
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:55:20JBENTANCOU
+ NNNNN 45794   CUIT / CUIL Titutal Cuenta                        INNSNA000007015200300302021011000000007000700300137000
+/?=(!I20)Y(I31)
+/V=C45794.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:55:30JBENTANCOU
+ NNNNN 45796   Apellido Nombre o Denominación TC                 INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 15:51:41JBENTANCOU
+ NNNNN 45796   Apellido Nombre o Denominación TC                 INNSNA000007015200300452001011000000007000700300137000
+/?=(!I20)Y(I30)
+/V=C45796.8
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:56:20JBENTANCOU
+ NNNNN 45796   Apellido Nombre o Denominación TC                 INNSNA000007015200300452001011000000007000700300137000
+/?=(!I20)Y(I31)
+/V=C45796.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-14 16:56:29JBENTANCOU
+TN  NN 1001TAlta SNP_DEBITOS                        A44661 00
+/?=(I11) Y (I13) Y (I20)
+*$2025-03-26 17:48:15WALTERS
+ NNNNN 37045   actividades utilizadas                            INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-20 11:58:02WALTERS
+ NNNNN 00109   SNP_DEBITO                                        INNSNK000007015200300202021011000000007000700300137000
+/V=4466
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-20 11:58:33WALTERS
+ NNNNN 43769   Descriptor                                        INNSNK000007015200300202021011000000007000700300137000
+/V=44685
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-20 12:02:36WALTERS
+ NNNNN 06590   Max ID_DEBITO                                     INNSNF000007015200300202021011000000007000700300137000
+/V=F(MAXIMO,C109,C43769,C37045)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-20 12:07:35WALTERS
+ NNNNN 44685   Id Débito:                                        INNSNF000007015200300302021011000200007000700300137000
+/V=C6590 +1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 12:07:51WALTERS
+ NNNNN 44701   Estado:                                           INNNNK000007015200300202001011000200007000700300137000
+/V=PP
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 15:39:31WALTERS
+ NNNNN 45802   ID Cliente Pagador                                INNSNA000007015200300452001011000200007000700300137000
+/V=C45789.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 12:36:26WALTERS
+ NNNNN 45638   Tracknumber reversa                               INNSNA000007015200300302001011000200007000700300137000
+/V=C45637.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-04-11 09:58:04WALTERS
+ NNNNN 45637   Tracknumber                                       INNSNA000007015200300302001011000200007000700300137000
+/V=C45637.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-26 17:39:25WALTERS
+ NNNNN 45549   Reversa                                           INNNNK000007015200300202021011000200007000700300137000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 15:39:11WALTERS
+ NNNNN 44698   Cod. Trn:                                         INNNNK000007015200300202001011000200007000700300137000
+/V=99
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 15:41:52WALTERS
+ NNNNN 44697   Cuenta Vista:                                     INNNNA000007015200300202001011000200007000700300137000
+/V=C44697.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-26 15:11:09WALTERS
+ NNNNN 44696   CBU:                                              INNNNA000007015200300202001011000200007000700300137000
+/V=C44590.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 14:29:16WALTERS
+ NNNNN 44695   Importe:                                          INNNNA000007015200300202001011000200007000700300137000
+/V=C44595.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 14:28:50WALTERS
+ NNNNN 44694   Moneda:                                           INNNNA000007015200300202001011000200007000700300137000
+/V=C44594.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 14:28:26WALTERS
+ NNNNN 44693   Fecha Compensación                                INNNNA000007015200300202001011000200007000700300137000
+/V=C44592.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 15:45:25WALTERS
+ NNNNN 44691   Referencia:                                       INNNNA000007015200300202001011000200007000700300137000
+/V=C44593.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 15:46:09WALTERS
+ NNNNN 44690   Id Cliente:                                       INNNNA000007015200300202001011000200007000700300137000
+/V=C44589.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 14:48:44WALTERS
+ NNNNN 44689   Fecha Vencimiento                                 INNNNA000007015200300202001011000200007000700300137000
+/V=C44591.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-04-11 09:51:23WALTERS
+ NNNNN 44688   Prestación:                                       INNNNA000007015200300202001011000200007000700300137000
+/V=C44588.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 15:09:31WALTERS
+ NNNNN 44687   Empresa:                                          INNNNA000007015200300202001011000200007000700300137000
+/V=C44581.11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 14:58:13WALTERS
+ NNNNN 44686   Origen:                                           INNNNK000007015200300202001011000200007000700300137000
+/V=E
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-20 15:44:23WALTERS
+ NNNNN 44699   Inf. Adic:                                        INNSNK000007015200300202001011000000007000700300137000
+/V=01
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-26 14:58:11WALTERS
+ NNNNN 45856   NOMBRE_EO                                         INNSNA000007015200300452001011000000007000700300137000
+/V=C45856.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-26 16:19:17WALTERS
+ NNNNN 45857   FECHA_PRESENTACION                                INNSNA000007015200300302011011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-26 16:17:53WALTERS
+ NNNNN 45858   FECHA_RECEPCION                                   INNSNA000007015200300302011011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-26 16:18:04WALTERS
+ NNNNN 45859   COD_ENT_ORIGINANTE                                INNSNA000007015200300202001011000000007000700300137000
+/V=C45859.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-26 16:19:53WALTERS
+ NNNNN 45860   COD_SUC_ORIGINANTE                                INNSNA000007015200300202001011000000007000700300137000
+/V=C45860.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-26 16:20:12WALTERS
+ NNNNN 45861   COD_ENT_DESTINO                                   INNSNA000007015200300202001011000000007000700300137000
+/V=C45861.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-26 16:20:39WALTERS
+ NNNNN 45862   COD_SUC_DESTINO                                   INNSNA000007015200300202001011000000007000700300137000
+/V=C45862.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-26 16:24:22WALTERS
+ NNNNN 45863   CONTADOR_REGISTRO                                 INNSNA000007015200300302001011000000007000700300137000
+/V=C45637.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-03-26 17:39:19WALTERS
+ NNNNN 45864   fecha vencimiento reversa                         INNSNA000007015200300302011011000000007000700300137000
+/V=C44689.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-11 10:12:15WALTERS
+TN  NN 1006TFinaliza Operación                      C00001 00
+*$2023-07-04 16:08:44JBENTANCOU
+VNNNNN 050171017101400433SSSD000000000000000000000000000000000000000
+/T=Mensaje reversa de orden
+/C=192192192
+*$2024-01-19 12:52:10JBENTANCOU
+ NNNNN 00910   Mensaje                                           INNNNF000007015200300452001011000000007000700300137000
+/?=(I10)Y(I12)
+/V="Orden de débito directo "+C44582.3+" - "+C44584.3+" será anulada."
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-06-17 12:13:42JBENTANCOU
+ NNNNN 00910   Mensaje                                           INNNNF000007015200300452001011000000007000700300137000
+/?=(I10)Y(I13)
+/V="Se generará una orden de reversa para el débito directo "+C44582.3+" - "+C44584.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-06-17 12:14:00JBENTANCOU
+ NNNNN 00910   Mensaje                                           INNNNF000007015200300452001011000000007000700300137000
+/?=(I11)Y(I13)
+/V="Se generará una orden de reversa para el débito directo "+C44685.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-01-25 15:56:42JBENTANCOU
+KNNNNN 050020003500630392010110
+/T=C910.0
+/F=0012700NNN000000000Arial                                   
+*$2024-01-19 12:52:14JBENTANCOU
+ NNNNN 00025   Fecha Valor                                       INNNNA000000013300200243000011000000000000000200119000
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2024-01-18 16:22:25JBENTANCOU
+ NNNNN 00028   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/?=I10
+/V="Reversa dbto. dir. "+C44582.3+" - "+C44584.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-06-17 12:23:48JBENTANCOU
+ NNNNN 00028   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/?=I11
+/V="Reversa dbto. dir. "+C44685.7
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-06-17 12:24:11JBENTANCOU
+*#I13#Orden de reversa común posterior a presentación
+*#I12#Orden de reversa anterior a la presentación
+*#I31#Existe orden enviada correspondiente a la recibida (1ra sesión)
+*#I200#Buscar por cliente
+*#I30#Existe orden enviada correspondiente a la recibida (2da sesión)
+*#I300#Persona titular es de tipo Físico
+*#I201#Buscar por cuenta
+*#I20#Prestación empresa es de otra entidad (no NBCH)
+*#I11#Orden de reversa a orden debitada a cliente adherido
+*#I10#Orden de reversa anticipada a emitida por empresa originante

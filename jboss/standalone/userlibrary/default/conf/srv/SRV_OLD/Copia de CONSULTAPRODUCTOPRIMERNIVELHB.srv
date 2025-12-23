@@ -1,0 +1,58 @@
+service CONSULTAPRODUCTOPRIMERNIVELHB111;
+description "Consulta de Productos de Primer Nivel HB";
+
+action: SQLQuery HAYDATOS(
+ 
+ Cliente:	numeric
+  ): [ 
+   
+    SCODERROR : numeric
+ 	
+]
+{ 
+  	properties { 
+  	("statement", "{call SP_ITF_CONSULTAPRIMERNIVEL_HB1 (?, ?)}"),
+	 ("0", "Cliente"),
+	 ("1", "out SCODERROR : numeric")
+	 
+	 
+	 
+   };
+	action:	SQLQuery DATOSDELSALDO() : [
+			
+			CLIENTE             :numeric,
+			PRODUCTO            :string,
+			TIPO_PRODUCTO       :string, 
+			DESC_PRODUCTO       :string, 
+			DESC_TIPO_PRODUCTO  :string, 
+			SUCURSAL            :numeric,
+			MONEDA		    :numeric,
+			SIMBOLOMONEDA       :string,
+			CUENTA		    :numeric,
+			OPERACION	    :numeric,
+			ORDINAL		    :numeric,
+			SALDO_ACTUAL	    :float,
+			SALDO_DISPONIBLE    :float,
+			SALDO_24H	    :float,
+			SALDO_48H	    :float,
+			PAQUETE		    :numeric,
+			CAPITAL		    :float,
+			INTERESES	    :float,
+			FECHA_VTO	    :date,
+			TASA		    :float,
+			CUOTA		    :float,
+			TOT_CUOTAS	    :numeric,
+			CUOTAS_PAGAS	    :numeric,
+			FECHA_ALTA	    :date,
+			FECHA_PROX_VTO	    :date,
+			FECHA_ULT_PAGO	    :date
+		] {
+	            condition { "SCODERROR == 0" };
+	
+			properties {
+				("statement", "select CLIENTE, PRODUCTO, TIPO_PRODUCTO, DESC_PRODUCTO,DESC_TIPO_PRODUCTO,SUCURSAL,MONEDA,SIMBOLOMONEDA,CUENTA, OPERACION,ORDINAL,SALDO_ACTUAL,SALDO_DISPONIBLE,SALDO_24H,SALDO_48H,PAQUETE, CAPITAL,INTERESES,FECHA_VTO,TASA,CUOTA,TOT_CUOTAS,CUOTAS_PAGAS,FECHA_ALTA,FECHA_PROX_VTO,FECHA_ULT_PAGO from ITF_CONS_PRIMER_NIVEL_HB1 where Cliente=? order by PRODUCTO"),
+				("0", "Cliente")
+			
+			}
+		}
+}

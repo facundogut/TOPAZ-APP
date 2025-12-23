@@ -1,0 +1,129 @@
+VERSION:051
+TN  NN 1006TConsulta Personas                       C0001 00
+VNSNNS 010002000204850800SSSD000000000000000000000000000000000000000
+/T=Clientes
+/C=192192192
+KNNNNN 010009001102950771000001
+/T=   Clientes   
+/F=0011700NNN000000000Arial                                   
+ NNNNN 0050   Cliente Origen IESSN 01002900240284076100001160000002600170046013600
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0902   Codigo Cliente IDNSNA01032001630343028902101150000032000290343014800
+/V=C0050.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1030   Residencia     INNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1000   Nombre Cliente IDNSN 01034901630372052300101150000034900290369014800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/P=I77
+CNNNNN ME00000000000000000000100
+/F=C1040='E'
+/M=Cliente es empleado del banco. Posicion no es visualizable.
+TN  NN 0253TConsulta Servicio de Personas           C0001 00
+*N  NN *****************************************************************************************************
+*N  NN *** Cargo los Parámetros para ejecutar el Servicio.-
+*N  NN *****************************************************************************************************
+ NNNNN 1850                  INNSNA00000701520030020202101100000000700070030013700
+/V=C0050.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *****************************************************************************************************
+*N  NN *** Ejecutar Servicio.-
+*N  NN *****************************************************************************************************
+ NSSNN 0618   ClientePos     INNSNA00000701520030030202101100000000700070030013700
+/V=C902.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 4171   FechaPos       INNSNA00000701520030030200101100000000700070030013700
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0091   Texto          INNSNK00000701520030030202101100000000700070030013700
+/V=Posicion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  S00000000000000000000100
+/R=jts:service=PosicionClienteService,posicioncliente,C1850 I, C0018 O
+*N  NN *****************************************************************************************************
+*N  NN *** Controlo la Respuesta del Servicio.-
+*N  NN *****************************************************************************************************
+ NNNNN 0018   Resp. Servicio INNSN 00039907200422077000101000000039905750422070500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Si (C18=-1) => Error en el Servicio.-
+CNNNNN M 00000000000000000000100
+/?=(C18=-1)Y1=0
+/M=Error al ejecutar Servicio (consultar Area Técnica)...
+*N  NN *** Si (C18=0) => No hay Registros para procesar.-
+CNNNNN M 00000000000000000000100
+/?=(C18=0)
+/M=No hay registros p/procesar de ésta Persona...
+*N  NN *** Si (C18>0) => Todo bien y aviso.-
+CNNNNN M 00000000000000000000100
+/?=(C18>0)
+/P=I77
+/M=Se imprimirá Reporte con los datos...
+TN  NN 0253TImprime Reporte de Posición             C0001 00
+/?=(I77)
+*N  NN *** Cargo los Campos para la emisión del Reporte.-
+ NNNNN 5376   Cód. Cliente   INNSNA03000701520030030202101100000000700070030013700
+/V=C0050.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0410   No. Persona    INNSNA03004601510069030102101100000004600060069013600
+/V=C1000.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 5376   Cód. Cliente   INNSN 00003300170056016702101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0410                  INNSN 00009500170118016702101100000007000070093013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Emito el Reporte.-
+ NNNNN 3812                  INNSNK00000701500027321000001100000000700070027012600
+/V=TZPQUERY /Q5010
+/F=0013700SNN000000128Arial                                   
+/f=0012700NNN255255255Arial                                   
+ NNNNN 3812                  INNSNF00000701500027321000001100000000700070027012600
+/?=1=0
+/V=C3812+" /Q6941 /R5376|"+C5376+"|"+C5376+"|"
+/F=0013700SNN000000128Arial                                   
+/f=0012700NNN255255255Arial                                   
+ NNNNN 3812                  INNSNF00000701500027321000001100000000700070027012600
+/?=1=0
+/V=C3812+" /R0410|"+C0410+"|"+C0410+"|"
+/F=0013700SNN000000128Arial                                   
+/f=0012700NNN255255255Arial                                   
+ NNNNN 3812                  INNSNF00000701500027321000001100000000700070027012600
+/?=1=0
+/V=C3812+" /A "
+/F=0013700SNN000000128Arial                                   
+/f=0012700NNN255255255Arial                                   
+ NNNNN 3812                  INNSNF00000701500027321000001100000000700070027012600
+/V=C3812+" /C1803|"+C902.1+"| /A "
+/F=0013700SNN000000128Arial                                   
+/f=0012700NNN255255255Arial                                   
+ NNNNN 9528   Linea Comando  INNSNA00000701500027321000001100000000700070027012600
+/V=C3812
+/F=0013700SNN000000128Arial                                   
+/f=0012700NNN255255255Arial                                   
+CNNNNN  M00000000000000000000100
+/M=Sale...
+/T=Consultar
+*N  NN *** Acá puede ponerse un botón para Imprimir el Reporte desde él.-
+TN  NN 1006TConsulta Genérica                       C0000 00
+ NNNNN 0028   Concepto       INNSNF00000701520030020200101100000000700070030013700
+/V="Posición por Cliente "+C0902.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*#I77#Imprimo Reporte

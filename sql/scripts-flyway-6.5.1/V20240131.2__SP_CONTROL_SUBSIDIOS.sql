@@ -1,0 +1,17 @@
+EXECUTE('
+CREATE PROCEDURE SP_CONTROL_SUBSIDIOS 
+    @C_SUBSIDIO NUMERIC(5,0), 
+    @C_SUBSIDIO_MONTO NUMERIC(15,2)OUTPUT
+    
+AS
+BEGIN
+   
+   SELECT @C_SUBSIDIO_MONTO=CASE b.TipoCupo WHEN ''S'' THEN isnull(sum(abs(C1604)),0) ELSE isnull(sum(C1601),0) END
+         FROM SALDOS s WITH(NOLOCK)
+         INNER JOIN CRE_SUBSIDIOS_PRESTAMOS c WITH(NOLOCK) ON c.Jts_asistencia=s.JTS_OID AND c.TZ_LOCK=0
+         INNER JOIN CRE_SUBSIDIOS b WITH(NOLOCK) ON b.CodigoSubsidio=c.CodigoSubsidio AND b.TZ_LOCK=0
+         WHERE c.Estado= ''A''  AND b.CodigoSubsidio =@C_SUBSIDIO
+         GROUP BY b.TipoCupo		 				
+END
+')
+

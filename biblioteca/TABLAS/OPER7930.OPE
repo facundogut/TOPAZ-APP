@@ -1,0 +1,384 @@
+VERSION:055_5
+TN  NN 1006TParametro de entrada                    C00001 00
+*$2022-12-29 17:55:33TOP
+ NNSNN 00556   Alfa de 1                                         INNSNI000217011902450440001011000000015001600380146000
+/V=accion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-06 09:20:10TOP
+ NNNNN 00120   Nro. Causa                                        INNSNI000007015200300302021011000000007000700300137000
+/V=idCausa
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-06 09:24:38TOP
+ NNNNN 00665   ID Persona                                        INNSNI000007015200300202021011000000007000700300137000
+/V=idPersona
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-06 09:26:56TOP
+CNNNNN   00000000000000000000100
+/F=F(LEN, F(LTRIM,C556.0) )=0
+/P=I99I500
+/M=PARAMETROS INVALIDOS
+*$2025-02-13 11:47:11c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C120.0=0
+/P=I99I501
+/M=PARAMETROS INVALIDOS
+*$2025-02-13 11:46:43c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C665.0=0
+/P=I99I502
+/M=PARAMETROS INVALIDOS
+*$2025-02-13 11:46:21c00candigi
+*N  NN A = I30  |  B = I31
+*$2025-02-13 11:20:18c00candigi
+CNNNNN   00000000000000000000100
+/F=C556='A'
+/P=I30
+/M=Alta
+*$2023-03-06 11:53:40TOP
+CNNNNN   00000000000000000000100
+/F=C556='B'
+/P=I31
+/M=Baja
+*$2023-03-06 11:53:43TOP
+CNNNNN  I00000000000000000000100
+/F=!I31Y!I30
+/P=I99I61
+/R=6
+*$2025-02-13 11:14:46c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=14
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-03 14:27:05TOP
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V="NUMEROPERSONAFISICA="+C665.0+" AND (TZ_LOCK < 300000000000000 ) AND (TZ_LOCK = 0 OR TZ_LOCK >= 200000000000000) AND ESTADO=0"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-06 12:28:50TOP
+CNSSNN   00000000000000000000100
+/?=!I99
+/F=F(CANTIDAD,C109,C9208)>0
+/P=I40
+/M=existe persona
+*$2025-02-13 11:15:06c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137010
+/V=19
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-03 14:27:34TOP
+ NSSNN 09208   Alfa 150                                          INNNNF000007015200300452001011000000007000700300137000
+/V="NUMEROPERSONAJURIDICA="+C665.0+" AND (TZ_LOCK < 300000000000000 ) AND (TZ_LOCK = 0 OR TZ_LOCK >= 200000000000000) AND ESTADO=0"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-03 14:30:28TOP
+CNSSNN   00000000000000000000100
+/?=!I40
+/F=F(CANTIDAD,C109,C9208)>0
+/P=I40
+/M=existe persona
+*$2023-03-06 12:30:31TOP
+CNNNNN   00000000000000000000100
+/?=!I40
+/P=I99
+/M=si no existe persona
+*$2025-02-13 11:22:05c00candigi
+ NSSNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=3329
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-01-30 16:41:33TOP
+ NNNNN 00914                                                     INNNNF000007015200300452001011000000007000700300137000
+/?=I31
+/V="NRO_CAUSA='"+C120.0+"' AND NRO_PERSONA='"+C665.0+"' AND  ((TZ_LOCK >= 100000000000000 AND TZ_LOCK < 200000000000000) OR  (TZ_LOCK >= 200000000000000 AND TZ_LOCK < 300000000000000) )"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-12-30 17:16:33TOP
+CNNNNN ME00000000000000000000100
+/?=I31
+/F=F(CANTIDAD,C109,C914)>0
+/M=Demandado con Registro Pendientes de Autorización
+*$2023-03-06 11:35:09TOP
+TN  NN 1006TConsulta Generica                       C00001 00
+/?=I40Y!I99
+*$2023-03-06 11:37:08TOP
+ NNNNN 33134   Nro. Causa                                        INNSNA000007015200300302021011000000007000700300137000
+/V=C120.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-01-30 12:58:52TOP
+ NNNNN 33149   Comentario                                        INNNN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-06 12:17:06TOP
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C9509=0
+/P=I99I12
+*$2025-02-13 11:42:25c00candigi
+CNNNNN  I00000000000000000000100
+/?=!I99
+/F=C33141='I'
+/P=I99I62
+/R=6
+*$2025-02-13 11:42:17c00candigi
+CNNNNN  I00000000000000000000100
+/?=!I99
+/F=C33141='T'
+/P=I99I64
+/M=causa transferida
+/R=6
+*$2025-02-13 11:42:17c00candigi
+CNNNNN  I00000000000000000000100
+/?=!I99
+/F=C33141#'A'
+/P=I99I63
+/M=Estado de causa debe estar activa
+/R=6
+*$2025-02-13 11:42:17c00candigi
+TN  NN 1006TConsulta Generica                       C00001 00
+/?=I40Y!I99
+*$2023-03-06 11:37:17TOP
+ NNNNN 33296   Nro. causa                                        INNSNA000007015200300302021011000000007000700300137000
+/V=C120.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-01-10 12:16:33TOP
+ NNNNN 33297   Persona                                           INNSNA000007015200300302021011000000007000700300137000
+/V=C665.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-01-10 12:16:43TOP
+ NNNNN 33298                                                     INNNN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-01-10 11:39:14TOP
+CNNNNN   00000000000000000000100
+/?=I30
+/F=C9509.0=1
+/P=I99I11
+/M=Si es alta y existe en demandados
+*$2025-02-13 11:28:25c00candigi
+CNNNNN   00000000000000000000100
+/?=I31
+/F=C9509=0
+/P=I99I15
+/M=Si es baja y no existe en demandados
+*$2025-02-13 11:29:38c00candigi
+TN  NN 1001TAlta Generica                           A33291 00
+/?=!I99 Y I30
+*$2025-02-13 11:31:15c00candigi
+ NNNNN 33296   Nro. causa                                        INNSNA000007015200300302021011000000007000700300137000
+/V=C120.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-12-30 17:09:20TOP
+ NNNNN 33297   Persona                                           INNSNA000007015200300302021011000000007000700300137000
+/V=C665.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-12-30 17:09:33TOP
+ NNNNN 33298                                                     INNNNK000007015200300202001011000000007000700300137000
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-12-29 17:54:57TOP
+TN  NN 1005TBaja de Demandado                       B33291 00
+/?=!I99 Y I31
+*$2025-02-13 11:31:46c00candigi
+ NSSNN 33296   Nro. causa                                        INNSNA000007015200300302021011000000007000700300137000
+/V=C120.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-01-10 12:16:45TOP
+ NNNNN 33297   Persona                                           INNSNA000007015200300302021011000000007000700300137000
+/V=C665.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-01-10 12:16:51TOP
+ NNNNN 33298                                                     INNNN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-12-29 17:54:57TOP
+TN  NN 1006TRetorno                                 C00000 10
+*$2022-12-29 18:40:38TOP
+ NNNNN 00622   RETORNO                                           INNNNK000007015200300302001011000000007000700300137000
+/V=OK
+/P=RETORNO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-02 23:42:12TOP
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/?=I99
+/V=1
+/P=respuesta.codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:25:13c00candigi
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I15
+/V=21
+/P=respuesta.codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:48:33c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I15
+/V=No existe demandado para esta causa judicial
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:23:00c00candigi
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/?=I99 Y !I40
+/V=22
+/P=respuesta.codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:48:53c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y !I40
+/V=La persona indicada no se encuentra habilitada/existente
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:18:04c00candigi
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I11
+/V=23
+/P=respuesta.codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:49:07c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I11
+/V=Ya existe el demandado para la causa judicial
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:23:19c00candigi
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I12
+/V=2
+/P=respuesta.codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:49:23c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I12
+/V=Error: Causa inexistente
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:36:57c00candigi
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I62
+/V=3
+/P=respuesta.codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:49:34c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I62
+/V=Error: Causa inactiva
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:37:05c00candigi
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I64
+/V=4
+/P=respuesta.codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:49:46c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I64
+/V=Error: Causa transferida
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:39:50c00candigi
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I64
+/V=24
+/P=respuesta.codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:51:02c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I63
+/V=Error: Estado de causa desconocido
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:51:11c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I61
+/V=Parámetro inválido: La accion debe ser 'A' (Alta ) o 'B' (Baja)
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:45:08c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I500
+/V=Parámetro inválido: acción
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:47:35c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I501
+/V=Parámetro inválido: idCausa
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:47:47c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I502
+/V=Parámetro inválido: idPersona
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:48:00c00candigi
+*N  NN Resultado  ok
+*$2025-02-13 11:08:00c00candigi
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/?=!I99
+/V=0
+/P=respuesta.codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:25:23c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=!I99 Y I30
+/V=Alta realizada
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 11:26:12c00candigi
+ NNNNN 00623   Alfanumer. 25                                     INNSNK000007015200300452001011000000007000700300137000
+/?=!I99 Y I31
+/V=Baja realizada
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 14:52:07ANITAORTIZ
+*#I502#PARAMETROS INVALIDOS
+*#I63#estado activa causa
+*#I501#PARAMETROS INVALIDOS
+*#I12#No existe causa
+*#I500#PARAMETROS INVALIDOS
+*#I15#Si es baja y no existe en demandados
+*#I31#Baja
+*#I30#Alta
+*#I40#existe persona
+*#I99#Error
+*#I64#CAUSA TRANSFERIDA
+*#I11#No existe
+*#I61#Accion incorrecta
+*#I62#Causa Inactiva

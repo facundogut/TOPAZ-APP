@@ -1,0 +1,520 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.automaticprocess.acuerdosysobregiros.AcuerdosSobregirosVO</class-name>
+        <entity-name>topsystems.vo.core_AcuerdosSobregiros</entity-name>
+        <table-name>VTA_SOBREGIROS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>jts_oid_saldo</attribute-name>
+            <column-name>JTS_OID_SALDO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>autorization</attribute-name>
+            <column-name>NRO_AUTORIZACION</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>autorizationType</attribute-name>
+            <column-name>TIPO_AUTORIZACION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>amount</attribute-name>
+            <column-name>IMPORTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>commissionOverDraft</attribute-name>
+            <column-name>COMISION_SOBREGIRO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>state</attribute-name>
+            <column-name>ESTADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>renovationType</attribute-name>
+            <column-name>TIPO_RENOVACION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>codeRange</attribute-name>
+            <column-name>COD_RANGO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>period</attribute-name>
+            <column-name>PERIODO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>vigencyValue</attribute-name>
+            <column-name>VALOR_VIGENCIA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>creationDate</attribute-name>
+            <column-name>FECHA_ALTA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>expirtationDate</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaCancelacion</attribute-name>
+            <column-name>fecha_cancelacion</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>autoriza</attribute-name>
+            <column-name>AUTORIZA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalAcuerdo</attribute-name>
+            <column-name>SUCURSAL_ACUERDO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidContingencia</attribute-name>
+            <column-name>JTS_OID_CONTINGENCIA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tasaDeIntereses</attribute-name>
+            <column-name>TASA_DE_INTERESES</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAcuerdo</attribute-name>
+            <column-name>SALDO_ACUERDO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importeConsumido</attribute-name>
+            <column-name>IMPORTE_CONSUMIDO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsSaldoDeuda</attribute-name>
+            <column-name>JTS_SALDO_DEUDA</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.acuerdosysobregiros.AcuerdosSobregirosVO</class-name>
+        <query-name>query.ConsumoLineaAcuerdoSobregiros</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+	Select
+		VTA_SOBREGIROS.JTS_OID_SALDO,
+		VTA_SOBREGIROS.NRO_AUTORIZACION,
+		VTA_SOBREGIROS.ORDINAL,
+		VTA_SOBREGIROS.FECHA_VENCIMIENTO,
+		VTA_SOBREGIROS.Tasa_De_Intereses,
+		VTA_SOBREGIROS.JTS_OID_CONTINGENCIA,
+		VTA_SOBREGIROS.TIPO_AUTORIZACION,
+		VTA_SOBREGIROS.SALDO_ACUERDO,
+		VTA_SOBREGIROS.IMPORTE_CONSUMIDO
+		from SALDOS join VTA_SOBREGIROS on SALDOS.JTS_OID = VTA_SOBREGIROS.JTS_OID_SALDO
+			where
+			SALDOS.c1604 &lt; 0 
+			and SALDOS.c1683 &gt; 0 
+			and  SALDOS.C1785 = 2 
+			and SALDOS.tz_lock = 0 
+			and VTA_SOBREGIROS.tz_lock = 0 
+			AND VTA_SOBREGIROS.SALDO_ACUERDO &gt; 0
+			AND VTA_SOBREGIROS.ESTADO = 1
+		ORDER BY VTA_SOBREGIROS.JTS_OID_SALDO, VTA_SOBREGIROS.VALOR_VIGENCIA asc, TIPO_AUTORIZACION asc
+	</sentence>
+        <attribute>
+            <attribute-name>jts_oid_saldo</attribute-name>
+            <column-name>JTS_OID_SALDO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>autorization</attribute-name>
+            <column-name>NRO_AUTORIZACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>expirtationDate</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tasaDeIntereses</attribute-name>
+            <column-name>TASA_DE_INTERESES</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidContingencia</attribute-name>
+            <column-name>JTS_OID_CONTINGENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>autorizationType</attribute-name>
+            <column-name>TIPO_AUTORIZACION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAcuerdo</attribute-name>
+            <column-name>SALDO_ACUERDO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeConsumido</attribute-name>
+            <column-name>IMPORTE_CONSUMIDO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.acuerdosysobregiros.QueryRecuperoLinea</class-name>
+        <query-name>query.QueryRecuperoLinea</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select SALDO_CC.C1604 AS MONTO_CC,
+				 SALDO_CC.JTS_OID AS JTS_OID_CC,
+				 SALDO_DEUDA.JTS_OID AS JTS_OID_DEUDA,
+				 SALDO_DEUDA.C1604 AS MONTO_DEUDA,
+				 PS.TIPO,
+				 SALDO_DEUDA.OPERACION,
+				 SB.JTS_OID_CONTINGENCIA,
+				 SB.TIPO_AUTORIZACION,
+				 SB.ORDINAL
+			  from SALDOS SALDO_DEUDA, CRE_PRODUCTOS_SOBREGIRO PS, SALDOS SALDO_CC, VTA_SOBREGIROS SB
+			 WHERE SALDO_DEUDA.C1604 &lt; 0
+			   and PS.producto = SALDO_DEUDA.PRODUCTO
+			   AND SALDO_DEUDA.C1665 = SALDO_CC.JTS_OID
+			   AND SALDO_CC.C1604 &gt; 0
+			   AND SB.NRO_AUTORIZACION = SALDO_DEUDA.OPERACION
+			   AND SB.ORDINAL = SALDO_DEUDA.ORDINAL
+			   AND SALDO_DEUDA.TZ_LOCK = 0 
+			   AND PS.TZ_LOCK = 0
+               AND SALDO_CC.TZ_LOCK = 0
+               AND SB.TZ_LOCK = 0
+			 ORDER BY PS.PRIORIDAD, SALDO_DEUDA.C1620
+		</sentence>
+        <attribute>
+            <attribute-name>montoCC</attribute-name>
+            <column-name>MONTO_CC</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidCC</attribute-name>
+            <column-name>JTS_OID_CC</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidDeuda</attribute-name>
+            <column-name>JTS_OID_DEUDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoDeuda</attribute-name>
+            <column-name>MONTO_DEUDA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jts_oidContingencia</attribute-name>
+            <column-name>JTS_OID_CONTINGENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoAutorizacion</attribute-name>
+            <column-name>TIPO_AUTORIZACION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.acuerdosysobregiros.AcuerdosSobregirosVO</class-name>
+        <query-name>query.ConsumoLineaAcuerdoSobregirosTipoPlazo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT SALDOS.JTS_OID AS JTS_OID_SALDO,
+					   VTA_SOBREGIROS.NRO_AUTORIZACION,
+					   VTA_SOBREGIROS.ORDINAL,
+					   VTA_SOBREGIROS.FECHA_VENCIMIENTO,
+					   VTA_SOBREGIROS.Tasa_De_Intereses,
+					   VTA_SOBREGIROS.JTS_OID_CONTINGENCIA,
+					   VTA_SOBREGIROS.TIPO_AUTORIZACION,
+					   VTA_SOBREGIROS.SALDO_ACUERDO,
+					   VTA_SOBREGIROS.IMPORTE_CONSUMIDO
+				  FROM SALDOS
+				  LEFT OUTER JOIN VTA_SOBREGIROS ON SALDOS.JTS_OID =
+													VTA_SOBREGIROS.JTS_OID_SALDO
+												AND VTA_SOBREGIROS.tz_lock = 0
+												AND VTA_SOBREGIROS.SALDO_ACUERDO &gt; 0
+												AND VTA_SOBREGIROS.ESTADO = 1
+				 WHERE SALDOS.c1604 &lt; 0
+				   AND SALDOS.C1785 IN (2, 3)
+			</sentence>
+        <attribute>
+            <attribute-name>jts_oid_saldo</attribute-name>
+            <column-name>JTS_OID_SALDO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>autorization</attribute-name>
+            <column-name>NRO_AUTORIZACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>expirtationDate</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tasaDeIntereses</attribute-name>
+            <column-name>TASA_DE_INTERESES</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidContingencia</attribute-name>
+            <column-name>JTS_OID_CONTINGENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>autorizationType</attribute-name>
+            <column-name>TIPO_AUTORIZACION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAcuerdo</attribute-name>
+            <column-name>SALDO_ACUERDO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeConsumido</attribute-name>
+            <column-name>IMPORTE_CONSUMIDO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.acuerdosysobregirostipoplazo.QueryRecuperoLineaTipoPlazo</class-name>
+        <query-name>query.QueryRecuperoLineaTipoPlazo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+							  SELECT SALDO_DEUDA.C1803, SALDO_CC.C1604 AS MONTO_CC,
+								 SALDO_CC.JTS_OID AS JTS_OID_CC,
+								 SALDO_DEUDA.JTS_OID AS JTS_OID_DEUDA,
+								 SALDO_DEUDA.C1604 AS MONTO_DEUDA,
+								 PS.TIPO,
+								 SALDO_DEUDA.OPERACION,
+								 SB.JTS_OID_CONTINGENCIA,
+								 SB.TIPO_AUTORIZACION,
+								 SB.ORDINAL
+							  FROM SALDOS SALDO_DEUDA INNER JOIN SALDOS SALDO_CC ON
+							     	SALDO_DEUDA.C1665 = SALDO_CC.JTS_OID
+							     	AND SALDO_DEUDA.C1604 &lt; 0
+							     	AND SALDO_CC.TZ_LOCK = 0
+							     	AND SALDO_DEUDA.TZ_LOCK = 0 
+							     INNER JOIN CRE_PRODUCTOS_SOBREGIRO PS
+							     	ON PS.producto = SALDO_DEUDA.PRODUCTO
+							     	AND PS.TZ_LOCK = 0
+							     LEFT JOIN VTA_SOBREGIROS SB ON
+								 	SB.NRO_AUTORIZACION = SALDO_DEUDA.OPERACION
+								 	AND SB.ORDINAL = SALDO_DEUDA.ORDINAL
+							        AND SB.TZ_LOCK = 0
+							 ORDER BY SALDO_DEUDA.C1803, JTS_OID_CC, PS.PRIORIDAD, SALDO_DEUDA.C1620
+						</sentence>
+        <attribute>
+            <attribute-name>cliente</attribute-name>
+            <column-name>C1803</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoCC</attribute-name>
+            <column-name>MONTO_CC</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidCC</attribute-name>
+            <column-name>JTS_OID_CC</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidDeuda</attribute-name>
+            <column-name>JTS_OID_DEUDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoDeuda</attribute-name>
+            <column-name>MONTO_DEUDA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jts_oidContingencia</attribute-name>
+            <column-name>JTS_OID_CONTINGENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoAutorizacion</attribute-name>
+            <column-name>TIPO_AUTORIZACION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.reservastipoplazo.objectsdomains.QueryConsumoReservas</class-name>
+        <query-name>query.QueryConsumoReservas</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT SUM(IMPORTE_DEUDA) AS IMPORTE_DEUDA, JTS_OID_CC, 'ALTA' AS ESTADO
+						  FROM (SELECT SALDO_DEUDA.C1665 AS JTS_OID_CC,
+						               (SALDO_DEUDA.C1604 * -1) + SALDO_DEUDA.C1608 AS IMPORTE_DEUDA
+						          FROM SALDOS SALDO_DEUDA
+						         INNER JOIN CRE_PRODUCTOS_SOBREGIRO PS ON PS.producto = SALDO_DEUDA.PRODUCTO
+						                                              AND SALDO_DEUDA.C1604 &lt; 0
+						                                              AND SALDO_DEUDA.TZ_LOCK = 0
+						                                              AND PS.TIPO = 'C'
+						                                              AND PS.TZ_LOCK = 0) T
+						 GROUP BY JTS_OID_CC
+						UNION
+						SELECT SUM(IMPORTE_DEUDA) AS IMPORTE_DEUDA, JTS_OID_CC, 'BAJA' AS ESTADO
+						  FROM (SELECT SALDO_DEUDA.C1665 AS JTS_OID_CC,
+						               (SALDO_DEUDA.C1604 * -1) + SALDO_DEUDA.C1608 AS IMPORTE_DEUDA
+						          FROM SALDOS SALDO_DEUDA
+						         INNER JOIN CRE_PRODUCTOS_SOBREGIRO PS ON PS.producto = SALDO_DEUDA.PRODUCTO
+						                                              AND SALDO_DEUDA.TZ_LOCK = 0
+						                                              AND PS.TIPO = 'C'
+						                                              AND PS.TZ_LOCK = 0
+						         INNER JOIN VTA_RESERVAS RES ON RES.SALDO_JTS_OID =
+						                                        SALDO_DEUDA.C1665
+						                                    AND RES.ESTADO = 1
+						                                    AND RES.TZ_LOCK = 0) T
+						 GROUP BY JTS_OID_CC
+						HAVING SUM(IMPORTE_DEUDA) = 0
+				</sentence>
+        <attribute>
+            <attribute-name>importeDeuda</attribute-name>
+            <column-name>IMPORTE_DEUDA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jstOidCC</attribute-name>
+            <column-name>JTS_OID_CC</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.acuerdosysobregirostipoplazo.QueryCuentasDisponible</class-name>
+        <query-name>query.QueryCuentasDisponible</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+							SELECT JTS_OID, MONEDA, C1604 
+								FROM SALDOS WHERE C1803 = ? AND TZ_LOCK = 0 AND C1604 &gt; 0 AND C1785 IN (2,3)
+							ORDER BY MONEDA, C1785
+						</sentence>
+        <attribute>
+            <attribute-name>jtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoActual</attribute-name>
+            <column-name>C1604</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.acuerdosencuentanoconsumido.objectsdomain.QueryAcuerdosEnCuentasNoConsumidos</class-name>
+        <query-name>query.AcuerdosEnCuentasNoConsumidos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+             SELECT JTS_OID_SALDO , NRO_AUTORIZACION, ORDINAL , IMPORTE, NROLINEA
+             FROM VTA_SOBREGIROS
+             WHERE FECHA_ALTA &lt;= (SELECT FECHAPROCESO FROM
+             PARAMETROS) AND FECHA_VENCIMIENTO &gt;= (SELECT FECHAPROCESO
+             FROM PARAMETROS) AND (FECHA_CANCELACION IS NULL  OR
+             FECHA_CANCELACION &gt; (SELECT FECHAPROCESO
+             FROM PARAMETROS))
+             ORDER BY JTS_OID_SALDO	
+	   </sentence>
+        <attribute>
+            <attribute-name>jts_oid_saldo</attribute-name>
+            <column-name>JTS_OID_SALDO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>autorization</attribute-name>
+            <column-name>NRO_AUTORIZACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>amount</attribute-name>
+            <column-name>IMPORTE</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroLinea</attribute-name>
+            <column-name>NROLINEA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.interesesdeudores.objectsdomain.QueryUltimoNumeral</class-name>
+        <query-name>query.QueryUltimoNumeral</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+		            SELECT MAX(FECHA) AS FECHA
+		            FROM GRL_SALDOS_DIARIOS
+		            WHERE FECHA &lt; ?
+		            AND SALDOS_JTS_OID = ?
+		</sentence>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+    </query>
+</map>

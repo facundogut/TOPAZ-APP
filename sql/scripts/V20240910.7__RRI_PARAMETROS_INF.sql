@@ -1,0 +1,4 @@
+execute('
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (507, 0, 0, 0, ''CUIL'', '''', 5, 0, '''', '''', 0)
+');

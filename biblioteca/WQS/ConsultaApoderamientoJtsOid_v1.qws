@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/ConsultaApoderamientoJtsOid/{saldo}/{filtro}/</uri>
+    <serviceDescription>Devuelve los apoderamientos de una persona física</serviceDescription>
+    <title>ConsultaApoderamientoJtsOid</title>
+    <querys>
+        <query id="1" name="apoderamientos" type="MULTIPLE">
+            <sql>
+DECLARE @idSaldo NUMERIC(12,0) = CONVERT(NUMERIC(12, 0), ?);
+DECLARE @filtro VARCHAR(1) = ?; 
+DECLARE @fechaProceso DATE = (SELECT fechaproceso FROM parametros);
+DECLARE @sql NVARCHAR(MAX);
+
+-- Consulta original (sin where)
+SET @sql = N'
+SELECT 
+    @idSaldo AS idSaldo,
+    TRY_CONVERT(NUMERIC(12, 0), pa.ID_PERSONA) AS idPersona,
+    pfpj.TIPODOCUMENTO AS tipoDocumento,
+    TRY_CONVERT(NUMERIC(12, 0), pfpj.NUMERODOCUMENTO) AS numeroDocumento,
+    TRIM(CONCAT(PRIMERNOMBRE, SEGUNDONOMBRE, APELLIDOPATERNO, APELLIDOMATERNO)) AS nombrePersona,
+    pa.APODERAMIENTO AS apoderamientoCodigo,
+    COALESCE(pt.DESCRIPCION, ''Sin descripcion'') AS apoderamientoDescripcion,
+    pa.TIPO_PODER AS poderCodigo,
+    tp.DESCRIPCION AS poderDescripcion,
+    pa.CATEGORIA AS poderCategoria,
+    TRY_CONVERT(DATE, pa.FECHA_VENCIMIENTO, 120) AS poderFechaVencimiento,
+    TRY_CONVERT(DATE, pa.FECHA_INI_VIGENCIA, 120) AS poderFechaInicioVigencia,
+    TRY_CONVERT(DATE, pa.FECHA_INI_SUSPENSION, 120) AS poderFechaSuspensionInicio,
+    TRY_CONVERT(DATE, pa.FECHA_FIN_SUSPENSION, 120) AS poderFechaSuspensionFin
+FROM PYF_APODERADOS pa
+LEFT JOIN PYF_TIPOAPODERAMIENTO pt ON pt.CODAPODERAMIENTO = pa.APODERAMIENTO AND pt.TZ_LOCK = 0
+INNER JOIN PYF_TIPOPODERES tp ON tp.TIPO_PODER = pa.TIPO_PODER AND tp.TZ_LOCK = 0
+INNER JOIN CLI_DocumentosPFPJ pfpj ON pfpj.NUMEROPERSONAFJ = TRY_CONVERT(NUMERIC(12, 0), pa.ID_PERSONA) AND pfpj.TIPOPERSONA = ''F'' AND pfpj.TZ_LOCK = 0
+INNER JOIN CLI_PERSONASFISICAS pf ON pf.NUMEROPERSONAFISICA = pfpj.NUMEROPERSONAFJ AND pf.ESTADO &lt;&gt; 1 AND pf.TZ_LOCK = 0
+';
+
+-- Si es distinto de 'T' se agrega el bloque join para filtrar. 
+IF @filtro &lt;&gt; 'T'
+BEGIN
+    SET @sql = @sql + N'
+    INNER JOIN itf_master_parametros imp2 ON imp2.codigo_interface = 13512021 AND imp2.ALFA_1 = @filtro AND imp2.NUMERICO_1 = pa.TIPO_PODER AND imp2.TZ_LOCK = 0
+    INNER JOIN (
+        SELECT pa.ID_PERSONA
+        FROM PYF_APODERADOS pa
+        INNER JOIN itf_master_parametros imp 
+            ON imp.codigo_interface = 13512021 
+           AND imp.ALFA_1 = @filtro 
+           AND imp.NUMERICO_1 = pa.TIPO_PODER
+           AND imp.TZ_LOCK = 0
+        WHERE pa.TIPO_ENTIDAD = 2
+          AND pa.ID_ENTIDAD = @idSaldo
+          AND pa.FECHA_VENCIMIENTO &gt;= @fechaProceso
+          AND pa.FECHA_INI_VIGENCIA &lt;= @fechaProceso
+          AND pa.TZ_LOCK = 0 
+        GROUP BY pa.ID_PERSONA
+        HAVING COUNT(DISTINCT pa.TIPO_PODER) = (
+            SELECT COUNT(DISTINCT imp.NUMERICO_1)
+            FROM itf_master_parametros imp
+            WHERE imp.codigo_interface = 13512021 
+              AND imp.ALFA_1 = @filtro
+              AND imp.TZ_LOCK = 0
+        )
+    ) personas_filtradas
+        ON personas_filtradas.ID_PERSONA = pa.ID_PERSONA
+    ';
+END;
+
+
+--MODIFICAR WHERE
+
+
+-- Agregar la cláusula WHERE al final del bloque de joins
+SET @sql = @sql + N'
+WHERE pa.TIPO_ENTIDAD = 2
+    AND ID_ENTIDAD = @idSaldo
+    AND pa.FECHA_VENCIMIENTO &gt;= @fechaProceso
+    AND pa.FECHA_INI_VIGENCIA &lt;= @fechaProceso
+    AND pa.TZ_LOCK = 0
+    ORDER BY pa.APODERAMIENTO DESC';
+
+-- Ejecutar la consulta
+EXEC sp_executesql @sql, 
+                    N'@idSaldo VARCHAR(12), @fechaProceso DATE, @filtro VARCHAR(1)', 
+                    @idSaldo, @fechaProceso, @filtro;
+            </sql>
+            <input>
+                <inParameter description="Saldo de la entidad" type="STRING">saldo</inParameter>
+                <inParameter description="Filtro de poderes" type="STRING">filtro</inParameter>
+            </input>
+            <output>
+                <level groupby="idSaldo" name="saldo">
+                    <outParameter description="idSaldo" type="LONG">
+                        <queryname>idSaldo</queryname>
+                        <servicename>idSaldo</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="idPersona" name="persona">
+                    <outParameter description="nombrePersona" type="STRING">
+                        <queryname>nombrePersona</queryname>
+                        <servicename>nombre</servicename>
+                    </outParameter>
+                    <outParameter description="idPersona" type="LONG">
+                        <queryname>idPersona</queryname>
+                        <servicename>id</servicename>
+                    </outParameter>  
+                    <outParameter description="tipoDocumento" type="STRING">
+                        <queryname>tipoDocumento</queryname>
+                        <servicename>documento.tipo</servicename>
+                    </outParameter>  
+                    <outParameter description="numeroDocumento" type="LONG">
+                        <queryname>numeroDocumento</queryname>
+                        <servicename>documento.numero</servicename>
+                    </outParameter>  
+                    <outParameter description="apoderamientoCodigo" type="LONG">
+                        <queryname>apoderamientoCodigo</queryname>
+                        <servicename>apoderamiento.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="apoderamientoDescripcion" type="STRING">
+                        <queryname>apoderamientoDescripcion</queryname>
+                        <servicename>apoderamiento.descripcion</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="poder">  
+                    <outParameter description="poderCodigo" type="LONG">
+                        <queryname>poderCodigo</queryname>
+                        <servicename>codigo</servicename>
+                    </outParameter>
+                    <outParameter description="poderDescripcion" type="STRING">
+                        <queryname>poderDescripcion</queryname>
+                        <servicename>descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="poderCategoria" type="STRING">
+                        <queryname>poderCategoria</queryname>
+                        <servicename>categoria</servicename>
+                    </outParameter>
+                    <outParameter description="poderFechaVencimiento" type="STRING">
+                        <queryname>poderFechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="poderFechaInicioVigencia" type="STRING">
+                        <queryname>poderFechaInicioVigencia</queryname>
+                        <servicename>fechaInicioVigencia</servicename>
+                    </outParameter>
+                    <outParameter description="poderFechaSuspensionInicio" type="STRING">
+                        <queryname>poderFechaSuspensionInicio</queryname>
+                        <servicename>fechaSuspensionInicio</servicename>
+                    </outParameter>
+                    <outParameter description="poderFechaSuspensionFin" type="STRING">
+                        <queryname>poderFechaSuspensionFin</queryname>
+                        <servicename>fechaSuspensionFin</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

@@ -1,0 +1,29 @@
+service AutorizacionesMovimientos; 
+description "Servicio Autorizaciones"; 
+
+action:	SQLQuery Entity ( 
+ ASIENTO: string,
+ FECHAPROCESO: string,
+ SUCURSAL: string
+): [ 
+   	FECHA: date,
+	SUCURSAL: string,
+   	ASIENTO: string,
+   	USUARIO: string,
+	PERMISO: string,
+	NOMBRE_PERMISO: string,
+	MENSAJE: string,
+	VALOR: string		
+]
+{ 
+  	properties { 
+  	("statement", "SELECT CONVERT(VARCHAR(10),A.FECHAACT,103) AS FECHA, A.SUCURSAL,A.ASIENTO,A.INICIALES AS USUARIO, A.PERMISO, CASE A.PERMISO WHEN 0 THEN 'Autorizacion General' ELSE P.DESCRIPCION END AS NOMBRE_PERMISO,A.MENSAJE, CONVERT(VARCHAR(40),CAST(A.VALOR AS FLOAT)) AS VALOR FROM AUTORIZACIONES A LEFT JOIN PERMISOS P ON A.PERMISO = P.NUMERO WHERE A.ASIENTO = ? AND CONVERT( VARCHAR(10),A.FECHAPROCESO,103) =CONVERT( VARCHAR(10),? , 103) AND A.SUCURSAL = ?"),
+	("0", "ASIENTO"),
+	("1", "FECHAPROCESO"),
+	("2", "SUCURSAL")	
+	}
+}
+
+
+
+

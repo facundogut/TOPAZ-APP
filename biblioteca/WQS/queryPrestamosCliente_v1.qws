@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>prestamosCliente/{IdCliente}/{Estado}</uri>
+    <serviceDescription>Convenios de Sueldo</serviceDescription>
+    <title>Convenios de Sueldo</title>
+    <querys>
+        <query id="1" name="Qrty_PrestamosCliente" type="MULTIPLE">
+            <sql>DECLARE @IdCliente numeric(12),
+	@estado varchar(2)
+
+set @IdCliente  = ?
+set @estado = ?
+
+
+IF @estado &lt;&gt; 'T' AND @estado &lt;&gt; 'A'  AND LEN(@estado) &gt; 1
+BEGIN
+THROW 50000, 'Error: El estado debe ser de tipo T o A', 1;
+END
+
+IF @estado = 'A'
+BEGIN
+SELECT JTS_OID FROM SALDOS WHERE C1785 = 5 AND C1803 = @IdCliente AND C1604 &lt;&gt; 0 AND TZ_LOCK=0;
+END
+ELSE IF @estado = 'T'
+BEGIN
+SELECT JTS_OID FROM SALDOS WHERE C1785 = 5 AND C1803 = @IdCliente AND TZ_LOCK=0
+END
+</sql>
+            <input>
+                <inParameter description="Id Cliente" type="LONG">IdCliente</inParameter>
+                <inParameter description="Estado" type="STRING">Estado</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Prestamos">
+                    <outParameter description="JTS_OID" type="LONG">
+                        <queryname>JTS_OID</queryname>
+                        <servicename>JTS_OID</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="vacio" type="SIMPLE">
+            <sql>select '' as PlazosFijos from parametros with(nolock) where 1 = 0</sql>
+            <input/>
+            <output>
+                <level groupby="" name="vacio">
+                    <outParameter description="" type="STRING">
+                        <queryname>PlazosFijos</queryname>
+                        <servicename>PlazosFijos</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

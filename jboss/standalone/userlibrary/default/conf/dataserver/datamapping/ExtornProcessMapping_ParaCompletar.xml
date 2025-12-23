@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by DC (TS) -->
+<map>
+	<query>
+		<class-name>topsystems.automaticprocess.Extorno.objectsdomain.AsientosExtornar</class-name>
+		<query-name>query.vo_extornoDevengamiento</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			select ASIENTO, SUCURSAL, FECHA, OPERACION 
+			  from ASIENTOS_A_EXTORNAR
+			 where PROCESADO = 'N' 
+			   and 
+			   
+			   	.... COMPLETAR ....
+			   
+		</sentence>
+		<attribute>
+			<attribute-name>numeroAsiento</attribute-name>
+			<column-name>ASIENTO</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>sucursal</attribute-name>
+			<column-name>SUCURSAL</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaProceso</attribute-name>
+			<column-name>FECHA</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>operacion</attribute-name>
+			<column-name>OPERACION</column-name>
+			<column-type>long</column-type>
+		</attribute>
+	</query>
+	
+	
+	
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.FechaValorParaExtorno</class-name>
+        <query-name>query.vo_fechaValorDeParametrosJTS</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+            select VALOR 
+            from PARAMETROS_JTS 
+            where FUNCIONALIDAD = 'PREVISION_SALDOS_CALCULO' 
+            and PARAMETRO = 'FECHA_ULTIMO_CALCULO_PREVISION'
+        </sentence>
+        <attribute>
+             <attribute-name>fechaValorString</attribute-name>
+            <column-name>VALOR</column-name>
+            <column-type>String</column-type>
+            </attribute>
+    </query>
+	
+	
+    <query>
+        <class-name>topsystems.automaticprocess.Extorno.objectsdomain.FechaValorParaExtorno</class-name>
+        <query-name>query.vo_fechaValorProcesoAnterior</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+            select to_char(fechaprocesoanterior,'DD') || '/' || 
+            to_char(fechaprocesoanterior,'MM') || '/' || 
+            to_char(fechaprocesoanterior,'YYYY')
+            from parametros
+         </sentence>
+        <attribute>
+            <attribute-name>fechaValorString</attribute-name>
+            <column-name>VALOR</column-name>
+            <column-type>String</column-type>
+            </attribute>
+    </query>
+		
+</map>

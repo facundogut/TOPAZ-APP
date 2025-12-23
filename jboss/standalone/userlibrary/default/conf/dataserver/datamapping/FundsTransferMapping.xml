@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.automaticprocess.fundstransfer.objectdomain.FundsTransfer</class-name>
+        <entity-name>core.vo_FundsTransfer</entity-name>
+        <table-name>cv_transferencia</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>tz_lock</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidCuentaDestino</attribute-name>
+            <column-name>JTS_OID_CTA_DESTINO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidCuentaFuente</attribute-name>
+            <column-name>JTS_OID_CTA_FUENTE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>importeFijo</attribute-name>
+            <column-name>importe_a_transferir</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importeMaximo</attribute-name>
+            <column-name>maximo_a_transferir</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>minimoRemanenteFuente</attribute-name>
+            <column-name>MIN_REMANENTE_FUENTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>diasMesTransferencia</attribute-name>
+            <column-name>DIA_MES_TRANSF</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaLimite</attribute-name>
+            <column-name>FECHA_LIMITE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>porcentajeAjusteImporte</attribute-name>
+            <column-name>PORC_AJUSTE_IMPORTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaUltimaTransferencia</attribute-name>
+            <column-name>FECHA_ULT_TRANSF</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>cantidadTransfRealizadas</attribute-name>
+            <column-name>CANT_TRANSF_REALIZADAS</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>cantidadTransfAjuste</attribute-name>
+            <column-name>CANT_TRANSF_AJUSTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>cantidadTransfFallidas</attribute-name>
+            <column-name>CANT_TRANSF_FALLIDAS</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>cantidadTransfPorReintento</attribute-name>
+            <column-name>CANT_TRANSF_POR_REINT</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaAlta</attribute-name>
+            <column-name>FECHA_ALTA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>usoCoberturaGrupo</attribute-name>
+            <column-name>USO_COBERTURA_GRUPO</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.fundstransfer.objectdomain.FundsTransfer</class-name>
+        <query-name>query.FundsTransfer</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+		SELECT CV.JTS_OID_CTA_FUENTE, CV.JTS_OID_CTA_DESTINO, CV.NROSOLICITUD, CV.DIA_MES_TRANSF, CV.USO_COBERTURA_GRUPO 
+		FROM CV_TRANSFERENCIA AS CV
+		INNER JOIN SALDOS AS S ON
+			S.JTS_OID = CV.JTS_OID_CTA_FUENTE
+			AND S.PRODUCTO NOT IN (SELECT NUMERICO FROM PARAMETROSGENERALES WHERE CODIGO IN (710, 717, 718))
+			AND S.TZ_LOCK = 0
+		WHERE CV.TZ_LOCK = 0
+			AND (CV.DIA_MES_TRANSF = 0 OR (CV.DIA_MES_TRANSF &lt;&gt; 0 AND CV.CANT_TRANSF_FALLIDAS &lt; ?))
+			AND (CV.FECHA_LIMITE &gt;= (SELECT FECHAPROCESO FROM PARAMETROS) OR (CV.FECHA_LIMITE IS NULL))
+			AND (CV.FECHA_ALTA &lt;= (SELECT FECHAPROCESO FROM PARAMETROS) OR (CV.FECHA_ALTA IS NULL))
+			AND (CV.FECHA_ULT_TRANSF &lt; (SELECT FECHAPROCESO FROM PARAMETROS) OR (CV.FECHA_ULT_TRANSF IS NULL)) 
+		ORDER BY CV.JTS_OID_CTA_FUENTE
+		</sentence>
+        <attribute>
+            <attribute-name>jtsOidCuentaFuente</attribute-name>
+            <column-name>jts_oid_cta_fuente</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidCuentaDestino</attribute-name>
+            <column-name>jts_oid_cta_destino</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasMesTransferencia</attribute-name>
+            <column-name>DIA_MES_TRANSF</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>UsoCoberturaGrupo</attribute-name>
+            <column-name>uso_cobertura_grupo</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.fundstransfer.objectdomain.VtaAgendamiento</class-name>
+        <entity-name>core.vo_VtaAgendamiento</entity-name>
+        <table-name>VTA_AGENDAMIENTO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NRO_SOLICITUD</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.topaz.server.objectsdomain.VOClientePersona</class-name>
+        <query-name>query.QueryClientePersona</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+											SELECT CODIGOCLIENTE, NUMEROPERSONA, TITULARIDAD
+												FROM CLI_CLIENTEPERSONA 
+												WHERE CODIGOCLIENTE = ?
+												AND TITULARIDAD IN ('T', 'C')
+					</sentence>
+        <attribute>
+            <attribute-name>codigoCliente</attribute-name>
+            <column-name>CODIGOCLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroPersona</attribute-name>
+            <column-name>NUMEROPERSONA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>titularidad</attribute-name>
+            <column-name>TITULARIDAD</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.fundstransfer.objectdomain.BitacoraTrapasoCobertura</class-name>
+        <entity-name>core_vo.BitacoraTrapasoCobertura</entity-name>
+        <table-name>BITACORA_TRASPASO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>jts_oid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <key>primary</key>
+            <attribute-id-generator>selfNumerator</attribute-id-generator>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>jts_origen</attribute-name>
+            <column-name>JTS_ORIGEN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>jts_destino</attribute-name>
+            <column-name>JTS_DESTINO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.automaticprocess.transferenciaperiodicas.TransferenciaPeriodica</class-name>
+        <entity-name>core.vo_transfPeriodica</entity-name>
+        <table-name>VTA_TRANSFERENCIA_PERIODICA</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>jtsOidCuentaOrigen</attribute-name>
+            <column-name>JTS_ORIGEN</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidCuentaDestino</attribute-name>
+            <column-name>JTS_DESTINO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaAlta</attribute-name>
+            <column-name>FECHA_INICIO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>importeFijo</attribute-name>
+            <column-name>IMPORTE_TRANSFERENCIA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoPeriodicidad</attribute-name>
+            <column-name>PERIODICIDAD</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_ultima_transferencia</attribute-name>
+            <column-name>FECHA_ULT_TRANSF_PROGRAMADA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>detalle_proceso</attribute-name>
+            <column-name>DETALLE_ULT_PROCESO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoReintento</attribute-name>
+            <column-name>REINTENTO</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.transferenciaperiodicas.TransferenciaPeriodica</class-name>
+        <query-name>query.TransferenciaPeriodica</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+		SELECT 
+			JTS_ORIGEN,
+			JTS_DESTINO,
+			IMPORTE_TRANSFERENCIA,
+			FECHA_INICIO,
+			PERIODICIDAD,
+			FECHA_ULT_TRANSF_PROGRAMADA,
+			DETALLE_ULT_PROCESO,
+			REINTENTO
+	   	FROM 
+			VTA_TRANSFERENCIA_PERIODICA
+	  	WHERE 
+			TZ_LOCK = 0 
+			AND ((FECHA_ULT_TRANSF_PROGRAMADA IS NULL  OR FECHA_ULT_TRANSF_PROGRAMADA &lt;= (SELECT FECHAPROCESO FROM PARAMETROS)) 
+			AND FECHA_INICIO &lt;= (SELECT FECHAPROCESO FROM PARAMETROS)
+		    AND FECHA_LIMITE &gt; (SELECT FECHAPROCESO FROM PARAMETROS)
+		    AND REINTENTO = 0)
+		    OR (FECHA_LIMITE &gt;= (SELECT FECHAPROCESO FROM PARAMETROS)
+			AND REINTENTO = 1)
+			ORDER BY JTS_ORIGEN
+</sentence>
+        <attribute>
+            <attribute-name>jtsOidCuentaOrigen</attribute-name>
+            <column-name>JTS_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidCuentaDestino</attribute-name>
+            <column-name>JTS_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeFijo</attribute-name>
+            <column-name>IMPORTE_TRANSFERENCIA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaAlta</attribute-name>
+            <column-name>FECHA_INICIO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoPeriodicidad</attribute-name>
+            <column-name>PERIODICIDAD</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_ultima_transferencia</attribute-name>
+            <column-name>FECHA_ULT_TRANSF_PROGRAMADA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoReintento</attribute-name>
+            <column-name>REINTENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>detalle_proceso</attribute-name>
+            <column-name>DETALLE_ULT_PROCESO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.transferenciaperiodicas.TransferenciaPeriodica</class-name>
+        <query-name>query.TransferenciaPeriodicaR</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+
+	  SELECT 
+			JTS_ORIGEN,
+			JTS_DESTINO,
+			IMPORTE_TRANSFERENCIA,
+		 	FECHA_INICIO,
+			PERIODICIDAD,
+			FECHA_ULT_TRANSF_PROGRAMADA,
+			DETALLE_ULT_PROCESO,
+			REINTENTO
+	   FROM
+			VTA_TRANSFERENCIA_PERIODICA
+	  WHERE 
+			TZ_LOCK = 0
+			AND REINTENTO = 1
+			AND FECHA_LIMITE &gt;= (SELECT FECHAPROCESO FROM PARAMETROS)
+			ORDER BY JTS_ORIGEN
+		</sentence>
+        <attribute>
+            <attribute-name>jtsOidCuentaOrigen</attribute-name>
+            <column-name>JTS_ORIGEN</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidCuentaDestino</attribute-name>
+            <column-name>JTS_DESTINO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeFijo</attribute-name>
+            <column-name>IMPORTE_TRANSFERENCIA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaAlta</attribute-name>
+            <column-name>FECHA_INICIO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoPeriodicidad</attribute-name>
+            <column-name>PERIODICIDAD</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_ultima_transferencia</attribute-name>
+            <column-name>FECHA_ULT_TRANSF_PROGRAMADA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoReintento</attribute-name>
+            <column-name>REINTENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>detalle_proceso</attribute-name>
+            <column-name>DETALLE_ULT_PROCESO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.fundstransfer.objectdomain.FundsTransfer</class-name>
+        <query-name>query.AcreditacionDPF</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT CV.JTS_OID_CTA_FUENTE, CV.JTS_OID_CTA_DESTINO, CV.NROSOLICITUD, CV.DIA_MES_TRANSF, CV.USO_COBERTURA_GRUPO 
+			FROM CV_TRANSFERENCIA AS CV
+			INNER JOIN SALDOS AS S ON
+				S.JTS_OID = CV.JTS_OID_CTA_FUENTE
+				AND S.PRODUCTO IN (SELECT NUMERICO FROM PARAMETROSGENERALES WHERE CODIGO IN (710, 717, 718))
+				AND S.TZ_LOCK = 0
+			WHERE CV.TZ_LOCK = 0
+				AND (CV.DIA_MES_TRANSF = 0 OR (CV.DIA_MES_TRANSF &lt;&gt; 0 AND CV.CANT_TRANSF_FALLIDAS &lt; ?))
+				AND (CV.FECHA_LIMITE &gt;= (SELECT FECHAPROCESO FROM PARAMETROS) OR (CV.FECHA_LIMITE IS NULL))
+				AND (CV.FECHA_ALTA &lt;= (SELECT FECHAPROCESO FROM PARAMETROS) OR (CV.FECHA_ALTA IS NULL))
+				AND (CV.FECHA_ULT_TRANSF &lt; (SELECT FECHAPROCESO FROM PARAMETROS) OR (CV.FECHA_ULT_TRANSF IS NULL)) 
+			ORDER BY CV.JTS_OID_CTA_FUENTE
+        </sentence>
+        <attribute>
+            <attribute-name>jtsOidCuentaFuente</attribute-name>
+            <column-name>jts_oid_cta_fuente</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsOidCuentaDestino</attribute-name>
+            <column-name>jts_oid_cta_destino</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasMesTransferencia</attribute-name>
+            <column-name>DIA_MES_TRANSF</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>UsoCoberturaGrupo</attribute-name>
+            <column-name>uso_cobertura_grupo</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

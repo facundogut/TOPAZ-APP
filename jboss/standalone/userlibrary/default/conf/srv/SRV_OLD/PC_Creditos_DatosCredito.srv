@@ -1,0 +1,26 @@
+service DatosCredito; 
+description "Servicio Datos Credito"; 
+
+action:	SQLQuery Entity ( 
+ IDSALDO: string
+): [ 
+	DIASPAGO: string,
+   	TASAEFECTIVAANUAL: string,
+	CAPITALORIGINAL: string,
+	ESTADO: string,
+	DIASPRIMERACUOTA: string,
+	CANTIDADCUOTAS: string,
+	PERIODOCUOTAS: string,
+	CANTIDADCUOTASPAGAS: string,
+	DIASMORA: string,
+	NROLINEACREDITO: string,
+	IDSALDO: string,
+	NROOPERACION: string
+	]
+{ 
+  	properties { 
+  	("statement", "SELECT s.OPERACION as NROOPERACION, s.JTS_OID as IDSALDO, s.C1773 AS DIASPAGO, to_char(( power(( 1 + ((s.C1632/100)/12) ) ,12) -1)*100, '9999.9999999') AS TASAEFECTIVAANUAL, TO_CHAR(s.C1601,'9999G999G999G999G999D99') AS CAPITALORIGINAL, CASE WHEN s.C1644 = s.C1645 THEN 'Cancelado' else cc.DESCRIPCION END AS ESTADO, s.C1641-s.C1621 AS DIASPRIMERACUOTA, s.C1644 AS CANTIDADCUOTAS, s.C1642 AS PERIODOCUOTAS, s.c1645 AS CANTIDADCUOTASPAGAS, CASE WHEN s.C1644 = s.C1645 OR s.c1628 >=(select fechaproceso from parametros) THEN 0 ELSE (select fechaproceso from parametros) - s.C1628 END AS DIASMORA, s.C1661 AS NROLINEACREDITO FROM SALDOS s left JOIN CLI_OFICUENTA f ON f.CODOFICIAL = s.C1670 left JOIN CR_CODIGOS_ATRASO_CARTERA cc ON s.C1728 = cc.COD_ATRASO WHERE s.JTS_OID = ? "),
+	("0", "IDSALDO")
+	}
+}
+

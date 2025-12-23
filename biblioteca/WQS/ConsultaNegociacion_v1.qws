@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/echeq/consultaNegociacion/{COD_NEGOCIACION}</uri>
+    <serviceDescription>ECHEQ consulta negociacion</serviceDescription>
+    <title>ECHEQ consulta negociacion</title>
+    <querys>
+        <query id="1" name="detalle" type="SIMPLE">
+            <sql>DECLARE @COD_NEGOCIACION VARCHAR(15)&#13;
+SET @COD_NEGOCIACION=?&#13;
+&#13;
+SELECT isnull(ESTADONEGOCIACION,'0') AS ESTADONEGOCIACION, isnull(MOTIVORECHAZO,'') AS MOTIVORECHAZO, isnull(CBUDEPOSITOAUTOMATICO,'') AS CBUDEPOSITOAUTOMATICO&#13;
+FROM CLE_DESCUENTOS_ECHEQ WITH (NOLOCK)&#13;
+WHERE COD_NEGOCIACION = @COD_NEGOCIACION</sql>
+            <input>
+                <inParameter description="COD_NEGOCIACION" type="STRING">COD_NEGOCIACION</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="response">
+                    <outParameter description="estadoNegociacion" type="STRING">
+                        <queryname>ESTADONEGOCIACION</queryname>
+                        <servicename>estadoNegociacion</servicename>
+                    </outParameter>
+                    <outParameter description="MOTIVORECHAZO" type="STRING">
+                        <queryname>MOTIVORECHAZO</queryname>
+                        <servicename>motivoRechazo</servicename>
+                    </outParameter>
+                    <outParameter description="cbuDepositoAutomatico" type="STRING">
+                        <queryname>CBUDEPOSITOAUTOMATICO</queryname>
+                        <servicename>cbuDepositoAutomatico</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

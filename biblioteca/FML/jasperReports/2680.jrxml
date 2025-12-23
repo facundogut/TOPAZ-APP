@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-09-10T15:58:02 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Comerzialisadoras" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8786ab61-57c9-44e9-8957-65e143ef70f2">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH Data Adapter "/>
+	<parameter name="NRO_CONVENIO" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Número de Convenio]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[
+SELECT TOP 1
+	--CONVENIO--
+	(SELECT CASE CONCAT('',a.Cuit) WHEN '0' THEN REPLICATE('_',11) WHEN '' THEN REPLICATE('_',11) ELSE CONCAT('',a.Cuit) END) AS Cuit,
+	(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',5) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',a.Plazo) END) AS Plazo, 
+	(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',10) ELSE dbo.Fn_NumberToWords(a.Plazo) END) AS W_Plazo,
+	a.FecAlta, 
+	a.Id_ConvPago, 
+	(SELECT CASE CONCAT('',a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE LEFT(CONVERT(VARCHAR,a.FecAlta,106),2) END) AS DIA,  
+	(SELECT CASE CONCAT('', a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE (SELECT dbo.Fn_NumberToWords(RIGHT(CONVERT(VARCHAR,FecAlta,106),4))) END) AS AÑO,
+	
+	-- CUENTA DEBITO -- 
+	(SELECT CASE CONCAT('',b.CUENTA) WHEN '' THEN REPLICATE('_',12)  ELSE CONCAT('',b.CUENTA) END)AS CUENTA, 
+	(SELECT CASE CONCAT('',e.C6251) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',e.C6251) END )AS TIPO_CUENTA,
+	(SELECT CASE CONCAT('',b.SUCURSAL) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',b.SUCURSAL) END) AS SUCURSAL, 
+	(SELECT CASE CONCAT('',d.NOMBRESUCURSAL) WHEN ''  THEN REPLICATE('_',25)  ELSE CONCAT('',d.NOMBRESUCURSAL) END) AS LOC_SUC, 
+	
+	
+	-- DIRECCION FISCAL --
+	(SELECT CASE CONCAT('',tf.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',n.NUMERO) END) AS TEL_DF,
+	(SELECT  CASE CONCAT('',n.CALLE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',n.CALLE)  END) AS CALLE_DF, 
+	(SELECT CASE CONCAT('',n.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',n.NUMERO) END) AS NRO_DF, 
+	(SELECT CASE CONCAT('apto ',n.APARTAMENTO) WHEN 'apto ' THEN '' ELSE CONCAT('apto ',n.APARTAMENTO) END)AS APTO_DF, 
+   	(SELECT CASE CONCAT('piso ',n.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ',n.PISO)  END) AS PISO_DF,
+	(SELECT CASE CONCAT('',p.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',p.DESCRIPCION_DIM3) END) AS LOCALIDAD_DF,
+	(SELECT CASE CONCAT('', o.DESCRIPCION) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('', o.DESCRIPCION) END) AS PROVINCIA_DF,
+	
+	--DIRECCION REAL --
+	(SELECT CASE CONCAT('',tr.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',n.NUMERO) END ) AS TEL_DR,
+	(SELECT CASE CONCAT('',r.CALLE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',r.CALLE) END) AS CALLE_DR,
+	(SELECT CASE CONCAT('',r.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',r.NUMERO) END) AS NRO_DR,
+	(SELECT CASE CONCAT('apto ',r.APARTAMENTO) WHEN 'apto ' THEN '' ELSE  CONCAT('apto ',r.APARTAMENTO) END) AS APTO_DR,
+	(SELECT CASE CONCAT('piso ', r.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ', r.PISO) END) AS PISO_DR,
+	(SELECT CASE CONCAT('',t.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',t.DESCRIPCION_DIM3) END) AS LOCALIDAD_DR,
+	(SELECT CASE CONCAT('',s.DESCRIPCION) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',s.DESCRIPCION) END)  AS PROVINCIA_DR,
+	
+	-- SUCURSAL -- 
+	(SELECT CASE CONCAT('',v.NOMBREDEP) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',v.NOMBREDEP) END) AS DEP_CONTRATO,
+	
+	--CLIENTE  --
+	(SELECT CASE CONCAT('', w.NOMBRECLIENTE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('', w.NOMBRECLIENTE) END) AS NOMBRECLIENTE,
+	(SELECT CASE CONCAT('',w.TIPO) WHEN '' THEN REPLICATE('_',15) WHEN 'J' THEN 'la Empresa' WHEN 'I' THEN 'la Institución' WHEN 'F' THEN 'la Persona' END) AS REPRESENTACION
+	
+	
+	FROM CONV_CONVENIOS_PAG a 
+    --CUENTA PAG --
+    LEFT JOIN SALDOS b ON a.CuentaDeb = b.JTS_OID AND b.TZ_LOCK = 0
+    LEFT JOIN CLI_DIRECCIONES c ON b.SUCURSAL = c.ID AND c.TZ_LOCK = 0
+    LEFT JOIN SUCURSALES d ON d.SUCURSAL = b.SUCURSAL AND d.TZ_LOCK = 0
+    LEFT JOIN PRODUCTOS e ON b.PRODUCTO = e.C6250 AND e.TZ_LOCK = 0
+    LEFT JOIN CLI_ClientePersona x ON a.Cliente = x.CODIGOCLIENTE AND x.TITULARIDAD = 'T' AND x.TZ_LOCK = 0
+    --DIRECCION FISCAL--
+	LEFT JOIN CLI_DIRECCIONES n ON a.Dir_Id = n.ID AND a.Dir_Formato =n.FORMATO AND a.Dir_Tipo = n.TIPODIRECCION AND a.Dir_ordinal = n.ORDINAL_DIR AND n.TZ_LOCK = 0
+	LEFT JOIN CLI_TELEFONOS tf ON tf.ID = a.Cliente AND tf.FORMATO IN ('PF','PJ') AND tf.ORDINAL = 1 AND tf.TIPO = 'LE' AND tf.TZ_LOCK = 0
+	LEFT JOIN CLI_PROVINCIAS o ON o.CODIGOPAIS =n.PAIS AND o.DIM1 = n.PROVINCIA AND o.TZ_LOCK = 0
+	LEFT JOIN CLI_LOCALIDADES p ON p.DIM1 = n.PROVINCIA AND p.DIM2 = n.DEPARTAMENTO AND p.DIM3 = n.LOCALIDAD AND p.TZ_LOCK = 0
+    --DIRECCION REAL--
+	LEFT JOIN  CLI_DIRECCIONES r ON a.Dir_Id = r.ID AND a.Dir_Formato = r.FORMATO AND r.TIPODIRECCION = 'R' AND r.TZ_LOCK = 0
+	LEFT JOIN CLI_TELEFONOS tr ON a.Cliente = tr.ID AND tr.FORMATO IN ('PF','PJ') AND tr.ORDINAL = 1 AND tr.TIPO = 'LE' AND tr.TZ_LOCK = 0
+    LEFT JOIN  CLI_PROVINCIAS s ON s.CODIGOPAIS = r.PAIS AND s.DIM1 = r.PROVINCIA AND s.TZ_LOCK = 0 AND s.TZ_LOCK = 0
+	LEFT JOIN CLI_LOCALIDADES t ON t.DIM1 = r.PROVINCIA AND t.DIM2 = r.DEPARTAMENTO AND t.DIM3 = r.LOCALIDAD AND t.TZ_LOCK = 0
+	    --SUCURSAL --
+	    LEFT JOIN CLI_DIRECCIONES u ON u.ID =  x.NUMEROPERSONA AND u.FORMATO = 'S' AND u.TIPODIRECCION = 'R' AND u.TZ_LOCK = 0
+	    LEFT JOIN CLI_DEPARTAMENTOS v ON v.CODIGOPAIS = u.PAIS AND v.DEPARTAMENTO = u.DEPARTAMENTO AND v.PROVINCIA = u.PROVINCIA AND v.TZ_LOCK = 0
+	    
+	    --CLIENTE ---
+	    LEFT JOIN CLI_CLIENTES w ON w.CODIGOCLIENTE = a.Cliente  AND w.TZ_LOCK = 0
+	    WHERE a.Id_ConvPago =  $P{NRO_CONVENIO}  AND a.TZ_LOCK = 0]]>
+	</queryString>
+	<field name="Cuit" class="java.lang.String"/>
+	<field name="Plazo" class="java.lang.String"/>
+	<field name="W_Plazo" class="java.lang.String"/>
+	<field name="FecAlta" class="java.sql.Timestamp"/>
+	<field name="Id_ConvPago" class="java.math.BigDecimal"/>
+	<field name="DIA" class="java.lang.String"/>
+	<field name="AÑO" class="java.lang.String"/>
+	<field name="CUENTA" class="java.lang.String"/>
+	<field name="TIPO_CUENTA" class="java.lang.String"/>
+	<field name="SUCURSAL" class="java.lang.String"/>
+	<field name="LOC_SUC" class="java.lang.String"/>
+	<field name="TEL_DF" class="java.lang.String"/>
+	<field name="CALLE_DF" class="java.lang.String"/>
+	<field name="NRO_DF" class="java.lang.String"/>
+	<field name="APTO_DF" class="java.lang.String"/>
+	<field name="PISO_DF" class="java.lang.String"/>
+	<field name="LOCALIDAD_DF" class="java.lang.String"/>
+	<field name="PROVINCIA_DF" class="java.lang.String"/>
+	<field name="TEL_DR" class="java.lang.String"/>
+	<field name="CALLE_DR" class="java.lang.String"/>
+	<field name="NRO_DR" class="java.lang.String"/>
+	<field name="APTO_DR" class="java.lang.String"/>
+	<field name="PISO_DR" class="java.lang.String"/>
+	<field name="LOCALIDAD_DR" class="java.lang.String"/>
+	<field name="PROVINCIA_DR" class="java.lang.String"/>
+	<field name="DEP_CONTRATO" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="REPRESENTACION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="79">
+			<image>
+				<reportElement x="50" y="9" width="140" height="60" uuid="146f7dfb-22d8-4d32-bf67-19580bad5c80"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="66" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="50" y="43" width="460" height="16" isPrintWhenDetailOverflows="true" uuid="18819f5e-430a-4102-ac4f-c43d53ac40ef"/>
+				<textElement textAlignment="Justified" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["En la Ciudad de Resistencia, el "+$F{DIA}+" de " +new SimpleDateFormat("MMMM").format($F{FecAlta})+" del año "+ $F{AÑO} +", entre <b>Nuevo Banco del Chaco S.A.</b>, con domicilio en la calle Güemes Nº 102 de la ciudad de Resistencia, en adelante “BANCO”, representado en este acto por los abajo firmantes, los cuales comparecen en el carácter de apoderados, con facultades suficientes para este acto, otorgadas mediante Poder General Amplio de Administración y Disposición instrumentado en Escritura N°75 de fecha 15/07/2016 pasada ante el Escribano Ariel Alfredo Farías, por una parte y por la otra "+ $F{NOMBRECLIENTE}+", con domicilio en "+$F{CALLE_DR}+" N °"+$F{NRO_DR}+","+ $F{LOCALIDAD_DR}+" "+$F{PROVINCIA_DR}+", con domicilio fiscal en "+$F{CALLE_DF}+" Nº"+$F{NRO_DF}+", de la localidad de "+$F{LOCALIDAD_DF}+", provincia de "+$F{PROVINCIA_DF}+", representada en este acto por los abajo firmantes, los que comparecen en nombre y representación de"+$F{REPRESENTACION}+", en adelante la \"ENTIDAD\", la cual fuera aprobada por Resolución de Directorio N° _____ de fecha ______________ para la suscripción del presente Convenio de Servicios que se regirá de acuerdo a las siguientes cláusulas y condiciones:"
++"<br><br>"+
+
+"<b>Primera: Términos y condiciones.</b> A los efectos del presente convenio, se entederá por: <br><u>CLIENTES:</u> Personas físicas y/o jurídicas que contratan los PRODUCTOS.<br><u>PRODUCTOS:</u> Las operaciones y servicios que el BANCO celebra, presta y/o comercializa, detallados en la cláusula Segunda del presente Convenio.<br><br>"+
+"<b>Segunda: Objeto.</b><br>La ENTIDAD y el BANCO acuerdan celebrar un Convenio de Servicios, consistente en la comercialización por la ENTIDAD, en la ciudad de ______________, de los PRODUCTOS del BANCO y/o comercializados por el mismo, que en los Anexos al presente convenio se detallan, y/o de aquellos que en el futuro puedan eventualmente incorporarse. <br><br>"+
+"<b>Tercera: Exclusividad.</b><br>3.1.- Expresamente se establece que la ENTIDAD no podrá comercializar PRODUCTOS similares de otras entidades financieras o no financieras que compitan con los PRODUCTOS del BANCO.<br> 3.2.- El BANCO podrá convenir con terceros la comercialización de sus PRODUCTOS y/o actuar con su propia fuerza de ventas. <br><br>"+
+
+"<ul><b>Cuarta: Obligaciones de la ENTIDAD.</b><li>La ENTIDAD efectuará la promoción y/o comercialización de los PRODUCTOS en las condiciones que el BANCO establezca con carácter general para los mismos.</li>"+
+"<li>En oportunidad de surgir un CLIENTE que solicite adquirir un PRODUCTO, la ENTIDAD integrará un legajo y lo elevará al BANCO, de conformidad con las normas de procedimientos que éste fije al efecto.</li>"+
+"<li>Personal autorizado de la ENTIDAD – cuyas firmas obren en registros del BANCO - suscribirá los antecedentes enviados en cada legajo, responsabilizándose la ENTIDAD por la correcta integración de los datos y requisitos exigidos por el BANCO, la veracidad de la información aportada y la fidelidad de las copias y/o fotocopias presentadas por los CLIENTES. Expresamente la ENTIDAD asume el deber de responder ante el BANCO por los daños y perjuicios que para el mismo resulten de la incorrecta integración de los documentos correspondientes a cada operación y/o de la falta de autenticidad o veracidad de las firmas impuestas y/o documentos presentados por los CLIENTES, obligándose a resarcir al BANCO en el total efectivamente desembolsado en que resultare damnificado, con más sus intereses y costos; obligándose asimismo la ENTIDAD a mantener indemne al BANCO de todo reclamo judicial o extrajudicial que CLIENTES o terceros promuevan en su contra por tales motivos u otros derivados del incumplimiento de los deberes impuestos a la ENTIDAD a través del presente Convenio.</li>"+
+"<li><b>Contratación de Personal. Prohibición.</b> La ENTIDAD no podrá contratar en relación de dependencia laboral y/o por cualquier otro vínculo jurídico a empleados y/o funcionarios y/o directores del BANCO para la ejecución de este convenio. Esta prohibición se mantendrá vigente por un plazo de doce (12) meses posteriores a la extinción del convenio.</li>"+
+"<li>La ENTIDAD se obliga a suministrar la información y documentación que el BANCO y/o la Superintendencia de Entidades Financieras y Cambiarias le requiera en ejercicio de las facultades de inspección y verificación que les confiere la cláusula Octava del presente convenio.</li>"+
+"<li>La ENTIDAD será responsable de la calidad de la gestión realizada, en especial se obliga a:<ul><li>Desarrollar la actividad en forma diligente y adecuada, conforme las reglas establecidas y realizando todos aquellos actos que resulten necesarios para el cumplimiento del objeto enunciado en el presente convenio.</li><li>Comunicar al BANCO cualquier hecho, circunstancia, acto u omisión que afecte su patrimonio y/o intereses dentro de las veinticuatro (24) horas de haber tomado conocimiento del mismo.</li></ul></li>"
++"</ul><br>"+
+"<b>Quinta: Aceptación de ofertas. Solicitudes.</b><br>Los legajos correspondientes a solicitudes de PRODUCTOS serán remitidos por la ENTIDAD al BANCO. El BANCO previo análisis, decidirá el otorgamiento del PRODUCTO, conforme a sus disponibilidades y recursos técnicos, antecedentes del CLIENTE, y normas vigentes, y -de ser necesario- previa entrevista personal con el CLIENTE en las oficinas del BANCO. El BANCO comunicará a la ENTIDAD su decisión respecto de su voluntad de aceptar la solicitud realizada por el CLIENTE.<br><br>"+
+"<b>Sexta: Verificación y Auditorías.</b><br>El BANCO se encuentra facultado a realizar las verificaciones y/o auditorías que estime conveniente en sistemas informáticos, registros y documentación de la ENTIDAD, relativas a las operaciones celebradas en el marco del presente convenio, tendiente a verificar el estricto cumplimiento de las obligaciones emergentes del presente convenio. A tal fin tendrá similares e irrestrictas facultades la Superintendencia de Entidades Financieras y Cambiarias. <br><br>"+
+"<b>Séptima: Condiciones de Comercialización.</b><br>Las condiciones de promoción y comercialización de los PRODUCTOS serán las vigentes con carácter general en el BANCO. En caso de modificarse las mismas, el BANCO comunicará las nuevas disposiciones a la ENTIDAD, indicando la fecha de su entrada en vigencia.<br><br>"+
+"<b>Octava:</b><br>La ENTIDAD se compromete al estricto sometimiento a procedimientos y requisitos que fije el BANCO, vigentes a la fecha y que en el futuro se determinen, para el cumplimiento de regulaciones de BCRA, los que se agregarán al presente como <b>Anexos</b>. Asimismo, asume el compromiso de observar las medidas de seguridad que se le impongan.<br><br>"+
+"<b>Novena: Responsabilidad Laboral.</b><br>La ENTIDAD desarrollará las tareas de comercialización bajo su exclusiva responsabilidad, afectando a tal fin a su propio personal. Respecto del mismo, la ENTIDAD se compromete al estricto cumplimiento de las obligaciones laborales, sindicales, previsionales e impositivas emergentes del vínculo laboral. En tal sentido se obliga a:<br>"+
+"a) Pagar en tiempo y forma las obligaciones inherentes o derivadas de dicha relación, incluyendo las indemnizaciones pertinentes por accidentes de trabajo, muerte, incapacidad total o parcial, despidos - justificados o no -, vacaciones, omisiones de preaviso, salarios caídos y/o cualquier otro concepto que corresponda o que se encuentre establecido actualmente o que se fije en el futuro, sin exclusión alguna.<br>"+
+"b) Efectivizar puntualmente los aportes y contribuciones previsionales respectivos del personal que se encuentre a su cargo.<br>"+
+"c)segurar los riesgos de las obligaciones a que se refiere el punto a), como así también las responsabilidades emergentes de la Ley 24.557 de Riesgos del Trabajo, y las derivadas del Art. 1113 y concordantes del Código Civil, debiendo exhibir al BANCO las pólizas correspondientes.<br>"+
+"d) Responder en forma directa por los actos u omisiones de su personal, que causaren perjuicios al BANCO y/o a terceros, cualquiera fuere su naturaleza.<br>"+
+"e) Mantener indemne al BANCO por todos y cada uno de los reclamos de su personal afectado y/o contratado para el cumplimiento de las obligaciones asumidas en este contrato, en los casos en que dicho personal recurra directamente al BANCO, en forma judicial o extrajudicial, con fundamento en la eventual responsabilidad solidaria emergente del artículo 30 de la Ley de contratos de Trabajo y/o cualquier otra norma legal. Esta obligación de indemnidad también será exigible frente a cualquier reclamo que sea dirigido contra el BANCO por cualquier organismo recaudador estatal y/o previsional, entidad sindical, obra social, otras autoridades de aplicación o terceros en virtud de los contratos de trabajo involucrados antes mencionados.<br>"+
+"f) No utilizar contratistas o subcontratistas sin expresa autorización previa y por escrito del BANCO.<br><br>"+
+"<b>Décima: Exhibición de comprobantes. Resolución contractual.</b><br>El BANCO queda autorizado a exigir la exhibición de los comprobantes de pago de los conceptos mencionados en la cláusula precedente. Se pacta como causal expresa de resolución del convenio la falta de cumplimiento de cualquiera de las obligaciones indicadas y/o de la prevista en esta cláusula, la que se producirá en caso de no cumplirse la misma dentro de los cinco (5) días de intimado fehacientemente su cumplimiento por el BANCO.<br><br>"+
+"<b>Décima Primera: PRODUCTOS no solicitados.</b><p>El BANCO reintegrará, a los titulares de cuentas habilitadas en el BANCO, toda suma debitada de las mismas en concepto de PRODUCTOS cuando no existiera expresa autorización de débito y/o se verifique la inexactitud o falsedad de los datos y documentos cuya verificación compete a la ENTIDAD en los términos de este convenio.</p><p>El importe del reintegro, con más una multa equivalente a 20 (veinte) veces el importe reintegrado, será debitado directamente de la cuenta de la ENTIDAD en el BANCO y/o se retendrá de cualquier suma existente o futura a su favor en el BANCO.</p><p>Este supuesto habilita al BANCO a considerar resuelto el contrato desde la fecha de recepción de la comunicación fehaciente de su voluntad en tal sentido a la ENTIDAD</p><br>"+
+"<b>Décima Segunda: Cesión y transferencia.</b><p>La ENTIDAD se abstendrá de ceder o transferir total o parcialmente a terceros, los derechos y obligaciones que surgen de este convenio sin el consentimiento previo y expreso del BANCO.</p><br>"+
+
+"<b>Décima Tercera: Comisiones.</b><p>El BANCO abonará mensualmente a la ENTIDAD la comisión que se estipula en los <b><u>Anexos</u></b> respectivos, previa presentación de la facturación correspondiente, respecto de PRODUCTOS objeto del presente convenio, sean aprobados y liquidados (o “activados” - en caso de tarjetas de créditos -). El importe correspondiente será acreditado en la <b>"+$F{TIPO_CUENTA}+" Nº "+$F{CUENTA}+" de la Sucursal "+$F{LOC_SUC}+" ("+$F{SUCURSAL}+")</b> del BANCO, de titularidad de la ENTIDAD, y/o en la que en el futuro indique la ENTIDAD al BANCO.</p><br>"+
+
+"<b>Décima Cuarta: Confidencialidad.</b><p>La ENTIDAD se compromete a guardar el más estricto secreto de toda información, operaciones, políticas y/o circunstancias de que tomare conocimiento con motivo del presente convenio. Se obliga en forma irrevocable a no revelar, divulgar o facilitar, bajo cualquier forma, a terceros – sean éstos personas físicas o jurídicas, públicas o privadas -, y a no utilizar los mismos para su propio beneficio o para beneficio de terceros. La obligación de confidencialidad se mantendrá una vez extinguida la relación contractual.</p><p>La violación o el incumplimiento de la obligación de confidencialidad, así como la falsedad de la información que pudiere brindarse a terceros, podrá dejar a quien así lo realice incurso en el delito de violación de secreto tipificado en el Artículo 156 del Código Penal de la Nación, siendo facultad del BANCO formular la denuncia del caso y constituirse en parte querellante.</p><br>"+
+
+"<b>Décima Quinta: Publicidad y promoción.</b><p>La gestión de comercialización comprende la publicidad de los PRODUCTOS del BANCO, estando facultada la ENTIDAD a realizar campañas de marketing y promoción, a su exclusivo cargo, y previa aprobación del material publicitario por el BANCO. La ENTIDAD se compromete a hacer una promoción responsable y conforme a los preceptos de la Ley 24.240, evitando de cualquier manera dañar la imagen del BANCO.</p><br>"+
+"<b>Décima Sexta: Incumplimiento.</b><p>La falta de cumplimiento de las obligaciones previstas en el presente convenio, con las modalidades convenidas, habilitará a la parte cumplidora a requerir la resolución del convenio, la que se producirá de pleno derecho con la sola notificación fehaciente de la voluntad de resolución a la contraria.</p><br>"+
+
+"<b>Décima Séptima: Vigencia.</b><p><u>Plazo:</u> Los términos de este convenio serán a partir de la fecha del contrato por el término de "+$F{W_Plazo}+" ("+$F{Plazo}+") meses, salvo voluntad en contrario manifestada en forma fehaciente por cualquiera de las partes.</p><p><u>Rescisión:</u> Ambas partes se reservan la facultad de rescindir unilateralmente la vigencia de los términos y condiciones expresados en el presente convenio sin expresión de causa, con el solo recaudo de así preavisarlo a la otra parte de manera fehaciente con un mínimo de treinta (30) días corridos de antelación respecto a la fecha de efectiva rescisión, en cuyo caso la misma no generará derecho a indemnización a favor de ninguna de las Partes.</p><p><u>Resolución:</u> La falta de cumplimiento de cualquiera de las obligaciones previstas en el presente convenio dentro de los diez (10) días de intimado fehacientemente, con las modalidades convenidas, habilitará a la parte cumplidora a requerir la resolución del convenio.</p><br>"+
+
+"<b>Décima Octava:</b><p>Extinguido el convenio, la ENTIDAD devolverá al BANCO el material administrativo remanente y soportes magnéticos que éste le hubiere entregado, dentro de las cuarenta y ocho (48) horas de producida la extinción. Asimismo, entregará al BANCO bajo inventario, toda documentación relativa a solicitudes de PRODUCTOS en trámite, legajos que contengan documentación suscripta por los CLIENTES.</p><br>"+
+
+"<b>Décima Novena:</b><p>Si se suscitaran casos no contemplados en este convenio, las partes negociarán de buena fe la incorporación de las Cláusulas necesarias para subsanarlos.</p><br>"+
+
+"<b>Vigésima:</b><p>A todos los efectos legales, judiciales o extrajudiciales, las partes fijan domicilios especiales en los arriba indicados, donde serán válidas todas las notificaciones o emplazamientos que hubiere lugar. Para cualquier controversia que pudiera surgir vinculada al presente convenio, las partes someterán la cuestión a la intervención del Centro de Mediación del Poder Judicial del Chaco. Manifiestan asimismo que en caso de fracasar dichas instancias dirimirán la cuestión por ante los tribunales civiles ordinarios de la Ciudad de Resistencia, con renuncia a cualquier otro fuero o jurisdicción.</p><br>"+
+
+"<p><b>Vigésima Primera:</b></p><p>Todos los impuestos que deban tributarse en virtud de la firma de este convenio estará a cargo de la ENTIDAD, excepto los gastos de sellado que se abonaran en partes iguales.</p><br>"+
+
+"<b>Vigésima Segunda: Comunicaciones del BANCO a la ENTIDAD. Notificaciones.</b><p>La ENTIDAD acepta como medio de comunicación fehaciente a los fines del presente convenio, el envío por parte del BANCO de un correo electrónico a la dirección que a continuación y en forma manuscrita la ENTIDAD inserta, obligándose a consultar diariamente la misma. Las comunicaciones así remitidas se considerarán realizadas en la fecha de su emisión.<p><br>"+
+"<b>Dirección/es de correo electrónico de la ENTIDAD:</b><br>___________________________________________________________________________<br><br>"+
+"En prueba de conformidad se firman dos (2) ejemplares de un mismo tenor y a un solo efecto, en el lugar y fecha indicados al comienzo."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="10" width="555" height="19" uuid="4332f352-1900-4ecf-8937-5c5a7dbff2a9"/>
+				<textElement textAlignment="Center" markup="html">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<u>CONVENIO DE SERVICIOS – COMERCIALIZADORA N° "+$P{NRO_CONVENIO}+"</u>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="31" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+			<textField>
+				<reportElement x="180" y="0" width="98" height="20" uuid="e4f9014d-93d0-4cfd-839f-3fb637dff27d"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="278" y="0" width="102" height="20" uuid="497cfaa0-25a9-42fc-b67d-6e8552c53b3b"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

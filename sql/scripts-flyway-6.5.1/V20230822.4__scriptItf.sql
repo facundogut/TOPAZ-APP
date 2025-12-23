@@ -1,0 +1,33 @@
+EXECUTE('
+IF OBJECT_ID (''dbo.SIBE_CALIFICACION_CAB'') IS NOT NULL
+	DROP TABLE dbo.SIBE_CALIFICACION_CAB
+
+CREATE TABLE dbo.SIBE_CALIFICACION_CAB
+	(
+	Cuit     NUMERIC (12) NOT NULL,
+	FecVig   NUMERIC (8) NOT NULL,
+	FecVenc  NUMERIC (8),
+	RiesgCP  NUMERIC (15, 2),
+	RiesgLP  NUMERIC (15, 2),
+	CalifCP  NUMERIC (15, 2),
+	CalifLP  NUMERIC (15, 2),
+	MonTE    NUMERIC (15, 2),
+	Sucursal NUMERIC (5),
+	CtaCli   NUMERIC (9),
+	UsuAlta  VARCHAR (10),
+	FecAlta  NUMERIC (8),
+	PRIMARY KEY (Cuit, FecVig)
+	)
+
+');
+
+
+execute('
+TRUNCATE TABLE dbo.SIBE_CALIFICACION_CAB
+');
+execute('
+
+
+INSERT INTO dbo.SIBE_CALIFICACION_CAB (Cuit, FecVig, FecVenc, RiesgCP, RiesgLP, CalifCP, CalifLP, MonTE, Sucursal, CtaCli, UsuAlta, FecAlta)
+VALUES (27265210193, 11032026, 1012055, 37039, 37039, 37039, 37039, 1110, 1, 10511105, ''SIBE'', 11032026)
+');

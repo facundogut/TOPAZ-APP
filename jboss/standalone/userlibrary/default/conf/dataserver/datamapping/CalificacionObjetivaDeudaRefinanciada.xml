@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.objectdomain.CalificacionObjetivaRefinaciada</class-name>
+        <query-name>query.CalificacionObjetivaDeudaRefinanciada</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+							SELECT Q.JTS_OID,
+								   Q.C1803,
+								   Q.TIPOPRODUCTO,
+								   Q.C1628,
+								   Q.CATEGORIA_COMERCIAL,
+								   Q.OBJETIVA_REFINANCIADO,
+								   Q.C1652,
+								   Q.ULT_FECHA_VIGENTE,
+								   Q.FECHAPRIMERCALIF,
+								   CATEGORIARESULTANTE,
+								   H1.CALIFICACION_REESTRUCTURADA AS CALIFINICIAL,
+								   Q.FECHAULTCALIF,
+								   Q.TIENE_ADICIONAL,
+								   Q.FECHA_ALTA_ADICIONAL,
+								   Q.MIN_CALIF_RES
+							FROM (SELECT S.JTS_OID,
+										 S.C1803,
+										 S.C1785 TIPOPRODUCTO,
+										 S.C1628,
+										 (CASE WHEN H.TIPO_RIESGO='S' THEN 'C'
+											   ELSE H.TIPO_RIESGO
+										  END) AS CATEGORIA_COMERCIAL,
+										 S.OBJETIVA_REFINANCIADO,
+										 S.C1652,
+										 S.ULT_FECHA_VIGENTE,
+										 (SELECT MIN(FECHA) 
+										  FROM HISTORICO_CALIF_X_SALDO 
+										  WHERE JTS_PRESTAMO = S.JTS_OID AND ORIGEN='M'
+										  AND TZ_LOCK = 0) AS FECHAPRIMERCALIF,
+										 CATEGORIARESULTANTE,
+										 (SELECT MAX(FECHA) FROM HISTORICO_CALIF_X_SALDO 
+										  WHERE JTS_PRESTAMO=S.JTS_OID AND CALIFICACION_REESTRUCTURADA IS NOT NULL
+										  AND TZ_LOCK=0) AS FECHAULTCALIF,
+										 (SELECT count(*)
+										  FROM SALDOS
+										  WHERE C1803 = s.C1803
+										  AND C1785=5
+										  AND C1604 &lt; 0
+										  AND C1695 = 'S'
+										  AND TZ_LOCK = 0) AS TIENE_ADICIONAL,
+										 (SELECT MAX(C1621) 
+										  FROM SALDOS 
+										  WHERE C1803 = s.C1803 
+										  AND C1785=5 
+										  AND C1604 &lt; 0 
+										  AND (C1695 = 'S' OR C8748 ='S') 
+										  AND TZ_LOCK = 0) AS FECHA_ALTA_ADICIONAL,
+										 (SELECT MIN(CALIFICACION_REESTRUCTURADA) 
+										  FROM HISTORICO_CALIF_X_SALDO 
+										  WHERE JTS_PRESTAMO = S.JTS_OID
+										  AND TZ_LOCK = 0) AS MIN_CALIF_RES
+								  FROM SALDOS S
+								  INNER JOIN PLANCTAS P ON S.C1730 = P.C6326
+								  INNER JOIN CLI_CLIENTES C ON C.CODIGOCLIENTE=S.C1803
+								  INNER JOIN HISTORICO_CALIF_X_SALDO H ON S.JTS_OID=H.JTS_PRESTAMO
+								  WHERE S.TZ_LOCK=0
+								  AND S.C1785 = 5
+								  AND S.C1604 &lt; 0 AND S.C1728 &lt;&gt; 'C'
+								  AND P.CALIFICA = 'S'
+								  GROUP BY S.JTS_OID,
+										 C1803,
+										   C1785,
+										   C1628,
+										   H.TIPO_RIESGO,
+										   S.OBJETIVA_REFINANCIADO,
+										   C.CLIENTE_DEVENGA_SUSPENSO,
+										   C1652,    S.ULT_FECHA_VIGENTE,
+										   CATEGORIARESULTANTE) Q
+							INNER JOIN HISTORICO_CALIF_X_SALDO H1 ON Q.JTS_OID=H1.JTS_PRESTAMO 
+																  AND Q.FECHAPRIMERCALIF=H1.FECHA
+																  AND H1.TZ_LOCK = 0 
+																  AND H1.ORIGEN='M' 
+																  AND H1.CALIFICACION_REESTRUCTURADA IS NOT NULL
+							ORDER BY C1803
+						</sentence>
+        <attribute>
+            <attribute-name>jtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroCliente</attribute-name>
+            <column-name>C1803</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoProducto</attribute-name>
+            <column-name>TIPOPRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProxVencimiento</attribute-name>
+            <column-name>C1628</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>categoriaComercial</attribute-name>
+            <column-name>CATEGORIA_COMERCIAL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>objetivaRefinanciado</attribute-name>
+            <column-name>OBJETIVA_REFINANCIADO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasAtrasoTC</attribute-name>
+            <column-name>C1652</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaSobregiro</attribute-name>
+            <column-name>ULT_FECHA_VIGENTE</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaPrimerCalif</attribute-name>
+            <column-name>FECHAPRIMERCALIF</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>categoriaResultante</attribute-name>
+            <column-name>CATEGORIARESULTANTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>califInicial</attribute-name>
+            <column-name>CALIFINICIAL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaUltCalif</attribute-name>
+            <column-name>FECHAULTCALIF</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tieneAdicional</attribute-name>
+            <column-name>TIENE_ADICIONAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaAltaAdicional</attribute-name>
+            <column-name>FECHA_ALTA_ADICIONAL</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>minCalifRes</attribute-name>
+            <column-name>MIN_CALIF_RES</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectdomain.DiasAtrasoPlanCta</class-name>
+        <query-name>query.SumaCapitalPlanCta</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+							SELECT  SUM(MontoTotal) AS MontoTotal, 
+									SUM(CapitalPagadoSinAtraso) AS CapitalPagadoSinAtraso 
+									
+							FROM (SELECT SUM(C2304) AS MontoTotal, 
+										 0 AS CapitalPagadoSinAtraso 
+								  FROM PLANPAGOS 
+								  WHERE SALDO_JTS_OID = ?
+								  AND TZ_LOCK= 0	
+
+								  UNION
+
+								  SELECT 0 AS MontoTotal, 
+										 SUM(C2304) - SUM(C2309) AS CapitalPagadoSinAtraso 
+								  FROM PLANPAGOS 
+								  WHERE SALDO_JTS_OID = ?
+								  AND C2309 &lt; C2304
+								  AND DIAS_ATRASO_CANCELACION &lt;= (SELECT valor 
+																	FROM PARAMETROS_JTS 
+																	WHERE FUNCIONALIDAD='CALIFICACION_DEUDA_REFINANCIADA' 
+																	AND PARAMETRO='MENOR_DIAS_ATRASO')
+								  AND TZ_LOCK= 0) q
+				</sentence>
+        <attribute>
+            <attribute-name>montoTotal</attribute-name>
+            <column-name>MontoTotal</column-name>
+            <column-type>Double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>capitalPagadoSinAtraso</attribute-name>
+            <column-name>CapitalPagadoSinAtraso</column-name>
+            <column-type>Double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectdomain.PorcentajeHistoricoCalif</class-name>
+        <query-name>query.PorcentajeHistoricoCalificaciones</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+							SELECT SUM (PORCENTAJE_CANCELADO_CAPITAL) AS PORCENTAJE, 
+								   MIN(P.PONDERACION) AS PONDERACION 
+							FROM CLI_CLAOBJATRASO_REF C 
+								 INNER JOIN CLI_CLASUBJETIVA P ON C.CATEGORIA_ORIGEN = P.CATEGORIASUB 
+															   AND P.TZ_LOCK = 0
+							WHERE  C.MODALIDAD = ? 
+							AND C.CATEGORIA_ORIGEN &lt;= (SELECT CALIFICACION_REESTRUCTURADA 
+													   FROM HISTORICO_CALIF_X_SALDO H 
+													   WHERE H.JTS_PRESTAMO = ?
+													   AND FECHA = (SELECT MIN(FECHA) AS FECHA 
+																	FROM HISTORICO_CALIF_X_SALDO 
+																	WHERE JTS_PRESTAMO=?
+																	AND CALIFICACION_REESTRUCTURADA IS NOT NULL)) 
+							AND C.CATEGORIA_ORIGEN &gt;= ?
+							AND C.TZ_LOCK = 0
+					</sentence>
+        <attribute>
+            <attribute-name>porcentaje</attribute-name>
+            <column-name>PORCENTAJE</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ponderacion</attribute-name>
+            <column-name>PONDERACION</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectdomain.CalculoMejora</class-name>
+        <query-name>query.CalculoMejora</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT P.PONDERACION,
+						   C.MODALIDAD, 
+						   C.PORCENTAJE_CANCELADO_CAPITAL,
+						   C.CUOTAS_CANCELADAS,
+						   C.CATEGORIA_ORIGEN
+						   
+					FROM CLI_CLAOBJATRASO_REF C 
+						 INNER JOIN CLI_CLASUBJETIVA P ON C.CATEGORIA_ORIGEN = P.CATEGORIASUB 
+					WHERE P.TZ_LOCK = 0 
+					AND C.TZ_LOCK=0 
+					AND C.TZ_LOCK = 0
+					ORDER BY PONDERACION DESC
+				</sentence>
+        <attribute>
+            <attribute-name>ponderacion</attribute-name>
+            <column-name>PONDERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidad</attribute-name>
+            <column-name>MODALIDAD</column-name>
+            <column-type>string</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>porcCancelCapital</attribute-name>
+            <column-name>PORCENTAJE_CANCELADO_CAPITAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cuotasCanceladas</attribute-name>
+            <column-name>CUOTAS_CANCELADAS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>categoriaOrigen</attribute-name>
+            <column-name>CATEGORIA_ORIGEN</column-name>
+            <column-type>string</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectdomain.CalculoDiasDesde</class-name>
+        <query-name>query.CalculoDiasDesde</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>		
+					SELECT CO.CATEGORIA,
+						   CO.MODALIDAD,
+						   CO.DIASDESDE
+					FROM CLI_CLAOBJATRASO CO
+					WHERE CO.TZ_LOCK = 0 
+					ORDER BY CO.CATEGORIA DESC
+				</sentence>
+        <attribute>
+            <attribute-name>categoria</attribute-name>
+            <column-name>CATEGORIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidad</attribute-name>
+            <column-name>MODALIDAD</column-name>
+            <column-type>string</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasDesde</attribute-name>
+            <column-name>DIASDESDE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.objectdomain.SaldoObjetivaRefinanciado</class-name>
+        <entity-name>core.SaldoObjetivaRefinanciado</entity-name>
+        <table-name>SALDOS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>jtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>objetivaRefinanciado</attribute-name>
+            <column-name>OBJETIVA_REFINANCIADO</column-name>
+        </attribute>
+    </class>
+</map>

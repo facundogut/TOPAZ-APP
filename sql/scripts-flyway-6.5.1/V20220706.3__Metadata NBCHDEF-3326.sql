@@ -1,0 +1,9 @@
+﻿EXECUTE('
+-------------------------
+--AGREGO FORMULARIO 500--
+-------------------------
+UPDATE dbo.OPERACIONES
+SET FORMULARIOPRINCIPAL = 500
+WHERE TITULO = 5000 AND IDENTIFICACION = 5064
+----
+')

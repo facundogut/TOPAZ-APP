@@ -1,0 +1,1189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Incentivos" language="groovy" pageWidth="1008" pageHeight="612" orientation="Landscape" columnWidth="1008" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["D:/CursoJasper/"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FechaReporte" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[DECLARE @FechaCorte  AS SmallDatetime  =$P{FechaReporte}
+DECLARE @FechaInicio AS SmallDatetime =  CONVERT( SMALLDATETIME, ('01' +'/'+ convert(nvarchar,MONTH(@FechaCorte)) +'/' + CONVERT(NVARCHAR, YEAR(@FechaCorte))))
+
+SELECT Detalle.Usuario
+       ,Detalle.Id_Region
+       ,UPPER(Detalle.Nombre_Region) AS Nombre_Region
+       ,Detalle.CodSucursal
+       ,Detalle.Sucursal
+       ,Detalle.Oficial_Credito
+       ,Detalle.Cedula_Oficial
+       ,Detalle.CodCargo
+       ,'Des_Cargo' = Case When Detalle.CodCargo = 119 THEN 'SENIOR 1'
+						   When Detalle.CodCargo = 120 THEN 'SENIOR 2'
+						   When Detalle.CodCargo = 121 THEN 'ENTRENAMIENTO'
+						   When Detalle.CodCargo = 122 THEN 'JUNIOR 1'
+						   When Detalle.CodCargo = 123 THEN 'JUNIOR 2'
+						   When Detalle.CodCargo = 125 THEN 'GRUPO SOLIDARIO'
+                      End
+      ,Detalle.Salario_Base
+      ,(Detalle.Incentivo_Base * Detalle.Porc_Incentivo) AS Monto_Incentivo
+      ,Detalle.Incentivo_Base AS SalBase_Incentivo
+      ,Detalle.Porc_SalBasico
+	  ,Detalle.Porc_Incentivo
+      /* A - Saldo de Cartera */
+      ,Sum(Detalle.Saldo_Cartera) AS Saldo_Cartera
+      ,'A_Incentivo_Cartera' = (Select (ir.INCENTIVO/100.00) * (ip.Peso)  * (Detalle.Incentivo_Base) * (Detalle.Porc_Incentivo)
+								   From dbo.INC_RANGOS ir Inner Join dbo.INC_PESO ip ON ir.CodVariable = ip.CodVariable And ir.CodRegion =ip.CodRegion And ir.CodCargo = ip.CodCargo
+														  Inner JOIN dbo.INC_VARIABLES_INDICADORES iv ON ir.CodVariable = iv.CodVariable
+								  Where ir.CodVariable = 'A'
+								    And ip.Tz_lock     = 0
+								    And ir.Tz_lock     = 0
+								    And iv.Tz_lock     = 0
+								    And ir.CodRegion   = Detalle.Id_Region
+							        And ir.CodCargo    = Detalle.CodCargo
+							        And (Sum(Detalle.Saldo_Cartera) >= ir.MINIMO
+							        And Sum(Detalle.Saldo_Cartera)  <= ir.MAXIMO) )
+
+      /* B - Incentivo Numero de Clientes Activos */
+      ,COUNT(DISTINCT CodCliente) AS Numero_Clientes_Activos
+      ,'B_Incentivo_Numero_Clientes_Activos' = (Select (ir.INCENTIVO/100.00) * (ip.Peso)  * (Detalle.Incentivo_Base) * (Detalle.Porc_Incentivo)
+												  From dbo.INC_RANGOS ir Inner Join dbo.INC_PESO ip ON ir.CodVariable = ip.CodVariable And ir.CodRegion =ip.CodRegion And ir.CodCargo = ip.CodCargo
+														  Inner JOIN dbo.INC_VARIABLES_INDICADORES iv ON ir.CodVariable = iv.CodVariable
+												  Where ir.CodVariable = 'B'
+													And ip.Tz_lock     = 0
+													And ir.Tz_lock     = 0
+													And iv.Tz_lock     = 0
+													And ir.CodRegion   = Detalle.Id_Region
+													And ir.CodCargo    = Detalle.CodCargo
+													And Count(DISTINCT CodCliente) >= ir.MINIMO
+													And Count(DISTINCT CodCliente) <= ir.MAXIMO)
+     ,Sum(Total_Colocaciones) AS Total_Colocaciones
+
+      /* C - Colocaciones de Creditos Nuevos */
+     ,Sum(Nuevas_Colocaciones) AS Colocaciones_Creditos_Nuevos
+
+     ,'C_Incentivo_Colocaciones_Creditos_Nuevos' = (Select (ir.INCENTIVO/100.00) * (ip.Peso)  * (Detalle.Incentivo_Base) * (Detalle.Porc_Incentivo)
+												  From dbo.INC_RANGOS ir Inner Join dbo.INC_PESO ip ON ir.CodVariable = ip.CodVariable And ir.CodRegion =ip.CodRegion And ir.CodCargo = ip.CodCargo
+														  Inner JOIN dbo.INC_VARIABLES_INDICADORES iv ON ir.CodVariable = iv.CodVariable
+												  Where ir.CodVariable = 'C'
+													And ip.Tz_lock     = 0
+													And ir.Tz_lock     = 0
+													And iv.Tz_lock     = 0
+													And ir.CodRegion   = Detalle.Id_Region
+													And ir.CodCargo    = Detalle.CodCargo
+													And Sum(Nuevas_Colocaciones)  >= ir.MINIMO
+													And Sum(Nuevas_Colocaciones)  <= ir.MAXIMO)
+
+      ,Sum(Represtamos) AS Colocaciones_Creditos_Represtamos
+      /* D - Colocaciones de Créditos Represtamos */
+      ,'D_Incentivo_Colocaciones_Creditos_Represtamos' =   (Select (ir.INCENTIVO/100.00) * (ip.Peso)  * (Detalle.Incentivo_Base) * (Detalle.Porc_Incentivo)
+															  From dbo.INC_RANGOS ir Inner Join dbo.INC_PESO ip ON ir.CodVariable = ip.CodVariable And ir.CodRegion =ip.CodRegion And ir.CodCargo = ip.CodCargo
+																	  Inner JOIN dbo.INC_VARIABLES_INDICADORES iv ON ir.CodVariable = iv.CodVariable
+															  Where ir.CodVariable = 'D'
+																And ip.Tz_lock     = 0
+																And ir.Tz_lock     = 0
+																And iv.Tz_lock     = 0
+																And ir.CodRegion   = Detalle.Id_Region
+																And ir.CodCargo    = Detalle.CodCargo
+																And Sum(Represtamos) >= ir.MINIMO
+		 														And Sum(Represtamos) <= ir.MAXIMO)
+
+
+      /* E -  Estructura de Cartera, No se tiene definido actualmente los parametros
+      *  que permitan analizar este incentivo, todos los oficiales ganan el 100%   */
+
+      ,100.00 AS Estructura_Cartera
+      ,'E_Incentivo_Estructura_Cartera' = Case When Detalle.CodCargo = 125 Then 0.00 Else
+      (Select (ir.INCENTIVO/100.00) * (ip.Peso)  * (Detalle.Incentivo_Base) * (Detalle.Porc_Incentivo)
+		From dbo.INC_RANGOS ir Inner Join dbo.INC_PESO ip ON ir.CodVariable = ip.CodVariable And ir.CodRegion =ip.CodRegion And ir.CodCargo = ip.CodCargo
+				               Inner JOIN dbo.INC_VARIABLES_INDICADORES iv ON ir.CodVariable = iv.CodVariable
+		Where ir.CodVariable = 'E'
+		And ip.Tz_lock     = 0
+		And ir.Tz_lock     = 0
+		And iv.Tz_lock     = 0
+		And ir.CodRegion   = Detalle.Id_Region
+		And ir.CodCargo    = Detalle.CodCargo
+		And 100 >= ir.MINIMO
+		And 100 <= ir.MAXIMO)
+        End
+      /* F - Indice de Cartera en Riesgo */
+      ,(Sum(Detalle.CER1) / Sum(Detalle.Saldo_MO)) * 100 AS Porcentaje_CER1
+
+      ,'Porc_Mora_Deducible' =  (Select ((ir.INCENTIVO/100.00) * IIF((ip.Peso)=0,1,(ip.Peso))) * 100
+									From dbo.INC_RANGOS ir Inner Join dbo.INC_PESO ip ON ir.CodVariable = ip.CodVariable And ir.CodRegion =ip.CodRegion And ir.CodCargo = ip.CodCargo
+														   Inner JOIN dbo.INC_VARIABLES_INDICADORES iv ON ir.CodVariable = iv.CodVariable
+									Where ir.CodVariable = 'F'
+										And ip.Tz_lock     = 0
+										And ir.Tz_lock     = 0
+										And iv.Tz_lock     = 0
+										And ir.CodRegion   = Detalle.Id_Region
+										And ir.CodCargo    = Detalle.CodCargo
+										And ((Sum(Detalle.CER1) / Sum(Detalle.Saldo_MO))* 100.00) >= ir.MINIMO
+		 								And ((Sum(Detalle.CER1) / Sum(Detalle.Saldo_MO))* 100.00) <= ir.MAXIMO)
+        ,Detalle.Usr_Gerente_Regional
+FROM (
+SELECT u.Iniciales AS Usuario
+       ,egp.Fecha_Saldo        AS Fecha_Saldo
+	   ,egp.Fecha_Desembolso   AS Fecha_Desembolso
+	   ,egp.Codigo_Cliente     AS CodCliente
+       ,egp.Nro_Prestamo       AS No_Prestamo
+       ,trs.CodRegion          AS Id_Region
+       ,Region                 AS Nombre_Region
+       ,egp.Sucursal_Prestamo  AS CodSucursal
+       ,ts.C6020               AS Sucursal
+       ,e.Nombre               AS Oficial_Credito
+       ,cr.NroDocumento        AS Cedula_Oficial
+       ,e.CodCargo             AS CodCargo
+       ,c.Descripcion          AS Des_Cargo
+       ,e.SalarioMensual       AS Salario_Base
+       ,egp.Codigo_Moneda      AS Moneda
+       ,Importe_Desembolso  = Importe_Desembolso_MO
+       ,Saldo_Cartera       = Saldo_MO
+       ,'Total_Colocaciones' = Case When Fecha_Desembolso Between @FechaInicio And @FechaCorte Then 1 Else 0 End
+
+       ,'Nuevas_Colocaciones'= Case When (Select Count(Cli.Cliente)
+	 				                       From (Select ca.customerid Cliente
+											   From [dbo].cuaccount ca
+												  Where ca.customerid = egp.Codigo_Cliente
+												    And ca.parentaccountid Is Null
+													And MONTH(egp.Fecha_Desembolso) = MONTH(@FechaCorte)
+													And YEAR(egp.Fecha_Desembolso)  = YEAR(@FechaCorte)
+						      Union All
+										  Select s2.C1803 Cliente
+											From Saldos s2
+										   Where s2.C1803 = egp.Codigo_Cliente
+										     And s2.C9314 = 5
+											 And MONTH(egp.Fecha_Desembolso) = MONTH(@FechaCorte)
+											 And YEAR(egp.Fecha_Desembolso) = YEAR(@FechaCorte)
+											 And Not Exists (Select sre.SALDOSJTSOIDEXT FROM SL_RASTROS_EXTORNOS sre Where sre.SALDOSJTSOIDEXT = s2.JTS_OID)
+											 And s2.Fecha_Migracion <> '30/04/2014') Cli) = 1 Then 1 Else 0 End
+    ,'Represtamos'= Case When (Select Count(Cli.Cliente)
+					          From(Select ca.customerid Cliente
+						             From [dbo].cuaccount ca
+						            Where ca.Customerid = egp.Codigo_Cliente
+						              And ca.parentaccountid Is Null
+						              And MONTH(egp.Fecha_Desembolso) = MONTH(@FechaCorte)
+						              And YEAR(egp.Fecha_Desembolso)  = YEAR(@FechaCorte)
+						  Union All
+								  Select s2.C1803 Cliente
+									From Saldos s2
+								   Where s2.C1803 = egp.Codigo_Cliente
+									 And S2.C9314 = 5
+									 And MONTH(egp.Fecha_Desembolso) = MONTH(@FechaCorte)
+									 And YEAR(egp.Fecha_Desembolso)  = YEAR(@FechaCorte)
+									 And Not Exists(Select sre.SaldosJTSOIDEXT
+													  From Sl_Rastros_Extornos sre
+													 Where sre.SaldosJTSOIDEXT = s2.JTS_OID)
+                    								   And s2.Fecha_Migracion <> '30/04/2014') Cli) > 1 Then 1 Else 0 END
+    ,egp.Saldo_MO
+    ,CER1  = Case When egp.Dias_Atraso > 0  Then egp.Saldo_MO Else 0 End
+	,ip.Porc_SalBasico
+	,ip.Porc_Incentivo
+	,ip.Incentivo_Base
+	,'Usr_Gerente_Regional' = (Select ru.UsuarioTopaz
+	                             From Au_RelFuncionariousr ru
+                                 Inner Join Rh_Cargos rc ON ru.Codcargo = rc.Codcargo
+                                 Inner Join Au_RelFuncionarioAgencia tr ON ru.UsuarioTopaz = tr.UsuarioTopaz
+                                 And tr.CodAgencia   = egp.Sucursal_Prestamo
+							   Where rc.CodCargo = 21
+								 And rc.TZ_LOCK  = 0
+								 And ru.TZ_LOCK  = 0
+								 AND tr.TZ_LOCK  = 0)
+FROM [dbo].[FN_EGP_FUNDESER_UNIVERSO] (@FechaCorte) egp
+      INNER JOIN RH_FUNCIONARIO rf            ON egp.Codigo_Analista  = rf.CodFuncionario
+	  INNER JOIN CL_RELPERDOC cr              ON cr.IdPersona         = rf.IdPersona
+      INNER JOIN VINC_NOMINA e       ON (REPLACE(e.Cedula,'-' ,'')) collate Modern_Spanish_CI_AS IN (ISNULL(cr.NRODOCUMENTO,''))
+      INNER JOIN VINC_NOMINA_CARGOS c         ON e.CodCargo           = c.CodCargo
+      INNER JOIN TC_SUCURSALES ts             ON ts.C6021             = egp.Sucursal_Prestamo
+      INNER JOIN TC_REL_REGION_SUCURSAL trs   ON trs.CodSucursal      = ts.C6021
+      INNER JOIN TC_REGIONES tr               ON tr.CodRegion         = trs.CodRegion
+      INNER JOIN INC_PARAMETROS_CARGOS ip     ON e.CodCargo           = ip.CodCargo And ip.CodRegion =tr.CodRegion AND egp.SUCURSAL_PRESTAMO = ip.CodSucursal
+      INNER JOIN USUARIOS u                   ON Convert(varchar,rf.CodFuncionario)  = u.Clave
+WHERE e.CodCargo          In (119,120,121,122,123,125)
+  And rf.FUNCESTADO = 'A'
+  And rf.TZ_LOCK    =  0
+ -- AND egp.Sucursal_Prestamo  = @Sucursal
+  And egp.Fecha_Saldo        = @FechaCorte
+ --AND u.Iniciales            = @Usuario
+  And Not Exists(Select sre.SALDOSJTSOIDEXT From SL_Rastros_Extornos sre WITH(NOLOCK) Where sre.SaldosJTSOIDEXT = egp.JTS_OID)
+)Detalle
+GROUP BY  Detalle.Usuario
+         ,Detalle.Id_Region
+         ,Detalle.Nombre_Region
+         ,Detalle.CodSucursal
+		 ,Detalle.Sucursal
+		 ,Detalle.Oficial_Credito
+		 ,Detalle.Cedula_Oficial
+		 ,Detalle.CodCargo
+		 ,Detalle.Des_Cargo
+		 ,Detalle.Salario_Base
+		 ,Detalle.Porc_SalBasico
+	     ,Detalle.Porc_Incentivo
+	     ,Detalle.Incentivo_Base
+	     ,Detalle.Usr_Gerente_Regional
+ORDER BY Detalle.Id_Region,Detalle.CodSucursal,Detalle.CodCargo]]>
+	</queryString>
+	<field name="Usuario" class="java.lang.String"/>
+	<field name="Id_Region" class="java.math.BigDecimal"/>
+	<field name="Nombre_Region" class="java.lang.String"/>
+	<field name="CodSucursal" class="java.math.BigDecimal"/>
+	<field name="Sucursal" class="java.lang.String"/>
+	<field name="Oficial_Credito" class="java.lang.String"/>
+	<field name="Cedula_Oficial" class="java.lang.String"/>
+	<field name="CodCargo" class="java.lang.Integer"/>
+	<field name="Des_Cargo" class="java.lang.String"/>
+	<field name="Salario_Base" class="java.math.BigDecimal"/>
+	<field name="Monto_Incentivo" class="java.math.BigDecimal"/>
+	<field name="SalBase_Incentivo" class="java.math.BigDecimal"/>
+	<field name="Porc_SalBasico" class="java.math.BigDecimal"/>
+	<field name="Porc_Incentivo" class="java.math.BigDecimal"/>
+	<field name="Saldo_Cartera" class="java.math.BigDecimal"/>
+	<field name="A_Incentivo_Cartera" class="java.math.BigDecimal"/>
+	<field name="Numero_Clientes_Activos" class="java.lang.Integer"/>
+	<field name="B_Incentivo_Numero_Clientes_Activos" class="java.math.BigDecimal"/>
+	<field name="Total_Colocaciones" class="java.lang.Integer"/>
+	<field name="Colocaciones_Creditos_Nuevos" class="java.lang.Integer"/>
+	<field name="C_Incentivo_Colocaciones_Creditos_Nuevos" class="java.math.BigDecimal"/>
+	<field name="Colocaciones_Creditos_Represtamos" class="java.lang.Integer"/>
+	<field name="D_Incentivo_Colocaciones_Creditos_Represtamos" class="java.math.BigDecimal"/>
+	<field name="Estructura_Cartera" class="java.math.BigDecimal"/>
+	<field name="E_Incentivo_Estructura_Cartera" class="java.math.BigDecimal"/>
+	<field name="Porcentaje_CER1" class="java.math.BigDecimal"/>
+	<field name="Porc_Mora_Deducible" class="java.math.BigDecimal"/>
+	<field name="Usr_Gerente_Regional" class="java.lang.String"/>
+	<variable name="Cartera_Riesgo" class="java.lang.Number">
+		<variableExpression><![CDATA[($F{Porc_Mora_Deducible}==1?($F{A_Incentivo_Cartera}+ $F{B_Incentivo_Numero_Clientes_Activos} + $F{C_Incentivo_Colocaciones_Creditos_Nuevos}+ $F{D_Incentivo_Colocaciones_Creditos_Represtamos} + $F{E_Incentivo_Estructura_Cartera})*($F{Porc_Mora_Deducible}*-1):
+    ($F{Porc_Mora_Deducible}==0.70?($F{A_Incentivo_Cartera}+ $F{B_Incentivo_Numero_Clientes_Activos} + $F{C_Incentivo_Colocaciones_Creditos_Nuevos}+ $F{D_Incentivo_Colocaciones_Creditos_Represtamos} + $F{E_Incentivo_Estructura_Cartera})*($F{Porc_Mora_Deducible}*-1):
+        ($F{Porc_Mora_Deducible}==0.35?($F{A_Incentivo_Cartera}+ $F{B_Incentivo_Numero_Clientes_Activos} + $F{C_Incentivo_Colocaciones_Creditos_Nuevos}+ $F{D_Incentivo_Colocaciones_Creditos_Represtamos} + $F{E_Incentivo_Estructura_Cartera})*($F{Porc_Mora_Deducible}*-1):0.00)))]]></variableExpression>
+	</variable>
+	<variable name="Total_Incentivos" class="java.lang.Number">
+		<variableExpression><![CDATA[$F{A_Incentivo_Cartera}+$F{B_Incentivo_Numero_Clientes_Activos}+$F{C_Incentivo_Colocaciones_Creditos_Nuevos}+$F{D_Incentivo_Colocaciones_Creditos_Represtamos}+ $F{E_Incentivo_Estructura_Cartera}+$V{Cartera_Riesgo}]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="Total_Salario_Incentivo" class="java.lang.Number" resetType="None">
+		<variableExpression><![CDATA[]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
+	</variable>
+	<variable name="SalBase40" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$F{Salario_Base}*0.40]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="SalBase60" class="java.lang.Number">
+		<variableExpression><![CDATA[$F{Salario_Base}*0.60]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Salario_Base_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Salario_Base}]]></variableExpression>
+	</variable>
+	<variable name="Saldo_Cartera_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Saldo_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Numero_Clientes_Activos_1" class="java.lang.Integer" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Numero_Clientes_Activos}]]></variableExpression>
+	</variable>
+	<variable name="Colocaciones_Creditos_Nuevos_1" class="java.lang.Integer" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Colocaciones_Creditos_Nuevos}]]></variableExpression>
+	</variable>
+	<variable name="Colocaciones_Creditos_Represtamos_1" class="java.lang.Integer" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Colocaciones_Creditos_Represtamos}]]></variableExpression>
+	</variable>
+	<variable name="Porcentaje_CER1_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Porcentaje_CER1}]]></variableExpression>
+	</variable>
+	<variable name="A_Incentivo_Cartera_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{A_Incentivo_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="B_Incentivo_Numero_Clientes_Activos_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{B_Incentivo_Numero_Clientes_Activos}]]></variableExpression>
+	</variable>
+	<variable name="C_Incentivo_Colocaciones_Creditos_Nuevos_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{C_Incentivo_Colocaciones_Creditos_Nuevos}]]></variableExpression>
+	</variable>
+	<variable name="Colocaciones_Creditos_Represtamos_2" class="java.lang.Integer" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Colocaciones_Creditos_Represtamos}]]></variableExpression>
+	</variable>
+	<variable name="E_Incentivo_Estructura_Cartera_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{E_Incentivo_Estructura_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Salario_Base_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Salario_Base}]]></variableExpression>
+	</variable>
+	<variable name="Saldo_Cartera_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Saldo_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Numero_Clientes_Activos_2" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{Numero_Clientes_Activos}]]></variableExpression>
+	</variable>
+	<variable name="Colocaciones_Creditos_Nuevos_2" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{Colocaciones_Creditos_Nuevos}]]></variableExpression>
+	</variable>
+	<variable name="Colocaciones_Creditos_Represtamos_3" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{Colocaciones_Creditos_Represtamos}]]></variableExpression>
+	</variable>
+	<variable name="Porcentaje_CER1_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{Porcentaje_CER1}]]></variableExpression>
+	</variable>
+	<variable name="A_Incentivo_Cartera_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{A_Incentivo_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="B_Incentivo_Numero_Clientes_Activos_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{B_Incentivo_Numero_Clientes_Activos}]]></variableExpression>
+	</variable>
+	<variable name="C_Incentivo_Colocaciones_Creditos_Nuevos_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{C_Incentivo_Colocaciones_Creditos_Nuevos}]]></variableExpression>
+	</variable>
+	<variable name="D_Incentivo_Colocaciones_Creditos_Represtamos_1" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$F{D_Incentivo_Colocaciones_Creditos_Represtamos}]]></variableExpression>
+	</variable>
+	<variable name="E_Incentivo_Estructura_Cartera_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{E_Incentivo_Estructura_Cartera}]]></variableExpression>
+	</variable>
+	<variable name="Totales_Incentivos_Sucursales" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$V{Total_Incentivos}]]></variableExpression>
+	</variable>
+	<variable name="Totales_Salario_Base60" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$V{SalBase60}]]></variableExpression>
+	</variable>
+	<variable name="Totales_Salario_Incentivo" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$V{Total_Incentivos}+$F{Salario_Base}]]></variableExpression>
+	</variable>
+	<variable name="D_Incentivo_Colocaciones_Creditos_Represtamos_2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{D_Incentivo_Colocaciones_Creditos_Represtamos}]]></variableExpression>
+	</variable>
+	<variable name="Total_General_Incentivos" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$V{Total_Incentivos}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Total_General_SalarioBase60" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$V{SalBase60}]]></variableExpression>
+	</variable>
+	<variable name="Total_General_Salario_Incentivo" class="java.math.BigDecimal">
+		<variableExpression><![CDATA[$V{Total_General_Incentivos}+$V{Salario_Base_2}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Total_Salario_Base40" class="java.math.BigDecimal" resetType="Group" resetGroup="Sucursal" calculation="Sum">
+		<variableExpression><![CDATA[$V{SalBase40}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="Total_General_SalarioBase40" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$V{SalBase40}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<group name="Sucursal">
+		<groupExpression><![CDATA[$F{Sucursal}]]></groupExpression>
+		<groupHeader>
+			<band height="16">
+				<textField>
+					<reportElement x="191" y="0" width="191" height="14"/>
+					<textElement>
+						<font size="10" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Sucursal}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="131" y="0" width="59" height="14"/>
+					<textElement>
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[SUCURSAL:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="3" y="0" width="118" height="15"/>
+					<textElement>
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Nombre_Region}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="26">
+				<staticText>
+					<reportElement mode="Opaque" x="215" y="4" width="767" height="15" backcolor="#CCCCCC"/>
+					<box>
+						<pen lineStyle="Solid"/>
+						<topPen lineWidth="1.0" lineStyle="Solid"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement textAlignment="Center">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="291" y="4" width="58" height="15" forecolor="#000000" backcolor="#999999"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Saldo_Cartera_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="352" y="4" width="33" height="15" forecolor="#000000" backcolor="#999999"/>
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Numero_Clientes_Activos_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="396" y="4" width="27" height="14" forecolor="#000000" backcolor="#999999"/>
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Colocaciones_Creditos_Nuevos_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0;-#,##0" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="438" y="4" width="41" height="14" forecolor="#000000" backcolor="#999999"/>
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Colocaciones_Creditos_Represtamos_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="495" y="4" width="34" height="14" forecolor="#000000" backcolor="#999999"/>
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Estructura_Cartera}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="2" y="22" width="980" height="1"/>
+					<graphicElement>
+						<pen lineWidth="2.0" lineStyle="Double"/>
+					</graphicElement>
+				</line>
+				<textField pattern="#,##0.00">
+					<reportElement mode="Transparent" x="539" y="4" width="27" height="14" backcolor="#999999"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Porcentaje_CER1_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement mode="Transparent" x="570" y="4" width="44" height="14" backcolor="#999999"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{A_Incentivo_Cartera_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement mode="Transparent" x="614" y="4" width="52" height="14" backcolor="#999999"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{B_Incentivo_Numero_Clientes_Activos_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement mode="Transparent" x="668" y="4" width="57" height="14" backcolor="#999999"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{C_Incentivo_Colocaciones_Creditos_Nuevos_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement mode="Transparent" x="777" y="4" width="49" height="14" backcolor="#999999"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{E_Incentivo_Estructura_Cartera_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00;-#,##0.00" isBlankWhenNull="false">
+					<reportElement mode="Transparent" x="250" y="4" width="40" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Right" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Salario_Base_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00" isBlankWhenNull="true">
+					<reportElement mode="Transparent" x="726" y="4" width="51" height="14" forecolor="#000000" backcolor="#FFFFFF"/>
+					<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+						<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{D_Incentivo_Colocaciones_Creditos_Represtamos_1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="867" y="4" width="48" height="15"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Totales_Incentivos_Sucursales}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="915" y="4" width="64" height="13"/>
+					<textElement textAlignment="Center">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Totales_Salario_Incentivo}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="3" y="1" width="979" height="1"/>
+					<graphicElement>
+						<pen lineWidth="2.0" lineStyle="Double"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement mode="Opaque" x="4" y="4" width="211" height="15" backcolor="#CCCCCC"/>
+					<box>
+						<topPen lineWidth="1.0" lineStyle="Solid"/>
+						<leftPen lineWidth="1.0" lineStyle="Solid"/>
+						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+						<rightPen lineWidth="1.0" lineStyle="Solid"/>
+					</box>
+					<textElement>
+						<font size="10" isBold="true" isUnderline="false"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA['SUBTOTAL SUCURSAL ' + $F{Sucursal}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Cargo">
+		<groupExpression><![CDATA[$F{CodCargo}]]></groupExpression>
+		<groupHeader>
+			<band height="19">
+				<textField>
+					<reportElement x="38" y="1" width="175" height="15"/>
+					<textElement>
+						<font size="10" isBold="true" isUnderline="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{Des_Cargo}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="3" y="1" width="34" height="15"/>
+					<textElement>
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cargo:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="113" splitType="Stretch">
+			<rectangle>
+				<reportElement mode="Transparent" x="567" y="73" width="295" height="36" forecolor="#000000" backcolor="#FFCC99"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="423" y="74" width="56" height="36"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desemb. Créditos Represtamos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="480" y="77" width="49" height="27"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estructura de Cartera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Transparent" x="529" y="74" width="37" height="34" backcolor="#CCCCCC"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Indice Cartera Riesgo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="349" y="75" width="33" height="33"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No. Clientes Activos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="84" width="93" height="14"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No. Documento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="80" width="59" height="24"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo de Cartera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="4" y="84" width="145" height="15"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Oficial de Crédito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="273" y="0" width="295" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FINANCIERA FUNDESER, SOCIEDAD ANONIMA]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="862" y="20" width="83" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="862" y="5" width="15" height="16"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="808" y="20" width="54" height="12"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Actual:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="242" y="23" width="365" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Reporte de Incentivos de Oficiales de Créditos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="253" y="78" width="36" height="24"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Salario Fijo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="664" y="82" width="59" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Col. Créditos Nuevos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="611" y="82" width="54" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No. Clientes Activos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="722" y="82" width="53" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Col. Créditos Represtamos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="774" y="82" width="49" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estructura de Cartera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="568" y="82" width="44" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo de Cartera]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="567" y="58" width="295" height="15" backcolor="#CCCCCC"/>
+				<box>
+					<pen lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cálculo de Incentivos de Desempeño]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="291" y="58" width="276" height="15" backcolor="#FFCC99"/>
+				<box>
+					<pen lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Indicadores de Desempeño]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="4" y="73" width="287" height="36" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="382" y="74" width="42" height="36"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desemb. Créditos Nuevos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="4" y="58" width="287" height="15" forecolor="#FFFFFF" backcolor="#006600"/>
+				<box>
+					<pen lineStyle="Solid" lineColor="#000000"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" lineSpacing="Single">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Datos Generales]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="822" y="82" width="40" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cartera en Riesgo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="575" y="74" width="20" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(+)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="626" y="74" width="20" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(+)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="682" y="74" width="20" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(+)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="735" y="74" width="20" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(+)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="785" y="74" width="20" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(+)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="832" y="74" width="20" height="11"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[(-)]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="291" y="73" width="276" height="36" forecolor="#000000" backcolor="#FFCC99"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="867" y="80" width="48" height="24"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Incentivos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="915" y="74" width="59" height="33"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Salario Fijo (+) Incentivo Proyectado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="863" y="58" width="119" height="15" forecolor="#FFFFFF" backcolor="#009999"/>
+				<box>
+					<pen lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cálculo Total]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="862" y="73" width="120" height="36" forecolor="#000000" backcolor="#FFCC99"/>
+			</rectangle>
+			<elementGroup>
+				<textField>
+					<reportElement x="808" y="5" width="54" height="16"/>
+					<textElement textAlignment="Right">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Página "+$V{PAGE_NUMBER}+" de"]]></textFieldExpression>
+				</textField>
+			</elementGroup>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20">
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="295" y="0" width="54" height="17"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Saldo_Cartera}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="0" width="33" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{Numero_Clientes_Activos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="396" y="0" width="28" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{Colocaciones_Creditos_Nuevos}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="438" y="0" width="42" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$F{Colocaciones_Creditos_Represtamos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="539" y="0" width="28" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Porcentaje_CER1}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="570" y="0" width="44" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{A_Incentivo_Cartera}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="614" y="0" width="52" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{B_Incentivo_Numero_Clientes_Activos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="667" y="0" width="57" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{C_Incentivo_Colocaciones_Creditos_Nuevos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="777" y="0" width="48" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{E_Incentivo_Estructura_Cartera}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="725" y="0" width="52" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{D_Incentivo_Colocaciones_Creditos_Represtamos}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="4" y="17" width="978" height="1" forecolor="#CCCCCC"/>
+				<graphicElement>
+					<pen lineWidth="0.75" lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="495" y="0" width="34" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Estructura_Cartera}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="0" width="181" height="17"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Oficial_Credito}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00 %">
+				<reportElement x="826" y="0" width="37" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$F{Porc_Mora_Deducible}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="915" y="0" width="63" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$V{Total_Incentivos}+$F{Salario_Base}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="184" y="0" width="69" height="17"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid"/>
+				</box>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Cedula_Oficial}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="867" y="0" width="48" height="17"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Number"><![CDATA[$V{Total_Incentivos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="253" y="0" width="36" height="17"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Salario_Base}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="54">
+			<staticText>
+				<reportElement mode="Opaque" x="215" y="4" width="767" height="15" backcolor="#999999"/>
+				<box>
+					<pen lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="3" y="4" width="211" height="15" backcolor="#999999"/>
+				<box>
+					<pen lineStyle="Solid"/>
+					<topPen lineWidth="1.0" lineStyle="Solid"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total General]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="295" y="4" width="54" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Saldo_Cartera_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="352" y="4" width="33" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Numero_Clientes_Activos_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="396" y="4" width="27" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Colocaciones_Creditos_Nuevos_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0">
+				<reportElement x="439" y="4" width="40" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{Colocaciones_Creditos_Represtamos_3}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="495" y="4" width="34" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Estructura_Cartera}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="539" y="4" width="27" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Porcentaje_CER1_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="570" y="4" width="42" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{A_Incentivo_Cartera_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="611" y="4" width="55" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{B_Incentivo_Numero_Clientes_Activos_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="668" y="4" width="57" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{C_Incentivo_Colocaciones_Creditos_Nuevos_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="777" y="4" width="49" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{E_Incentivo_Estructura_Cartera_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="726" y="4" width="51" height="14"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{D_Incentivo_Colocaciones_Creditos_Represtamos_2}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="867" y="4" width="46" height="13"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Total_General_Incentivos}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="false">
+				<reportElement mode="Transparent" x="915" y="4" width="64" height="13" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Center" verticalAlignment="Top" rotation="None" lineSpacing="Single" markup="none">
+					<font fontName="SansSerif" size="8" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Helvetica" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Total_General_Salario_Incentivo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="250" y="4" width="45" height="14"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{Salario_Base_2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

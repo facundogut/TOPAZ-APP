@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="6079" language="groovy" pageWidth="1175" pageHeight="842" columnWidth="1135" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="216"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="Cliente" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT c.CLIENTE, cli.NOMBRECLIENTE, cli.TIPODOC, cli.NUMERODOC, s.C1644 AS TOTAL_CUOTAS, s.C1645 AS CUOTAS_PAGAS,
+s.C1644 - s.C1645 AS CUOTA_NOPAGAS, a.NOMBRESUCURSAL, a.NOMBREPRODUCTO, a.OPERACION, a.DESGLOSE, a.VENCIMIENTO, a.MONTOORIGEN, a.SALDO
+FROM CRE_CAB_CESIONCARTERA c
+INNER JOIN VW_CLI_X_DOC cli ON c.CLIENTE = cli.CODIGOCLIENTE
+INNER JOIN CRE_DET_CESIONCARTERA d ON c.NUMERO_CESION = d.NUMERO_CESION AND d.TZ_LOCK = 0
+INNER JOIN SALDOS s ON d.JTS_OID_ASISTENCIA = s.JTS_OID AND s.TZ_LOCK = 0
+INNER JOIN VW_ASISTENCIAS a ON s.JTS_OID = a.JTS_OID
+WHERE c.ESTADO = 'C' AND c.TZ_LOCK = 0 AND (c.CLIENTE = $P{Cliente} or 0 = $P{Cliente})]]>
+	</queryString>
+	<field name="CLIENTE" class="java.math.BigDecimal"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="TIPODOC" class="java.lang.String"/>
+	<field name="NUMERODOC" class="java.lang.String"/>
+	<field name="TOTAL_CUOTAS" class="java.math.BigDecimal"/>
+	<field name="CUOTAS_PAGAS" class="java.math.BigDecimal"/>
+	<field name="CUOTA_NOPAGAS" class="java.math.BigDecimal"/>
+	<field name="NOMBRESUCURSAL" class="java.lang.String"/>
+	<field name="NOMBREPRODUCTO" class="java.lang.String"/>
+	<field name="OPERACION" class="java.math.BigDecimal"/>
+	<field name="DESGLOSE" class="java.math.BigDecimal"/>
+	<field name="VENCIMIENTO" class="java.sql.Timestamp"/>
+	<field name="MONTOORIGEN" class="java.math.BigDecimal"/>
+	<field name="SALDO" class="java.math.BigDecimal"/>
+	<group name="Cliente">
+		<groupExpression><![CDATA[$F{CLIENTE}]]></groupExpression>
+		<groupHeader>
+			<band height="30">
+				<textField>
+					<reportElement x="0" y="3" width="555" height="25"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA["Cliente: "+$F{TIPODOC}+" "+$F{NUMERODOC}+" "+$F{NOMBRECLIENTE}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25"/>
+		</groupFooter>
+	</group>
+	<title>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement x="80" y="0" width="1000" height="34"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="22" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ESTADO DE SITUACIÓN DE CARTERA CEDIDA POR CLIENTE]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="0" width="80" height="40"/>
+				<imageExpression class="java.lang.String"><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="145" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sucursal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="145" y="0" width="243" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="388" y="0" width="89" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Operación]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="477" y="0" width="89" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Desglose]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="566" y="0" width="100" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Capital Inicial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="666" y="0" width="100" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo Capital]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="766" y="0" width="90" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Vencimiento]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="856" y="0" width="92" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuotas Pagas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="948" y="0" width="100" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuotas No Pagas]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1048" y="0" width="87" height="25"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Cuotas]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="145" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRESUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="0" width="243" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBREPRODUCTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="388" y="0" width="89" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{OPERACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="477" y="0" width="89" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{DESGLOSE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="566" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{MONTOORIGEN}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="666" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{SALDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1048" y="0" width="87" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TOTAL_CUOTAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="856" y="0" width="92" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CUOTAS_PAGAS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="948" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CUOTA_NOPAGAS}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="766" y="0" width="90" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{VENCIMIENTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

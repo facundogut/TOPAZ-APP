@@ -1,0 +1,9 @@
+﻿EXECUTE('
+----------------------
+--AJUSTE A OBSOLETAS--
+----------------------
+UPDATE dbo.OPERACIONES
+SET TITULO = 9998
+WHERE TITULO = 3554 AND IDENTIFICACION = 3563
+----
+')

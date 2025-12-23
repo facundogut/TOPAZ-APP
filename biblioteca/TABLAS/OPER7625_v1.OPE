@@ -1,0 +1,677 @@
+VERSION:055_5
+TN  NN 1006TConsulta Generica                       C00000 00
+*$2025-04-29 10:49:09GOKU
+ NNNNN 44267   jtsoid                                            INNNNI000007015200300202001011000000007000700300137000
+/V=jts_oid
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 09:55:24GOKU
+ NNNNN 00910   email                                             INNNNI000007015200300202001011000000007000700300137000
+/V=email
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 09:55:25GOKU
+ NNNNN 00760   estado                                            INNNNI000007015200270452020011000100007000700270137000
+/V=estado
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-04-29 09:55:26GOKU
+*N  NN - Validaciones
+*$2025-04-29 10:07:19GOKU
+ NNNNN 00080   Numerico                                          INNSNF000007015200270302000011000100007000700270137000
+/V=C44267.0
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-04-29 10:07:45GOKU
+CNNNNN   00000000000000000000100
+/F=C80.0=0
+/P=I99I500
+/M=Parametro jts_oid inválido
+*$2025-04-29 10:08:37GOKU
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=F(LEN,C910.0)=0
+/P=I99I501
+/M=email inválido
+*$2025-04-29 10:50:08GOKU
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=F(LEN,C760.0)=0
+/P=I99I502
+/M=ESTADO INVALIDO
+*$2025-04-29 10:50:08GOKU
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=A(C760#"S")YA(C760#"N")
+/P=I99I502
+/M=ESTADO INVALIDO
+*$2025-04-29 10:50:08GOKU
+TN  NN 1006TValidacion email                        C00000 00
+/?=!I99
+*$2025-05-06 11:08:57GOKU
+*N  NN ------------------------ BEGIN -----------------------------
+*$2025-05-06 11:23:36GOKU
+*N  NN ****Controlo mail
+*$2025-05-06 11:09:28GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(POS, C910,"@")=1
+/P=I200I99
+/M=Debe ingresar Dirección de Correo antes del Dominio
+*$2025-05-06 11:09:05GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(POSSTR,C910,"@")=0
+/P=I201I99
+/M=Mail debe contener "@" luego del nombre de cuenta
+*$2025-05-06 11:09:06GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(POSSTR,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),".")=0
+/P=I202I99
+/M=Falta separador "." luego del dominio
+*$2025-05-06 11:09:07GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(POS, C910, ".")- F(POS, C910, "@")=1
+/P=I203I99
+/M=Debe ingresar el dominio luego del "@"
+*$2025-05-06 11:09:07GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(LEN,C910)=F(POS,C910,".")
+/P=I204I99
+/M=Dominio incorrecto o incompleto
+*$2025-05-06 11:09:08GOKU
+ NSSNN 00933   nombcuenta                                        INNNNF000148057101680763020011000100148042601680556000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEN,F(LEFT,C910, F(POS, C910, "@")-1))
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-05-06 11:09:08GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=C933='0'
+/P=I205I99
+/M=Mail debe tener nombre de cuenta
+*$2025-05-06 11:09:10GOKU
+ NSSNN 00934   dominio                                           INNNNF000206057602260766020011000100204042502240555000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEN,F(LEFT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")-1))
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-05-06 11:09:10GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=C934='0'
+/P=I206I99
+/M=Mail debe tener dominio
+*$2025-05-06 11:09:11GOKU
+ NSSNN 00935   extension                                         INNNNF000235057802550768020011000100233042702530557000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEN,F(RIGHT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),F(LEN,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")))- F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")))
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-05-06 11:09:12GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=C935='0'
+/P=I207I99
+/M=Mail debe tener extensión
+*$2025-05-06 11:09:12GOKU
+ NSSNN 00272   Cuenta                                            INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEFT,C910, F(POS, C910, "@")-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:09:13GOKU
+ NSSNN 00272   Cuenta minuscul                                   INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(TOLOWER, C272.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:09:13GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(VALIDCHARS,1,C272,"abcdefghijklmnñopqrstuvwxyz0123456789.!#$%&'*+/=?^_`{|}~-")=0
+/P=I208I99
+/M=Mail debe tener nombre de cuenta válido
+*$2025-05-06 11:09:14GOKU
+ NSSNN 00274   Dominio                                           INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(LEFT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:09:15GOKU
+ NSSNN 00274   Dominio minuscu                                   INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(TOLOWER, C274.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:09:15GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(VALIDCHARS,1,C274,"abcdefghijklmnñopqrstuvwxyz0123456789-")=0
+/P=I209I99
+/M=Mail debe tener dominio válido
+*$2025-05-06 11:09:16GOKU
+ NSSNN 00936   Extension                                         INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(RIGHT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),F(LEN,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")))- F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), "."))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:09:16GOKU
+ NSSNN 00936   Extension minus                                   INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/V=F(TOLOWER, C936.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:09:17GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=(F(RIGHT,C936,1)='.')OF(POSSTR,C936,"..")>0O(F(LEFT,C936,1)='.')
+/P=I210I99
+/M=Mail debe tener extensión válida
+*$2025-05-06 11:09:17GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=(F(RIGHT,C936,1)='.')OF(POSSTR,C936,"..")>0O(F(LEFT,C936,1)='.')
+/P=I211I99
+/M=Mail debe tener extensión válida
+*$2025-05-06 11:09:18GOKU
+ NSSNN 00937   Sub Extension                                     INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" ")Y(F(POSSTR,C936,".")>0))Y!I99
+/V=F(TOLOWER,F(RIGHT,F(RIGHT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),F(LEN,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")))- F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")),F(LEN,C936)-F(POSSTR,C936,".")))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:09:18GOKU
+ NSSNN 00936   Extension                                         INNSNF000007015200300452001011000000007000700300137000
+/?=(F(LEN,C910)>0YA(C910#" ")Y(F(POSSTR,C936,".")>0))Y!I99
+/V=F(TOLOWER,F(LEFT,F(RIGHT,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")),F(LEN,F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")))- F(POS, F(RIGHT,C910,F(LEN, C910)- F(POS, C910, "@")), ".")),(F(POSSTR,C936,".")-1)))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:09:21GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(VALIDCHARS,1,C936,"abcdefghijklmnñopqrstuvwxyz0123456789-")=0
+/P=I212I99
+/M=Mail debe tener extensión válida
+*$2025-05-06 11:09:22GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=F(VALIDCHARS,1,C937,".abcdefghijklmnñopqrstuvwxyz0123456789-")=0
+/P=I213I99
+/M=Mail debe tener extensión válida
+*$2025-05-06 11:09:23GOKU
+CNSSNN   00000000000000000000100
+/?=(F(LEN,C910)>0YA(C910#" "))Y!I99
+/F=(F(RIGHT,C937,1)='.')OF(POSSTR,C937,"..")>0O(F(RIGHT,C937,1)='-')
+/P=I214I99
+/M=Mail debe tener extensión válida
+*$2025-05-06 11:09:23GOKU
+CNSSNN   00000000000000000000100
+/?=I200OI201OI202OI203OI204OI205OI206OI207OI208OI209OI210OI211OI212OI213OI214
+/P=I99I215
+/M=Mail no valido
+*$2025-05-06 11:09:24GOKU
+*N  NN Resultado con Error
+*$2025-05-06 11:09:26GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI20
+/V=7
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:02GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI20
+/V=No se ingresa un mail.
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI215
+/V=8
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:13GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI215
+/V=El mail ingresado no es valido.
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI200
+/V=9
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:18GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI200
+/V=Debe ingresar Dirección de Correo antes del Dominio
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI201
+/V=10
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:21GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI201
+/V=Mail debe contener "@" luego del nombre de cuenta
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI202
+/V=11
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:25GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI202
+/V=Falta separador "." luego del dominio
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI203
+/V=12
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:29GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI203
+/V=Debe ingresar el dominio luego del "@"
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI204
+/V=13
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:33GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI204
+/V=Dominio incorrecto o incompleto
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI205
+/V=14
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:37GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI205
+/V=Mail debe tener nombre de cuenta
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI206
+/V=15
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:41GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI206
+/V=Mail debe tener dominio
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI207
+/V=16
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:45GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI207
+/V=Mail debe tener extensión
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI208
+/V=17
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:49GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI208
+/V=Mail debe tener nombre de cuenta válido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI209
+/V=18
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:53GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI209
+/V=Mail debe tener dominio válido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI210
+/V=19
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:13:59GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI210
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI211
+/V=20
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:14:03GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI211
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI212
+/V=21
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:14:06GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI212
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI213
+/V=22
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:14:10GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI213
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI214
+/V=23
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:14:16GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI214
+/V=Mail debe tener extensión válida
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:08:24GOKU
+*N  NN ------------------------ END -----------------------------
+*$2025-05-06 11:14:54GOKU
+TN  NN 1006TValidacion Saldo                        C00001 00
+/?=!I99
+*$2025-05-06 11:12:44GOKU
+ NNNNN 01810   OID Saldo                                         INNSNA000007015200270302000011000100007000700270137000
+/V=C44267.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-04-29 10:49:36GOKU
+ NNNNN 01651   Codigo Cancel                                     INNSN 000007015200270202020011000100007000700270137000
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-04-29 10:33:04GOKU
+ NNNNN 01785   Tipo Producto                                     INNNN 000007015200270202000011000100007000700270137000
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-04-29 10:42:34GOKU
+CNNNNN   00000000000000000000100
+/F=C9509.0=0
+/P=I99I503
+/M=Saldo inexistente
+*$2025-04-29 10:33:37GOKU
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=A(C1651="1")
+/P=I99I504
+/M=Saldo cancelado
+*$2025-04-29 10:34:28GOKU
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C1785.0#2YC1785.0#3
+/P=I99I505
+/M=Tipo producto inválido
+*$2025-04-29 10:47:26GOKU
+TN  NN 1003TAlta Automatica Generica                T01401 00
+/?=!I99
+*$2025-04-29 10:11:34GOKU
+ NNNNN 08536   JTS_OID_SALDO                                     INNSNA000007015200270302000011000100007000700270137000
+/V=C44267.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-04-29 10:05:17GOKU
+ NNNNN 08595   EMAIL                                             INNSNA000007015200270302000011000100007000700270137000
+/V=C910.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-04-29 10:06:07GOKU
+ NNNNN 08620   ESTADO                                            INNSNA000007015200270302000011000100007000700270137000
+/V=C760.1
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2025-04-29 10:06:17GOKU
+TN  NN 1006TRetorno                                 C00000 00
+*$2025-04-29 10:49:06GOKU
+ NNNNN 00622   RETORNO                                           INNNNK000007015200300302001011000000007000700300137000
+/V=OK
+/P=RETORNO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:49:02GOKU
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/V=200
+/P=ERR_HTTP_CODE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:49:01GOKU
+*N  NN Resultado OK
+*$2025-04-29 10:49:00GOKU
+ NNNNN 00664   codResultado                                      INNSNK000007015200300202021011000000007000700300137000
+/?=!I99
+/V=0
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:48:59GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=!I99
+/V=Operación realizada
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:48:57GOKU
+*N  NN Resultado con Error
+*$2025-04-29 10:08:48GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99 Y I500
+/V=1
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:12:14GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I500
+/V=Error: Parámetro jst_oid inválido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:37:16GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99 Y I501
+/V=2
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:12:52GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I501
+/V=Error: Parámetro email inválido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:37:23GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99 Y I502
+/V=3
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:13:14GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I502
+/V=Error: Parámetro estado inválido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:37:27GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99 Y I503
+/V=4
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:35:08GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I503
+/V=Error: Saldo inexistente
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:37:31GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99 Y I504
+/V=5
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:35:10GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I504
+/V=Error: Saldo cancelado
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:43:54GOKU
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99 Y I505
+/V=6
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:44:15GOKU
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99 Y I505
+/V=Error: Tipo producto del saldo inválido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-04-29 10:44:06GOKU
+*N  NN Resultado Error EMAIL
+*$2025-05-06 11:07:28GOKU
+ NNNNN 00664   codResultado                                      INNSNA000007015200300202021011000000007000700300137000
+/?=I99 Y I215
+/V=C664.1
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:07:15GOKU
+ NNNNN 04968   resultado                                         INNNNA000007015200300452001011000000007000700300137000
+/?=I99 Y I215
+/V=C4968.1
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-05-06 11:18:11GOKU
+*N  NN ------------------------------------ 2 -----------------------------------------
+*$2025-05-06 11:07:15GOKU
+*#I502#ESTADO INVALIDO
+*#I210#Correo no válido - mail debe tener extensión válida
+*#I501#EMAIL INVALIDO
+*#I500#JTS INVALIDO
+*#I200#Correo no válido - debe ingresar dirección antes del dominio
+*#I201#Correo no válido - debe contener @ luego de la dirección
+*#I215#Error - Mail no válido
+*#I99#Error
+*#I202#Correo no válido - falta separador "." luego del dominio
+*#I214#Correo no válido - mail debe tener subextensión válida
+*#I203#Correo no válido - debe ingresar el dominio luego del arroba
+*#I204#Correo no válido - dominio incorrecto o incompleto
+*#I205#Correo no válido - mail debe tener nombre de cuenta
+*#I206#Correo no válido - mail debe tener dominio
+*#I207#Correo no válido - mail debe tener extensión
+*#I208#Correo no válido - mail debe tener nombre de cuenta válido
+*#I209#Correo no válido - mail debe tener dominio válido
+*#I505#Tipo producto inválido
+*#I213#Correo no válido - subextensión debe tener caracteres válidos
+*#I504#Saldo cancelado
+*#I212#Correo no válido - extensión debe tener caracteres válidos
+*#I503#Saldo inexistente
+*#I211#Correo no valido - CONTROL DUPLICADO??

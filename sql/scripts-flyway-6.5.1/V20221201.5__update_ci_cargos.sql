@@ -1,0 +1,5 @@
+execute ('
+UPDATE dbo.CI_CARGOS
+SET PIVOT_ = 34355
+WHERE ID_CARGO = 1200
+')

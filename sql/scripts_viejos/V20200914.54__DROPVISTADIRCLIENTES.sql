@@ -1,0 +1,2 @@
+execute ('
+DROP VIEW dbo.VW_CLI_DIRECCIONES')

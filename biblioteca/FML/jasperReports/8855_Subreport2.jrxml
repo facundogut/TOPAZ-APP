@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-06-28T18:18:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Sub Reporte 2 - DOyLF" pageWidth="555" pageHeight="842" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="bcc431e5-004d-4574-9e24-22abfb3b0c30">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="JTS_OID" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT
+S.JTS_OID,
+A.CODIGO_PERSONA_CLIENTE,
+concat(P.PRIMERNOMBRE, ' ' + P.SEGUNDONOMBRE, ' ' + P.APELLIDOPATERNO) AS NOMBRE_TITULAR,
+concat(PC.PRIMERNOMBRE, ' ' + PC.SEGUNDONOMBRE, ' ' + PC.APELLIDOPATERNO) AS NOMBRE_CONYUGE,
+sum(A.INGRESO_PROM_PESOS) AS INGRESOS
+FROM SALDOS AS S
+INNER JOIN CLI_CLIENTEPERSONA AS CP ON S.C1803 = CP.CODIGOCLIENTE AND CP.TITULARIDAD = 'T' AND CP.TZ_LOCK = 0
+INNER JOIN CLI_ACTIVIDAD_ECONOMICA AS A ON CP.NUMEROPERSONA = A.CODIGO_PERSONA_CLIENTE AND A.TZ_LOCK = 0
+LEFT JOIN CLI_PFCONYUGE C ON A.CODIGO_PERSONA_CLIENTE = C.NUMEROPERSONAFISICA AND C.TZ_LOCK = 0
+LEFT JOIN CLI_PERSONASFISICAS PC ON C.NUMEROPERSONAFISICACONY = PC.NUMEROPERSONAFISICA AND PC.TZ_LOCK = 0
+LEFT JOIN CLI_PERSONASFISICAS P ON A.CODIGO_PERSONA_CLIENTE = P.NUMEROPERSONAFISICA AND PC.TZ_LOCK = 0
+WHERE S.TZ_LOCK =0 AND S.JTS_OID =  $P{JTS_OID}
+GROUP BY S.JTS_OID, A.CODIGO_PERSONA_CLIENTE, P.PRIMERNOMBRE, P.SEGUNDONOMBRE, P.APELLIDOPATERNO,
+PC.PRIMERNOMBRE, PC.SEGUNDONOMBRE, PC.APELLIDOPATERNO]]>
+	</queryString>
+	<field name="JTS_OID" class="java.math.BigDecimal"/>
+	<field name="CODIGO_PERSONA_CLIENTE" class="java.math.BigDecimal"/>
+	<field name="NOMBRE_TITULAR" class="java.lang.String"/>
+	<field name="NOMBRE_CONYUGE" class="java.lang.String"/>
+	<field name="INGRESOS" class="java.math.BigDecimal"/>
+	<detail>
+		<band height="75" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="15" uuid="d9c3ae2a-d42b-405e-afda-52ca12a66b0c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[INFORMACIÓN ADICIONAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="15" width="190" height="15" uuid="982827d9-0bc1-4144-bd3d-9fa34de954e9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[INGRESOS (promedio últimos 6 meses):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="30" width="190" height="15" uuid="8d97f201-3b62-42e8-8474-99a48c70272f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Titular:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="45" width="190" height="15" uuid="fab57b32-370b-47fd-8d7e-1cc812549d3d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Cónyuge:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="Float" x="0" y="60" width="190" height="15" uuid="6a167e63-636f-44b3-b62d-0ae972070d93">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<text><![CDATA[Otros (grupo familiar):]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#;(#,##0.00#)" isBlankWhenNull="true">
+				<reportElement positionType="Float" x="190" y="15" width="365" height="15" uuid="e879905e-3e10-45c8-922f-bfb6717d6538">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INGRESOS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="190" y="30" width="365" height="15" uuid="c4498feb-40de-483d-93c2-9cf0b8598bcb">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_TITULAR}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="190" y="45" width="365" height="15" uuid="2f57231f-e170-49c8-8948-a90a6414b03d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE_CONYUGE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement positionType="Float" x="190" y="60" width="365" height="15" uuid="7cda5118-e125-4f35-9e79-8993ee9277d4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11"/>
+					<paragraph leftIndent="5"/>
+				</textElement>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

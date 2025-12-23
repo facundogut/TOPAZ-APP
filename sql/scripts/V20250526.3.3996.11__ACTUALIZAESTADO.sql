@@ -1,0 +1,79 @@
+EXECUTE('
+CREATE OR ALTER PROCEDURE dbo.SP_ACTUALIZO_ESTADO_ADELANTO 
+    @P_ID_PROCESO FLOAT(53),
+    @P_DT_PROCESO DATETIME2(0),
+    @P_RET_PROCESO FLOAT(53) OUTPUT,
+    @P_MSG_PROCESO VARCHAR(MAX) OUTPUT
+AS 
+BEGIN 
+    SET NOCOUNT ON;
+
+    DECLARE @RETORNO_CON_REGISTRO NUMERIC(12);
+    DECLARE @p_tipo_error VARCHAR(8000);
+
+    BEGIN TRY
+    BEGIN
+-----Comienzo de lógica
+  
+  UPDATE AH
+    SET AH.ESTADO = ''P''
+    FROM CRE_ADELANTOS_HABERES AH WITH(NOLOCK)
+    INNER JOIN CRE_ADELANTOS_HABERES_RESUMEN RES WITH(NOLOCK)
+        ON AH.JTS_OID_CV = RES.JTS_OID_CV
+        AND AH.FECHA = RES.FECHA
+        AND AH.PRODUCTO = RES.PRODUCTO
+        AND AH.CANAL = RES.CANAL
+    WHERE RES.ESTADO = ''P''
+    	AND RES.FECHA_PROCESADO = (SELECT FECHAPROCESO FROM PARAMETROS WITH(NOLOCK))
+    	AND AH.ESTADO=''I''
+		AND AH.TZ_LOCK=0 AND RES.TZ_LOCK=0
+
+----- Contamos registros
+ 	SELECT @RETORNO_CON_REGISTRO = COUNT(1)
+    FROM CRE_ADELANTOS_HABERES A WITH (NOLOCK)
+    INNER JOIN CRE_ADELANTOS_HABERES_RESUMEN R WITH(NOLOCK)
+        ON A.JTS_OID_CV = R.JTS_OID_CV
+        AND A.FECHA = R.FECHA
+        AND A.PRODUCTO = R.PRODUCTO
+        AND A.CANAL = R.CANAL
+    WHERE R.ESTADO = ''P''
+    	AND R.FECHA_PROCESADO = (SELECT FECHAPROCESO FROM PARAMETROS WITH(NOLOCK))
+    	AND A.ESTADO=''P''
+		AND A.TZ_LOCK=0 AND R.TZ_LOCK=0
+
+-- Seteamos mensajes
+		BEGIN
+        SET @P_MSG_PROCESO = ''Se procesaron '' + CONVERT(VARCHAR, @RETORNO_CON_REGISTRO) + '' registros'';
+        SET @P_RET_PROCESO = 1;
+        SET @p_tipo_error = ''I'';
+
+        -- Ejecutamos log
+        EXECUTE PKG_LOG_PROCESO$proc_ins_log_proceso 
+            @P_ID_PROCESO,
+            @P_DT_PROCESO,
+            ''SP_ACTUALIZO_ESTADO_ADELANTO'',
+            @P_RET_PROCESO,
+            @P_MSG_PROCESO,
+            @p_tipo_error;
+		END
+	END
+    END TRY
+    BEGIN CATCH
+    	BEGIN
+        SET @P_RET_PROCESO = 3;
+        SET @P_MSG_PROCESO = ''Proceso finalizado con errores: '' + ERROR_MESSAGE();
+        SET @p_tipo_error = ''E'';
+
+        -- Log del error
+        EXECUTE dbo.PKG_LOG_PROCESO$PROC_INS_LOG_PROCESO 
+            @P_ID_PROCESO = @P_ID_PROCESO, 
+            @P_FCH_PROCESO = @P_DT_PROCESO, 
+            @P_NOM_PACKAGE = ''SP_ACTUALIZO_ESTADO_ADELANTO - Error'', 
+            @P_COD_ERROR = @P_RET_PROCESO, 
+            @P_MSG_ERROR = @P_MSG_PROCESO, 
+            @P_TIPO_ERROR = @p_tipo_error;
+		END
+    END CATCH;
+END
+
+')

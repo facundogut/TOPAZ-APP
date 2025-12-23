@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2025-02-25T16:39:15 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REP_PRELIQ_SECHEEP" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7b3a546b-76e0-4810-8a57-51dc3513e2fa">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH.xml"/>
+	<parameter name="headerRep" class="java.lang.String" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT 
+$P{headerRep} as headerRep, 
+nombrearchivo,
+convpadre, 
+canal, 
+isnull(xd.descripcion, 'NBCH') descripcion, 
+right(concat('0000', codigoempresa), 4) codigoempresa, 
+fechacarga,
+totcobranzas, 
+cast(totimporte as varchar(20)) totimporte
+FROM ITF_RP_SECHEEP_AUX (nolock) s 
+	JOIN (SELECT DESCRIPCION, OPCIONINTERNA FROM OPCIONES WHERE NUMERODECAMPO = 44750) xd
+		ON s.canal = xd.opcioninterna]]>
+	</queryString>
+	<field name="headerRep" class="java.lang.String"/>
+	<field name="nombrearchivo" class="java.lang.String"/>
+	<field name="convpadre" class="java.lang.Integer"/>
+	<field name="canal" class="java.lang.Integer"/>
+	<field name="descripcion" class="java.lang.String"/>
+	<field name="codigoempresa" class="java.lang.String"/>
+	<field name="fechacarga" class="java.lang.String"/>
+	<field name="totcobranzas" class="java.lang.Integer"/>
+	<field name="totimporte" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="106" splitType="Stretch">
+			<staticText>
+				<reportElement x="20" y="35" width="280" height="25" uuid="6289be6e-d7a3-4a25-b11a-e4700ef48439"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[NUEVO BANCO DEL CHACO S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" x="311" y="37" width="264" height="20" uuid="677fce84-19e1-4bc3-b03c-a21704bdf4f7"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Reporte: Preliquidación SECHEEP]]></text>
+			</staticText>
+			<line>
+				<reportElement x="20" y="10" width="509" height="1" uuid="96c42ef7-0924-4863-808b-daece71b7341"/>
+			</line>
+			<line>
+				<reportElement x="23" y="100" width="509" height="1" uuid="75ccd5f1-722a-4a16-a771-b430044f689c"/>
+			</line>
+			<textField>
+				<reportElement x="23" y="76" width="504" height="24" uuid="cdd4e7f3-fa9c-4419-9084-8862ac43c700"/>
+				<textFieldExpression><![CDATA[$F{headerRep}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="271" splitType="Stretch">
+			<staticText>
+				<reportElement x="60" y="186" width="240" height="20" uuid="035ddda6-d032-4156-9dce-0fce6c1834d0"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Cantidad Total de Cobranzas:..]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="206" width="240" height="20" uuid="bd925043-df71-477a-9e57-ff1d89593b26"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Cantidad Total de Importes:.....]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="20" y="20" width="310" height="30" uuid="1e0892ac-b9bb-46c0-b2b6-c412cee130fa"/>
+				<textElement>
+					<font size="16" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Totales de Movimientos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="166" width="240" height="20" uuid="672a4cc4-e86a-46f2-9e6f-b864bff278d8"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Fecha Carga:............................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="86" width="240" height="20" uuid="6e14fd79-92bc-40c5-bf49-177bcc43b35a"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Convenio Padre:.......................]]></text>
+			</staticText>
+			<line>
+				<reportElement x="20" y="246" width="509" height="1" uuid="83903697-d369-4595-b05a-305b262e645b"/>
+			</line>
+			<textField>
+				<reportElement x="320" y="66" width="212" height="20" uuid="a2c888ef-2375-4214-aa98-8f4e92015557"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{nombrearchivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="166" width="212" height="20" uuid="bc678291-e912-4a58-ab5f-2be238748de0"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fechacarga}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="186" width="212" height="20" uuid="ed7ff910-6a0b-4601-b5e0-211f67d7854d"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totcobranzas}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="206" width="212" height="20" uuid="3b6695e7-0ad9-4907-b161-9a703035179b"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totimporte}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="60" y="146" width="240" height="20" uuid="7095d168-bc04-4a5e-b5f2-0877c41ef39e"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Codigo Empresa:......................]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="320" y="146" width="212" height="20" uuid="df33bd9b-aba8-472d-ba7b-868504bc47c7"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{codigoempresa}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="320" y="106" width="212" height="20" uuid="2accb23f-2a81-44b2-8afe-076c4457281c"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{canal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="60" y="106" width="240" height="20" uuid="9a56ee0d-c481-4aff-8494-1900e36c1ae2"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Canal:.......................................]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="320" y="126" width="212" height="20" uuid="25324d15-0832-475a-8ea0-93e9e4fa3c57"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{descripcion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="60" y="126" width="240" height="20" uuid="12a2850f-2e0d-4ebb-81d5-855b81c52544"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Descripción:..............................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="60" y="66" width="240" height="20" uuid="e1185d06-ed14-4965-a7fc-991d0cf8c800"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[Nombre archivo:.......................]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="320" y="86" width="212" height="20" uuid="7bbfa4ce-d66d-4aee-8744-32942a2a8e2d"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{convpadre}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

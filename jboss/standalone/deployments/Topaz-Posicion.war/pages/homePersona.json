@@ -1,0 +1,1304 @@
+{
+	"page":{
+		"attributesService": {
+				"service":"DocumentoPersona",
+				"parameters":["TIPODOC","NRODOC","CODPAIS"]
+		},
+		"attributes":[
+		
+			{
+				"label" : "CÓDIGO PAIS",
+				"key" : "CODPAIS",
+				"defaultValue" : "32",
+				"help" : {
+					"input":{
+						"service":"AyudaCodPais",
+						"parameters":[]
+					},
+					"columns":[
+						{
+							"header":"NOMBRE",
+							"value":"NOMBREPAIS",
+                            "filter":true
+						},
+						{
+							"header":"CODIGO SWIFT",
+							"value":"CODIGOSWIFT"
+						},
+						{
+							"header":"CÓDIGO PAIS",
+							"value":"CODPAIS"
+						}						
+					],
+					"valueColumns" : ["CODPAIS"]
+				}			
+			},
+			{
+				"label" : "TIPO DOCOCUMENTO",
+				"key" : "TIPODOC",
+				"help" : {
+					"input":{
+						"service":"AyudaTipoDocJF",
+						"parameters":[]
+					},
+					"columns":[
+				        {
+			                "header":"TIPO DOCUMENTO",
+			                "value":"TIPODOC"
+				        },
+				        {
+			                "header":"TIPO DE PERSONA",
+			                "value":"TIPOPERSONA"
+				        },
+				        {
+			                "header":"NOMBRE DE PAIS",
+			                "value":"NOMBREPAIS"
+				        }
+					],
+					"valueColumns" : ["TIPODOC"]
+            	}
+			},
+			{
+				"label" : "NRO DE DOCUMENTO",
+				"key" : "NRODOC",						
+				"help" : {
+					"input":{
+						"service":"AyudaNroDocJF",
+						"parameters":["TIPOPERSONA","TIPODOC","CODPAIS"]
+					},
+					"columns":[
+						{
+							"header":"NOMBRE",
+							"value":"NOMBRE"
+						},
+						{
+							"header":"CÓDIGO PAÍS",
+							"value":"CODPAIS"
+						},
+						{
+							"header":"TIPO DOCUMENTO",
+							"value":"TIPODOC"
+						},
+						{
+							"header":"NÚMERO DOCUMENTO",
+							"value":"NRODOC",
+							"filter":true
+						},
+{
+							"header":"TIPO PERSONA",
+							"value":"TIPOPERSONA",
+							"hidden":true
+						}							
+					],
+					"valueColumns" : ["CODPAIS","TIPODOC","NRODOC"]
+				}		
+			}
+		],
+		
+		"frames":[				
+			{
+				"id":"personaFisica",
+				"title":"Persona física",
+				"icon":"client.png",
+				"type":"Form",
+				"input":{
+					"type":"service",
+					"service":"PersonaFisica",
+					"parameters":["TIPODOC","NRODOC","CODPAIS"]
+				},
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+                "formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Nombre",
+	                            "key":"NOMBRE"
+	                        },
+	                        {  
+	                            "label":"Apellido",
+	                            "key":"APELLIDO"
+	                        },
+							{  
+	                            "label":"Tipo Doc.",
+	                            "key":"TIPODOCUMENTO"
+	                        },
+							{  
+	                            "label":"Pais Doc.",
+	                            "key":"PAISDOCUMENTO"
+	                        },
+							{  
+	                            "label":"Nro. Doc.",
+	                            "key":"NRODOCUMENTO"
+	                        }
+                        ],                        
+                    	[
+	                        {  
+	                            "label":"Edad",
+	                            "key":"EDAD"
+	                        },
+							{  
+	                            "label":"Fecha Nac.",
+	                            "key":"FECHANAC"
+	                        },
+							{  
+	                            "label":"Sexo",
+	                            "key":"SEXO"
+	                        },
+							{  
+	                            "label":"Estado civil",
+	                            "key":"ESTADOCIVIL"
+	                        }
+                        ],                        
+                    	[
+	                        
+	                        {  
+	                            "label":"Profesión",
+	                            "key":"PROFESION"
+	                        },
+	                        {  
+	                            "label":"Actividad Principal",
+	                            "key":"ACTIVIDADPRINCIPAL"
+	                        },
+							{  
+	                            "label":"Empresa Actividad",
+	                            "key":"EMPRESA"
+	                        },
+							{  
+	                            "label":"Años antiguedad",
+	                            "key":"ANTIGUEDAD"
+	                        }
+	                        
+                        ],
+						[
+	                        
+	                        {  
+	                            "label":"Fallecido",
+	                            "key":"FALLECIDO"
+	                        },
+	                        {  
+	                            "label":"Fecha Fallecimiento",
+	                            "key":"FECHA_FALLECIMIENTO"
+	                        },
+							{  
+	                            "label":"Estado",
+	                            "key":"ESTADO"
+	                        },
+							{  
+	                            "label":"Motivo Inhabilitado",
+	                            "key":"MOTIVO_INHABILITADO"
+	                        }
+	                        
+                        ],
+					    [
+	                        {  
+	                            "label":"Incluido PEP",
+	                            "key":"INCLUIDO_PEP"
+	                        },
+							{  
+	                            "label":"Incluido en Lista Negra",
+	                            "key":"INCLUIDO_LISTA_NEGRA"
+	                        },
+							{  
+	                            "label":"En Situación Jurídica",
+	                            "key":"SITUACION_JURIDICA"
+	                        }
+						]
+                    ]
+                }
+			},
+			{
+				"id":"personaJuridica",
+				"title":"Persona Juridica",
+				"icon":"client.png",
+				"type":"Form",
+				"input":{
+					"type":"service",
+					"service":"PersonaJuridica",
+					"parameters":["NRODOC","TIPODOC","CODPAIS"]
+				},
+				"enabled":{
+					"condition" : "#TIPOPERSONA != 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+                "formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Razon Social",
+	                            "key":"RAZONSOCIAL"
+	                        },
+							{  
+	                            "label":"Tipo Doc.",
+	                            "key":"TIPODOCUMENTO"
+	                        },
+							{  
+	                            "label":"Pais Doc.",
+	                            "key":"PAISDOCUMENTO"
+	                        },
+							{  
+	                            "label":"Nro. Doc.",
+	                            "key":"NRODOCUMENTO"
+	                        },
+							{  
+	                            "label":"Fecha Constitución.",
+	                            "key":"FECHACONSTITUCION"
+	                        },
+							{  
+	                            "label":"Profesión",
+	                            "key":"PROFESION"
+	                        },
+	                        {  
+	                            "label":"Actividad Principal",
+	                            "key":"ACTIVIDADPRINCIPAL"
+	                        }
+                        ],                        
+                    	[
+							
+							{  
+	                            "label":"Empresa Actividad",
+	                            "key":"EMPRESA"
+	                        },
+							{  
+	                            "label":"Estado",
+	                            "key":"ESTADO"
+	                        },
+							{  
+	                            "label":"Motivo Inhabilitado",
+	                            "key":"MOTIVO_INHABILITADO"
+	                        },
+							{  
+	                            "label":"Años antigüedad",
+	                            "key":"ANTIGUEDAD"
+	                        },
+							{  
+	                            "label":"Incluido PEP",
+	                            "key":"INCLUIDO_PEP"
+	                        },
+							{  
+	                            "label":"Incluido en Lista Negra",
+	                            "key":"INCLUIDO_LISTA_NEGRA"
+	                        },
+							{  
+	                            "label":"En Situación Jurídica",
+	                            "key":"SITUACION_JURIDICA"
+	                        }
+                        ]
+						
+                    ]
+                }
+			},
+			{
+				"id":"Actividades Secundarias",
+				"title":"Actividades Secundarias",
+				"icon":"client.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"ActividadesSecundariasPF",
+					"parameters":["TIPODOC","NRODOC","CODPAIS"]
+				},
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Actividad",
+							"value":"DESCRIPCION"
+						},
+						{
+							"header":"Empresa",
+							"value":"EMPRESA"
+						},
+						{
+							"header":"Años Antigüedad",
+							"value":"ANTIGUEDAD"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						}
+					]
+				}			
+                
+			},
+			{
+				"id":"Actividades Secundarias",
+				"title":"Actividades Secundarias",
+				"icon":"client.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"ActividadesSecundariasPJ",
+					"parameters":["NRODOC","TIPODOC","CODPAIS"]
+				},
+				"enabled":{
+					"condition" : "#TIPOPERSONA != 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Actividad",
+							"value":"DESCRIPCION"
+						},
+						{
+							"header":"Empresa",
+							"value":"EMPRESA"
+						},
+						{
+							"header":"Años Antigüedad",
+							"value":"ANTIGUEDAD"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						}
+					]
+				}			
+                
+			},
+			{
+				"id":"Emergencias Agropecuarias",
+				"title":"Emergencias Agropecuarias",
+				"icon":"client.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"EmergenciasAgroPersona",
+					"parameters":["TIPODOC","NRODOC","CODPAIS"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Nro Cliente",
+							"value":"NRO_CLIENTE"
+						},
+						{
+							"header":"Emisor Certificado",
+							"value":"EMISOR_CERTIFICADO"
+						},
+						{
+							"header":"Motivo",
+							"value":"MOTIVO"
+						},
+						{
+							"header":"Fecha Desde",
+							"value":"DESDE"
+						},
+						{
+							"header":"Fecha Hasta",
+							"value":"HASTA"
+						}
+					]
+				}			
+                
+			},			
+			{
+				"id":"IntegrantesPersonaJuridica",
+				"title":"Integrantes Persona Juridica",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"IntegrantesPersonaJuridica",
+					"parameters":["NRODOC","TIPODOC","CODPAIS"]
+				},
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'J'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"pageLength":"10",				
+					"columns":[
+						{
+							"header":"País Documento",
+							"value":"PAISDOCUMENTO"
+						},
+						{
+							"header":"Tipo Documento",
+							"value":"TIPODOCUMENTO"
+						},
+						{
+							"header":"Nro. Documento",
+							"value":"NRODOC"
+						},
+						{
+							"header":"Nombre",
+							"value":"NOMBRE"
+						},
+						{
+							"header":"Tipo Persona",
+							"value":"TIPOPERSONA"
+						},
+						{
+							"header":"Cargo",
+							"value":"CARGO"
+						}						
+					]
+				}
+			},
+			{
+				"id":"PersonasJuridicasQueIntegra",
+				"title":"Personas Juridicas que integra",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"PersonasJuridicasQueIntegra",
+					"parameters":["NRODOC","TIPODOC", "CODPAIS"]
+				},
+				
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Tipo Documento",
+							"value":"TIPODOCUMENTO"
+						},
+						{
+							"header":"Nro Documento",
+							"value":"NUMERODOCUMENTO"
+						},
+						{
+							"header":"País Documento",
+							"value":"NOMBREPAIS"
+						},
+						{
+							"header":"Razón Social",
+							"value":"RAZONSOCIAL"
+						},
+						{
+							"header":"Nombre Fantasía",
+							"value":"NOMBREFANTASIA"
+						}				
+					]
+				}
+			},
+			{
+				"id":"DireccionesPersonaFisica",
+				"title":"Direcciones",
+				"icon":"documents.png",
+				"type":"Grid",
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"input":{
+					"type":"service",
+					"service":"DatosDireccionesPF",
+					"parameters":["TIPODOC","NRODOC", "CODPAIS", "TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"FORMATO",
+							"value":"DESCFORMATO"
+						},
+						{
+							"header":"TIPO",
+							"value":"DESCTIPODIRECCION"
+						},
+						{
+							"header":"ORDINAL",
+							"value":"ORDINAL"
+						},
+						{
+							"header":"PAIS",
+							"value":"PAIS"
+						},
+						{
+							"header":"PROVINCIA",
+							"value":"NOMBREPROVINCIA"
+						},
+						{
+							"header":"DPTO",
+							"value":"NOMBREDEPARTAMENTO"
+						},
+						{
+							"header":"LOCALIDAD",
+							"value":"NOMBRELOCALIDAD"
+						},
+						{
+							"header":"BARRIO",
+							"value":"BARRIO"
+						},
+						{
+							"header":"CALLE",
+							"value":"CALLE"
+						},
+						{
+							"header":"NUMERO",
+							"value":"NUMERO"
+						},
+						{
+							"header":"PISO",
+							"value":"PISO"
+						},
+						{
+							"header":"APTO",
+							"value":"APARTAMENTO"
+						},
+						{
+							"header":"MANZANA",
+							"value":"MANZANA"
+						}
+					]
+				}
+			},
+			{
+				"id":"DireccionesPersonaJuridica",
+				"title":"Direcciones",
+				"icon":"documents.png",
+				"type":"Grid",
+				"enabled":{
+					"condition" : "#TIPOPERSONA != 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"input":{
+					"type":"service",
+					"service":"DatosDireccionesPJ",
+					"parameters":["NRODOC","TIPODOC", "CODPAIS", "TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"FORMATO",
+							"value":"DESCFORMATO"
+						},
+						{
+							"header":"TIPO",
+							"value":"DESCTIPODIRECCION"
+						},
+						{
+							"header":"ORDINAL",
+							"value":"ORDINAL"
+						},
+						{
+							"header":"PAIS",
+							"value":"PAIS"
+						},
+						{
+							"header":"PROVINCIA",
+							"value":"NOMBREPROVINCIA"
+						},
+						{
+							"header":"DPTO",
+							"value":"NOMBREDEPARTAMENTO"
+						},
+						{
+							"header":"LOCALIDAD",
+							"value":"NOMBRELOCALIDAD"
+						},
+						{
+							"header":"BARRIO",
+							"value":"BARRIO"
+						},
+						{
+							"header":"CALLE",
+							"value":"CALLE"
+						},
+						{
+							"header":"NUMERO",
+							"value":"NUMERO"
+						},
+						{
+							"header":"PISO",
+							"value":"PISO"
+						},
+						{
+							"header":"APTO",
+							"value":"APARTAMENTO"
+						},
+						{
+							"header":"MANZANA",
+							"value":"MANZANA"
+						}		
+					]
+				}
+			},
+			{
+				"id":"EmailsPersonaFisica",
+				"title":"Emails",
+				"icon":"documents.png",
+				"type":"Grid",
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"input":{
+					"type":"service",
+					"service":"DatosEmailsPF",
+					"parameters":["TIPODOC","NRODOC", "CODPAIS", "TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"TIPO",
+							"value":"DESC_TIPO"
+						},
+						{
+							"header":"ORDINAL",
+							"value":"ORDINAL"
+						},
+						{
+							"header":"CORREO",
+							"value":"EMAIL"
+						}
+					]
+				}
+			},
+			{
+				"id":"EmailsPersonaJuridica",
+				"title":"Emails",
+				"icon":"documents.png",
+				"type":"Grid",
+				"enabled":{
+					"condition" : "#TIPOPERSONA != 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"input":{
+					"type":"service",
+					"service":"DatosEmailsPJ",
+					"parameters":["TIPODOC","NRODOC", "CODPAIS", "TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"TIPO",
+							"value":"DESC_TIPO"
+						},
+						{
+							"header":"ORDINAL",
+							"value":"ORDINAL"
+						},
+						{
+							"header":"CORREO",
+							"value":"EMAIL"
+						}
+					]
+				}
+			},
+			{
+				"id":"TelefonosPersonaFisica",
+				"title":"Telefonos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"input":{
+					"type":"service",
+					"service":"DatosTelefonosPF",
+					"parameters":["TIPODOC","NRODOC", "CODPAIS", "TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"TIPO",
+							"value":"DESC_TIPO"
+						},
+						{
+							"header":"ORDINAL",
+							"value":"ORDINAL"
+						},
+						{
+							"header":"FIJO/CELULAR",
+							"value":"TIPO_CEL_TEL"
+						},
+						{
+							"header":"NÚMERO",
+							"value":"NUMERO"
+						}
+					]
+				}
+			},
+			{
+				"id":"TelefonosPersonaJuridica",
+				"title":"Telefonos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'J'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"input":{
+					"type":"service",
+					"service":"DatosTelefonosPJ",
+					"parameters":["TIPODOC","NRODOC", "CODPAIS", "TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"TIPO",
+							"value":"DESC_TIPO"
+						},
+						{
+							"header":"ORDINAL",
+							"value":"ORDINAL"
+						},
+						{
+							"header":"FIJO/CELULAR",
+							"value":"TIPO_CEL_TEL"
+						},
+						{
+							"header":"NÚMERO",
+							"value":"NUMERO"
+						}
+					]
+				}
+			},
+			{
+				"id":"VinculosPersonaFisicaPersonaFisica",
+				"title":"Personas Humanas vinculadas",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"VinculosPersonaHumanaconHumana",
+					"parameters":["NRODOC","TIPODOC","CODPAIS"]
+				},
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"pageLength":"10",
+					"columns":[
+						{
+							"header":"Descripcion vínculo",
+							"value":"VINCULO"
+						},
+						{
+							"header":"Rol persona",
+							"value":"ROL"
+						},
+						{
+							"header": "Nombre Persona",
+							"value":"NOMBRE"
+						},
+						{
+							"header": "Pais Doc",
+							"value":"PAISDOCUMENTO"
+						},
+						{
+							"header": "Tipo Doc",
+							"value":"TIPODOCUMENTO"
+						},
+						{
+							"header": "Nro Doc",
+							"value":"NUMERODOCUMENTO"
+						},
+						{
+							"header": "Nro Persona",
+							"value":"NRO_PERSONAVINCULADA",
+							"hidden": true
+						},
+						{
+							"header": "Tipo de vínculo",
+							"value":"TIPOVINCULO"
+						}						
+					]
+				}
+			},
+			{
+				"id":"VinculosPersonaFisicaPersonaJuridica",
+				"title":"Personas Juridicas vinculadas",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"VinculosPersonaHumanaconJuridica",
+					"parameters":["NRODOC","TIPODOC","CODPAIS"]
+				},
+				"enabled":{
+					"condition" : "#TIPOPERSONA == 'F'",
+					"parameters":["TIPOPERSONA"]
+				},
+				"gridProperties":{
+					"pageLength":"10",				
+					"columns":[
+						{
+							"header":"Descripcion vínculo",
+							"value":"VINCULO"
+						},
+						{
+							"header":"Rol persona",
+							"value":"ROL"
+						},
+						{
+							"header": "Nombre Persona",
+							"value":"NOMBRE"
+						},
+						{
+							"header": "Pais Doc",
+							"value":"PAISDOCUMENTO"
+						},
+						{
+							"header": "Tipo Doc",
+							"value":"TIPODOCUMENTO"
+						},
+						{
+							"header": "Nro Doc",
+							"value":"NUMERODOCUMENTO"
+						},
+						{
+							"header": "Nro Persona",
+							"value":"NRO_PERSONAVINCULADA",
+							"hidden": true
+						},
+						{
+							"header": "Tipo de vínculo",
+							"value":"TIPOVINCULO"
+						}						
+					]
+				}
+			},
+			{
+				"id":"ClientesIntegrados",
+				"title":"Clientes Integrados",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"ClientesIntegrados",
+					"parameters":["TIPODOC","NRODOC","CODPAIS"]
+				},
+				"links":[
+					{
+						"name":"Datos de Cliente",
+						"to":"homeCliente",
+						"parameters":["IDCLIENTE"]
+					}
+				],
+				"gridProperties":{
+					"pageLength":"10",				
+					"columns":[
+						{
+							"header":"Código Cliente",
+							"value":"IDCLIENTE"
+						},
+						{
+							"header":"Titularidad",
+							"value":"TITULARIDAD"
+						},
+						{
+							"header":"Fecha Alta de Relación",
+							"value":"FECHAALTA"
+						},
+						{
+							"header":"Categoría",
+							"value":"NATURALEZA"
+						},
+{
+							"header":"Grupo Económico",
+							"value":"GRUPOECONOMICO"
+						}							
+					]
+				}
+			},
+			{
+				"id":"ConveniosRecaudacion",
+				"title":"Convenios de Recaudación",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"ConveniosRecaudacionesPersona",
+					"parameters":["TIPODOC","NRODOC","CODPAIS"]
+				},
+				"gridProperties":{
+					"pageLength":"10",				
+					"columns":[
+						{
+							"header":"Nro Convenio",
+							"value":"NUMEROCONVENIO"
+						},
+						{
+							"header":"Tipo",
+							"value":"TIPOCONVENIO"
+						},
+						{
+							"header":"Descripción",
+							"value":"DESCRIPCION"
+						},
+						{
+							"header":"Fecha Alta",
+							"value":"FECHAALTA"
+						},
+						{
+							"header":"Fecha Vencimiento",
+							"value":"FECHAVENCIMIENTO"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						},
+						{
+							"header":"IdCuentaComisiones",
+							"value":"IDCUENTACOBROCOMISIONES",
+							"hidden": "true"
+						},
+						{
+							"header":"Sucursal Cta Cobro Comisiones",
+							"value":"SUCURSALCUENTACOBROCOMISIONES"
+						},
+						{
+							"header":"Producto Cta Cobro Comisiones",
+							"value":"PRODUCTOCUENTACOBROCOMISIONES"
+						},
+						{
+							"header":"Cta Cobro Comisiones",
+							"value":"CUENTACOBROCOMISIONES"
+						},
+						{
+							"header":"Tipo Cta Cobro Comisiones",
+							"value":"TIPOCUENTACOBROCOMISIONES"
+						},
+						{
+							"header":"Sucursal Cta Recaudación",
+							"value":"SUCURSALCUENTARECAUDACION"
+						},
+						{
+							"header":"Producto Cta Recaudación",
+							"value":"PRODUCTOCUENTARECAUDACION"
+						},
+						{
+							"header":"Cta Recaudación",
+							"value":"CUENTARECAUDACION"
+						},
+						{
+							"header":"Tipo Cta Recaudación",
+							"value":"TIPOCUENTARECAUDACION"
+						},
+						{
+							"header":"IdCuentaRecaudación",
+							"value":"IDCUENTARECAUDACION",
+							"hidden": "true"
+						}								
+					]
+				}
+			},
+			{
+				"id":"ConveniosPagosPersona",
+				"title":"Convenios de Pago",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"ConveniosPagosPersona",
+					"parameters":["TIPODOC","NRODOC","CODPAIS"]
+				},
+				"gridProperties":{
+					"pageLength":"10",				
+					"columns":[
+						{
+							"header":"Nro Convenio",
+							"value":"NUMEROCONVENIO"
+						},
+						{
+							"header":"Tipo",
+							"value":"TIPOCONVENIO"
+						},
+						{
+							"header":"Descripción",
+							"value":"DESCRIPCION"
+						},
+						{
+							"header":"Fecha Alta",
+							"value":"FECHAALTA"
+						},
+						{
+							"header":"Fecha Vencimiento",
+							"value":"FECHAVENCIMIENTO"
+						},
+						{
+							"header":"Estado",
+							"value":"ESTADO"
+						},
+						{
+							"header":"IdCuentaDebito",
+							"value":"IDCUENTADEBITO",
+							"hidden": "true"
+						},
+						{
+							"header":"Sucursal Cta Debito",
+							"value":"SUCURSALCUENTADEBITO"
+						},
+						{
+							"header":"Producto Cta Debito",
+							"value":"PRODUCTOCUENTADEBITO"
+						},
+						{
+							"header":"Cta Debito",
+							"value":"CUENTADEBITO"
+						},
+						{
+							"header":"Tipo Cta Debito",
+							"value":"TIPOCUENTADEBITO"
+						},
+						{
+							"header":"Sucursal Cta Debito Secundaria",
+							"value":"SUCURSALCUENTADEBITOSECUNDARIA"
+						},
+						{
+							"header":"Producto Cta Debito Secundaria",
+							"value":"PRODUCTOCUENTADEBITOSECUNDARIA"
+						},
+						{
+							"header":"Cta Debito Secundaria",
+							"value":"CUENTADEBITOSECUNDARIA"
+						},
+						{
+							"header":"Tipo Cta Debito Secundaria",
+							"value":"TIPOCUENTADEBITOSECUNDARIA"
+						},
+						{
+							"header":"IdCuentaDebitoSecundaria",
+							"value":"IDCUENTADEBITOSECUNDARIA",
+							"hidden": "true"
+						}								
+					]
+				}
+			},
+			{
+				"id":"posicionConsolidada",
+				"title":"Posición Consolidada",
+				"icon":"people.png",
+				"type":"Grids",
+				"links":[
+					{
+						"name":"Datos Cuenta Vista",
+						"to":"datosAhorros",
+						"parameters":["IDCLIENTE","IDMONEDA","TIPOPRODNRO"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '2 - Cuenta Corriente'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},
+					{
+						"name":"Datos Cuenta Vista",
+						"to":"datosAhorros",
+						"parameters":["IDCLIENTE","IDMONEDA","TIPOPRODNRO"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '3 - Caja de Ahorros'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},
+					{
+						"name":"Datos DPFs",
+						"to":"datosDPF",
+						"parameters":["IDCLIENTE","IDMONEDA"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '4 - Depositos Pzo. Fijo'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},					
+					{
+						"name":"Datos Créditos",
+						"to":"datosCreditos",
+						"parameters":["IDCLIENTE","IDMONEDA"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '5 - Prestamos'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					}
+				],
+				"input":{
+					"type":"service",
+					"service":"ConsolidadoPersona",
+					"parameters":["NRODOC","TIPOPERSONA","TIPODOC"]
+				},				
+                "formProperties":{
+                    "data":[                       
+                    	[
+	                        {  
+	                            "label":"Cod. Cliente",
+	                            "key":"IDCLIENTE",
+	                            "columnSpan":1
+	                        },
+	                        {  
+	                            "label":"Nombre",
+	                            "key":"NOMBRE",
+	                            "columnSpan":4
+	                        },
+	                        {  
+	                            "label":"Rol",
+	                            "key":"ROL",
+	                            "columnSpan":1
+	                        },
+	                        {  
+	                            "label":"Tipo Cliente",
+	                            "key":"TIPOCLIENTE",
+	                            "columnSpan":3
+	                        }
+                        ]
+                    ]
+                },            
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Tipo Producto",
+							"value":"TIPOPRODUCTO"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA",
+                            "columnSpan":1
+						},
+						{
+							"header":"MonedaId",
+							"value":"IDMONEDA",
+							"hidden":"true"
+						},						
+						{
+							"header":"Saldo Consolidado",
+							"value":"SALDOCONSOLIDADO",
+                            "textAlign":"right"
+						},
+						{
+							"header":"F. aper. antiguo",
+							"value":"APERTURAMASANTIGUA"
+						},
+						{
+							"header":"F. aper. nuevo",
+							"value":"APERTURAMASNUEVA"
+						},
+						{
+							"header":"F. último mov.",
+							"value":"ULTIMOMOVIMIENTO"
+						},
+						{
+							"header":"TIPOPRODNRO",
+							"value":"TIPOPRODNRO",
+							"hidden": "true"
+						}
+					]
+				}
+			},
+			{
+				"id":"posicionConsolidadaPersonasJuridicasQueIntegra",
+				"title":"Posición Consolidada Por Personas Juridicas Que Integra",
+				"icon":"people.png",
+				"type":"Grids",
+				"links":[
+					{
+						"name":"Datos Cuenta Vista",
+						"to":"datosAhorros",
+						"parameters":["IDCLIENTE","IDMONEDA","TIPOPRODNRO"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '2 - Cuenta Corriente'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},
+					{
+						"name":"Datos Cuenta Vista",
+						"to":"datosAhorros",
+						"parameters":["IDCLIENTE","IDMONEDA","TIPOPRODNRO"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '3 - Caja de Ahorros'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},
+					{
+						"name":"Datos DPFs",
+						"to":"datosDPF",
+						"parameters":["IDCLIENTE","IDMONEDA"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '4 - Depositos Pzo. Fijo'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					},					
+					{
+						"name":"Datos Créditos",
+						"to":"datosCreditos",
+						"parameters":["IDCLIENTE","IDMONEDA"],
+						"enabled":{
+							"condition" : "#TIPOPRODUCTO == '5 - Prestamos'",
+							"parameters":["TIPOPRODUCTO"]
+						}
+					}
+				],
+				"input":{
+					"type":"service",
+					"service":"ConsolidadoPersonaJuridicaIntegrada",
+					"parameters":["NRODOC","TIPOPERSONA","CODPAIS","TIPODOC"]
+				},				
+                "formProperties":{
+                    "data":[                       
+                    	[
+	                        {  
+	                            "label":"Cod. Cliente",
+	                            "key":"IDCLIENTE",
+	                            "columnSpan":1
+	                        },
+	                        {  
+	                            "label":"Nombre",
+	                            "key":"NOMBRE",
+	                            "columnSpan":4
+	                        },
+	                        {  
+	                            "label":"Rol",
+	                            "key":"ROL",
+	                            "columnSpan":1
+	                        },
+	                        {  
+	                            "label":"Tipo Cliente",
+	                            "key":"TIPOCLIENTE",
+	                            "columnSpan":3
+	                        }
+                        ]
+                    ]
+                },            
+				"gridProperties":{
+					"columns":[
+						{
+							"header":"Tipo Producto",
+							"value":"TIPOPRODUCTO"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA",
+                            "columnSpan":1
+						},
+						{
+							"header":"MonedaId",
+							"value":"IDMONEDA",
+							"hidden":"true"
+						},						
+						{
+							"header":"Saldo Consolidado",
+							"value":"SALDOCONSOLIDADO",
+                            "textAlign":"right"
+						},
+						{
+							"header":"F. aper. antiguo",
+							"value":"APERTURAMASANTIGUA"
+						},
+						{
+							"header":"F. aper. nuevo",
+							"value":"APERTURAMASNUEVA"
+						},
+						{
+							"header":"F. último mov.",
+							"value":"ULTIMOMOVIMIENTO"
+						},
+						{
+							"header":"TIPOPRODNRO",
+							"value":"TIPOPRODNRO",
+							"hidden": "true"
+						}
+					]
+				}
+			}
+		]
+	}
+}

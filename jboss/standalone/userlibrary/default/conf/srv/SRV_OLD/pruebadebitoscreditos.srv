@@ -1,0 +1,60 @@
+service CONSULTAPRUEBADEBITOSCREDITOS; 
+description "Prueba servicios anidados DC"; 
+
+	action: SQLQuery ULTSELECTSALDO(
+			CuentaDeb:   numeric
+			
+			): [ 
+				C1604:	numeric as SaldoActual,
+				SUCURSAL: numeric as SUCURSAL,
+				PRODUCTO: numeric as PRODUCTO,
+				CUENTA:	numeric as CUENTA,
+				MONEDA: numeric as MONEDA,
+				ORDINAL: numeric as ORDINAL
+			    ] 
+				{
+				properties 
+				{ 
+				("statement", "SELECT C1604,SUCURSAL,PRODUCTO,CUENTA,MONEDA,ORDINAL FROM SALDOS where CUENTA=?"),
+				("0", "CuentaDeb")
+		       };
+
+
+				action: SQLQuery DEBITOS(): [ 
+			 	
+				DEBITOCREDITO: string as Debito_Credito,
+				CAPITALREALIZADO: numeric as Monto,
+				CLIENTE: numeric,
+				RUBROCONTABLE: numeric
+			    ] 
+		    	    {
+			   		properties 
+					{ 
+						("statement", "SELECT CLIENTE,RUBROCONTABLE,CAPITALREALIZADO,DEBITOCREDITO FROM MOVIMIENTOS_CONTABLES WHERE SUCURSAL = ? AND CUENTA = ? AND MONEDA = ? AND PRODUCTO = ? AND DEBITOCREDITO = 'D'"),
+						("0", "SUCURSAL"), 
+						("1", "CUENTA"), 
+						("2", "MONEDA"), 
+						("3", "PRODUCTO")
+					}
+		
+					};
+					
+				action: SQLQuery CREDITOS(): [ 
+			 	
+				DEBITOCREDITO: string as Debito_Credito,
+				CAPITALREALIZADO: numeric as Monto,
+				CLIENTE: numeric,
+				RUBROCONTABLE: numeric
+			    ] 
+		    	    {
+			   		properties 
+					{ 
+						("statement", "SELECT CLIENTE,RUBROCONTABLE,CAPITALREALIZADO,DEBITOCREDITO FROM MOVIMIENTOS_CONTABLES WHERE SUCURSAL = ? AND CUENTA = ? AND MONEDA = ? AND PRODUCTO = ? AND DEBITOCREDITO = 'C'"),
+						("0", "SUCURSAL"), 
+						("1", "CUENTA"), 
+						("2", "MONEDA"), 
+						("3", "PRODUCTO")
+					}
+		
+					}	
+}

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/Sueldos/{version}/convenios</uri>
+    <serviceDescription>Consulta de convenios</serviceDescription>
+    <title>Consulta de convenios</title>
+    <querys>
+        <query id="1" name="Convenios" type="MULTIPLE">
+            <sql>DECLARE 
+@CUIT NUMERIC(11,0),
+@CONVID NUMERIC(15,0);
+
+SET @CUIT = ?
+SET @CONVID = ?
+
+
+SELECT DISTINCT pag.ID_ConvPago AS idConvenio, 
+pag.NomConvPago AS descripcionConvenio, 
+pag.Cuit AS cuitEmpresa,
+CASE
+WHEN pag.Estado = 'A' THEN 'true'
+ELSE 'false'
+END AS activo,
+CASE WHEN clicli.NOMBRECLIENTE= NULL THEN pag.NomConvPago ELSE clicli.NOMBRECLIENTE END AS nombreEmpresa,
+pag.Id_TpoConv AS idTipoConvenio,
+convt.DscTpoConv AS descripcionTipoConvenio,
+FORMAT(pag.FecAlta,'yyyy-MM-ddTHH:mm:ss.fffZ') AS fechaDeAlta,
+FORMAT(FecUltAct,'yyyy-MM-ddTHH:mm:ss.fffZ') AS fechaDeModificacion,
+FORMAT(pag.FecVto,'yyyy-MM-ddTHH:mm:ss.fffZ') AS fechaDeVencimiento
+
+
+FROM CONV_CONVENIOS_PAG pag WITH(NOLOCK) 
+INNER JOIN CONV_TIPOS convt WITH(NOLOCK) ON pag.Id_TpoConv = convt.Id_TpoConv
+INNER JOIN CLI_CLIENTES clicli WITH(NOLOCK) ON pag.Cliente = clicli.CODIGOCLIENTE
+WHERE ((pag.CUIT = @CUIT OR  @CUIT = 0) AND (pag.ID_ConvPago = @CONVID OR @CONVID = 0)) AND pag.TZ_LOCK = 0
+</sql>
+            <input>
+                <inParameter description="Cuit" type="LONG">cuitEmpresa</inParameter>
+                <inParameter description="idConvenio" type="INTEGER">idConvenio</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="data">
+                    <outParameter description="idConvenio" type="INTEGER">
+                        <queryname>idConvenio</queryname>
+                        <servicename>idConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="descripcionConvenio" type="STRING">
+                        <queryname>descripcionConvenio</queryname>
+                        <servicename>descripcionConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="cuitEmpresa" type="LONG">
+                        <queryname>cuitEmpresa</queryname>
+                        <servicename>cuitEmpresa</servicename>
+                    </outParameter>
+                    <outParameter description="activo" type="STRING">
+                        <queryname>activo</queryname>
+                        <servicename>activo</servicename>
+                    </outParameter>
+                    <outParameter description="nombreEmpresa" type="STRING">
+                        <queryname>nombreEmpresa</queryname>
+                        <servicename>nombreEmpresa</servicename>
+                    </outParameter>
+                    <outParameter description="idTipoConvenio" type="INTEGER">
+                        <queryname>idTipoConvenio</queryname>
+                        <servicename>idTipoConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="descripcionTipoConvenio" type="STRING">
+                        <queryname>descripcionTipoConvenio</queryname>
+                        <servicename>descripcionTipoConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="fechaDeAlta" type="STRING">
+                        <queryname>fechaDeAlta</queryname>
+                        <servicename>fechaDeAlta</servicename>
+                    </outParameter>
+                    <outParameter description="fechaDeModificacion" type="STRING">
+                        <queryname>fechaDeModificacion</queryname>
+                        <servicename>fechaDeModificacion</servicename>
+                    </outParameter>
+                    <outParameter description="fechaDeVencimiento" type="STRING">
+                        <queryname>fechaDeVencimiento</queryname>
+                        <servicename>fechaDeVencimiento</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

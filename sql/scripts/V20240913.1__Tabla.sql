@@ -1,0 +1,19 @@
+EXECUTE('
+IF OBJECT_ID (''dbo.SOS_TRANSACCIONES'') IS NOT NULL
+	DROP TABLE dbo.SOS_TRANSACCIONES
+')
+
+EXECUTE('
+CREATE TABLE dbo.SOS_TRANSACCIONES
+	(
+	Subsistema     VARCHAR (2) DEFAULT ('' '') NOT NULL,
+	Operacion      NUMERIC (5) NOT NULL,
+	CodTransaccion NUMERIC (5) DEFAULT ((0)) NOT NULL,
+	TipOperacion   NUMERIC (3) DEFAULT ((0)) NOT NULL,
+	MtoMinimo      NUMERIC (15, 2) DEFAULT ((0)),
+	TZ_LOCK        NUMERIC (15) DEFAULT ((0)) NOT NULL,
+	Ind_RTE        VARCHAR (1),
+	PagosAInformar VARCHAR (1),
+	CONSTRAINT PK_SOS_TRANSACCIONES PRIMARY KEY (Subsistema, Operacion, CodTransaccion, TipOperacion)
+	)
+')

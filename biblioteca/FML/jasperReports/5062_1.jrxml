@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-05-03T08:37:17 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="5062_1" pageWidth="400" pageHeight="49" columnWidth="400" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="35d27d1a-a40a-442f-97b1-2643814d9834">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<parameter name="JTSOID" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT TOP 3 
+	CLIENTE,
+	TELEFONO,
+	Titularidad
+FROM (
+	SELECT
+		RTRIM(DOC.TIPODOCUMENTO + DOC.NUMERODOCUMENTO + ' ' + ISNULL(PF.PRIMERNOMBRE, '') + ' ' + 
+			ISNULL(PF.APELLIDOPATERNO, '') + ' ' + ISNULL(PF.APELLIDOMATERNO, '')) AS CLIENTE,
+		CP.NUMEROPERSONA,
+		T.NUMERO AS TELEFONO,
+		CP.TITULARIDAD AS Titularidad
+	FROM
+		SALDOS AS S WITH (nolock)
+	INNER JOIN CLI_CLIENTES AS C WITH (nolock) ON
+		C.CODIGOCLIENTE = S.C1803
+		AND ((C.TZ_LOCK < 100000000000000 OR C.TZ_LOCK >= 200000000000000)
+			AND (C.TZ_LOCK < 300000000000000 OR C.TZ_LOCK >= 400000000000000)
+		)
+	INNER JOIN CLI_ClientePersona AS CP WITH (nolock) ON
+		CP.CODIGOCLIENTE = C.CODIGOCLIENTE
+		AND ((CP.TZ_LOCK < 100000000000000 OR CP.TZ_LOCK >= 200000000000000)
+			AND (CP.TZ_LOCK < 300000000000000 OR CP.TZ_LOCK >= 400000000000000)
+		)
+	INNER JOIN CLI_PERSONASFISICAS AS PF WITH (nolock) ON
+		PF.NUMEROPERSONAFISICA = CP.NUMEROPERSONA
+		AND ((PF.TZ_LOCK < 100000000000000 OR PF.TZ_LOCK >= 200000000000000)
+			AND (PF.TZ_LOCK < 300000000000000 OR PF.TZ_LOCK >= 400000000000000)
+		)
+	LEFT JOIN CLI_DOCUMENTOSPFPJ AS DOC WITH (nolock) ON
+		DOC.NUMEROPERSONAFJ = PF.NUMEROPERSONAFISICA
+		AND DOC.TIPODOCUMENTO IN (	SELECT TIPODOCUMENTO
+									FROM CLI_TIPOSDOCUMENTOS WITH (nolock)
+									WHERE TIPOPERSONA = 'F'
+										AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)
+											AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000)
+										)
+								)
+		AND ((DOC.TZ_LOCK < 100000000000000 OR DOC.TZ_LOCK >= 200000000000000)
+			AND (DOC.TZ_LOCK < 300000000000000 OR DOC.TZ_LOCK >= 400000000000000)
+		)
+	LEFT JOIN CLI_TELEFONOS AS T WITH (nolock) ON
+		T.ID = PF.NUMEROPERSONAFISICA
+		AND T.FORMATO = 'PF'
+		AND T.TIPO = 'PE'
+		AND T.ORDINAL = (	SELECT TOP 1 ORDINAL
+							FROM CLI_TELEFONOS WITH (nolock)
+							WHERE ID = T.ID
+								AND FORMATO = T.FORMATO
+								AND TIPO = T.TIPO
+								AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)
+									AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000)
+								)
+						)
+		AND ((T.TZ_LOCK < 100000000000000 OR T.TZ_LOCK >= 200000000000000)
+			AND (T.TZ_LOCK < 300000000000000 OR T.TZ_LOCK >= 400000000000000)
+		)
+	WHERE
+		S.JTS_OID = $P{JTSOID}
+		AND ((S.TZ_LOCK < 100000000000000 OR S.TZ_LOCK >= 200000000000000)
+			AND (S.TZ_LOCK < 300000000000000 OR S.TZ_LOCK >= 400000000000000)
+		)
+	
+	UNION ALL
+	
+	SELECT
+		RTRIM(DOC.TIPODOCUMENTO + DOC.NUMERODOCUMENTO + ' ' + ISNULL(PF.PRIMERNOMBRE, '') + ' ' + 
+			ISNULL(PF.APELLIDOPATERNO, '') + ' ' + ISNULL(PF.APELLIDOMATERNO, '')) AS CLIENTE,
+		CP.NUMEROPERSONA,
+		T.NUMERO AS TELEFONO,
+		CP.TITULARIDAD AS Titularidad
+	FROM
+		SALDOS AS S WITH (nolock)
+	INNER JOIN CLI_CLIENTES AS C WITH (nolock) ON
+		C.CODIGOCLIENTE = S.C1803
+		AND ((C.TZ_LOCK < 100000000000000 OR C.TZ_LOCK >= 200000000000000)
+			AND (C.TZ_LOCK < 300000000000000 OR C.TZ_LOCK >= 400000000000000)
+		)
+	INNER JOIN CLI_ClientePersona AS CP WITH (nolock) ON
+		CP.CODIGOCLIENTE = C.CODIGOCLIENTE
+		AND ((CP.TZ_LOCK < 100000000000000 OR CP.TZ_LOCK >= 200000000000000)
+			AND (CP.TZ_LOCK < 300000000000000 OR CP.TZ_LOCK >= 400000000000000)
+		)
+	INNER JOIN CLI_PERSONASJURIDICAS AS PJ WITH (nolock) ON
+		PJ.NUMEROPERSONAJURIDICA = CP.NUMEROPERSONA
+		AND ((PJ.TZ_LOCK < 100000000000000 OR PJ.TZ_LOCK >= 200000000000000)
+			AND (PJ.TZ_LOCK < 300000000000000 OR PJ.TZ_LOCK >= 400000000000000)
+		)
+	INNER JOIN CLI_INTEGRANTESPJ AS IJ WITH (nolock) ON
+		IJ.NUMEROPERSONAJURIDICA = PJ.NUMEROPERSONAJURIDICA
+		AND ((IJ.TZ_LOCK < 100000000000000 OR IJ.TZ_LOCK >= 200000000000000)
+			AND (IJ.TZ_LOCK < 300000000000000 OR IJ.TZ_LOCK >= 400000000000000)
+		)
+	INNER JOIN CLI_PERSONASFISICAS AS PF WITH (nolock) ON
+		PF.NUMEROPERSONAFISICA = IJ.NUMEROPERSONAFISICA
+		AND ((PF.TZ_LOCK < 100000000000000 OR PF.TZ_LOCK >= 200000000000000)
+			AND (PF.TZ_LOCK < 300000000000000 OR PF.TZ_LOCK >= 400000000000000)
+		)
+	LEFT JOIN CLI_DOCUMENTOSPFPJ AS DOC WITH (nolock) ON
+		DOC.NUMEROPERSONAFJ = PF.NUMEROPERSONAFISICA
+		AND DOC.TIPODOCUMENTO IN (	SELECT TIPODOCUMENTO
+									FROM CLI_TIPOSDOCUMENTOS WITH (nolock)
+									WHERE TIPOPERSONA = 'F'
+										AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)
+											AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000)
+										)
+								)
+		AND ((DOC.TZ_LOCK < 100000000000000 OR DOC.TZ_LOCK >= 200000000000000)
+			AND (DOC.TZ_LOCK < 300000000000000 OR DOC.TZ_LOCK >= 400000000000000)
+		)
+	LEFT JOIN CLI_TELEFONOS AS T WITH (nolock) ON
+		T.ID = PF.NUMEROPERSONAFISICA
+		AND T.FORMATO = 'PF'
+		AND T.TIPO = 'PE'
+		AND T.ORDINAL = (	SELECT TOP 1 ORDINAL
+							FROM CLI_TELEFONOS WITH (nolock)
+							WHERE ID = T.ID
+								AND FORMATO = T.FORMATO
+								AND TIPO = T.TIPO
+								AND ((TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)
+									AND (TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000)
+								)
+						)
+		AND ((T.TZ_LOCK < 100000000000000 OR T.TZ_LOCK >= 200000000000000)
+			AND (T.TZ_LOCK < 300000000000000 OR T.TZ_LOCK >= 400000000000000)
+		)
+	WHERE
+		S.JTS_OID = $P{JTSOID}
+		AND ((S.TZ_LOCK < 100000000000000 OR S.TZ_LOCK >= 200000000000000)
+			AND (S.TZ_LOCK < 300000000000000 OR S.TZ_LOCK >= 400000000000000)
+		)
+) AS CLIENTE
+ORDER BY
+	TITULARIDAD DESC,
+	NUMEROPERSONA]]>
+	</queryString>
+	<field name="CLIENTE" class="java.lang.String"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="Titularidad" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="9" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="280" height="9" uuid="d1a670a9-d8f0-45c9-b7b8-ee278e2715b3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="280" y="0" width="100" height="9" uuid="554c1061-2688-4d59-8282-95b3afd174eb"/>
+				<textElement>
+					<font size="6"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TELEFONO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

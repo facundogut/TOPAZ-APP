@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>getGeoDataParm/{idPais}/{idProv}/{idDpto}/{idLoc}</uri>
+    <serviceDescription>Devuelve listados de Paises, provincias, departamentos por parÃ¡metro ingresado.</serviceDescription>
+    <title>Paises, provincias, departamentos, localidades</title>
+    <querys>
+        <query id="1" name="Geo" type="MULTIPLE">
+            <sql>declare @pais varchar(10) = ?
+declare @prov varchar(10)=?
+declare @dpto varchar(10)=?
+declare @loc varchar(10)=?
+
+IF ( (@pais &lt;&gt; '*' AND ISNUMERIC(@pais) = 0) 
+OR (@prov &lt;&gt; '*' AND LEN(@prov) &lt;&gt; 1) 
+OR (@dpto &lt;&gt; '*' AND ISNUMERIC(@dpto) = 0) 
+OR (@loc &lt;&gt; '*' AND ISNUMERIC(@loc) = 0) ) 
+BEGIN THROW 50000, 'Los campos no cumplen las condiciones de validación.', 1; 
+END
+
+if(@pais = '*' and @prov = '*' and @dpto = '*' and @loc = '*' )
+
+SELECT distinct cp.NOMBREPAIS AS nombre,cp.CODIGOPAIS AS codigo, null AS CODIGOprov, 
+	null as nombreProv, null AS codigoDpto, null as nombreDpto,
+		null as codigoLoc, null as NombreLoc
+FROM CLI_PAISES cp
+
+if(@pais ! = '*' and @prov = '*' and @dpto = '*' and @loc = '*' )
+
+SELECT distinct cp.NOMBREPAIS AS nombre,cp.CODIGOPAIS AS codigo,cpv.dim1 AS CODIGOprov, 
+		cpv.DESCRIPCION as nombreProv, null AS codigoDpto, null as nombreDpto,
+		null as codigoLoc, null as NombreLoc
+FROM CLI_PAISES cp, CLI_PROVINCIAS cpv, CLI_DEPARTAMENTOS cd, CLI_LOCALIDADES cl
+WHERE cp.CODIGOPAIS=cpv.CODIGOPAIS AND
+		cpv.DIM1=cd.PROVINCIA AND
+		cd.DEPARTAMENTO = cl.DIM2 AND
+		cl.CODIGOPAIS=cp.CODIGOPAIS AND
+		cl.DIM1=cd.PROVINCIA and
+		cp.CODIGOPAIS=@pais 
+
+else if(@pais != '*' and @prov != '*' and @dpto = '*' and @loc = '*' )
+
+SELECT distinct cp.NOMBREPAIS AS nombre,cp.CODIGOPAIS AS codigo, cpv.DIM1 AS CODIGOprov, 
+		cpv.DESCRIPCION as nombreProv, cd.DEPARTAMENTO AS codigoDpto, cd.NOMBREDEP as nombreDpto,
+		null as codigoLoc, null as NombreLoc
+FROM CLI_PAISES cp, CLI_PROVINCIAS cpv, CLI_DEPARTAMENTOS cd, CLI_LOCALIDADES cl
+WHERE cp.CODIGOPAIS=cpv.CODIGOPAIS AND
+		cpv.DIM1=cd.PROVINCIA AND
+		cd.DEPARTAMENTO = cl.DIM2 AND
+		cl.CODIGOPAIS=cp.CODIGOPAIS AND
+		cl.DIM1=cd.PROVINCIA and
+		cp.CODIGOPAIS=@pais AND
+		cpv.DIM1=@prov 
+
+else if(@pais != '*' and @prov != '*' and @dpto != '*' and @loc = '*' )
+
+SELECT distinct cp.NOMBREPAIS AS nombre,cp.CODIGOPAIS AS codigo, cpv.DIM1 AS CODIGOprov, 
+		cpv.DESCRIPCION as nombreProv, cd.DEPARTAMENTO AS codigoDpto, cd.NOMBREDEP as nombreDpto,
+		cl.DIM3 AS codigoLoc, cl.DESCRIPCION_DIM3 AS NombreLoc
+FROM CLI_PAISES cp, CLI_PROVINCIAS cpv, CLI_DEPARTAMENTOS cd, CLI_LOCALIDADES cl
+WHERE cp.CODIGOPAIS=cpv.CODIGOPAIS AND
+		cpv.DIM1=cd.PROVINCIA AND
+		cd.DEPARTAMENTO = cl.DIM2 AND
+		cl.CODIGOPAIS=cp.CODIGOPAIS AND
+		cl.DIM1=cd.PROVINCIA and
+		cp.CODIGOPAIS=@pais AND
+		cpv.DIM1=@prov AND
+		cd.DEPARTAMENTO= @dpto 
+
+else if(@pais != '*' and @prov != '*' and @dpto != '*' and @loc != '*' )
+
+SELECT cp.NOMBREPAIS AS nombre,cp.CODIGOPAIS AS codigo, cpv.DIM1 AS CODIGOprov, 
+		cpv.DESCRIPCION as nombreProv, cd.DEPARTAMENTO AS codigoDpto, cd.NOMBREDEP as nombreDpto,
+		cl.DIM3 AS codigoLoc, cl.DESCRIPCION_DIM3 AS NombreLoc
+FROM CLI_PAISES cp, CLI_PROVINCIAS cpv, CLI_DEPARTAMENTOS cd, CLI_LOCALIDADES cl
+WHERE cp.CODIGOPAIS=cpv.CODIGOPAIS AND
+		cpv.DIM1=cd.PROVINCIA AND
+		cd.DEPARTAMENTO = cl.DIM2 AND
+		cl.CODIGOPAIS=cp.CODIGOPAIS AND
+		cl.DIM1=cd.PROVINCIA and
+		cp.CODIGOPAIS=@pais AND
+		cpv.DIM1=@prov AND
+		cd.DEPARTAMENTO= @dpto and
+		cl.DIM3=@loc
+</sql>
+            <input>
+                <inParameter description="" type="STRING">idPais</inParameter>
+                <inParameter description="" type="STRING">idProv</inParameter>
+                <inParameter description="" type="STRING">idDpto</inParameter>
+                <inParameter description="" type="STRING">idLoc</inParameter>
+            </input>
+            <output>
+                <level groupby="codigo,nombre" name="paises">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>codigo</queryname>
+                        <servicename>paises.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombre</queryname>
+                        <servicename>paises.nombre</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="CODIGOprov,nombreProv" name="provincias">
+                    <outParameter description="" type="STRING">
+                        <queryname>CODIGOprov</queryname>
+                        <servicename>provincias.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombreProv</queryname>
+                        <servicename>provincias.descripcion</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="codigoDpto,nombreDpto" name="departamentos">
+                    <outParameter description="" type="STRING">
+                        <queryname>codigoDpto</queryname>
+                        <servicename>departamentos.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombreDpto</queryname>
+                        <servicename>departamentos.descripcion</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="localidades">
+                    <outParameter description="" type="STRING">
+                        <queryname>codigoLoc</queryname>
+                        <servicename>localidades.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NombreLoc</queryname>
+                        <servicename>localidades.nombre</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

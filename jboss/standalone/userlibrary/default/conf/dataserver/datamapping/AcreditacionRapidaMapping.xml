@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.acreditacionrapida.AcreditacionRapida</class-name>
+        <query-name>query.AcreditacionRapida</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+     select 
+        u.idt_user_balance jts_oid, 
+        u.idt_account_number CUENTA_TABLA,
+        u.idt_customer CLIENTE_TABLA,
+        u.idt_bank_branch SUCURSAL_TABLA,
+        u.num_balance IMPORTE_TABLA,
+        s.JTS_OID SALDO_JTS_OID,
+        s.CUENTA,
+        s.c1803 CLIENTE,
+        s.MONEDA,
+        s.PRODUCTO,
+        s.OPERACION,
+        s.ORDINAL,
+        s.c1730 RUBRO_CONTABLE,
+        s.c1804 RUBRO_OPERATIVO,
+        s.C1679 BLOQUEO_SALDO,
+        c.CODIGOBLOQUEO BLOQUEO_CLIENTE,
+    u.FLG_PROCESS procesado
+        from user_balance u
+        left join saldos s on u.idt_customer = s.c1803
+                    and s.cuenta = u.idt_account_number
+                    and s.sucursal = u.idt_bank_branch
+                    and s.moneda = 0
+                    and s.operacion = 0
+                    and s.ordinal = 0
+                    and c1785 in (1,2,3)
+                    --and s.producto = 101 para pago seguro no se usa el producto por que la cuenta es unica siempre, en otro cliente hay que revisar el la query y el codigo
+                    and s.tz_lock = 0 
+      left join cli_clientes c on 
+           u.idt_customer = c.codigocliente
+           and c.tz_lock = 0 
+      where u.FLG_PROCESS = 0 
+			</sentence>
+        <attribute>
+            <attribute-name>jts_oid</attribute-name>
+            <column-name>jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cuentaTabla</attribute-name>
+            <column-name>CUENTA_TABLA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>clienteTabla</attribute-name>
+            <column-name>CLIENTE_TABLA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalTabla</attribute-name>
+            <column-name>SUCURSAL_TABLA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeTabla</attribute-name>
+            <column-name>IMPORTE_TABLA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cuenta</attribute-name>
+            <column-name>CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cliente</attribute-name>
+            <column-name>CLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>producto</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroContable</attribute-name>
+            <column-name>RUBRO_CONTABLE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroOperativo</attribute-name>
+            <column-name>RUBRO_OPERATIVO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>bloqueoSaldo</attribute-name>
+            <column-name>BLOQUEO_SALDO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>bloqueoCliente</attribute-name>
+            <column-name>BLOQUEO_CLIENTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>procesado</attribute-name>
+            <column-name>procesado</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.acreditacionrapida.AcreditacionRapida</class-name>
+        <entity-name>core.vo_AcreditacionRapida</entity-name>
+        <table-name>user_balance</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>jts_oid</attribute-name>
+            <column-name>IDT_USER_BALANCE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>procesado</attribute-name>
+            <column-name>FLG_PROCESS</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>IND_STATUS_PROCESS</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaActualizado</attribute-name>
+            <column-name>DAT_UPDATE</column-name>
+        </attribute>
+    </class>
+</map>

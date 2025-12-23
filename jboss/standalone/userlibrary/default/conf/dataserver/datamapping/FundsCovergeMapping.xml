@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.disponibilidad.DisponibilidadGrupoCuentasDefault</class-name>
+        <query-name>query.DisponibilidadGrupoCuentas</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+	select
+	DSP_GRUPOS_CUENTAS.tz_lock, saldo_jts_oid,  c1803 as cliente, moneda, prioridad,uso_sobregiro,grupo,JTS_CTA_DEBITO_COMISION, USO_SOBREGIRO_PA_FUNDS_TRANS,
+USO_SOB_CREDITO_PA_FUNDS_TRANS, USO_SOB_DEBITO_PA_FUNDS_TRANS
+	from
+	DSP_GRUPOS_CUENTAS, saldos
+	where 
+	DSP_GRUPOS_CUENTAS.tz_lock = 0 and
+	saldos.tz_lock = 0 and
+	saldo_jts_oid = jts_oid and
+	DSP_GRUPOS_CUENTAS.BLOQUEA_COBERTURA = 'N' and
+	grupo = ?
+</sentence>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>tz_lock</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>saldo_jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cliente</attribute-name>
+            <column-name>cliente</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>moneda</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>prioridad</attribute-name>
+            <column-name>prioridad</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>uso_sobreiro</attribute-name>
+            <column-name>uso_sobregiro</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>grupo</attribute-name>
+            <column-name>grupo</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsCuentaDebitoComision</attribute-name>
+            <column-name>jts_cta_debito_comision</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>usaSobregiroPaFundsTranfer</attribute-name>
+            <column-name>USO_SOBREGIRO_PA_FUNDS_TRANS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>usaSobregiroCreditoPaFundsTranfer</attribute-name>
+            <column-name>USO_SOB_CREDITO_PA_FUNDS_TRANS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>usaSobregiroDebitoPaFundsTranfer</attribute-name>
+            <column-name>USO_SOB_DEBITO_PA_FUNDS_TRANS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.JtsSaldosGrupoCuentas</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+		SELECT JTS_OID FROM 											
+		(SELECT   s.JTS_OID FROM  DSP_GRUPOS_CUENTAS grpCtas , SALDOS s 											
+		WHERE   s.tz_lock = 0 AND grpCtas.TZ_LOCK = 0  AND  grpCtas.GRUPO = ?  AND s.JTS_OID = grpCtas.SALDO_JTS_OID   AND 											
+		MONEDA = (SELECT PARAMETROS.MONNAC FROM PARAMETROS) 											
+		UNION ALL											
+		SELECT    s.JTS_OID FROM  DSP_GRUPOS_CUENTAS grpCtas , SALDOS s 											
+		WHERE   grpCtas.TZ_LOCK = 0 AND s.tz_lock = 0 AND grpCtas.GRUPO = ?  AND s.JTS_OID = grpCtas.SALDO_JTS_OID   AND 											
+		MONEDA  &lt;&gt; (SELECT PARAMETROS.MONNAC FROM PARAMETROS)  ) WHERE ROWNUM =1											
+		</sentence>
+        <attribute>
+            <attribute-name>jts_oid</attribute-name>
+            <column-name>saldo_jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

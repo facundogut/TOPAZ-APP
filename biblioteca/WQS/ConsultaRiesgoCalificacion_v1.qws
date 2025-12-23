@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/usogeneral/RiesgoyCalificacionCliente/{cuit}</uri>
+    <serviceDescription>ConsultaRiesgoCalificacion</serviceDescription>
+    <title>ConsultaRiesgoCalificacion</title>
+    <querys>
+        <query id="1" name="ConsultaRiesgo" type="SIMPLE">
+            <sql>DECLARE @CUIT VARCHAR(max)&#13;
+DECLARE @cv_codcliente NUMERIC(15,0)&#13;
+SET @CUIT=?&#13;
+&#13;
+IF (ISNUMERIC(@CUIT) = 0 OR LEN(@CUIT) &lt;&gt; 11)&#13;
+BEGIN&#13;
+    THROW 50000, 'CUIT no válido.', 1;&#13;
+END&#13;
+&#13;
+BEGIN&#13;
+	DECLARE c_clientes CURSOR FOR &#13;
+	SELECT CODIGOCLIENTE &#13;
+	FROM VW_CLI_X_DOC WITH (nolock)&#13;
+	WHERE NUMERODOC = @CUIT&#13;
+	&#13;
+	OPEN c_clientes  &#13;
+	FETCH NEXT FROM c_clientes INTO @cv_codcliente  &#13;
+	&#13;
+	WHILE @@FETCH_STATUS = 0  &#13;
+	BEGIN  &#13;
+	      EXECUTE dbo.SP_LIMITES @cv_codcliente&#13;
+	&#13;
+	      FETCH NEXT FROM c_clientes INTO @cv_codcliente &#13;
+	END &#13;
+	&#13;
+	CLOSE c_clientes  &#13;
+	DEALLOCATE c_clientes&#13;
+END&#13;
+&#13;
+SELECT FORMAT(MAX(fechaVencimiento), 'yyyy-MM-dd HH:mm:ss') AS fechaVencimiento,fechaVigencia&#13;
+	,sum(riesgoCP) AS riesgoCP ,SUM(riesgoLP) AS riesgoLP&#13;
+	,sum(calificacionCP) AS calificacionCP ,SUM(calificacionLP) AS calificacionLP&#13;
+	, usuarioAlta, maximaAsistenciaExc, sucursal, cuentaCliente &#13;
+FROM (&#13;
+SELECT&#13;
+	  max(rc.FECHA_VENCIMIENTO) AS fechaVencimiento&#13;
+    ,FORMAT(min(s.FECHA_SOLICITUD), 'yyyy-MM-dd HH:mm:ss') AS fechaVigencia&#13;
+	,CASE WHEN lcc.TIPO = 2 THEN sum(isnull(lcc.MONTO_LIMITE,0)) ELSE 0 END AS riesgoCP&#13;
+	,0 AS riesgoLP&#13;
+	,CASE WHEN lcc.TIPO = 4 THEN sum(isnull(lcc.MONTO_LIMITE,0)) ELSE 0 END AS calificacionCP&#13;
+	,0 AS calificacionLP&#13;
+	,'SIBE' AS usuarioAlta&#13;
+    ,0 AS maximaAsistenciaExc&#13;
+    ,s.SUCURSAL AS sucursal&#13;
+    ,0 AS cuentaCliente&#13;
+FROM VW_CLI_X_DOC c WITH (nolock)&#13;
+JOIN CRE_SOLLICCLIENTE s WITH (nolock) ON s.CLIENTE = c.CODIGOCLIENTE AND s.TZ_LOCK = 0&#13;
+JOIN CRE_RIESGOLIC rc WITH (nolock) ON rc.IDLIMITE = s.NROSOLICITUD AND rc.CODIGO_RIESGO = 1 AND rc.TZ_LOCK = 0&#13;
+JOIN CRE_LIMITES_CLIENTE lcc WITH (nolock) ON lcc.CLIENTE = c.CODIGOCLIENTE AND lcc.IDLIMITE = s.NROSOLICITUD AND lcc.RIESGO = 1 AND lcc.TIPO IN (2,4)&#13;
+WHERE c.NUMERODOC = @CUIT&#13;
+GROUP BY s.SUCURSAL,lcc.TIPO&#13;
+UNION&#13;
+SELECT&#13;
+	 max(rl.FECHA_VENCIMIENTO) AS fechaVencimiento&#13;
+    ,FORMAT(min(s.FECHA_SOLICITUD), 'yyyy-MM-dd HH:mm:ss') AS fechaVigencia&#13;
+	,0 AS riesgoCP&#13;
+	,CASE WHEN lcl.TIPO = 2 THEN sum(isnull(lcl.MONTO_LIMITE,0)) ELSE 0 END AS riesgoLP&#13;
+	,0 AS calificacionCP&#13;
+	,CASE WHEN lcl.TIPO = 4 THEN sum(isnull(lcl.MONTO_LIMITE,0)) ELSE 0 END AS calificacionLP&#13;
+	,'SIBE' AS usuarioAlta&#13;
+    ,0 AS maximaAsistenciaExc&#13;
+    ,s.SUCURSAL AS sucursal&#13;
+    ,0 AS cuentaCliente&#13;
+FROM VW_CLI_X_DOC c WITH (nolock)&#13;
+JOIN CRE_SOLLICCLIENTE s WITH (nolock) ON s.CLIENTE = c.CODIGOCLIENTE AND s.TZ_LOCK = 0&#13;
+JOIN CRE_RIESGOLIC rl WITH (nolock) ON rl.IDLIMITE = s.NROSOLICITUD AND rl.CODIGO_RIESGO = 2 AND rl.TZ_LOCK = 0&#13;
+JOIN CRE_LIMITES_CLIENTE lcl WITH (nolock) ON lcl.CLIENTE = c.CODIGOCLIENTE AND lcl.IDLIMITE = s.NROSOLICITUD AND lcl.RIESGO = 2 AND lcl.TIPO IN (2,4)&#13;
+WHERE c.NUMERODOC = @CUIT&#13;
+GROUP BY s.SUCURSAL,lcl.TIPO&#13;
+) A&#13;
+GROUP BY fechaVigencia, usuarioAlta, maximaAsistenciaExc, sucursal, cuentaCliente</sql>
+            <input>
+                <inParameter description="cuit" type="STRING">cuit</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="consulta">
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaVigencia</queryname>
+                        <servicename>fechaVigencia</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>riesgoCP</queryname>
+                        <servicename>riesgoCP</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>riesgoLP</queryname>
+                        <servicename>riesgoLP</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>calificacionCP</queryname>
+                        <servicename>calificacionCP</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>calificacionLP</queryname>
+                        <servicename>calificacionLP</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>maximaAsistenciaExc</queryname>
+                        <servicename>maximaAsistenciaExc</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>usuarioAlta</queryname>
+                        <servicename>usuarioAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>sucursal</queryname>
+                        <servicename>sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>cuentaCliente</queryname>
+                        <servicename>cuentaCliente</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="detalles" type="MULTIPLE">
+            <sql>DECLARE @CUIT VARCHAR(11)&#13;
+SET @CUIT=?&#13;
+&#13;
+IF (ISNUMERIC(@CUIT) = 0 OR LEN(@CUIT) &lt;&gt; 11)&#13;
+BEGIN&#13;
+    THROW 50000, 'CUIT no válido.', 1;&#13;
+END&#13;
+&#13;
+&#13;
+DECLARE @descripcion VARCHAR(1) = '';&#13;
+&#13;
+SELECT&#13;
+	lcc.PRODUCTO AS lineaCalificada&#13;
+    ,lcc.DISP_LIMITE AS importeCalificado&#13;
+    ,pc.C6251 AS descripcionLinea&#13;
+    ,'C' AS horizonteLinea &#13;
+    , lg.DESC_TIPO_GARANTIA AS descripcion &#13;
+    ,lg.TIPO_GARANTIA AS id&#13;
+FROM VW_CLI_X_DOC c WITH (nolock)&#13;
+JOIN CRE_SOLLICCLIENTE s WITH (nolock) ON s.CLIENTE = c.CODIGOCLIENTE AND s.TZ_LOCK = 0&#13;
+JOIN CRE_LIMITES_CLIENTE lcc WITH (nolock) ON lcc.CLIENTE = c.CODIGOCLIENTE AND lcc.IDLIMITE = s.NROSOLICITUD AND lcc.RIESGO = 1 AND lcc.TIPO =4&#13;
+JOIN productos pc WITH (nolock) ON pc.C6250 = lcc.PRODUCTO AND pc.TZ_LOCK = 0&#13;
+LEFT JOIN CRE_LIMITE_GARANTIA lg WITH (nolock) ON lg.ID_LIMITE = s.NROSOLICITUD&#13;
+WHERE c.NUMERODOC = @CUIT&#13;
+UNION&#13;
+SELECT&#13;
+	 lcl.PRODUCTO AS lineaCalificada&#13;
+    ,lcl.DISP_LIMITE AS importeCalificado&#13;
+    ,pl.C6251 AS descripcionLinea&#13;
+    ,'L' AS horizonteLinea&#13;
+    , lg.DESC_TIPO_GARANTIA AS descripcion &#13;
+    ,lg.TIPO_GARANTIA AS id&#13;
+FROM VW_CLI_X_DOC c&#13;
+JOIN CRE_SOLLICCLIENTE s WITH (nolock) ON s.CLIENTE = c.CODIGOCLIENTE AND s.TZ_LOCK = 0&#13;
+JOIN CRE_LIMITES_CLIENTE lcl WITH (nolock) ON lcl.CLIENTE = c.CODIGOCLIENTE AND lcl.IDLIMITE = s.NROSOLICITUD AND lcl.RIESGO = 2 AND lcl.TIPO = 4&#13;
+JOIN PRODUCTOS pl WITH (nolock) ON pl.C6250 = lcl.PRODUCTO AND pl.TZ_LOCK = 0&#13;
+LEFT JOIN CRE_LIMITE_GARANTIA lg WITH (nolock) ON lg.ID_LIMITE = s.NROSOLICITUD&#13;
+WHERE c.NUMERODOC = @CUIT</sql>
+            <input>
+                <inParameter description="cuit" type="STRING">cuit</inParameter>
+            </input>
+            <output>
+                <level groupby="lineaCalificada,descripcionLinea,horizonteLinea,importeCalificado" name="calificacionDetalle">
+                    <outParameter description="" type="STRING">
+                        <queryname>lineaCalificada</queryname>
+                        <servicename>lineaCalificada</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionLinea</queryname>
+                        <servicename>descripcionLinea</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>horizonteLinea</queryname>
+                        <servicename>horizonteLinea</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>importeCalificado</queryname>
+                        <servicename>importeCalificado</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="garantiaSolicitada">
+                    <outParameter description="" type="STRING">
+                        <queryname>id</queryname>
+                        <servicename>ID</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcion</queryname>
+                        <servicename>DESCRIPCION</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

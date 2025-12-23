@@ -1,0 +1,21 @@
+﻿EXECUTE('
+----------------------------
+--AJUSTES CAMPO DE LISTADO--
+----------------------------
+UPDATE dbo.DICCIONARIO
+SET PROMPT = ''Canal''
+WHERE NUMERODECAMPO = 34634
+--
+UPDATE dbo.DICCIONARIO
+SET PROMPT = ''Nro. Tarjeta Base''
+WHERE NUMERODECAMPO = 34636
+--
+UPDATE dbo.DICCIONARIO
+SET PROMPT = ''Origen''
+WHERE NUMERODECAMPO = 34637
+--
+UPDATE dbo.AYUDAS
+SET DESCRIPCION = ''Listado de Tarjetas de Débito''
+WHERE NUMERODEAYUDA = 2232
+----
+')

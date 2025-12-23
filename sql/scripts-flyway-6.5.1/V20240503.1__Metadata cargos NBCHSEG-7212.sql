@@ -1,0 +1,13 @@
+﻿EXECUTE('
+----------------------------------
+--AJUSTE COD. TRANSACCIÓN CARGOS--
+----------------------------------
+UPDATE dbo.CI_CARGOS
+SET CODIGO_TRANSACCION = 0
+WHERE ID_CARGO = 1452
+--
+UPDATE dbo.CI_CARGOS
+SET CODIGO_TRANSACCION = 0
+WHERE ID_CARGO = 1453
+----
+')

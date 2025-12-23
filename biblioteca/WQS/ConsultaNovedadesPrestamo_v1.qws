@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/prestamos/novedadesSolicitudes/{ID_CLIENTE}</uri>
+    <serviceDescription>Consulta novedades de prestamo</serviceDescription>
+    <title>ConsultaNovedadesPrestamo</title>
+    <querys>
+        <query id="1" name="RESPUESTA" type="MULTIPLE">
+            <sql>DECLARE @P_ID_CLIENTE INT = ?;&#13;
+&#13;
+SELECT 	  NUMEROSOLICITUD AS NRO_SOLICITUD&#13;
+		, CASE WHEN P.C6800 = 'AH' THEN 1 ELSE 2 END AS ID&#13;
+		, o.DESCRIPCION&#13;
+		, FECHARECEPCIONSOLICITUD AS FECHA_NOVEDAD&#13;
+		, UsuarioIngresoSolicitud AS USUARIO_INTERVINIENTE &#13;
+FROM CRE_SOLICITUDCREDITO C (NOLOCK)&#13;
+JOIN PRODUCTOS P (NOLOCK) ON C.CODPRODUCTOSOLICITADO = P.C6250 AND P.C6800 IN ('AH','PP')&#13;
+JOIN OPCIONES O (NOLOCK) ON O.NUMERODECAMPO = 6800 AND P.C6800 = O.OPCIONINTERNA&#13;
+WHERE 	C.ESTADOSOLICITUD IN ('04','21','22','23','32')&#13;
+		AND C.CLIENTE = @P_ID_CLIENTE;</sql>
+            <input>
+                <inParameter description="ID_CLIENTE" type="INTEGER">ID_CLIENTE</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="novedades">
+                    <outParameter description="nroSolicitud" type="INTEGER">
+                        <queryname>NRO_SOLICITUD</queryname>
+                        <servicename>nroSolicitud</servicename>
+                    </outParameter>
+                    <outParameter description="ID" type="INTEGER">
+                        <queryname>ID</queryname>
+                        <servicename>tipoNovedad.id</servicename>
+                    </outParameter>
+                    <outParameter description="Descripcion" type="STRING">
+                        <queryname>DESCRIPCION</queryname>
+                        <servicename>tipoNovedad.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="USUARIO_INTERVINIENTE" type="STRING">
+                        <queryname>USUARIO_INTERVINIENTE</queryname>
+                        <servicename>usuarioInterviniente</servicename>
+                    </outParameter>
+                    <outParameter description="FECHA_NOVEDAD" type="DATE">
+                        <queryname>FECHA_NOVEDAD</queryname>
+                        <servicename>fechaNovedad</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="cliente" type="SIMPLE">
+            <sql>SELECT DISTINCT CLIENTE FROM CRE_SOLICITUDCREDITO WHERE CLIENTE  =  ?  and ESTADOSOLICITUD IN ('04','21','22','23','32')</sql>
+            <input>
+                <inParameter description="" type="LONG">ID_CLIENTE</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="respuesta">
+                    <outParameter description="" type="LONG">
+                        <queryname>CLIENTE</queryname>
+                        <servicename>numeroCliente</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

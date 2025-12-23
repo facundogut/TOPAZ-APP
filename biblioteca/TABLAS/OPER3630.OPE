@@ -1,0 +1,88 @@
+VERSION:054_5
+TN  NN 1006TConsulta Genérica                       C00001 00
+ NNNNN 09500   Fecha Sistema  INNNN 00000701520030030200121100300000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+VNSSNS 010002000203390800SSSD000000000000000000000000000000000000000
+/T=Informar al BCU de la Suspención de Cuentas
+/C=192192192
+KNSSNS 010025001600470773010100
+/T=Cheques Rechazados
+/F=0013700NNN000000000Arial                                   
+*N  NN ********************************************************
+*N  NN *** FILTRO- Clase<>' '  y FechaMaxReint<Hoy 
+*N  NN ***              y Estado<>9 y Estado<>11
+*N  NN ********************************************************
+ NNNNN 08010   Filtro ayuda   INNSNF00000701520030030202121100300000700070030013700
+/V="CLASEREINCIDENCIA <>' '  AND ESTADO<>9 AND ESTADO<>11 "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08010   Filtro ayuda   INNSNF00000701520030030202121100300000700070030013700
+/V=C8010+ " AND (FECHA_MAXIMA_REINTEGRO< '" + C9500 + "' OR FECHA_REINTEGRO< '"+ C9500 +"')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2015-07-01 12:50:12SCOLLAZO
+ NNNNN 08010   Filtro ayuda   INNSNF00000701520030030202121100300000700070030013700
+/V=C8010 + " AND SUCURSAL= " + C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 02080   Ayu Che.Rechaz IENSN 01008500270240076400101160000010900640129022000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 010060001602600773000101
+/T=Datos
+/F=0012700NNN000000000Arial                                   
+ NNNNN 00603   FechaNull      INNSNK00003101460054026400001100000003100400051015900
+/V=18000101
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03144   Campo :39A:    INNSNK00003101460054026400001100000003100400051015900
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TConsulta Sec. Generica                  S01121 00
+/?=1=0
+/F=(C7614=8 or C6498<>C3144.1) and  C7614<>9 and C7611<C9500
+ NNNNN 02087   Importe Cheque INNNN 00000701330027024300001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I50
+ NNNNN 01810   OID Saldo      INNNNA00000701330027024300001100000000700070027012600
+/?=!I50
+/V=C2092.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 01679   Bloqueo/Afect  INNNN 00000701330027024300001100000000700070027012600
+/?=!I50
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 01651   Codigo Cancel  INNNN 00000701330027024300001100000000700070027012600
+/?=!I50
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+TN  NN 1006TImp. formulario                         C00001 00
+/?=C2080#0
+CNNNNN M 00000000000000000000100
+/M=Genero Reporte 8052
+ NNNNN 00073   Nombre FormualrINNSNK00000701520027045202001100010000700070027013700
+/V=FORM8052
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 09528   Linea Comando  INNSNF00000701520030020200101100000000700070030013700
+/V="tzpquery.exe /Q8052 /C0073|"+C0073+"| /A"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  M00000000000000000000100
+ NNNNN 00028   Concepto       INNSNF00024501500265033700101100000024500230265014200
+/V="Reporte 8052: Cuentas Reincidentes" 
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*#I50#
+*#I52#Clase C
+*#I53#
+*#I54#Clase C

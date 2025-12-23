@@ -1,0 +1,139 @@
+VERSION:051
+TN  NN 1006TConsulta Generica                       C0001 00
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /* Operacion 3583                                                                                      
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /*     SOLO SE PERMITE SELECCIONAR UN SOLO REGISTRO:
+*N  NN /*          S - Confirma el Envío del Cheque a Central Clear. Cambia de Estado 3 a 1.
+*N  NN /*          N - Cancela Envío del Cheque a Central Clear. Deja el Estado sin modificarlo.
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+VNNNNN 020005000501340655SSSD000000000000000000000000000000000000001
+/T=Camara Compensadora
+/C=192192192
+ NNNNN 2700   Sucursal       I NSN 02002301590046020902001000000002300330046014300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2373   Segmento       INNSNA00000701520030020202101100000000700070030013700
+/V=C2700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0938   Descripción    IDNNNA02002602490049061800101150010000000000000000000
+/V=C0938
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+VNSSNS 030003000304410805SSSD000000000000000000000000000000000000010
+/T="Camara Compensadora "+C2072
+/C=192192192
+KNSSNS 030017016200400640010100
+/T=Agregar Cheques a la Lista.
+/F=0015700NNN000000000Arial                                   
+KNSSNS 030050002603460773000001
+/T=Cheques   
+/F=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/?=1=2
+/V="CODIGO_CAMARA="+C2072+" AND "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/?=1=2
+/V=C8010+" SUCURSAL_DE_INGRESO="+C9502+ " AND ESTADO=3"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V="FECHA_ALTA<='"+C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+"' AND SUCURSAL_CORRESPONSAL="+C2700+" AND " 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" SUCURSAL_DE_INGRESO="+C9502+ " AND ESTADO=3"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 5784   Ayuda cheq sal IESSN 03007400410331075900101060000000700070027012600
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C5784=0
+/M=Registro No válido
+VNNNNN 040127020402370400SSSD000000000000000000000000000000000000001
+/T=Confirmación   
+/C=192192192
+KNNNNN 040004000801620382000101
+/F=0012700NNN000000000Arial                                   
+KNNNNN 040030001900500379000100
+/T=Agregar Cheque a Lista 
+/F=0015700NNN000000000Arial                                   
+KNNNNN 040068005700840355000100
+/T=S - Agrega a Lista de Envío.
+/F=0011700NNN000000000Arial                                   
+KNNNNN 040103005701190355000100
+/T=N - Mantiene Estado.
+/F=0011700NNN000000000Arial                                   
+ NSSNN 0327   Opcion Si/No   I NSNK04013501380155024700001130000009001650110022300
+/V=N
+/F=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C0327="S")
+/P=I21
+CNNNNN  P00000000000000000000100
+/F=A(C0327="N")
+TN  NN 1006TCambia Un sólo Cheque Seleccionado      C0000 00
+/?=I21
+ NNNNN 7000   Tipo Doc       INNSNA00000701500027021000001100000000700070027012600
+/V=C7000.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7002   Numero de serieINNSNA00000701500027021000001100000000700070027012600
+/V=C7002.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7003   Nro de cheque  INNSNA00000701500027021000001100000000700070027012600
+/V=C5784.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7004   Banco          INNSNA00000701500027021000001100000000700070027012600
+/V=C7004.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7005   Sucural banco  INNSNA00000701500027021000001100000000700070027012600
+/V=C7005.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificación Solicitud Chequera         M1181 00
+/?=I21
+ NNNNN 7000   Tipo Doc       INNSNA00000701500027021000001100000000700070027012600
+/V=C7000.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7002   Numero de serieINNSNA00000701500027021000001100000000700070027012600
+/V=C7002.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7003   Nro de cheque  INNSNA00000701500027021000001100000000700070027012600
+/V=C7003.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7004   Banco          INNSNA00000701500027021000001100000000700070027012600
+/V=C7004.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7005   Sucural banco  INNSNA00000701500027021000001100000000700070027012600
+/V=C7005.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7021   Estado         INNSNK00024501500265033700101100000024500230265014200
+/V=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2647   F.Dia a Cent.ClINNSNA00000701500027027000001100000000700070027012600
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*#I21#Cambia sólo un registro.

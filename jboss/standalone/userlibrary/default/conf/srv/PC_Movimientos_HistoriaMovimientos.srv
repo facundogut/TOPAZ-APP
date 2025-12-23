@@ -1,0 +1,27 @@
+service HistoriaMovimientos; 
+description "Servicio Historia Movimientos"; 
+
+action:	SQLQuery Entity ( 
+ ASIENTO: string,
+ FECHAPROCESO: string,
+ SUCURSAL: string
+): [ 
+   	FECHA: string,
+	HORA: string,
+   	SUCURSAL: string,
+   	USUARIO: string,
+	COMENTARIO: string,
+	ACCION: string	
+]
+{ 
+  	properties { 
+  	("statement", "SELECT CONVERT(VARCHAR(10),H.DATE_,103) AS FECHA, CONVERT(VARCHAR(8),H.DATE_,8) AS HORA, CONVERT(VARCHAR(10),H.BRANCH) + '-' + sc.DESCRIPCION AS SUCURSAL, H.USERNAME AS USUARIO, H.COMMENT_ AS COMENTARIO,CASE H.ACTION WHEN 1 THEN 'Registro Asiento' WHEN 2 THEN 'Confirmacion Asiento' WHEN 3 THEN 'Asiento Bajado' WHEN 4 THEN 'Asiento Extornado' WHEN 5 THEN 'Asiento Reaplicado' WHEN 6 THEN 'Asiento Rechazado' WHEN 7 THEN 'Asiento Autorizado' WHEN 8 THEN 'Confimarcion Diferida' END AS ACCION FROM HISTORY H LEFT JOIN SUCURSALESSC sc ON H.BRANCH = sc.SUCURSAL AND sc.TZ_LOCK NOT LIKE '3%'  WHERE h.TRANSACTIONID = ? AND h.PROCESSDATE=CONVERT(VARCHAR(10),? ,103) AND h.BRANCH = ? ORDER BY JTS_OID"),
+	("0", "ASIENTO"),
+	("1", "FECHAPROCESO"),
+	("2", "SUCURSAL")	
+	}
+}
+
+
+
+

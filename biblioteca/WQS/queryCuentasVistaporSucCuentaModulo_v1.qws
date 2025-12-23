@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/productos/cuentaVista/{SUCURSAL}/{CUENTA}/{MODULO}</uri>
+    <serviceDescription>Consulta Cuenta Vista por Sucursal, Cuenta, Modulo</serviceDescription>
+    <querys>
+        <query id="1" name="CUENTA" type="MULTIPLE">
+            <sql>DECLARE 
+@Sucursal NUMERIC(5),
+@Cuenta VARCHAR(20),
+@Modulo VARCHAR(20);
+
+SET @Sucursal = ?
+SET @Cuenta = ?
+SET @Modulo = ?
+
+IF LEN(@Cuenta) &lt; 13
+
+SELECT DISTINCT SD.JTS_OID 
+
+FROM 			SALDOS SD (NOLOCK) 
+INNER JOIN 	VTA_SALDOS VT (NOLOCK) ON VT.JTS_OID_SALDO = SD.JTS_OID 
+
+WHERE 	(SD.C1785 = (CASE   WHEN @Modulo = 'CA' THEN 3 
+					   	  							WHEN @Modulo = 'CC' THEN 2 END)) 
+AND 		(SD.SUCURSAL = @Sucursal) 
+AND 		(SD.CUENTA = @Cuenta) 
+AND 		((SD.TZ_LOCK &lt; 300000000000000 OR SD.TZ_LOCK &gt;= 400000000000000) AND (SD.TZ_LOCK &lt; 100000000000000 OR SD.TZ_LOCK &gt;= 200000000000000))
+AND 		((VT.TZ_LOCK &lt; 300000000000000 OR VT.TZ_LOCK &gt;= 400000000000000) AND (VT.TZ_LOCK &lt; 100000000000000 OR VT.TZ_LOCK &gt;= 200000000000000))
+ 
+Else
+
+SELECT TOP 0 NULL AS JTS_OID</sql>
+            <input>
+                <inParameter description="" type="INTEGER">SUCURSAL</inParameter>
+                <inParameter description="" type="STRING">CUENTA</inParameter>
+                <inParameter description="" type="STRING">MODULO</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="jts_oid">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>JTS_OID</queryname>
+                        <servicename>jts_oid</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

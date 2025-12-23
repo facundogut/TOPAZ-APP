@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.centrocosto.valueobjects.MovimientosADistribuir</class-name>
+        <query-name>query.MovimientosCentroCostos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT SUCURSAL_CUENTA,
+					             MONEDA,
+					             CUENTA,
+					             OPERACION_CUENTA,
+					             PRODUCTO,
+					             ORDINAL_CUENTA,
+					             RUBROCONTABLE,
+					             FECHAVALOR,
+					             MARCAAJUSTE,
+					             CENTROCOSTO,
+					             SUM(equivalenteme) equivalenteme,
+					             SUM(equivalentemn) equivalentemn,
+					             SUM(CAPITAL) CAPITAL
+					        FROM (select SUCURSAL_CUENTA,
+					          MONEDA,
+					          CUENTA,
+					          OPERACION_CUENTA,
+					          PRODUCTO,
+					          ORDINAL_CUENTA,
+					          RUBROCONTABLE,
+					          FECHAVALOR,
+					          MARCAAJUSTE,
+					          CENTROCOSTO,
+					          case
+						   when (DEBITOCREDITO = 'D') THEN
+						   equivalenteme * -1
+						   ELSE
+						   equivalenteme
+					          END AS equivalenteme,
+					          case
+						    when (DEBITOCREDITO = 'D') THEN
+						     equivalentemn * -1
+						    ELSE
+						      equivalentemn
+					          END AS equivalentemn,
+					          case
+					            when (DEBITOCREDITO = 'D') THEN
+					             CAPITALREALIZADO * -1
+					            ELSE
+					             CAPITALREALIZADO
+					          END AS CAPITAL
+					           from movimientos_contables m, asientos a, planctas p
+					          where
+					         -- JOIN PLAN CUENTAS 
+					          m.RUBROCONTABLE = p.c6326
+					             and p.DISTRIBUYE_CENTROCOSTO = 'S'
+					             and 
+					         -- JOIN ASIENTOS   
+					          M.SUCURSAL = A.SUCURSAL
+					             AND M.ASIENTO = A.ASIENTO
+					             AND M.FECHAPROCESO = A.FECHAPROCESO
+					             AND A.ESTADO = 77
+					             AND (M.SUCURSAL_CUENTA = ? OR
+					          (M.CENTROCOSTO = ? OR M.CENTROCOSTO IS NULL))
+					             and a.FECHAPROCESO = ?) T
+					      GROUP BY SUCURSAL_CUENTA,
+					          MONEDA,
+					          CUENTA,
+					          OPERACION_CUENTA,
+					          PRODUCTO,
+					          ORDINAL_CUENTA,
+					          RUBROCONTABLE,
+					          FECHAVALOR,
+					          MARCAAJUSTE,
+					          CENTROCOSTO
+		      				  HAVING SUM(CAPITAL) &lt;&gt; 0   
+				</sentence>
+        <attribute>
+            <attribute-name>sucursalCuenta</attribute-name>
+            <column-name>SUCURSAL_CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>moneda</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cuenta</attribute-name>
+            <column-name>cuenta</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacionCuenta</attribute-name>
+            <column-name>OPERACION_CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>producto</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinalCuenta</attribute-name>
+            <column-name>ORDINAL_CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>RUBROCONTABLE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHAVALOR</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>marcaAjuste</attribute-name>
+            <column-name>MARCAAJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>centroCosto</attribute-name>
+            <column-name>CENTROCOSTO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>equivalenteME</attribute-name>
+            <column-name>equivalentemE</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>equivalenteMN</attribute-name>
+            <column-name>equivalentemn</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>capital</attribute-name>
+            <column-name>CAPITAL</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.centrocosto.valueobjects.CentroDeCosto</class-name>
+        <entity-name>core.CentroDeCostos</entity-name>
+        <table-name>CENTRO_DE_COSTOS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>sucursal</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>centroCosto</attribute-name>
+            <column-name>CENTROCOSTO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>indice</attribute-name>
+            <column-name>indice</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>rubro</column-name>
+            <key>primary</key>
+        </attribute>
+    </class>
+</map>

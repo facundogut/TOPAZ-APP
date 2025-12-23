@@ -1,0 +1,104 @@
+VERSION:051
+*N  NN ***
+*N  NN *** Javier Alvarez - 05/01/2010 - En testing - Cambiando indicadores para evitar conflictos con las operaciones que llaman a esta subrutina ***
+*N  NN *** Ma. Noel Fernández - 02/12/2011 - Pasaje a testing con arreglos solicitados por Juan Gallardo
+*N  NN ***
+ NNNNN 1051                  INNSNI00000701500027057002001100000000700070027012600
+/f=0012700NNN000000000Arial                                   
+*N  NN --------------------Se agrega control sobre el campo Teléfonos--------------------
+CNNNNN   00000000000000000000100
+/A=I120I121
+ NSNNS 4101   Marca 01       INNNNF00007401850094033100001100000007400460094015800
+/V=F(MID,C1051,1,1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=A(C4101#"1")YA(C4101#"2")YA(C4101#"4")YA(C4101#"0")YA(C4101#" ")
+/M=Error - Teléfono no valido
+ NSNNS 0118   Texto          INNNNA00007401850094033100001100000007400460094015800
+/V=C1051
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 1429   Clasif. Int. 1 INNNNF00007401850094033100001100000007400460094015800
+/V=F(MID,C1051,1,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Se controla si el número es de largo 9 que comience por 00, 09 o 1
+CNNNNN ME00000000000000000000100
+/?=(A(C1429#"09")YA(C1429#"00")YA(C4101#"1"))Y(F(LEN, C118)=9)
+/M=Error - Teléfono no valido
+CNNNNN ME00000000000000000000100
+/?=A(C1429#"00")Y(F(LEN, C118)>9)
+/M=Error - Teléfono no valido
+*N  NN Se controla si se ingresa un número de 8 dígitos que solo comience por 1, 2, 4 o 0800 y que no tenga caracteres
+ NSNNS 3578   Letras         INNNNF00007401850094033100001100000007400460094015800
+/V=F(MID,C1051,1,4)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNS 0615                  INNNNF00007401850094033100001100000007400460094015800
+/V=F(MID,C1051,1,8)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ***
+CNNNNN ME00000000000000000000100
+/?=(A(C4101#"2")YA(C4101#"4")YA(C4101#"1")YA(C3578#"0800"))Y(F(LEN, C118)=8)
+/M=Error - Teléfono no valido
+*N  NN Se controla si se ingresa un número de 8 dígitos y comienza por 2, 4 o 0800 que no tenga "/" 
+CNNNNN   00000000000000000000100
+/?=(A(C4101="2")OA(C4101="4")OA(C3578="0800"))
+/P=I120
+CNNNNN ME00000000000000000000100
+/?=I120
+/F=(F(LEN, C118)#8)
+/M=Error - Teléfono no valido
+CNNNNN ME00000000000000000000100
+/?=I120Y(F(POSSTR, C1051, "/")<9)Y(F(POSSTR, C1051, "/")>0)
+/M=Error - Teléfono no valido
+*N  NN Se contorla que si es un telefono fijo, tenga 8 números
+CNNNNN ME00000000000000000000100
+/?=I120Y(F(LEN,C118)#8)
+/M=Error - Teléfono no valido
+*N  NN Se controla si se ingresa un número de 9 dígitos y comienza por 09, que no tenga "/" 
+*N  NN Se condiciona porque no controla si se ingresan más de 9 caracteres..
+CNNNNN   00000000000000000000100
+/?=I0Y(A(C1429="09"))Y(F(LEN, C118)=9)
+/P=I121
+/A=I120
+CNNNNN   00000000000000000000100
+/?=(A(C1429="09"))
+/P=I121
+/A=I120
+CNNNNN ME00000000000000000000100
+/?=I121Y(F(POSSTR, C1051, "/")<10)Y(F(POSSTR, C1051, "/")>0)
+/M=Error - Teléfono no valido
+*N  NN Controla que el celular sea solamente de 9 dígitos.
+CNNNNN ME00000000000000000000100
+/?=I121Y(F(LEN,C118)#9)
+/M=Error - Teléfono no valido
+*N  NN Se controla para número nacional corto que comience con 1
+CNNNNN ME00000000000000000000100
+/?=(A(C4101#"1")Y(F(LEN, C118)>2YF(LEN, C118)<8))YI0
+/M=Error - Teléfono no valido
+CNNNNN ME00000000000000000000100
+/?=(A(C4101#"1")Y(F(LEN, C118)>2YF(LEN, C118)<8))
+/M=Error - Teléfono no valido
+CNNNNN ME00000000000000000000100
+/?=(A(C4101="1")Y(F(LEN, C118)<3OF(LEN, C118)>9))
+/M=Error - Teléfono no valido
+*N  NN Se controla para número del exterior que comience con 00
+CNNNNN ME00000000000000000000100
+/?=A(C1429="00")Y(F(LEN, C118)<9)
+/M=Error - Teléfono no valido
+*N  NN Se controla si se ingresa uno o dos dígitos el primero no sea un espacio
+CNNNNN ME00000000000000000000100
+/?=(F(LEN, C118)=2)YA(C4101=" ")
+/M=Error - Teléfono no valido
+CNNNNN ME00000000000000000000100
+/?=(F(LEN, C118)<3)YA(C4101#" ")
+/M=Error - Teléfono no valido
+CNNNNN ME00000000000000000000100
+/?=A(C4101#" ")Y(F(LEN, C118)>0YF(LEN, C118)<2)
+/M=Error - Teléfono no valido
+*N  NN --------------------Fin control sobre el campo Teléfonos--------------------
+*#I120#
+*#I121#

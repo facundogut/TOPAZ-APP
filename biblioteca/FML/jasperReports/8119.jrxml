@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-09-24T15:21:53 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Autorizacion de Acceso a Cajas de Seguridad" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7efe036f-fe89-4ffd-ab32-f5ac55a2cde5">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<parameter name="CONTRATO" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Nro. Contrato:]]></parameterDescription>
+	</parameter>
+	<parameter name="PERSONA" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Nro. Persona:]]></parameterDescription>
+	</parameter>
+	<parameter name="GENERA_EXCEL" class="java.lang.Boolean" isForPrompting="false">
+		<parameterDescription><![CDATA[Genera Excel:]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+    PS.DESCRIPCION AS PROVINCIA,
+    (SELECT FECHAPROCESO FROM PARAMETROS WITH (nolock)) AS FECHAPROCESO,
+    C.NUMERO_COFRE AS NUMERO_COFRE,
+    CC.CODIGO AS CODIGO,
+    concat_ws(' ', trim(PF.PRIMERNOMBRE), trim(PF.APELLIDOPATERNO)) AS NOMBRE,
+    CONCAT(DF.CALLE, DF.NUMERO) AS DIRECCION,
+    DOC.TIPODOCUMENTO AS TIPO_DOCUMENTO,
+    DOC.NUMERODOCUMENTO AS DOCUMENTO,
+    t2.DESCRIPCION_DIM3 AS LOCALIDAD
+FROM
+    PYF_APODERADOS AS P WITH (nolock)
+INNER JOIN COF_COFRES AS C WITH (nolock) ON
+    C.CODIGO = P.ID_ENTIDAD
+    AND C.TZ_LOCK = 0
+INNER JOIN COF_COFRES_CONTRATOS AS CC WITH (nolock) ON
+    CC.TZ_LOCK = 0
+    AND CC.CODIGO_COFRE = C.CODIGO
+    AND CC.ESTADO IN ('C', 'V', 'M')
+    AND CC.CODIGO = (SELECT 
+                        TOP 1 CODIGO
+                     FROM COF_COFRES_CONTRATOS
+                     WHERE
+                        CODIGO_COFRE = CC.CODIGO_COFRE
+                        AND ESTADO = CC.ESTADO
+                        AND TZ_LOCK = 0
+                     ORDER BY CODIGO)
+INNER JOIN SUCURSALES AS S WITH (nolock) ON
+    S.SUCURSAL = C.DEPENDENCIA
+    AND S.TZ_LOCK = 0
+INNER JOIN CLI_PERSONASFISICAS AS PF WITH (nolock) ON
+    PF.NUMEROPERSONAFISICA = P.ID_PERSONA
+    AND PF.TZ_LOCK = 0
+LEFT JOIN CLI_DIRECCIONES AS DS WITH (nolock) ON
+    DS.TZ_LOCK = 0
+    AND DS.ID = S.SUCURSAL
+    AND DS.FORMATO = 'S'
+    AND DS.TIPODIRECCION = 'R'
+    AND DS.ORDINAL_DIR = 
+        (SELECT 
+            TOP 1 ORDINAL_DIR
+         FROM CLI_DIRECCIONES
+         WHERE
+            TZ_LOCK = 0
+            AND ID = DS.ID
+            AND FORMATO = DS.FORMATO
+            AND TIPODIRECCION = DS.TIPODIRECCION
+         ORDER BY ORDINAL_DIR)
+LEFT JOIN CLI_PROVINCIAS AS PS WITH (nolock) ON
+    PS.CODIGOPAIS = DS.PAIS
+    AND PS.DIM1 = DS.PROVINCIA
+    AND PS.TZ_LOCK = 0
+LEFT JOIN CLI_DIRECCIONES AS DF WITH (nolock) ON
+    DF.TZ_LOCK = 0
+    AND DF.ID = P.ID_PERSONA
+    AND DF.FORMATO = 'PF'
+    AND DF.TIPODIRECCION = 'PR'
+    AND DF.ORDINAL_DIR =
+        (SELECT
+            TOP 1 ORDINAL_DIR
+         FROM CLI_DIRECCIONES
+         WHERE
+            TZ_LOCK = 0
+            AND ID = DF.ID
+            AND FORMATO = DF.FORMATO
+            AND TIPODIRECCION = DF.TIPODIRECCION
+         ORDER BY ORDINAL_DIR)
+LEFT JOIN CLI_DOCUMENTOSPFPJ AS DOC WITH (nolock) ON
+    DOC.TZ_LOCK = 0
+    AND DOC.NUMEROPERSONAFJ = P.ID_PERSONA
+    AND DOC.TIPODOCUMENTO = (SELECT 
+                                TOP 1 TIPODOCUMENTO
+                             FROM CLI_DocumentosPFPJ
+                             WHERE
+                                NUMEROPERSONAFJ = DOC.NUMEROPERSONAFJ
+                                AND TZ_LOCK = 0
+                             ORDER BY
+                                TIPODOCUMENTO, NUMERODOCUMENTO)
+    AND DOC.NUMERODOCUMENTO = (SELECT
+                                TOP 1 NUMERODOCUMENTO
+                             FROM CLI_DocumentosPFPJ
+                             WHERE
+                                NUMEROPERSONAFJ = DOC.NUMEROPERSONAFJ
+                                AND TIPODOCUMENTO = DOC.TIPODOCUMENTO
+                                AND TZ_LOCK = 0
+                             ORDER BY
+                                TIPODOCUMENTO, NUMERODOCUMENTO)
+LEFT JOIN CLI_LOCALIDADES AS t2 WITH (nolock) ON
+    t2.DIM1 = DS.PROVINCIA
+    AND t2.DIM2 = DS.DEPARTAMENTO
+    AND t2.DIM3 = DS.LOCALIDAD
+    AND t2.TZ_LOCK = 0
+WHERE
+    P.TZ_LOCK = 0
+    AND P.TIPO_ENTIDAD = 3
+    AND P.TIPO_PODER = (SELECT NUMERICO FROM PARAMETROSGENERALES WITH (nolock) WHERE CODIGO = 216)
+	AND P.ID_PERSONA = $P{PERSONA}
+	AND CC.CODIGO = $P{CONTRATO}]]>
+	</queryString>
+	<field name="PROVINCIA" class="java.lang.String"/>
+	<field name="FECHAPROCESO" class="java.sql.Timestamp"/>
+	<field name="NUMERO_COFRE" class="java.math.BigDecimal"/>
+	<field name="CODIGO" class="java.math.BigDecimal"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="DIRECCION" class="java.lang.String"/>
+	<field name="TIPO_DOCUMENTO" class="java.lang.String"/>
+	<field name="DOCUMENTO" class="java.lang.String"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="65" splitType="Stretch">
+			<image>
+				<reportElement x="0" y="0" width="130" height="65" uuid="e4b1f401-0355-4acc-9bd2-e70a96dc7434"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="239" splitType="Stretch">
+			<staticText>
+				<reportElement x="30" y="40" width="39" height="15" uuid="548b0bc1-04a4-46cc-94dd-6ca3c5ea29e8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Lugar:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="40" width="36" height="15" uuid="fe852ffd-d6fd-4f82-8dfc-b4c373e0b94b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="554" height="17" uuid="f271ec67-cb77-4f50-afd6-075c9e9438d3"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AUTORIZACIÓN DE ACCESO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="30" y="120" width="159" height="15" uuid="d700dab5-35db-476c-acdb-c4dcb5976a1f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Ref.: CAJA DE SEGURIDAD N° ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToTallestObject" x="219" y="120" width="132" height="15" uuid="6d9a2fc4-c68c-475a-98b4-bcb01b302dca">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Contrato de locación N° ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="150" width="499" height="40" uuid="f8ad975d-53ac-4a2f-84b4-f9692f9d04fa">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Por la presente el LOCATARIO autoriza a la persona abajo indicada a acceder, en forma CONJUNTA / INDISTINTA, a la caja de seguridad de la referencia, bajo su exclusiva responsabilidad y sin que ello implique sub-locación.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="199" width="515" height="21" uuid="e1253972-d894-4ae8-88b1-9b8254f929e2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[La presente autorización subsistirá hasta tanto se notifique por escrito al BANCO por su revocación.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="223" width="100" height="15" uuid="cabb6fc8-28eb-4250-88cb-7db51c76caf4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Autorizado/a:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="448" y="40" width="106" height="15" uuid="732c7d90-abb6-418f-9831-fa5788ce415b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{FECHAPROCESO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="351" y="120" width="179" height="15" uuid="c7ffe0bb-f9e2-4489-8b23-2423c9c93ea3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CODIGO}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+				<reportElement x="69" y="40" width="240" height="15" uuid="e8ce2bff-073c-4d5c-8f79-6638bfa007b4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD}+", "+$F{PROVINCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="189" y="120" width="30" height="15" uuid="9d2aef54-0d13-476c-97f5-faef7244bf8b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NUMERO_COFRE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="71" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="30" y="10" width="159" height="15" uuid="d42a09d3-e35a-4d15-9f91-82f0a8fd9c64">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="379" y="10" width="151" height="15" uuid="c87364a8-3353-481e-999b-47eb4396839d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="205" y="10" width="159" height="15" uuid="971a451c-ef86-4e9b-83bc-af39f35dbfc7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{TIPO_DOCUMENTO}+" N° "+$F{DOCUMENTO}]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="215">
+			<staticText>
+				<reportElement x="30" y="90" width="514" height="30" uuid="bd4e2d2a-c781-4559-9291-62faeaaf3037">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[El/los autorizados declaran conocer los términos y condiciones del Contrato de Locación de Caja de Seguridad suscripto con el Banco, suscribiendo la presente a modo de conformidad y notificación.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="0" width="90" height="15" uuid="a40e9489-c545-4c3e-8948-27327eea3af8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Firma Locatario: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="15" width="199" height="15" uuid="0b2a2783-205d-4dab-99b6-f58ba792cfc5">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ ........................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="199" height="15" uuid="08c932bf-8065-43d2-95b5-16fcc2d3df93">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ ........................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="15" width="90" height="15" uuid="70fd1b84-cac6-4bbd-a9d2-14dc0c366133">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Aclaración:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="45" width="190" height="15" uuid="1979354d-2609-482c-a967-f324028db059">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[........................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="319" y="60" width="210" height="24" uuid="6fb69e34-093b-4253-b0da-fe0afda3b4be">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Certificación por funcionario del Banco]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="190" width="210" height="24" uuid="6bbf3d44-77e5-4610-904e-d6f15311b37f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Certificación por funcionario del Banco]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="135" width="90" height="15" uuid="b8e69f10-85b2-45e7-92aa-829968d04fbc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Firma Autorizado:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="135" width="198" height="15" uuid="aade4bef-f2a3-4e39-a9ae-647838e3285b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ ........................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="30" y="150" width="90" height="15" uuid="3bb410a4-6338-4d59-892e-5380627967f2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Aclaración:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="150" width="198" height="15" uuid="a573f57d-2cee-4a75-8363-36565fabe073">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[ ........................................................]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="175" width="190" height="15" uuid="c565378f-4226-47e5-970a-ae6139c40f37">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[........................................................]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<noData>
+		<band height="50"/>
+	</noData>
+</jasperReport>

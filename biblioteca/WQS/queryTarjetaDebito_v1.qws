@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/tarjetaDebito/getByID/{idTarjeta}</uri>
+    <serviceDescription>Este servicio devuelve la informacion correspondiente a una tarjeta de debito. </serviceDescription>
+    <title>Tarjeta Debito</title>
+    <querys>
+        <query id="1" name="tarjetas" type="MULTIPLE">
+            <sql>
+DECLARE @idTarjeta VARCHAR(19)
+SET @idTarjeta = ?
+SELECT 
+    cdp.NUMERODOCUMENTO,
+    t.NOMBRE_TARJETA,
+    t.ID_TARJETA AS tarjetaCompleta,
+    CAST(t.ID_TARJETA_BASE AS VARCHAR(19)) AS tarjetaBase,
+    t.TITULARIDAD AS IdTitularidad,
+    (SELECT CASE WHEN t.TITULARIDAD = 'T' THEN 'TITULAR' WHEN t.TITULARIDAD = 'A' THEN 'ADICIONAL' END) AS descripcionTitularidad,
+    t.ESTADO AS Estado,
+    (SELECT O.descripcion FROM OPCIONES O WHERE O.NUMERODECAMPO=3831 AND O.OPCIONINTERNA=T.ESTADO) AS descripcionEstado,
+    CONVERT(varchar(5),FORMAT(t.VENCIMIENTO, 'MM/yy')) AS vencimiento,
+    T.PERMISO AS IdTipoTarjeta,
+    (SELECT p.descripcion FROM TJD_PERMISOS p WHERE p.sub_tipo = t.PERMISO AND p.TZ_LOCK=0) AS descripcionTipoTarjeta,
+    (SELECT TT.CODIGO_PRODUCTO FROM TJD_TIPO_TARJETA TT WHERE TT.TIPO_TARJETA = t.TIPO_TARJETA) AS productoId,
+    (SELECT TT.DESCRIPCION FROM TJD_TIPO_TARJETA TT WHERE TT.TIPO_TARJETA = t.TIPO_TARJETA) AS descripcionProducto,
+    t.NRO_CLIENTE AS Cliente,
+    s.Tipo_Cuenta  AS orden,
+    (SELECT (CASE WHEN SA.c1785 = '2' THEN 'CC' WHEN SA.c1785 = '3' THEN 'CA' END) 
+        FROM TJD_REL_TARJETA_CUENTA TC, SALDOS SA  WHERE SA.JTS_OID = TC.SALDO_JTS_OID
+        AND TC.ID_TARJETA = T.ID_TARJETA AND SA.TZ_LOCK=0 AND TC.TZ_LOCK=0 AND T.TZ_LOCK=0 AND TC.CUENTA_PBF = S.NUMERO_CUENTA AND TC.TIPO_CUENTA = S.Tipo_Cuenta) AS MODULO,
+    T.SUCURSAL AS SUCURSAL,
+    (CASE WHEN ISNUMERIC(S.Numero_Cuenta)=0 THEN 0 ELSE CAST(s.Numero_Cuenta AS NUMERIC(19)) END) AS CUENTA,
+    COALESCE(TRY_CONVERT(DATE, c.Fec_Emi_Plast,120), '') AS 'fechaEmision'
+FROM TJD_TARJETAS t
+INNER JOIN TJD_ITF_TARJETAS_CUENTAS s ON s.NroTarjeta = t.ID_TARJETA
+INNER JOIN TJD_ITF_TARJETAS_COMPLETAS c ON c.Nro_Tarjeta = t.ID_TARJETA
+join CLI_DocumentosPFPJ cdp on t.NRO_PERSONA = cdp.NUMEROPERSONAFJ
+WHERE t.ID_TARJETA =@idTarjeta and t.TZ_LOCK = 0
+
+
+</sql>
+            <input>
+                <inParameter description="idTarjeta" type="STRING">idTarjeta</inParameter>
+            </input>
+            <output>
+                <level groupby="tarjetaCompleta" name="tarjetas1">
+                    <outParameter description="" type="STRING">
+                        <queryname>tarjetaCompleta</queryname>
+                        <servicename>tarjetaCompleta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tarjetaBase</queryname>
+                        <servicename>tarjetaBase</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IdTitularidad</queryname>
+                        <servicename>titularidad.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionTitularidad</queryname>
+                        <servicename>titularidad.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>estado</queryname>
+                        <servicename>estado.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionEstado</queryname>
+                        <servicename>estado.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>vencimiento</queryname>
+                        <servicename>vencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IdTipoTarjeta</queryname>
+                        <servicename>tipoTarjeta.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionTipoTarjeta</queryname>
+                        <servicename>tipoTarjeta.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>productoId</queryname>
+                        <servicename>producto.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionProducto</queryname>
+                        <servicename>producto.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Cliente</queryname>
+                        <servicename>Cliente</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaEmision</queryname>
+                        <servicename>fechaEmision</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGINT">
+                        <queryname>NUMERODOCUMENTO</queryname>
+                        <servicename>CUIT</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NOMBRE_TARJETA</queryname>
+                        <servicename>nombreTarjeta</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="vectorctas">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>orden</queryname>
+                        <servicename>orden</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>modulo</queryname>
+                        <servicename>modulo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>sucursal</queryname>
+                        <servicename>sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>cuenta</queryname>
+                        <servicename>cuenta</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

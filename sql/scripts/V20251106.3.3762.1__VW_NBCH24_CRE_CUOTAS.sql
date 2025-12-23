@@ -1,0 +1,74 @@
+EXEC('
+CREATE OR ALTER VIEW dbo.VW_NBCH24_CRE_CUOTAS (
+    origen, jtsCRE, nroCuota, fecVencimiento, fecPago, capital, interes, saldo, impuestos, otrosRubros, totalPago
+) AS
+SELECT
+    ISNULL(pagos.origen, ''Topaz'') AS origen,
+    ecc.SALDO_JTS_OID, 
+    ecc.NCUOTA,
+    ecc.VENCIMIENTOCUOTA,
+    ecc.fechavalor,
+    ecc.CAPITAL,
+    ecc.INTERES,
+    ecc.SALDO_CAPITAL + ecc.SALDO_INTERES +
+    ecc.PP_IVAINTERES + ecc.PP_IVAPERCEPCIONINTERES +
+    ecc.PP_MORA + ecc.PP_IVAMORA + ecc.PP_IVAPERCEPCIONMORA +
+    ecc.PP_INTCOMPMORA + ecc.PP_IVAINTCOMPMORA + ecc.PP_IVAPERCEPCIONINTCOMPMORA AS saldo,
+
+    -- Impuestos estimados si no hay pagos
+    ISNULL(pagos.impuestos,
+        ecc.PP_IVAINTERES + ecc.PP_IVAPERCEPCIONINTERES +
+        ecc.PP_IVAMORA + ecc.PP_IVAPERCEPCIONMORA +
+        ecc.PP_IVAINTCOMPMORA + ecc.PP_IVAPERCEPCIONINTCOMPMORA
+    ) AS impuestos,
+
+    -- Otros rubros estimados si no hay pagos
+    ISNULL(pagos.otrosRubros,
+        ecc.PP_MORA + ecc.PP_INTCOMPMORA + ecc.PP_GASTOS
+    ) AS otrosRubros,
+
+    -- Total estimado si no hay pagos
+    ISNULL(pagos.totalPago,
+        ecc.CAPITAL + ecc.INTERES +
+        ecc.PP_IVAINTERES + ecc.PP_IVAPERCEPCIONINTERES +
+        ecc.PP_IVAMORA + ecc.PP_IVAPERCEPCIONMORA +
+        ecc.PP_IVAINTCOMPMORA + ecc.PP_IVAPERCEPCIONINTCOMPMORA +
+        ecc.PP_MORA + ecc.PP_INTCOMPMORA + ecc.PP_GASTOS
+    ) AS totalPago
+
+FROM VBS_ESTADO_CUENTA_CLIENTE ecc WITH (NOLOCK)
+LEFT JOIN (
+    -- Pagos desde Topaz
+    SELECT
+        ''Topaz'' AS origen,
+        vp.SALDO_JTS_OID,
+        vp.NCUOTA,
+        SUM(VP.PP_IVAINTERES + VP.PP_IVAPERCEPCIONINTERES + VP.PP_IVAMORA + VP.PP_IVAPERCEPCIONMORA + VP.PP_IVAINTCOMPMORA + VP.PP_IVAPERCEPCIONINTCOMPMORA) AS impuestos, 
+        SUM(VP.PP_MORA + VP.PP_INTCOMPMORA + VP.PP_GASTOS) AS otrosRubros,
+        SUM(VP.CAPITAL + VP.INTERES + VP.PP_IVAINTERES + VP.PP_IVAPERCEPCIONINTERES + VP.PP_IVAMORA + VP.PP_IVAPERCEPCIONMORA + VP.PP_IVAINTCOMPMORA + VP.PP_IVAPERCEPCIONINTCOMPMORA +
+            VP.PP_MORA + VP.PP_INTCOMPMORA + VP.PP_GASTOS) AS totalPago
+    FROM VBS_DETALLE_CUOTAS_PAGADAS VP
+    GROUP BY VP.SALDO_JTS_OID, VP.NCUOTA
+
+    UNION
+
+    -- Pagos desde Sideba (solo si no están en Topaz)
+    SELECT
+        ''Sideba'' AS origen,
+        VPMig.SALDO_JTS_OID,
+        VPMig.NCUOTA,
+        SUM(VPMig.PP_IVAINTERES + VPMig.PP_IVAPERCEPCIONINTERES + VPMig.PP_IVAMORA + VPMig.PP_IVAPERCEPCIONMORA + VPMig.PP_IVAINTCOMPMORA + VPMig.PP_IVAPERCEPCIONINTCOMPMORA) AS impuestos, 
+        SUM(VPMig.PP_MORA + VPMig.PP_INTCOMPMORA + VPMig.PP_GASTOS) AS otrosRubros,
+        SUM(VPMig.CAPITAL + VPMig.INTERES + VPMig.PP_IVAINTERES + VPMig.PP_IVAPERCEPCIONINTERES + VPMig.PP_IVAMORA + VPMig.PP_IVAPERCEPCIONMORA + VPMig.PP_IVAINTCOMPMORA + VPMig.PP_IVAPERCEPCIONINTCOMPMORA +
+            VPMig.PP_MORA + VPMig.PP_INTCOMPMORA + VPMig.PP_GASTOS) AS totalPago
+    FROM VBS_DETALLE_CUOTAS_PAGADAS_MIGRADOS VPMig
+    WHERE NOT EXISTS (
+        SELECT 1
+        FROM VBS_DETALLE_CUOTAS_PAGADAS VP
+        WHERE VP.SALDO_JTS_OID = VPMig.SALDO_JTS_OID
+          AND VP.NCUOTA = VPMig.NCUOTA
+    )
+    GROUP BY VPMig.SALDO_JTS_OID, VPMig.NCUOTA
+) pagos
+    ON pagos.SALDO_JTS_OID = ecc.SALDO_JTS_OID AND pagos.NCUOTA = ecc.NCUOTA;
+');

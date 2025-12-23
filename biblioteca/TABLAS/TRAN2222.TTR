@@ -1,0 +1,318 @@
+VERSION:051
+*N  NN ##########################################################################################
+*N  NN ### DESCRIPCIÓN de la SubRutina.-
+*N  NN ##########################################################################################
+*N  NN ###
+*N  NN ###                           Listas Negras:
+*N  NN ###                           ************
+*N  NN ###                           Se deben componer concatenados los campos que me interesa controlar. Recurro a la Base de Datos de Trace
+*N  NN ###                           y obtengo a través de una función, si existen ó no oincidencias con el Sistema de Antilavado de dinero, para ello
+*N  NN ###                           usaremos los Campos de Primer Apellido, Segundo Apellido, Primer Nombre y Segundo Nombre.-
+*N  NN ###                           eventualmente podría haber DOS Controles de Listas Negras (que determinará el programador con Indicadores)
+*N  NN ###
+*N  NN ###                           Control de Montos:
+*N  NN ###                           ****************
+*N  NN ###                           Con el Código 77 de la Tabla Cre_Parámetros obtengo: MONTO MÍNIMO.-
+*N  NN ###                           Con el Código 88 de la Tabla Cre_Parámetros obtengo: MONTO MÁXIMO.-
+*N  NN ###                           Según la Moneda de la Transferencia y si hubo ó no Coincidencias con Trace, comparo contra los montos
+*N  NN ###                           mínimos y máximos para determinar el Estado en el que quedará ésta Operación al finalizar.-
+*N  NN ###
+*N  NN ##########################################################################################
+*N  NN ### ENTRADAS de la SubRutina.-
+*N  NN ##########################################################################################
+*N  NN ###
+*N  NN ###                           I140 (Indicador de UN Control de Trace).-
+*N  NN ###                           I141 (Indicador de DOS Controles de Trace).-
+*N  NN ###                           I150 (Indicador de que ES País de Riesgo).-
+*N  NN ###                           C7930 (Código de la Moneda de la Transferencia), asumir en el Campo 840 .-
+*N  NN ###                           C7931 (Importe en la Moneda de la Transferencia), asumir en el Campo 870 .-
+*N  NN ###                           C7795 (1er. Control Listas Negras: Concateno 1er. y 2do. Apellido más 1er. y 2do. Nombre)
+*N  NN ###                           C7798 (2do. Control Listas Negras: Concateno 1er. y 2do. Apellido más 1er. y 2do. Nombre)
+*N  NN ###                           Cuidado! Con los campos auxiliares que se usan en la SubRutina: (808,3940,3941,669,840,799,320,700,701,702 y 870)
+*N  NN ###
+*N  NN ##########################################################################################
+*N  NN ### SALIDAS de la SubRutina.-
+*N  NN ##########################################################################################
+*N  NN ###
+*N  NN ###                           (I221) => Moneda de la Transferencia es USD.-
+*N  NN ###                           (I222) => Moneda de la Transferencia NO es USD.-
+*N  NN ###                           (I223) => Estado : Para Procesar.-
+*N  NN ###                           (I224 o I226) => Estado : Para Autorizar - Oficial de Cuentas.-
+*N  NN ###                           (I225 o I227) => Estado : Para Autorizar - Oficial de Cumplimiento.-
+*N  NN ###                           (I228) => (NO HAY Coincidencias con Trace 1)
+*N  NN ###                           (I229) => (HAY Coincidencias con Trace 1)
+*N  NN ###                           (I231) => (NO HAY Coincidencias con Trace 2)
+*N  NN ###                           (I232) => (HAY Coincidencias con Trace 2)
+*N  NN ###                           (I233) => (NO HAY Coincidencias con Trace Genéricas)
+*N  NN ###                           (I234) => (HAY Coincidencias con Trace Genéricas)
+*N  NN ###                           (I230) => (Error de Conexión ó Control Inválido de TRACE => No hay Control de Montos).-
+*N  NN ###
+*N  NN ##########################################################################################
+*N  NN ### Cereo los Indicadores a utilizar.-
+CNNNNN   00000000000000000000100
+/A=I221I222I223I224I225I226I227I228I229
+CNNNNN   00000000000000000000100
+/A=I230I231I232I233I234
+*N  NN ##########################################################################################
+*N  NN ###
+*N  NN ###
+*N  NN ###
+*N  NN ##########################################################################################
+*N  NN ### Control de Listas Negras.-
+*N  NN ##########################################################################################
+*N  NN ###
+*N  NN ###
+*N  NN ###
+*N  NN ***********************
+*N  NN *** Parámetros de Entrada:
+*N  NN ***********************
+*N  NN *** Si  (I140)  => 1 Control de Trace.-
+*N  NN *** Si  (I141)  => 2 Controles de Trace.-
+*N  NN ***********************
+*N  NN *** Resultados del Control:
+*N  NN ***********************
+*N  NN ***   0  =>  NO HAY Coincidencias.-
+*N  NN ***  -1  =>  Error de Inactividad, no se ejecutó la Función.-
+*N  NN ***  -2  =>  Error de Conexión, no se ejecutó la Función.-
+*N  NN *** >0  =>  No. de Ejecucion (HAY Coincidencias).-
+*N  NN ***
+*N  NN *** Control de Parámetros de Entrada de Trace.-
+CNNNNN ME00000000000000000000100
+/?=!(I140OI141)
+/M=Error: Falta carga de Parámetros para el Control de Trace...
+CNNNNN ME00000000000000000000100
+/?=(I140YI141)
+/M=Error: Exceso de carga de Parámetros p/Control de Trace...
+*N  NN ***********************
+*N  NN *** Control de Trace (1).-
+*N  NN ***********************
+ NSSNS 0808   Parámetro TRACEINNSNF00001901470041039200001100000002100140040006600
+/V="Cliente|?|"+C7795+"|?|Datos|?| USR-"+C9505+"  ASI-"+C9507+"  SUC-"+C9502
+ NSSNS 3940   Texto          INNSNK00005001470070032700001100000004900140069013300
+/V=CheckAntilavado
+ NSSNS 0669   Ejecucion TraceINNNNF00009701430117020300001100000009800360118012500
+/V=F(CheckAntiLavado, C3940,1,C808)
+CNSSNS   00000000000000000000100
+/?=(C669=0)
+/P=I228
+/M=Trace CheckAntilavado (1) => NO HAY Coincidencias...
+CNSSNS   00000000000000000000100
+/?=(C669>0)
+/P=I229
+/M=Trace CheckAntilavado (1) => HAY Coincidencias...
+CNSSNS M 00000000000000000000100
+/?=(C669=(-1)OC669=(-2))
+/P=I230
+/M=Trace CheckAntilavado (1) => Inactivo (NO ejecutó Control)
+*N  NN ***********************
+*N  NN *** Control de Trace (2).-
+*N  NN ***********************
+ NSSNS 0191                  INNSNF00001901470041039200001100000002100140040006600
+/?=(I141)
+/V="Cliente|?|"+C7798+"|?|Datos|?| USR-"+C9505+"  ASI-"+C9507+"  SUC-"+C9502
+ NSSNS 3941   Texto          INNSNK00005001470070032700001100000004900140069013300
+/?=(I141)
+/V=CheckAntilavado
+ NSSNS 0670   No. Auxiliar 7 INNNNF00009701430117020300001100000009800360118012500
+/?=(I141)
+/V=F(CheckAntiLavado, C3941,1,C191)
+CNSSNS   00000000000000000000100
+/?=(I141)Y(C670=0)
+/P=I231
+/M=Trace CheckAntilavado (2) => NO HAY Coincidencias...
+CNSSNS   00000000000000000000100
+/?=(I141)Y(C670>0)
+/P=I232
+/M=Trace CheckAntilavado (2) => HAY Coincidencias...
+CNSSNS M 00000000000000000000100
+/?=(I141)Y((C670=(-1)OC670=(-2)))
+/P=I230
+/M=Trace CheckAntilavado (2) => Inactivo (NO ejecutó Control)
+*N  NN ***********************
+*N  NN *** Seteo p/control Monto.-
+*N  NN ***********************
+*N  NN *** 1 Control TRACE:     (I228  ó  I229)
+*N  NN *** 2 Controles TRACE: (I233  ó  I234)  Cualquier Combinación obtiene Coincidencias, SALVO cuando los 2 controles no tienen.-
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I141)Y(I228)Y(I231)
+/P=I233
+/M=28 y 31 => NO HAY (Genérica)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I141)Y(I228)Y(I232)
+/P=I234
+/M=28 y 32 => HAY (Genérica)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I141)Y(I229)Y(I231)
+/P=I234
+/M=29 y 31 => HAY (Genérica)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I141)Y(I229)Y(I232)
+/P=I234
+/M=29 y 32 => HAY (Genérica)
+*N  NN *** Si ES País de Riesgo, tomo como si fuera una COINCIDENCIA genérica (independientemente si hubo 1 ó 2 Controles de Trace).-
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I150)
+/P=I229I234
+/M=29 y 32 => HAY (Genérica)
+*N  NN ###
+*N  NN ###
+*N  NN ###
+*N  NN ##########################################################################################
+*N  NN ### Control de Montos.-
+*N  NN ##########################################################################################
+*N  NN ###
+*N  NN ###
+*N  NN ###
+*N  NN *** Tomo Factor Divide/Multiplica y Arbitraje de Compra de la Tabla de Monedas (Mon. Transf.)
+ NNNNN 0840   Moneda Transf. INNNN 00001001970030030700101100000001000550030017400
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 0799   Divide/Multipl.INNNNA00004001970060030700101100000004000550060017400
+/V=C6442
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 0320   Arb. Compra    INNNNA00007001970090030700101100000007000550090017400
+/?=(!I230)
+/V=C6429
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN *** Cargo desde la Tabla CRE_Parametros, los importes -en USD- mínimo y máximo a considerar en el presente Control..-
+*N  NN *** Código 77 (Mínimo en USD)
+ NSSNN 7797   Código Parám.  INNSNK00000701520027020200001100010000700070027013700
+/?=(!I230)
+/V=77
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 0700   Importe Mínimo INNSNA00013002000150030700101100000013000550150017400
+/?=(!I230)
+/V=C4623
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN *** Código 88 (Máximo en USD)
+ NSSNN 7797   Código Parám.  INNSNK00000701520027020200001100010000700070027013700
+/?=(!I230)
+/V=88
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 0701   Importe Máximo INNSNA00016002000180030700101100000016000550180017400
+/?=(!I230)
+/V=C4623
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN #
+*N  NN #
+*N  NN #
+*N  NN ***Averiguo la Moneda de la Transferencia.-
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(C840=2225)
+/P=I221
+/M=Mon. Transf. USD
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(C840#2225)
+/P=I222
+/M=Mon. Transf. # USD
+*N  NN *** Si la Moneda de la Transferencia ES Dólares => Guardo importe.-
+ NNNNN 0702   Importe (1)    INNSNA00020502000225030700101100000020500550225017400
+/?=(!I230)Y(I221)
+/V=C870
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN *** Si la Moneda de la Transferencia NO es Dólares y Factor=D (Moneda distinta de Euros y Libras Esterlinas).-
+ NNNNN 0702   Importe (2)    INNSNF00023002000250030700101100000023000550250017400
+/?=(!I230)Y(I222)Y(C799='D')
+/V=C870/C320
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN *** Si la Moneda de la Transferencia NO es Dólares y Factor=M (Moneda ES Euros ó Libras Esterlinas).-
+ NNNNN 0702   Importe (3)    INNSNF00025502000275030700101100000025500550275017400
+/?=(!I230)Y(I222)Y(C799='M')
+/V=C870*C320
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN ***
+*N  NN ***
+*N  NN ***
+*N  NN ******************************************
+*N  NN *** Control de Montos con UN Control de Trace
+*N  NN ******************************************
+*N  NN ***
+*N  NN ***
+*N  NN ***
+*N  NN *** En el C702 tengo la cantidad de USD que vale la Transferencia => paso a los Controles
+*N  NN *** (NO hay Coincidencias)  Y  (Monto <= USD 20.000)  =>  Estado: PARA PROCESAR (I223)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I140)Y(I228Y!(C700.0<C702.0))
+/P=I223
+/M=223 - Para Procesar...
+*N  NN *** (NO hay Coincidencias)  Y  (Monto > USD 20.000 y <= 200.000)  =>  Estado: AUT. OFICIAL CUENTAS (I224)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I140)Y(I228Y((C702.0>C700)Y!(C702.0>C701.0)))
+/P=I224
+/M=224 - Para Autorizar por el Oficial de Cuentas...
+*N  NN *** (NO hay Coincidencias)  Y  (Monto > USD 200.000)  =>  Estado: AUT. OFICIAL CUMPLIMIENTO (I225)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I140)Y(I228Y(C702.0>C701.0))
+/P=I225
+/M=225 - Para Autorizar por el Oficial de Cumplimiento...
+*N  NN *** (HAY Coincidencias)  Y  (Monto <= USD 20.000)  =>  Estado: AUT. OFICIAL CUENTAS (I226)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I140)Y(I229Y!(C700.0<C702.0))
+/P=I226
+/M=226 - Para Autorizar por el Oficial de Cuentas...
+*N  NN *** (HAY Coincidencias)  Y  (Monto > USD 20.000)  =>  Estado: AUT. OFICIAL CUMPLIMIENTO (I227)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I140)Y(I229Y(C702.0>C700))
+/P=I227
+/M=227 - Para Autorizar por el Oficial de Cumplimiento...
+*N  NN ***
+*N  NN ***
+*N  NN ***
+*N  NN ******************************************
+*N  NN *** Control de Montos con DOS Controles de Trace
+*N  NN ******************************************
+*N  NN ***
+*N  NN ***
+*N  NN ***
+*N  NN *** En el C702 tengo la cantidad de USD que vale la Transferencia => paso a los Controles
+*N  NN *** (NO hay Coincidencias)  Y  (Monto <= USD 20.000)  =>  Estado: PARA PROCESAR (I223)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I141)Y(I233Y!(C700.0<C702.0))
+/P=I223
+/M=223 - Para Procesar...
+*N  NN *** (NO hay Coincidencias)  Y  (Monto > USD 20.000 y <= 200.000)  =>  Estado: AUT. OFICIAL CUENTAS (I224)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I141)Y(I233Y((C702.0>C700)Y!(C702.0>C701.0)))
+/P=I224
+/M=224 - Para Autorizar por el Oficial de Cuentas...
+*N  NN *** (NO hay Coincidencias)  Y  (Monto > USD 200.000)  =>  Estado: AUT. OFICIAL CUMPLIMIENTO (I225)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I141)Y(I233Y(C702.0>C701.0))
+/P=I225
+/M=225 - Para Autorizar por el Oficial de Cumplimiento...
+*N  NN *** (HAY Coincidencias)  Y  (Monto <= USD 20.000)  =>  Estado: AUT. OFICIAL CUENTAS (I226)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I141)Y(I234Y!(C700.0<C702.0))
+/P=I226
+/M=226 - Para Autorizar por el Oficial de Cuentas...
+*N  NN *** (HAY Coincidencias)  Y  (Monto > USD 20.000)  =>  Estado: AUT. OFICIAL CUMPLIMIENTO (I227)
+CNNNNN   00000000000000000000100
+/?=(!I230)Y(I141)Y(I234Y(C702.0>C700))
+/P=I227
+/M=227 - Para Autorizar por el Oficial de Cumplimiento...
+*N  NN ###
+*N  NN ###
+*N  NN ###
+*N  NN ##########################################################################################
+*#I221#2
+*#I222#45
+*#I223#34

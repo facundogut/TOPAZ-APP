@@ -1,0 +1,11 @@
+﻿EXECUTE('
+----
+INSERT INTO dbo.OPCIONES (NUMERODECAMPO, IDIOMA, DESCRIPCION, OPCIONINTERNA, OPCIONDEPANTALLA)
+VALUES (45446, ''E'', ''Rechazada Procesada'', ''RP'', ''RP'')
+----
+')
+
+
+
+
+

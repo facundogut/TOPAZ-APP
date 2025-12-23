@@ -1,0 +1,7 @@
+﻿EXECUTE('
+------------------------
+--NUEVO CAMPO CLEARING--
+------------------------
+ALTER TABLE CLE_CHEQUES_CLEARING_RECIBIDO ADD ACEPTACION_MANUAL VARCHAR(1)
+----
+')

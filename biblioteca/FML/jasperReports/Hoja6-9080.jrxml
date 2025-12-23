@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Hoja1" language="groovy" pageWidth="576" pageHeight="792" columnWidth="576" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="170"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1"/>
+	<subDataset name="CiudadSuc">
+		<parameter name="SUCURSAL" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[SELECT d3.C1216 as Ciudad
+FROM TC_DIRECCIONES d JOIN tc_dir_dim3 d3 ON d.DIM1=d3.C1212 AND d.DIM2=d3.C1214 AND d.DIM3=d3.C1215
+WHERE d.FORMATO='S' AND d.TIPODIRECCION='R' AND ID=$P{SUCURSAL}]]>
+		</queryString>
+		<field name="Ciudad" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="SUCURSAL" class="java.lang.Integer"/>
+	<parameter name="NROSOLICITUD" class="java.math.BigDecimal"/>
+	<parameter name="NROGARANTIA" class="java.math.BigDecimal"/>
+	<parameter name="CODGERENTE" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT
+	(SELECT lower(dbo.NumeroALetrasEntero(DATEPART(dd,(SELECT FECHAPROCESO FROM PARAMETROS))))) AS DIA,
+	(SELECT CASE (DATEPART(mm,(SELECT FECHAPROCESO FROM PARAMETROS)))
+  WHEN 1 THEN 'Enero'
+  WHEN 2 THEN 'Febrero'
+  WHEN 1 THEN 'Marzo'
+  WHEN 2 THEN 'Abril'
+  WHEN 1 THEN 'Mayo'
+  WHEN 2 THEN 'Junio'
+  WHEN 1 THEN 'Julio'
+  WHEN 2 THEN 'Agosto'
+  WHEN 1 THEN 'Septiembre'
+  WHEN 2 THEN 'Octubre'
+  WHEN 1 THEN 'Noviembre'
+  WHEN 2 THEN 'Diciembre'
+  end
+ ) AS MES,
+	(SELECT lower(dbo.NumeroALetrasEntero(DATEPART(yy,(SELECT FECHAPROCESO FROM PARAMETROS))))) AS ANIO,
+	(SELECT t.DESCRIPCION FROM CL_RELPERDOC d,CL_TIPOSDOCUMENTO t WHERE d.principal = 'S' AND d.TIPODOC = t.TIPODOC AND d.IDPERSONA =s.C5187) AS TIPODOCDEUDOR,
+	(SELECT c.C1000 FROM CL_CLIENTES c WHERE c.C0902 =s.C5187) AS NOMDEUDOR,
+	(SELECT Gerente_Suc FROM PARAM_CONTRATOS_POR_SUC_2 WHERE Sucursal=$P{SUCURSAL} AND Codigo=$P{CODGERENTE}) AS NOMGERENTE
+FROM SL_SOLICITUDCREDITO s, GR_GARANTIAS g
+WHERE s.C5000=$P{NROSOLICITUD}*100 AND g.NROGARANTIA=$P{NROGARANTIA}*100 AND
+(s.tz_lock < 300000000000000 OR s.tz_lock >= 400000000000000) AND (s.tz_lock < 100000000000000 OR s.tz_lock >= 200000000000000)]]>
+	</queryString>
+	<field name="DIA" class="java.lang.String"/>
+	<field name="MES" class="java.lang.String"/>
+	<field name="ANIO" class="java.lang.String"/>
+	<field name="TIPODOCDEUDOR" class="java.lang.String"/>
+	<field name="NOMDEUDOR" class="java.lang.String"/>
+	<field name="NOMGERENTE" class="java.lang.String"/>
+	<detail>
+		<band height="714" splitType="Stretch">
+			<staticText>
+				<reportElement x="3" y="2" width="573" height="712"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Décima Sexta: LEY APLICABLE: El presente crédito se regirá supletoriamente por la Ley No. 769 “Ley de Fomento y Regulación de las Microfinanzas” por ser EL ACREEDOR una institución de microfinanzas (IMF) debidamente registrada ante la Comisión Nacional de Microfinanzas (Conami); en consecuencia:
+
+1.	El presente contrato tendrá mérito ejecutivo y pleno valor probatorio en los juicios que entable EL ACREEDOR en contra de EL DEUDOR o sus garantes para exigir el pago de cualquier saldo deudor bajo el mismo.
+
+2.	Los derechos que se establecen a los usuarios de los servicios de microfinanzas son de carácter irrenunciable.
+
+3.	Cualquier disposición contenida en dicha ley, o en futuras normas generales que llegare a dictar la Comisión Nacional de Microfinanzas, relativas a los contratos de microcréditos, se tendrán por automáticamente incorporados a este contrato y derogarán cualquier disposición que se le oponga, sin que lo anterior afecte la validez y exigibilidad del presente crédito y sus garantías.
+
+Décima séptima: AUTORIZACIÓN MODELO DE CONTRATO: En cumplimiento de lo preceptuado por el artículo 35 de la Ley No. 842,”Ley de Protección de los Derechos de las Personas Consumidoras y Usuarias” (La Gaceta, Diario Oficial No. 129, del 11 de julio de 2013), el presente modelo de contrato ha sido autorizado por la Junta Directiva de EL ACREEDOR y, posteriormente, por el ente regulador de EL ACREEDOR, la Comisión Nacional de Microfinanzas (CONAMI), mediante resolución número ____________________ del ____________________ del año 2013.
+
+Decima  octava: ACEPTACION: Las partes contratantes, es decir, EL ACREEDOR, EL DEUDOR y EL FIADOR SOLIDARIO E INCONDICIONAL, en señal de aceptación de las obligaciones y estipulaciones contenidas en las cláusulas precedentes, así como de las garantías otorgadas a favor de EL ACREEDOR, en particular la FIANZA SOLIDARIA E INCONDICIONAL y el ENDOSO DE LA POLIZA DE SEGURO, firmamos en la ciudad de ______________________________ en dos tantos de un mismo tenor y fuerza probatoria, a los ____________________ días del mes de ____________________ de     ______________.
+
+
+
+
+(f) Por EL ACREEDOR
+Nombres y apellidos conforme cédula:
+
+
+(f) Por EL DEUDOR
+Nombres y apellidos conforme      _________       : ]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Opaque" x="3" y="241" width="100" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="173" y="241" width="101" height="13"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{MES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="291" y="241" width="84" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ANIO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="134" y="343" width="101" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TIPODOCDEUDOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Opaque" x="251" y="343" width="308" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMDEUDOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="302" width="389" height="13"/>
+				<textElement>
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMGERENTE}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table" style="table" x="162" y="230" width="154" height="10"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="CiudadSuc">
+						<datasetParameter name="SUCURSAL">
+							<datasetParameterExpression><![CDATA[$P{SUCURSAL}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="152">
+						<jr:detailCell style="table_TD" height="12" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="142" height="12"/>
+								<textElement textAlignment="Center">
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{Ciudad}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

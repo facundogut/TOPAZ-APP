@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-11-04T15:44:32 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Dep 007" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="22a5c7e2-84f8-4cca-a4ee-9ea36b3b2a31">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<style name="Table 1_TH" mode="Opaque" backcolor="#737475">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TH" mode="Opaque" backcolor="#C2C2C2">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_CH" mode="Opaque" backcolor="#C2C2C2">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_CH" mode="Opaque" backcolor="#C2C2C2">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+			<topPen lineWidth="0.5" lineColor="#000000"/>
+			<leftPen lineWidth="0.5" lineColor="#000000"/>
+			<bottomPen lineWidth="0.5" lineColor="#000000"/>
+			<rightPen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Dataset1" uuid="18c0e6f7-f096-415d-823b-83f1518c2df9">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+		<parameter name="JTSOID" class="java.lang.Integer"/>
+		<queryString>
+			<![CDATA[SELECT   dbo."CHE_CHEQUES"."SERIE",
+ dbo."CHE_CHEQUES"."NUMEROCHEQUE",
+dbo."CHE_CHEQUES"."FECHAINGRESO" AS [Fecha de creación],
+ dbo."CHE_CHEQUES"."FECHA_VENCIMIENTO" AS [Fecha de Vencimiento],
+ DATEADD(DAY,30, dbo."CHE_CHEQUES"."FECHA_VENCIMIENTO") AS [Vto. Plazo de Validez],
+  dbo."CHE_CHEQUES"."IMPORTE" FROM  dbo."CHE_CHEQUES", dbo."SALDOS"
+  WHERE  dbo."CHE_CHEQUES"."ESTADO" = 'P' AND 
+  dbo."CHE_CHEQUES"."SUCURSAL" =  dbo."SALDOS"."SUCURSAL" AND 
+  dbo."CHE_CHEQUES"."MONEDA" =  dbo."SALDOS"."MONEDA" AND
+  dbo."CHE_CHEQUES"."CUENTA" =  dbo."SALDOS"."CUENTA" AND
+  dbo."CHE_CHEQUES"."PRODUCTO" =  dbo."SALDOS"."PRODUCTO" AND
+  dbo."CHE_CHEQUES"."OPERACION" =  dbo."SALDOS"."OPERACION" AND
+  dbo."CHE_CHEQUES"."ORDINAL" =  dbo."SALDOS"."ORDINAL" AND  dbo."SALDOS"."JTS_OID" = $P{JTSOID}]]>
+		</queryString>
+		<field name="SERIE" class="java.lang.String"/>
+		<field name="NUMEROCHEQUE" class="java.math.BigDecimal"/>
+		<field name="Fecha de creación" class="java.sql.Timestamp"/>
+		<field name="Fecha de Vencimiento" class="java.sql.Timestamp"/>
+		<field name="Vto. Plazo de Validez" class="java.sql.Timestamp"/>
+		<field name="IMPORTE" class="java.math.BigDecimal"/>
+		<variable name="Total" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{IMPORTE}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<subDataset name="Dataset2" uuid="1539f593-b4ab-4ad4-9c69-80c3db85e961">
+		<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+		<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+		<parameter name="JTSOID" class="java.lang.Integer">
+			<parameterDescription><![CDATA[JTSOID]]></parameterDescription>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT   dbo."CHE_CHEQUES"."SERIE",
+ dbo."CHE_CHEQUES"."NUMEROCHEQUE",
+dbo."CHE_CHEQUES"."FECHAINGRESO" AS [Fecha de creación],
+ dbo."CHE_CHEQUES"."FECHA_VENCIMIENTO" AS [Fecha de Vencimiento],
+  dbo."CHE_CHEQUES"."IMPORTE" FROM  dbo."CHE_CHEQUES", dbo."SALDOS"
+  WHERE  dbo."CHE_CHEQUES"."ESTADO" = 'A' AND 
+  dbo."CHE_CHEQUES"."SUCURSAL" =  dbo."SALDOS"."SUCURSAL" AND 
+  dbo."CHE_CHEQUES"."MONEDA" =  dbo."SALDOS"."MONEDA" AND
+  dbo."CHE_CHEQUES"."CUENTA" =  dbo."SALDOS"."CUENTA" AND
+  dbo."CHE_CHEQUES"."PRODUCTO" =  dbo."SALDOS"."PRODUCTO" AND
+  dbo."CHE_CHEQUES"."OPERACION" =  dbo."SALDOS"."OPERACION" AND
+  dbo."CHE_CHEQUES"."ORDINAL" =  dbo."SALDOS"."ORDINAL" AND  dbo."SALDOS"."JTS_OID" = $P{JTSOID}]]>
+		</queryString>
+		<field name="SERIE" class="java.lang.String"/>
+		<field name="NUMEROCHEQUE" class="java.math.BigDecimal"/>
+		<field name="Fecha de creación" class="java.sql.Timestamp"/>
+		<field name="Fecha de Vencimiento" class="java.sql.Timestamp"/>
+		<field name="IMPORTE" class="java.math.BigDecimal"/>
+		<variable name="Total" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{IMPORTE}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="JTSOID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[JTSOID]]></parameterDescription>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT  dbo."SALDOS"."CUENTA",  dbo."SALDOS"."SUCURSAL",  dbo."SALDOS"."C1803",  
+dbo."SUCURSALES"."NOMBRESUCURSAL" FROM dbo."SUCURSALES", dbo."SALDOS"
+ WHERE dbo."SALDOS"."SUCURSAL" =  dbo."SUCURSALES"."SUCURSAL" 
+AND  dbo."SALDOS"."JTS_OID" = $P{JTSOID}]]>
+	</queryString>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="C1803" class="java.lang.Double"/>
+	<field name="NOMBRESUCURSAL" class="java.lang.String"/>
+	<variable name="Variable_1" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="246" splitType="Stretch">
+			<staticText>
+				<reportElement x="53" y="0" width="380" height="35" uuid="89dbb856-e9d6-4f48-b392-96600be28ee3">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AVISO DE CIERRE DE CUENTA CORRIENTE POR DECISION DEL CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="45" width="55" height="15" uuid="bcc37106-8f9f-4abd-9b79-3b2c4c29f67c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="434" y="0" width="120" height="15" uuid="3f785ce5-de14-4f89-90a6-b72d61ff1c6a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="434" y="15" width="120" height="15" uuid="95c342ea-e47f-4412-9d7d-25899bda0564">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="434" y="30" width="120" height="15" uuid="7795ab26-1fd1-43d3-bd4c-50f7cfd76e7f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="434" y="45" width="120" height="15" uuid="8792f28f-66f0-461a-b7cb-431a673b6d38">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="435" y="0" width="120" height="15" uuid="7c819e3e-4cdd-4b98-9b92-660e5f0aa315">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CLIENTE N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="30" width="120" height="15" uuid="c3942f0e-a734-4c54-8764-41a7688ea078">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CUENTA CORRIENTE N°]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="60" width="554" height="1" uuid="116697b4-5665-4ff0-b228-f7178229b618">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="380" y="61" width="51" height="15" uuid="8e4b4e3e-eb86-4d32-b241-47b7afd6e973">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="439" y="15" width="111" height="15" uuid="24c763a5-1f63-4803-bfb9-3f45f6751a86">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{C1803}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="439" y="45" width="111" height="15" uuid="836bcb29-d75c-4bb7-aaf5-6228a8d56fc6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="431" y="61" width="100" height="15" uuid="7644540c-50a3-43f1-b5f5-00918801e476">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="45" width="65" height="15" uuid="b4cfcfa5-8c18-4c17-9eb6-ad0b48a95bd6">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="121" y="45" width="140" height="15" uuid="2b291de7-18d5-4937-9c44-9600289101b4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRESUCURSAL}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="82" width="140" height="30" uuid="60cde303-1520-466c-b3c8-88f6e70e7067"/>
+				<text><![CDATA[SR. GERENTE
+De mi/nuestra consideración:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="112" width="455" height="16" uuid="74819306-dc20-43a2-8369-7b0a68fc5e3c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Nos dirigimos a Ud. A los efectos de comunicarle que he/hemos decidido proceder al cierre de mi/]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="128" width="280" height="15" uuid="159ec957-d13f-4cb8-afcb-784062935610">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[nuestra cuenta corriente en esta institución a partir del día:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="143" width="455" height="16" uuid="d1524b77-3258-4631-8464-815c4d464911">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Por tal motivo detallo/mos a continuación la nomina de los cheques liberados hasta la fecha y aún no]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="159" width="554" height="15" uuid="0ec60293-65c1-4771-94a2-50afae292355">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[presentados al cobro, y aquellos sin utilizar, los cuales entregamos en el presente acto. Asimismo se deposita la suma de]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="174" width="555" height="15" uuid="1c7a2864-4b35-4f7f-a092-5f7b551cd013">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[pesos ................................................................................................................................. (.................................)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="189" width="210" height="15" uuid="0ce82759-ed8e-4cce-9c18-60a7406c90af">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[pagos diferidos con fecha de pago cumplida.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="204" width="455" height="16" uuid="fdebedc8-4b4a-4200-bacc-44259ccfc023">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[En tiempo oportuno se efectuara el depósito de los importes correspondientes a los cheques de pagos]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="220" width="270" height="15" uuid="0ea1c4b2-178f-47b8-a1f6-3c7931e1159a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[pendientes de vencimiento, para hacer frente a los mismos.]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="280" y="128" width="100" height="15" uuid="9002635b-3698-4403-9656-bb0ad4e39a1c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="142" splitType="Stretch">
+			<componentElement>
+				<reportElement x="0" y="32" width="555" height="100" uuid="a5123f47-7f15-4ff2-b12e-116aff97038e">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+					<property name="net.sf.jasperreports.export.headertoolbar.table.name" value=""/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="Dataset1" uuid="05b7642d-2812-495f-9046-a40a513f2275">
+						<datasetParameter name="JTSOID">
+							<datasetParameterExpression><![CDATA[$P{JTSOID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="40" uuid="3dab679d-c674-4a4d-bafe-e7032ce667d0">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<box>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<staticText>
+								<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="40" height="30" uuid="4057532b-474a-4a9c-85ca-3bbfbe0fc958"/>
+								<text><![CDATA[Cheque]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="40" height="30" uuid="d412bafd-63bd-493a-9c80-4f9f86d18b22"/>
+								<text><![CDATA[COMUN]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="20">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="20">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="50" uuid="a3e20443-1cb4-4a04-9cf4-b53d07780ed6">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:tableHeader style="Table_TH" height="30">
+							<box>
+								<topPen lineWidth="0.0"/>
+								<leftPen lineWidth="0.0"/>
+								<bottomPen lineWidth="0.0"/>
+								<rightPen lineWidth="0.0"/>
+							</box>
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="30" uuid="2b5fcc80-ee11-48a2-ba83-5a0d78b95d40"/>
+								<text><![CDATA[Tipo(2)]]></text>
+							</staticText>
+						</jr:tableHeader>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="30" uuid="5afb0170-e655-46f0-b9fd-e9d6842bee64"/>
+								<text><![CDATA[PAGO DIFERIDO]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="20"/>
+						<jr:detailCell style="Table_TD" height="20"/>
+					</jr:column>
+					<jr:column width="50" uuid="03f93cce-ed89-46cd-9a3f-444d8fbd91f7">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="50" height="30" uuid="deee0c8d-3237-4cc2-820c-40df8e57e660"/>
+								<text><![CDATA[SERIE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="20"/>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="50" height="20" uuid="191593af-1267-47a7-a543-e1ad5b780b04"/>
+								<textFieldExpression><![CDATA[$F{SERIE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="b30a4565-fb52-47fd-bcec-c18b0823d6d7">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="2511dc61-1e06-451e-92fb-760af1081c78"/>
+								<text><![CDATA[Nro. de Cheque]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="20"/>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="57670e9b-9d6d-42a3-a128-d435833509f5"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{NUMEROCHEQUE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="80" uuid="eae86f74-a188-4068-bd61-32ff786c375f">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="30" uuid="1f1846f7-e88e-478c-8701-8fe8936e88d0"/>
+								<text><![CDATA[Fecha de creación]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="20"/>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="80" height="20" uuid="16041e55-3232-4c9b-9f60-28d936dd8957"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{Fecha de creación}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="86" uuid="e42c23f6-0850-49b8-8ca4-4a5a0af363e2">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="86" height="30" uuid="b6f1f91b-129b-448b-87c5-556741b1e845"/>
+								<text><![CDATA[Fecha de Vencimiento]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="20"/>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="86" height="20" uuid="d93006af-f568-4640-8854-a310b1298d5b"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{Fecha de Vencimiento}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="78" uuid="125be919-0375-4150-8672-4ff572425837">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="78" height="30" uuid="78f7b1c5-1391-4e96-9fee-db4879ffd8ae"/>
+								<text><![CDATA[Vto. Plazo de Validez]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="20">
+							<staticText>
+								<reportElement x="0" y="0" width="78" height="20" uuid="326dbe9a-fadf-4bc5-a925-04a7e907139f"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="78" height="20" uuid="f8673b6e-b188-4e15-83bf-8094262a048d"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{Vto. Plazo de Validez}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="85" uuid="b0a3adf3-3c37-448d-a0ac-3428ddc7649b">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+						<jr:columnHeader style="Table_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="85" height="30" uuid="4fbfecac-65fe-4c48-8eb4-83ad6ca7d2cc"/>
+								<text><![CDATA[IMPORTE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table_CH" height="20">
+							<textField isBlankWhenNull="true">
+								<reportElement positionType="FixRelativeToBottom" x="0" y="0" width="85" height="20" uuid="dad0a213-5789-46a5-989a-7ab665c7feee"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$V{Total}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="85" height="20" uuid="b45c5380-27ce-490e-b3ec-cf741ea7cdd4"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{IMPORTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="12" width="555" height="20" backcolor="#737373" uuid="0a56f4e2-a7fa-46cf-9e42-4895d34c7701">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CHEQUES LIBRADOS CON FECHA DE VENCIMIENTO (PAGO) CUMPLIDA]]></text>
+			</staticText>
+		</band>
+		<band height="107">
+			<componentElement>
+				<reportElement x="1" y="28" width="554" height="70" uuid="881a8f8d-f1dc-4307-ada6-e092f0e4533b">
+					<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+				</reportElement>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" whenNoDataType="AllSectionsNoDetail">
+					<datasetRun subDataset="Dataset2" uuid="5cb73b25-bbb3-4d34-bc68-11c896d1ef29">
+						<datasetParameter name="JTSOID">
+							<datasetParameterExpression><![CDATA[$P{JTSOID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="80" uuid="fa18ce65-8c6d-442d-9240-4b8932f56ad1">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="80" height="30" uuid="87e4ee56-a81d-425a-b771-1f8e2e5a183e"/>
+								<text><![CDATA[SERIE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table 1_CH" height="20">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="80" height="20" uuid="35ac72ba-5b5f-41bd-97c7-12d8619adf33"/>
+								<textFieldExpression><![CDATA[$F{SERIE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="110" uuid="edec4948-bf82-4afc-a2c8-d874dfe0f737">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="110" height="30" uuid="cb720420-f671-4767-ae2a-6b16a6e894c2"/>
+								<text><![CDATA[Nro. de cheque]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table 1_CH" height="20"/>
+						<jr:detailCell style="Table 1_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="110" height="20" uuid="da45e47f-cb2a-40cb-99ac-33820bd409cc"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{NUMEROCHEQUE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="130" uuid="4806511c-bf6f-4298-8930-217cb9c404e7">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="130" height="30" uuid="f00cb3fd-11da-4a58-84ba-7bb4a9c2837f"/>
+								<text><![CDATA[Fecha de creación]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table 1_CH" height="20"/>
+						<jr:detailCell style="Table 1_TD" height="20">
+							<textField pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="130" height="20" uuid="e1841267-d1d0-44e6-97c9-a7848fdb42bd"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{Fecha de creación}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="130" uuid="dcf82811-8d6c-4c04-9488-c494d5fa856d">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="130" height="30" uuid="dda8157e-007a-4f6e-99e5-ef4d21b4a139"/>
+								<text><![CDATA[Fecha de Vencimiento]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table 1_CH" height="20">
+							<staticText>
+								<reportElement x="0" y="0" width="130" height="20" uuid="cb7e4810-dfdc-4562-b19e-2c5ae6c40c2d"/>
+								<text><![CDATA[Total]]></text>
+							</staticText>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="20">
+							<textField pattern="dd/MM/yyyy">
+								<reportElement x="0" y="0" width="130" height="20" uuid="9adea846-442e-486d-a7be-825509153268"/>
+								<textElement textAlignment="Center"/>
+								<textFieldExpression><![CDATA[$F{Fecha de Vencimiento}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="103" uuid="fd79f194-d0b7-4adb-bae6-191759fca440">
+						<property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+						<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+						<jr:columnHeader style="Table 1_CH" height="30">
+							<staticText>
+								<reportElement x="0" y="0" width="103" height="30" uuid="066b8a37-f9e8-4e1b-9f2d-261e40fa4a66"/>
+								<text><![CDATA[IMPORTE]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="Table 1_CH" height="20">
+							<textField isBlankWhenNull="true">
+								<reportElement x="0" y="0" width="103" height="20" uuid="b067f26e-8057-413a-a9b7-758e170a2ed7"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$V{Total}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="Table 1_TD" height="20">
+							<property name="com.jaspersoft.studio.unit.height" value="px"/>
+							<textField>
+								<reportElement x="0" y="0" width="103" height="20" uuid="77a5e049-f7c6-4aa8-80d7-9a74b2d733b9"/>
+								<textElement textAlignment="Right"/>
+								<textFieldExpression><![CDATA[$F{IMPORTE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="8" width="555" height="20" backcolor="#737373" uuid="9ee1f2a4-d173-425c-b038-8f05d40f70ab">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CHEQUES LIBRADOS CON FECHA DE VENCIMIENTO (PAGO) CUMPLIDA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-18" y="-82" width="15" height="170" uuid="28079f1d-0e2c-4d0b-afb8-628196da8d0e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement rotation="Left"/>
+				<text><![CDATA[Original: Entidad - Duplicado: Cliente]]></text>
+			</staticText>
+		</band>
+		<band height="150">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<subreport>
+				<reportElement x="-18" y="0" width="590" height="150" uuid="05dfd076-3b9c-4598-bb80-715f8f930a7d"/>
+				<subreportParameter name="JTSOID">
+					<subreportParameterExpression><![CDATA[$P{JTSOID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "3552_2.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="300">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<subreport>
+				<reportElement x="-19" y="2" width="592" height="298" uuid="0d5854a4-c58a-41b5-b047-2332eb494635"/>
+				<subreportParameter name="JTSOID">
+					<subreportParameterExpression><![CDATA[$P{JTSOID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "3552_1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+		<band height="300">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<subreport overflowType="NoStretch">
+				<reportElement x="-18" y="1" width="590" height="289" uuid="4b1186e1-f2dc-4ecc-a81c-7a4a7e4330cf"/>
+				<subreportParameter name="JTSOID">
+					<subreportParameterExpression><![CDATA[$P{JTSOID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} +"3552_3.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement x="175" y="0" width="380" height="30" uuid="275c7b30-faf5-41ac-862b-04d97444a82c"/>
+				<text><![CDATA[(1) Plazo no inferior a 10 días contados desde la fecha de presentación de este aviso
+(2) Marcar cun una "X" donde corresponda- (3) tachar lo que no corresponda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="12" y="0" width="140" height="30" uuid="1a86263f-b8d7-4e69-bdb5-0baeca97f8ba"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Aviso de cierre de cuenta corriente por
+decisión del cliente.]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

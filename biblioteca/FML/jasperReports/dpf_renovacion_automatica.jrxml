@@ -1,0 +1,405 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="dpf_renovacion_automatica" language="groovy" pageWidth="850" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="810" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="25"/>
+	<queryString>
+		<![CDATA[SELECT  x.moneda AS CODIGOMONEDA,x.SUCURSAL,r.cliente,
+C.C1000 AS NOMBRE,r.cuenta AS CUENTADPF,s.CUENTA AS CUENTAVISTA,r.CAPITAL_RENOVACION,r.fecha_INICIAL,r.fecha_VENCIMIENTO, x.C1659, o.DESCRIPCION AS TIPO_RENOVACION, R.TASA_INTERES, R.INTERES_RENOVACION,p.DESCRIPCION AS TASAYPLAZO
+FROM DPF_RENOVACIONES r, CL_CLIENTES c, SALDOS s, SALDOS x, OPCIONES O, OPCIONES p
+WHERE C.C0902 = r.cliente AND r.JTS_OID_CONTRACUENTA = s.JTS_OID
+AND r.CLIENTE=x.c1803 AND r.CUENTA=x.cuenta AND r.MONEDA = x.moneda AND r.PRODUCTO=x.producto
+AND  o.NUMERODECAMPO=1659 AND x.C1659 = O.OPCIONINTERNA AND  p.NUMERODECAMPO=1640 AND x.C1640 = p.OPCIONINTERNA AND R.FECHA_vencimiento=to_date('29/04/2011')
+ORDER BY CODIGOMONEDA, x.SUCURSAL,r.cliente]]>
+	</queryString>
+	<field name="CODIGOMONEDA" class="java.math.BigDecimal"/>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="CLIENTE" class="java.lang.Double"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="CUENTADPF" class="java.lang.Double"/>
+	<field name="CUENTAVISTA" class="java.math.BigDecimal"/>
+	<field name="CAPITAL_RENOVACION" class="java.math.BigDecimal"/>
+	<field name="FECHA_INICIAL" class="java.util.Date"/>
+	<field name="FECHA_VENCIMIENTO" class="java.util.Date"/>
+	<field name="C1659" class="java.lang.String"/>
+	<field name="TIPO_RENOVACION" class="java.lang.String"/>
+	<field name="TASA_INTERES" class="java.math.BigDecimal"/>
+	<field name="INTERES_RENOVACION" class="java.math.BigDecimal"/>
+	<field name="TASAYPLAZO" class="java.lang.String"/>
+	<field name="SYS_FECHAPROCESO" class="java.util.Date"/>
+	<field name="SYS_USUARIO" class="java.lang.String"/>
+	<field name="SYS_DESC_MONEDA" class="java.lang.String"/>
+	<field name="SYS_DESC_SUCURSAL" class="java.lang.String"/>
+	<field name="FECHAPROCESO" class="java.util.Date"/>
+	<variable name="CUENTADPF_1" class="java.lang.Integer" resetType="Group" resetGroup="SUCURSAL" calculation="Count">
+		<variableExpression><![CDATA[$F{CUENTADPF}]]></variableExpression>
+	</variable>
+	<variable name="CUENTADPF_2" class="java.lang.Integer" resetType="Group" resetGroup="moneda" calculation="Count">
+		<variableExpression><![CDATA[$F{CUENTADPF}]]></variableExpression>
+	</variable>
+	<group name="moneda" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{CODIGOMONEDA}]]></groupExpression>
+		<groupHeader>
+			<band height="27">
+				<textField>
+					<reportElement x="59" y="0" width="27" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{CODIGOMONEDA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="86" y="0" width="100" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SYS_DESC_MONEDA}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="59" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Moneda:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="25">
+				<textField>
+					<reportElement x="210" y="0" width="100" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{CUENTADPF_2}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="0" y="0" width="83" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cant. Moneda:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="83" y="0" width="27" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{CODIGOMONEDA}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="110" y="0" width="100" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SYS_DESC_MONEDA}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="SUCURSAL" isStartNewPage="true">
+		<groupExpression><![CDATA[$F{SUCURSAL}]]></groupExpression>
+		<groupHeader>
+			<band height="25">
+				<textField>
+					<reportElement x="86" y="0" width="24" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="27" y="0" width="59" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sucursal:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="110" y="0" width="100" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SYS_DESC_SUCURSAL}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="24">
+				<textField>
+					<reportElement x="259" y="0" width="100" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Integer"><![CDATA[$V{CUENTADPF_1}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="27" y="0" width="108" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Cant. Sucursal:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="135" y="0" width="24" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="159" y="0" width="100" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SYS_DESC_SUCURSAL}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="119" splitType="Stretch">
+			<staticText>
+				<reportElement x="272" y="40" width="256" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RENOVACION AUTOMATICA DE DPF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="348" y="60" width="30" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AL]]></text>
+			</staticText>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="378" y="60" width="100" height="20"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHAPROCESO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="680" y="58" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{SYS_USUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="630" y="38" width="50" height="20"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="630" y="58" width="50" height="20"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[USUARIO:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="680" y="38" width="100" height="22"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{SYS_FECHAPROCESO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="41" width="47" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLIENTE	]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="41" width="163" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="41" width="72" height="20"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA DPF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="282" y="41" width="77" height="20"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA VISTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="359" y="41" width="58" height="20"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[IMPORTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="420" y="30" width="46" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA INICIO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="469" y="30" width="46" height="31"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA VTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="515" y="29" width="69" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TIPO RENOVACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="584" y="29" width="46" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TASA INTERES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="630" y="29" width="50" height="32"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[INTERES RENOV.ION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="680" y="40" width="130" height="21"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TASA Y PLAZO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="28" width="810" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="60" width="810" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="47" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{CLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="47" y="0" width="163" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="0" width="72" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{CUENTADPF}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="282" y="0" width="77" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{CUENTAVISTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="466" y="0" width="49" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHA_VENCIMIENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="515" y="0" width="79" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TIPO_RENOVACION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="594" y="0" width="21" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TASA_INTERES}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="630" y="0" width="38" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{INTERES_RENOVACION}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="680" y="0" width="130" height="15"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TASAYPLAZO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="417" y="0" width="49" height="15"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHA_INICIAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="359" y="0" width="52" height="15"/>
+				<textElement textAlignment="Right">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{CAPITAL_RENOVACION}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch">
+			<textField>
+				<reportElement x="660" y="18" width="80" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.String"><![CDATA["Pag. "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="740" y="18" width="40" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="44">
+			<staticText>
+				<reportElement x="327" y="11" width="170" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No hay datos para procesar]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

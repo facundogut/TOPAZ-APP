@@ -1,0 +1,10 @@
+﻿EXECUTE('
+----------------
+--AJUSTE CAMPO--
+----------------
+UPDATE dbo.DICCIONARIO
+SET TIPODECAMPO = ''A''
+WHERE NUMERODECAMPO = 45732
+----
+')
+

@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.interesesdeudores.objectsdomain.QuerySaldosCobroDeudores</class-name>
+        <query-name>query.QuerySaldosCobroDeudoresNA</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT S.C1620 AS FECHA_INICIO,
+							   S.C1621 AS FECHA_VALOR,
+							   S.C1604 AS SALDO_ACTUAL,
+							   S.JTS_OID,
+							   S.C1813 AS FECHA_DEVENGADO,
+							   S.C1820 AS DEVENGADO_COBRO,
+							   S.C1822 AS FECHA_COBRO,
+							   V.NRO_AUTORIZACION,
+							   V.IMPORTE AS MONTO_ACUERDO,
+							   V.FECHA_VENCIMIENTO,
+							   V.JTS_SALDO_DEUDA,
+							   V.DIA_COBRO,
+							   V.DIAS_CARENCIA,
+							   V.FECHA_ALTA,	
+					   		   V.TIPO_DIA_COBRO,
+							   V.VALOR_VIGENCIA,
+							   D.CODIGORANGOCOBRO
+							FROM SALDOS S        
+							INNER JOIN VTA_DEFINICION_VISTA D ON S.MONEDA = D.MONEDA AND S.C1772 = D.GRUPO AND S.PRODUCTO = D.PRODUCTO     
+						    LEFT JOIN VTA_SOBREGIROS V ON S.JTS_OID = V.JTS_OID_SALDO AND V.TZ_LOCK = 0
+						  WHERE
+						  S.C1785=2 AND S.C1651 = ' ' --cuentas corrientes y cuentas no bloqueadas
+						  AND S.TZ_LOCK = 0
+						  AND S.tipo_saldo_fondo = 0 --se quitan las cuentas FUCO
+						  AND (S.JTS_OID = ? OR - 1 = ?)
+						  ORDER BY S.JTS_OID
+					</sentence>
+        <attribute>
+            <attribute-name>fechaInicio</attribute-name>
+            <column-name>FECHA_INICIO </column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoActual</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldos_jts_oid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDevengado</attribute-name>
+            <column-name>FECHA_DEVENGADO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>devengadoCobro</attribute-name>
+            <column-name>DEVENGADO_COBRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaCobro</attribute-name>
+            <column-name>FECHA_COBRO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroAcuerdo</attribute-name>
+            <column-name>NRO_AUTORIZACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoAcuerdo</attribute-name>
+            <column-name>MONTO_ACUERDO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsSaldoDeuda</attribute-name>
+            <column-name>JTS_SALDO_DEUDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diaCobro</attribute-name>
+            <column-name>DIA_COBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasCarencia</attribute-name>
+            <column-name>DIAS_CARENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaALta</attribute-name>
+            <column-name>FECHA_ALTA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoDiaCobro</attribute-name>
+            <column-name>TIPO_DIA_COBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVigencia</attribute-name>
+            <column-name>VALOR_VIGENCIA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoRangoCobro</attribute-name>
+            <column-name>CODIGORANGOCOBRO</column-name>
+            <column-type>Long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.accounting.objectsdomain.SaldoDiarioExtend</class-name>
+        <query-name>query.QueryNumeralesNA</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+								SELECT FECHA, SALDO_CON_FECHA_VALOR_COBRO, CUPO_SOBREGIRO
+								  FROM GRL_SALDOS_DIARIOS
+								 WHERE FECHA &gt;= ? AND FECHA &lt;= ? AND SALDOS_JTS_OID = ?
+								 ORDER BY FECHA ASC
+							</sentence>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldo_fecha_valor_cobro</attribute-name>
+            <column-name>SALDO_CON_FECHA_VALOR_COBRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cupoSobregiro</attribute-name>
+            <column-name>CUPO_SOBREGIRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.interesesvista.interesesdeudores.objectsdomain.TasasSobregiro</class-name>
+        <entity-name>core.vo.TasasSobregiroNA</entity-name>
+        <table-name>VTA_TASAS_SOBREGIROS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>nroAcuerdo</attribute-name>
+            <column-name>NRO_ACUERDO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDesde</attribute-name>
+            <column-name>FECHADESDE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>tasa</attribute-name>
+            <column-name>TASA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tasaMora</attribute-name>
+            <column-name>TASA_MORA</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.automaticprocess.interesesvista.interesesdeudores.objectsdomain.ProductoSobregiro</class-name>
+        <entity-name>core.vo.ProductoSobregiroNA</entity-name>
+        <table-name>VTA_PRODUCTO_SOBREGIRO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>producto</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>productoSobregiro</attribute-name>
+            <column-name>PRODUCTO_SOBREGIRO</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.interesesdeudores.objectsdomain.QueryUltimoNumeral</class-name>
+        <query-name>query.QueryUltimoNumeralNA</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+								SELECT MAX(FECHA) AS FECHA
+								  FROM GRL_SALDOS_DIARIOS
+								 WHERE FECHA &lt; ?
+								   AND SALDOS_JTS_OID = ?
+							</sentence>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.interesesvista.interesesdeudores.HistoricoCobroDeudores</class-name>
+        <entity-name>core.vo_historicoCobroDeudores</entity-name>
+        <table-name>VTA_HIS_COBRO_DEUDORES</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>jtsOidSaldo</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA_PROCESO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroAcuerdo</attribute-name>
+            <column-name>NUMERO_ACUERDO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>tasaIntereses</attribute-name>
+            <column-name>TASA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>montoAcuerdo</attribute-name>
+            <column-name>MONTO_ACUERDO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>montoUtilizado</attribute-name>
+            <column-name>MONTO_UTILIZADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>interesesCalculados</attribute-name>
+            <column-name>INTERESES_CALCULADOS</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.interesesdeudores.objectsdomain.QuerySaldosCobroDeudores</class-name>
+        <query-name>query.QuerySaldosCobroDeudoresNAunJtsOid</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT S.C1620 AS FECHA_INICIO,
+							   S.C1621 AS FECHA_VALOR,
+							   S.C1604 AS SALDO_ACTUAL,
+							   S.JTS_OID,
+							   S.C1813 AS FECHA_DEVENGADO,
+							   S.C1820 AS DEVENGADO_COBRO,
+							   S.C1822 AS FECHA_COBRO,
+							   V.NRO_AUTORIZACION,
+							   V.IMPORTE AS MONTO_ACUERDO,
+							   V.FECHA_VENCIMIENTO,
+							   V.JTS_SALDO_DEUDA,
+							   V.DIA_COBRO,
+							   V.DIAS_CARENCIA,
+							   V.FECHA_ALTA,	
+					   		   V.TIPO_DIA_COBRO,
+							   V.VALOR_VIGENCIA,
+							   D.CODIGORANGOCOBRO
+							FROM SALDOS S        
+							INNER JOIN VTA_DEFINICION_VISTA D ON S.MONEDA = D.MONEDA AND S.C1772 = D.GRUPO AND S.PRODUCTO = D.PRODUCTO     
+						    LEFT JOIN VTA_SOBREGIROS V ON S.JTS_OID = V.JTS_OID_SALDO AND V.TZ_LOCK = 0
+						  WHERE
+						  S.C1785=2 and S.C1651 = ' ' --cuentas no bloqueadas
+						  AND S.TZ_LOCK = 0
+						  AND S.tipo_saldo_fondo = 0 --se quitan las cuentas FUCO
+						  AND S.JTS_OID = ?
+						  ORDER BY S.JTS_OID
+					</sentence>
+        <attribute>
+            <attribute-name>fechaInicio</attribute-name>
+            <column-name>FECHA_INICIO </column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoActual</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldos_jts_oid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDevengado</attribute-name>
+            <column-name>FECHA_DEVENGADO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>devengadoCobro</attribute-name>
+            <column-name>DEVENGADO_COBRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaCobro</attribute-name>
+            <column-name>FECHA_COBRO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroAcuerdo</attribute-name>
+            <column-name>NRO_AUTORIZACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoAcuerdo</attribute-name>
+            <column-name>MONTO_ACUERDO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsSaldoDeuda</attribute-name>
+            <column-name>JTS_SALDO_DEUDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diaCobro</attribute-name>
+            <column-name>DIA_COBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasCarencia</attribute-name>
+            <column-name>DIAS_CARENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaALta</attribute-name>
+            <column-name>FECHA_ALTA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoDiaCobro</attribute-name>
+            <column-name>TIPO_DIA_COBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVigencia</attribute-name>
+            <column-name>VALOR_VIGENCIA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoRangoCobro</attribute-name>
+            <column-name>CODIGORANGOCOBRO</column-name>
+            <column-type>Long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.interesesdeudores.objectsdomain.QuerySaldosCobroDeudores</class-name>
+        <query-name>query.QuerySaldosCobroDeudoresNAtodos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT S.C1620 AS FECHA_INICIO,
+							   S.C1621 AS FECHA_VALOR,
+							   S.C1604 AS SALDO_ACTUAL,
+							   S.JTS_OID,
+							   S.C1813 AS FECHA_DEVENGADO,
+							   S.C1820 AS DEVENGADO_COBRO,
+							   S.C1822 AS FECHA_COBRO,
+							   V.NRO_AUTORIZACION,
+							   V.IMPORTE AS MONTO_ACUERDO,
+							   V.FECHA_VENCIMIENTO,
+							   V.JTS_SALDO_DEUDA,
+							   V.DIA_COBRO,
+							   V.DIAS_CARENCIA,
+							   V.FECHA_ALTA,	
+					   		   V.TIPO_DIA_COBRO,
+							   V.VALOR_VIGENCIA,
+							   D.CODIGORANGOCOBRO
+							FROM SALDOS S        
+							INNER JOIN VTA_DEFINICION_VISTA D ON S.MONEDA = D.MONEDA AND S.C1772 = D.GRUPO AND S.PRODUCTO = D.PRODUCTO     
+						    LEFT JOIN VTA_SOBREGIROS V ON S.JTS_OID = V.JTS_OID_SALDO AND V.TZ_LOCK = 0
+						  WHERE
+						  S.C1785=2 and S.C1651 = ' ' --cuentas no bloqueadas
+						  AND S.TZ_LOCK = 0
+						  AND S.tipo_saldo_fondo = 0 --se quitan las cuentas FUCO
+						  AND  --Dejo atraso menor a 90d
+						  (
+						  (DATEDIFF(DAY,S.ULT_FECHA_VIGENTE,(SELECT FECHAPROCESOANTERIOR FROM PARAMETROS)) &lt; 90)
+						  OR
+						  (S.ULT_FECHA_VIGENTE IS NULL))
+						  ---Quito las CC bloqueadas
+						  AND S.JTS_OID not in (SELECT gb.SALDO_JTS_OID FROM grl_cod_bloqueos gcb, grl_bloqueos gb
+						  WHERE gcb.COD_BLOQUEO = gb.COD_BLOQUEO AND gcb.COD_BLOQUEO in (5, 13, 15, 19, 24, 48, 997, 999) AND gb.ESTADO = 1 AND gb.TZ_LOCK = 0 AND gcb.TZ_LOCK = 0)
+						  ORDER BY S.JTS_OID
+					</sentence>
+        <attribute>
+            <attribute-name>fechaInicio</attribute-name>
+            <column-name>FECHA_INICIO </column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoActual</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldos_jts_oid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDevengado</attribute-name>
+            <column-name>FECHA_DEVENGADO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>devengadoCobro</attribute-name>
+            <column-name>DEVENGADO_COBRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaCobro</attribute-name>
+            <column-name>FECHA_COBRO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>nroAcuerdo</attribute-name>
+            <column-name>NRO_AUTORIZACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoAcuerdo</attribute-name>
+            <column-name>MONTO_ACUERDO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimiento</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>jtsSaldoDeuda</attribute-name>
+            <column-name>JTS_SALDO_DEUDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diaCobro</attribute-name>
+            <column-name>DIA_COBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diasCarencia</attribute-name>
+            <column-name>DIAS_CARENCIA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaALta</attribute-name>
+            <column-name>FECHA_ALTA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoDiaCobro</attribute-name>
+            <column-name>TIPO_DIA_COBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVigencia</attribute-name>
+            <column-name>VALOR_VIGENCIA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoRangoCobro</attribute-name>
+            <column-name>CODIGORANGOCOBRO</column-name>
+            <column-type>Long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.interesesdeudores.objectsdomain.QueryExentoImpuestoSello</class-name>
+        <query-name>query.evaluarExentoImpuestoSello</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT 
+				COALESCE((
+				SELECT Exento_Imp_Sellos 
+				FROM CLI_Cod_Act_AFIP C 
+				INNER JOIN VW_ACT_ECO E ON C.CODIGO_ACT_AFIP = E.COD_ACTIVIDAD
+				INNER JOIN CLI_ClientePersona P ON P.NUMEROPERSONA = E.CODIGO_PERSONA
+				WHERE P.CODIGOCLIENTE = ? 
+				AND P.TITULARIDAD = 'T' 
+				AND E.TIPO_ACTIVIDAD = 'Primaria'
+				), 'N') AS Exento_Imp_Sellos
+			</sentence>
+        <attribute>
+            <attribute-name>Exento_Imp_Sellos</attribute-name>
+            <column-name>Exento_Imp_Sellos</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.accounting.objectsdomain.SaldoDiarioExtend</class-name>
+        <query-name>query.QueryLatestAvailableNumeral</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT FECHA, SALDO_CON_FECHA_VALOR_COBRO, CUPO_SOBREGIRO FROM GRL_SALDOS_DIARIOS 
+				WHERE SALDOS_JTS_OID = ? 
+				AND FECHA = (
+   				SELECT MAX(FECHA)
+    			FROM GRL_SALDOS_DIARIOS
+    			WHERE SALDOS_JTS_OID = ?
+    			AND FECHA &lt; ?)
+		</sentence>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+		<attribute>
+            <attribute-name>saldo_fecha_valor_cobro</attribute-name>
+            <column-name>SALDO_CON_FECHA_VALOR_COBRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+		<attribute>
+            <attribute-name>cupoSobregiro</attribute-name>
+            <column-name>CUPO_SOBREGIRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>	
+</map>

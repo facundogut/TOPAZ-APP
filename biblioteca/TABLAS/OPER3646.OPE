@@ -1,0 +1,449 @@
+VERSION:051
+TN  NN 1006TConsulta Cheque Rechazado               C1121 00
+ NNNNN 2081   Sucursal       INNSNL00000701500027021000021100300000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2084   Moneda         INNSNL00008802020108026202121100300008800590108017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2086   Producto       INNSNL00016402020184026202121100300016400590184017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0003   Moneda         INNSNA00008802020108026202121100300008800590108017800
+/V=C2084
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6400   Descripción    INNNN 00008803310111048900101100000015502600175040000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 2090   Cuenta         INNSNL00011402020134030102121100300011400590134017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2082   Serie Cheque   INNSNL00016402020184026202121100300016400590184017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2083   Cheque Nro     INNSNL00016404810184058202121100300016403510184047000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2087   Importe Cheque INNSN 00019002020210033202121100300019000590210017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2085   Cliente        INNSN 00013902020159030102121100300013900590159017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0002   Cliente        INNSNA00013902020159030102121100300013900590159017800
+/V=C2085
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1002   Nomb.Reducido  INNSN 00000701500027033000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1000   Nombre         INNNN 00013903310159063600101100000007100750091018500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0011700SNN000000000Arial                                   
+ NNNNN 2088   Cheque Fecha   INNSN 00019304810213056300121100300019403510214047000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2089   Fecha Rechazo  INNSN 00021602020236027900121100300021600590236017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2091   Codigo Rechazo INNSN 00024402020262035600121100300024300590263017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2093   Motivo Rechazo INNSN 00027102020291063300121100300027100610291018000
+/m=>
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2092   JTS Saldos     INNSN 00000701500027021000021100300000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0077   Fecha          INNSNK00000701520030030200101100000000700070030013700
+/V=18000101
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN I20 - Aviso de Cheque Devuelto
+*N  NN           C7614 in (0) and C7610 is null
+CNNNNN   00000000000000000000100
+/?=(C7614=0)Y(C7610=C077)
+/P=I20
+/M=I20
+CNNNNN   00000000000000000000100
+/?=!I20Y(C7614=8 O A(C6498="A"))
+/P=I20
+/M=I20
+*N  NN           //////**********////////
+*N  NN I21 - Notificación Cheque Devuelto
+*N  NN           C7614=1
+CNNNNN   00000000000000000000100
+/?=(C7614=1)
+/P=I21
+/M=I21
+*N  NN           //////**********////////
+*N  NN I22 - Aviso Suspensión de Cuenta
+*N  NN           C7614 in (0,1,2) and Fecha Max Reintegro < hoy y Clase=' '
+CNNNNN   00000000000000000000100
+/?=1=0Y((C7614=0OC7614=1OC7614=2) Y (C7611<C9500 OC7611=C9500)Y!I20YA(C6498=" "))
+/P=I22
+*N  NN           //////**********////////
+CNNNNN   00000000000000000000100
+/?=1=0Y((C7614=0OC7614=1OC7614=2) Y (C7611<C9500 OC7611=C9500)Y!I20YA(C6498=" "))
+/P=I22
+*N  NN I23 - Notificación Suspensión de Cuenta
+*N  NN           C7614 =5 and  Clase=' '
+CNNNNN   00000000000000000000100
+/?=C7614=5YA(C6498=" ")
+/P=I23
+*N  NN           //////**********////////
+*N  NN ********************************************************
+*N  NN I74 - Estado=2 y Clase=A
+CNNNNN   00000000000000000000100
+/F=C7614=2 Y A(C6498="A")
+/P=I74
+/M=Consulta
+*N  NN ********************************************************
+TN  NN 1006TConsulta Generica                       C0001 00
+VNSSNS 060001000304660801NNND000020000000000000000000000000000000000
+/T=Ingreso de Notificaciones
+/C=192192192
+ NNNNN 6021   Sucursal       IDNSNA06003602020056026202121150300003600590056017800
+/V=C2081.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6020   Nombre         ICNNN 06003603310059063600101150000009702600117050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 6250   Producto       IDNSNA06006202020082026202121150300006200590082017800
+/V=C2086.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6251   Descripción    ICNNN 06006203310085063600101150000012802600148050500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 6399   Moneda         IDNSNA06008802020108026202121150300008800590108017800
+/V=C2084.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6400   Descripción    ICNNN 06008803310111048900101150000015502600175040000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 0429   Cuenta         IDNSNA06011402020134030202121150300011400590134017800
+/V=C2090.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0002   Cliente        IDNSNA06013902020159030202121150300013900590159017800
+/V=C2085.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1002   Nomb.Reducido  INNSN 06000701500027033000001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1000   Nombre         DCNNN 06013903310159063600101150000007100750091018500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0011700SNN000000000Arial                                   
+ NNNNN 2082   Serie Cheque   IDNSNA06016402020184026202121150300016400590184017800
+/V=C2082.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2083   Cheque Nro     IDNSNA06016403650184046602121150300016402850184035800
+/V=C2083.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2087   Importe Cheque IDNSN 06019002020210033202121150300019000590210017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2085   Cliente        INNSNA06013902020159026202121100300013900590159017800
+/V=C0002.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 060164048601840606000100
+/T=Fecha Presentación
+/F=0012700NNN000000000Arial                                   
+ NNNNN 2088   Fecha Presenta ICNSN 06016406140188069600121150300016404800188059500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2089   Fecha Rechazo  IDNSN 06021602020236027900121150300021600590236017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 060190035302100479000100
+/T=Fecha Max Reintegro
+/F=0012700NNN000000000Arial                                   
+ NNNNN 7614   Estado         IINSN 06024204970262066000121150300024203870262047400
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********************************************************
+*N  NN *** EP: 13/07/2011
+*N  NN *** MANTIS: 738
+*N  NN *** El campo Fecha Max Reint, asume el calculo del campo 6498 Fecha Demostracion
+ NNNNN 7611   Fecha Max ReintIDSSN 06019004970210057400121150300054600800566019900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********************************************************
+ NNNNN 7612   Fecha ReintegroIDSSN 06021604970236057400121150300021203530236044900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2091   Codigo Rechazo IINSN 06024202020262035600121150300024200590262017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2093   Motivo Rechazo IDNSN 06026802020288063300121150300026800590288017800
+/m=>
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 060295004502970746000102
+/F=0012700NNN000000000Arial                                   
+*N  NN ********************************************************
+KNNNNN 060337005903570170000000
+/?=I21
+/T=Fecha Notificacion
+/F=0012700NNN000000000Arial                                   
+KNNNNN 060352005903720170000000
+/?=I21
+/T=Ch.Devuelto
+/F=0012700NNN000000000Arial                                   
+ NNNNN 0077   Fecha          INNSNK00000701520030030200101100000000700070030013700
+/?=I21
+/V=18000101
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0075   Fecha          INSSNA00000701520030030200101100000000700070030013700
+/?=I21
+/V=C7610
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7610   Fecha NotificacIESSN 06034202020362027900021000300021603230236041300
+/?=I21
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=I21
+/F=C7610.2>C9500
+/M=Fecha Notificación > Fecha del Hoy
+CNNNNN ME00000000000000000000100
+/?=I21
+/F=C7610.2<C2089.2
+/M=Fecha Anterior a Fecha de RechazoHoy
+*N  NN ********************************************************
+*N  NN *** EP: 13/08/2011
+*N  NN *** MANTIS: 738
+*N  NN *** Estado=5 SI Fecha Max Reint> FechaNotif + 5 Dias Habiles
+*N  NN ********************************************************
+ NNNNN 0026   Dias Habiles   INNSNF00000701520030020202101100000000700070030013700
+/?=I21
+/V=5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9502   Sucursal Sist. INNSN 00000701520030020202101100000000700070030013700
+/?=I21
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0075   Fecha          INNNNF00000701330027024300001100000000700070027012600
+/?=I21
+/V=F(nextworkingday,C7610,C0026,858,C9502)
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C7611>C75
+/P=I73
+/M=Paso a Estado 5
+ NNNNN 7611   Fecha Max ReintINSSNA06019004970210057400121100300054600800566019900
+/?=I21YI73
+/V=C0075
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********************************************************
+KNNNNN 060337038003570492000000
+/?=I23
+/T=Fecha Notificacion
+/F=0012700NNN000000000Arial                                   
+KNNNNN 060352038003720506000000
+/?=I23
+/T=Suspensión
+/F=0012700NNN000000000Arial                                   
+ NNNNN 0075   Fecha          INNSNA00000701520030030200101100000000700070030013700
+/?=I23
+/V=C7613
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  w06034206150362066411000
+/?=I23Y1=0
+/P=I51
+/R=7613
+/T=Borrar
+ NNNNN 7613   Fcha Notif. JudIESSN 06034205000362058200021000300021605240236061400
+/?=I23Y!I51YC7614#2 Y A(C6498#"A")
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=I23Y!I51
+/F=C7613.2<C2089.2
+/M=Fecha Anterior a Fecha de RechazoHoy
+ NNNNN 0092   Texto (contin.)ICNSNK06034205000362060100121050300021603230236041300
+/?=I23YI51
+/V=00/00/0000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7613   Fcha Notif. JudINSSNA06033505750355065700021100300021605240236061400
+/?=I23YI51
+/V=C077
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=I23
+/F=C7613<C7610YC7613>C77
+/M=Fecha de Notif.Susp. no puede ser menor a Fecha Not.Devuelto
+CNNNNN ME00000000000000000000100
+/?=I23
+/F=C7613<C6890YC7613>C77
+/M=Fecha de Notif.Susp. no puede ser menor a Fecha de Aviso
+CNNNNN ME00000000000000000000100
+/?=I23
+/F=C7613=C77
+/M=No ingreso Fecha Notificación de Suspensión.
+*N  NN ********************************************************
+*N  NN *** EP: 13/08/2011
+*N  NN *** MANTIS: 738
+*N  NN *** Se quito el campo 6498 Fecha Demostracion
+*N  NN ********************************************************
+*N  NN           //////**********////////
+*N  NN I82 - Notificación Cheque Devuelto
+ NNNNN 7614   Estado         INNNNK00000701520030020202121100300000700070030013700
+/?=I21YC7610#C77
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN           //////**********////////
+*N  NN           //////**********////////
+*N  NN Notificación Suspensión de Cuenta
+ NNNNN 7614   Estado         INNNNK00000701520030020202121100300000700070030013700
+/?=I23YC7613#C77
+/V=6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN           //////**********////////
+KNNNNN 060009004004100748000101
+/T=Notificaciones
+/F=0012700NNN000000000Arial                                   
+ NNNNN 0028   Concepto       INNSNK00000701520030045200101100000000700070030013700
+/V=Ingreso Notificaciones Ch.Rech.
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *
+CNNNNN ME00000000000000000000100
+/?=!I21Y!I23
+/M=Cheque ya notificado
+TN  NN 1009TModificacion Generica                   M1121 00
+/?=(I21OI23)
+ NNNNN 2081   Sucursal       INNSNA06003602020056026202121100300003600590056017800
+/V=C2081.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2084   Moneda         INNSNA06008802020108026202121100300008800590108017800
+/V=C2084.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2086   Producto       INNSNA06006202020082026202121100300006200590082017800
+/V=C2086.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2090   Cuenta         INNSNA06006202020082026202121100300006200590082017800
+/V=C2090.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2082   Serie Cheque   INNSNA06006202020082026202121100300006200590082017800
+/V=C2082.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2083   Cheque Nro     INNSNA00006202020082026202121100300006200590082017800
+/V=C2083.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3719   Suc. DevoluciónINNSN 00006202020082026202121100300006200590082017800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7610   Fecha Notif    INNSNA00006202020082026202121100300006200590082017800
+/V=C7610.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7611   Fecha Max ReintINNSNA00006202020082026202121100300006200590082017800
+/V=C7611.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7613   Fcha Notif. JudINSSNA06034205000362058200021000300021605240236061400
+/V=C7613.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN **** Actualizo Estado y Fecha_Estado
+ NNNNN 7614   Estado         INNSNA06006202020082026202121100300006200590082017800
+/V=C7614.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6890   Fecha Estado   INNSNA06006202020082026202121100300006200590082017800
+/V=C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TFin                                     C0000 00
+ NNNNN 0028   Concepto       INNNNF00000701330027024300001100000000700070027012600
+/V="Serie: "+C2082.3+" Chq: "+C2083.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*#I83#Aviso de suspensión
+*#I73#
+*#I51#Borrar Notif.Suspension
+*#I74#No habilita el ingreso de Notif
+*#I20#Aviso Cheque Devuelto
+*#I21#Notificación Cheque Devuelto
+*#I22#Aviso Suspensión de Cuenta
+*#I23#Notificación Suspensión de Cuenta
+*#I210#PF
+*#I82#Aviso de notificacion

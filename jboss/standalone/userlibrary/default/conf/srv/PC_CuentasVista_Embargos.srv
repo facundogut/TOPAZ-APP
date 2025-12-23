@@ -1,0 +1,25 @@
+service EmbargosCuenta; 
+description "Servicio EmbargosCuenta"; 
+
+action:	SQLQuery Entity ( 
+ IDSALDO: string
+): [ 
+   	OFICIOS_MANUALES: numeric,
+   	OFICIOS_JUDICIALES_AFIO: numeric,
+   	COMUNICACION_BCRA: numeric,
+   	NUMERO_OFICIO: numeric,
+   	CARATULA: string,
+   	JUZGADO: string,
+	MONTO: string,
+	EXPEDIENTE: string
+]
+{ 
+  	properties { 
+  	("statement", "SELECT E.OM AS OFICIOS_MANUALES, E.SOJ AS OFICIOS_JUDICIALES_AFIO, E.COMD AS COMUNICACION_BCRA, E.NumeroOficio AS NUMERO_OFICIO, E.Caratula AS CARATULA, J.NOMBRE AS JUZGADO, REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(E.Monto AS MONEY),1) , '.','p') , ',', '.'),'p',',')  AS MONTO, E.NroExpediente AS EXPEDIENTE FROM GRL_EMBARGO E JOIN DJ_JUZGADOS J ON E.Juzgado=J.NRO_JUZGADO  WHERE   J.TZ_LOCK NOT LIKE '3%' AND E.TZ_LOCK NOT LIKE '3%' AND E.SALDO_JTS_OID=?"),
+	("0", "IDSALDO")
+	}
+}
+
+
+
+

@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2022-12-26T18:59:55 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RECASEC_ResImportacion" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f1500372-adb0-4366-a5c1-1bacd883d656">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<queryString>
+		<![CDATA[select (select cast(importe3 as int) from ITF_GENERICA_ARCHIVOS where tiporeg = 1) as Convenio,
+cast(fechaproceso as date) as fechaproceso,
+(select string1 from ITF_GENERICA_ARCHIVOS where tiporeg = 1) as NomArchivo,
+(select importe1 - 2 from ITF_GENERICA_ARCHIVOS where tiporeg = 3) as CantReg,
+(select importe3 from ITF_GENERICA_ARCHIVOS where tiporeg = 3) as ImpInfra
+ from parametros]]>
+	</queryString>
+	<field name="Convenio" class="java.math.BigDecimal"/>
+	<field name="fechaproceso" class="java.sql.Timestamp"/>
+	<field name="NomArchivo" class="java.lang.String"/>
+	<field name="CantReg" class="java.math.BigDecimal"/>
+	<field name="ImpInfra" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="10" y="30" width="540" height="30" uuid="46f2c4d9-571b-4eea-8b52-e69268e69f41"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SERVICIOS - REPORTE IMPORTACION RECAUDACION DE CAJA DE SECHEEP]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="130" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="100" height="30" uuid="7b85e89b-8d95-4737-a525-7c018fc2c12b"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Convenio]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="100" height="30" uuid="6df2ea82-0a6e-4f43-bc0b-0c495949de2e"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="100" height="30" uuid="e10b095c-4841-4d01-93fa-5191d5877064"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+					<paragraph lineSpacing="1_1_2"/>
+				</textElement>
+				<text><![CDATA[Archivo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="10" width="100" height="30" uuid="b5dd7f91-6391-4872-946d-9120260a3d6e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cantidad de Registros]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="50" width="100" height="30" uuid="bcaa9513-525a-4428-8d2d-45ee0205dc62"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe Total]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="64" y="10" width="115" height="30" uuid="bb5b3fac-ce8d-49f2-804d-01a082d19731"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Convenio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="50" width="128" height="30" uuid="e9abc93e-8487-4be3-a6c5-9e259064b3ac"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{fechaproceso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="50" width="139" height="30" uuid="ea6fb9da-8855-4fef-a6c6-8ffb7c7c4716"/>
+				<textFieldExpression><![CDATA[$F{ImpInfra}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="10" width="100" height="30" uuid="907281a7-516e-4757-938c-e9d39aeab5e2"/>
+				<textFieldExpression><![CDATA[$F{CantReg}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="55" y="90" width="124" height="30" uuid="2801acaf-8635-493c-a1ac-efc04866d892"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NomArchivo}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="3" y="5" width="547" height="1" uuid="22f5c71c-e977-4e2a-9c42-302f1221eb1a"/>
+			</line>
+			<line>
+				<reportElement x="4" y="120" width="547" height="1" uuid="6a483075-40cb-43d4-be77-d866afe3272d"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,36 @@
+service CONSULTASRVPAGOS; 
+description "Consulta de Servicios disponibles de Pagos"; 
+
+action:	SQLQuery CONSULTASRVPAGOS ( 
+	TicketSesion: numeric,
+	NodoCliente: string,
+	TipoProceso: string,
+	ModoAutentica: string,
+	IdAutentica: string,
+	InfoOrigen: string,
+	CodCanal: string,
+	NroDepOrigen: numeric,
+	Origen: string,
+	NroTransaccion: numeric,
+	IdInvocaTopaz: numeric
+	
+): [ 
+ 	XML_TAG: string as XML_TAG, 
+ 	ID_CONVENIO: numeric as CodigoSrv,
+ 	NOMBRE_CONVENIO : string as NombreSrv,
+ 	TIPO_CONVENIO: numeric as TipoServicio,
+ 	CLASE_DE_CONVENIO: numeric as ClaseServicio,
+	TIPO_MODULO: numeric as NroAlgoritmo
+	
+	
+	
+]
+{ 
+  	properties { 
+  	("statement", "SELECT 'Servicio' AS XML_TAG , ID_CONVENIO, NOMBRE_CONVENIO, TIPO_CONVENIO, CLASE_DE_CONVENIO, TIPO_MODULO FROM rct_convenio_recaud WHERE Tipo_convenio in(2,3) AND Estado='A' AND (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999)  ORDER BY ID_CONVENIO")
+	
+	
+}
+}
+
+

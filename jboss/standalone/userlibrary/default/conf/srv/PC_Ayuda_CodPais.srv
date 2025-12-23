@@ -1,0 +1,118 @@
+service AyudaCodPais; 
+description "Ayuda de TipoDocumento"; 
+
+action:	SQLQuery Entity ( 
+ TIENEFILTRO: string,
+ CAMPO: string,
+ OPERADOR: string,
+ VALOR: string
+): [ 
+   	STIENEFILTRO: string,
+	SCAMPO: string,
+	SOPERADOR: string,
+	SVALOR: string
+	]
+{ 
+	properties {
+  	("statement", "select ? as STIENEFILTRO, ? as SCAMPO, ? as SOPERADOR, ? as SVALOR "), 
+	("0", "TIENEFILTRO"), ("1", "CAMPO"), ("2", "OPERADOR"), ("3", "VALOR") };
+	
+		action:	SQLQuery Entity0 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+			condition {" (STIENEFILTRO == \"0\") "};
+			properties { 
+			("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' ORDER BY p.NOMBREPAIS ASC")
+			}
+	    };
+		
+		action:	SQLQuery Entity1 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBREPAIS\") && (SOPERADOR == \"1\")"};
+		properties {
+		("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' AND p.NOMBREPAIS LIKE ? + '%' ORDER BY p.NOMBREPAIS ASC"),
+			("0", "SVALOR")
+	               }
+	    };
+		
+		action:	SQLQuery Entity2 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBREPAIS\") && (SOPERADOR == \"2\")"};
+		properties {
+		("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' AND p.NOMBREPAIS LIKE '%' + ? + '%' ORDER BY p.NOMBREPAIS ASC"),
+			("0", "SVALOR")
+	               }
+	    };		
+
+		action:	SQLQuery Entity3 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBREPAIS\") && (SOPERADOR == \"3\")"};
+		properties {
+		("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' AND p.NOMBREPAIS NOT LIKE '%' + ? + '%' ORDER BY p.NOMBREPAIS ASC"),
+			("0", "SVALOR")
+	               }
+	    };		
+
+		action:	SQLQuery Entity4 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBREPAIS\") && (SOPERADOR == \"4\")"};
+		properties {
+		("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' AND p.NOMBREPAIS = ?"),
+			("0", "SVALOR")
+	               }
+	    };		
+
+		action:	SQLQuery Entity5 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBREPAIS\") && (SOPERADOR == \"5\")"};
+		properties {
+		("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' AND p.NOMBREPAIS <> ? ORDER BY p.NOMBREPAIS ASC"),
+			("0", "SVALOR")
+	               }
+	    };		
+
+		action:	SQLQuery Entity6 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBREPAIS\") && (SOPERADOR == \"6\")"};
+		properties {
+		("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' AND p.NOMBREPAIS > ? ORDER BY p.NOMBREPAIS ASC"),
+			("0", "SVALOR")
+	               }
+	    };		
+
+		action:	SQLQuery Entity7 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBREPAIS\") && (SOPERADOR == \"7\")"};
+		properties {
+		("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' AND p.NOMBREPAIS >= ? ORDER BY p.NOMBREPAIS ASC"),
+			("0", "SVALOR")
+	               }
+	    };		
+
+		action:	SQLQuery Entity8 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBREPAIS\") && (SOPERADOR == \"8\")"};
+		properties {
+		("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' AND p.NOMBREPAIS < ? ORDER BY p.NOMBREPAIS ASC"),
+			("0", "SVALOR")
+	               }
+	    };		
+
+		action:	SQLQuery Entity9 ( 
+		): [ CODPAIS: numeric, NOMBREPAIS: string, CODIGOSWIFT: string]
+		{
+		condition {" (STIENEFILTRO == \"1\") && (SCAMPO == \"NOMBREPAIS\") && (SOPERADOR == \"9\")"};
+		properties {
+		("statement", "SELECT p.CODIGOPAIS AS CODPAIS, p.CODIGOSWIFT, p.NOMBREPAIS FROM CLI_PAISES p WHERE p.TZ_LOCK NOT LIKE '3%' AND p.NOMBREPAIS <= ? ORDER BY p.NOMBREPAIS ASC"),
+			("0", "SVALOR")
+	               }
+	    }
+}

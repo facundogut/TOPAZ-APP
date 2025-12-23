@@ -1,0 +1,59 @@
+service BALANCEINQUIRY; 
+description "Parámetros de entrada al servicio Consulta de Saldos"; 
+
+
+	action: SQLQuery HAYREGISTROS(
+				
+			Branch: numeric,
+			Product: numeric,     
+			Account:   numeric,      
+			Currency:   numeric,
+			Operation: numeric,
+			Ordinal: numeric
+
+			
+			
+		):[
+			
+			SERRORCODE: numeric
+	]{ 
+  			
+  	
+	properties {
+			("statement", "select count(*) as SERRORCODE from saldos where sucursal=? and producto=? and cuenta=? and moneda=? and operacion=? and ordinal=?"),
+			("0", "Branch"), 
+			("1", "Product"), 
+			("2", "Account"), 
+			("3", "Currency"),
+			("4", "Operation"),
+			("5", "Ordinal")
+	
+	           };
+
+	           
+  	     action:SQLQuery DATOSALDOSC() : [
+				SaldoActual:	float as BOOKBALANCE,
+				SaldoDisponible: float as AVAILABLEBALANCE
+				
+				       		] 
+			   {
+			
+				condition{"SCODERROR == 1"};
+		properties 	{
+					("statement", "select C1604 as SaldoActual, (C1604-C2627) as SaldoDisponible from saldos where sucursal=? and producto? and cuenta=? and moneda=? and operacion=? and ordinal=?"),
+					("0", "Branch"), 
+					("1", "Product"), 
+					("2", "Account"), 
+					("3", "Currency"),
+					("4", "Operation"),
+					("5", "Ordinal")
+				
+			   	 }
+			   	 
+		            }
+		 						  
+	
+          } 
+
+
+

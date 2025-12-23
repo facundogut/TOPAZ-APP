@@ -1,0 +1,3 @@
+Execute('
+DROP TABLE IF EXISTS dbo.ITF_GIRELEC_AUX
+')

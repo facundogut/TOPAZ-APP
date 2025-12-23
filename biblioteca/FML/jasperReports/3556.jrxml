@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2022-08-30T16:40:44 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DEP 212" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4b531c70-826d-45b8-b663-e65a1f1e55e3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.band.2" value="pageFooter"/>
+	<property name="net.sf.jasperreports.export.xls.exclude.origin.keep.first.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.export.xlsx.exclude.origin.keep.first.band.1" value="pageHeader"/>
+	<property name="net.sf.jasperreports.print.keep.full.text" value="true"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="JTSOID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[JTS OID:]]></parameterDescription>
+	</parameter>
+	<parameter name="GENERA_EXCEL" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[false]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+	S.SUCURSAL,
+	C.CODIGOCLIENTE,
+	CP.NUMEROPERSONA,
+	CONCAT_WS(' ', DS.CALLE, ISNULL(NULLIF(CAST(DS.NUMERO AS VARCHAR), '0'),'S/N')) AS DIRSUC, 
+	C.NOMBRECLIENTE,
+	CONCAT_WS(' ', D.CALLE, ISNULL(NULLIF(CAST(D.NUMERO AS VARCHAR), '0'),'S/N')) AS DIRCLI,
+	L.DESCRIPCION_DIM3 AS LOCALIDAD,
+	D.CPA_NUEVO AS CP,
+	U.NOMBRESUCURSAL AS NOMSUC,
+	S.CUENTA,
+	CC.FECHA_CANCELACION
+FROM
+	SALDOS AS S WITH (nolock)
+INNER JOIN SUCURSALES AS U WITH (nolock) ON
+	U.SUCURSAL = S.SUCURSAL
+	AND U.TZ_LOCK = 0
+INNER JOIN CLI_DIRECCIONES AS DS WITH (nolock) ON
+	DS.TZ_LOCK = 0
+	AND DS.ID = U.SUCURSAL
+	AND DS.FORMATO = 'S'
+	AND DS.TIPODIRECCION = 'R'
+	AND DS.ORDINAL_DIR IN (	SELECT
+								TOP 1 ORDINAL_DIR
+							FROM 
+								CLI_DIRECCIONES
+							WHERE
+								ID = DS.ID
+								AND FORMATO = DS.FORMATO
+								AND TIPODIRECCION = DS.TIPODIRECCION
+								AND TZ_LOCK = 0
+							)
+INNER JOIN CLI_CLIENTES AS C WITH (nolock) ON
+	C.CODIGOCLIENTE = S.C1803
+	AND C.TZ_LOCK = 0
+INNER JOIN VW_CLIENTES_PERSONAS AS CP WITH (nolock) ON
+	CP.CODIGOCLIENTE = C.CODIGOCLIENTE
+	AND CP.TITULARIDAD = 'T'
+INNER JOIN CLI_DIRECCIONES AS D WITH (nolock) ON
+	D.TZ_LOCK = 0
+	AND D.ID = CP.NUMEROPERSONA
+	AND D.FORMATO =
+				CASE
+					WHEN CP.TIPOPERSONA = 'F'
+						THEN 'PF'
+					ELSE 'PJ'
+				END
+	AND D.TIPODIRECCION =
+				CASE
+					WHEN CP.TIPOPERSONA = 'F'
+						THEN 'PR'
+					ELSE 'L'
+				END
+	AND D.ORDINAL_DIR IN (	SELECT
+								TOP 1 ORDINAL_DIR
+							FROM 
+								CLI_DIRECCIONES
+							WHERE
+								ID = D.ID
+								AND FORMATO = D.FORMATO
+								AND TIPODIRECCION = D.TIPODIRECCION
+								AND TZ_LOCK = 0
+							)
+INNER JOIN CLI_LOCALIDADES AS L WITH (nolock) ON
+	L.CODIGOPAIS = D.PAIS
+	AND L.DIM1 = D.PROVINCIA
+	AND L.DIM2 = D.DEPARTAMENTO
+	AND L.DIM3 = D.LOCALIDAD
+	AND L.TZ_LOCK = 0
+LEFT JOIN CV_CANCELACION_CUENTAS AS CC WITH (nolock) ON
+	CC.SALDO_JTS_OID = S.JTS_OID
+	AND CC.TZ_LOCK = 0
+WHERE
+	S.TZ_LOCK = 0
+	AND S.JTS_OID = $P{JTSOID}]]>
+	</queryString>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="CODIGOCLIENTE" class="java.math.BigDecimal"/>
+	<field name="NUMEROPERSONA" class="java.math.BigDecimal"/>
+	<field name="DIRSUC" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="DIRCLI" class="java.lang.String"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<field name="CP" class="java.lang.String"/>
+	<field name="NOMSUC" class="java.lang.String"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="FECHA_CANCELACION" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="73" splitType="Stretch">
+			<image>
+				<reportElement x="1" y="10" width="130" height="50" uuid="2395a1e6-5d38-46a6-b037-2d451d2d43aa"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="44" splitType="Stretch">
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="7" width="555" height="30" uuid="437564a8-c8c7-4342-afff-0813f4c7a9b8"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[CONSTANCIA DE CIERRE DE CAJA DE AHORRO/CUENTA SUELDO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="119" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="100" height="16" uuid="220027f6-ed69-4c9e-8f99-541b88c9b4c3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="26" width="100" height="16" uuid="5794383e-b785-4c60-9240-9c7389a463b9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Domicilio:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="42" width="100" height="16" uuid="62f339d7-048d-4bcc-92a1-15495c5fac29">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Sr./Sra./Sres.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="58" width="160" height="16" uuid="03f8f886-1d7f-4bd1-9fe0-b83f6dcb2b96">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Domicilio Especial Constituido:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="74" width="100" height="16" uuid="2a3f5a86-b6a1-4954-b488-ca7b0ff7b17d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Localidad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="100" height="16" uuid="577e9e39-358d-4dfe-8095-4345cfc93cb8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[CP:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="10" width="455" height="16" uuid="4c579ff9-8efd-47e1-90e5-29df5560cc31">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="26" width="455" height="16" uuid="e0df9bff-8d1d-4f98-b1f8-23d0e1a89405">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DIRSUC}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="42" width="455" height="16" uuid="ae14059b-313e-46c1-b059-82111e846205">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRECLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="58" width="395" height="16" uuid="4ee7cc52-f2fc-4033-840d-d2aef0b57af2">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DIRCLI}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="74" width="455" height="16" uuid="587379cc-b359-4a05-831d-12aeb9388c8e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="90" width="455" height="16" uuid="8d3492fe-d724-41b7-af25-143eb50fe297">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CP}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="344" splitType="Stretch">
+			<staticText>
+				<reportElement x="350" y="16" width="100" height="16" uuid="a030d78b-7647-432c-bf67-dc4875ffaadf">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Cuenta Sueldo N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="350" y="0" width="100" height="16" uuid="b5e7bb38-3c25-4a43-8db6-f5a9b32746cc">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Caja de Ahorro N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="230" width="555" height="16" uuid="4384cd8d-e53c-4e77-9a35-d3a1e2b671f0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Se extiende la presente Constancia de Cierre en Resistencia, Chaco a la fecha:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="58" y="315" width="100" height="27" uuid="0bebc8f7-93c6-41e3-b019-d1548038d42c"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Sello
+Sucursal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="328" width="235" height="16" uuid="8f19b189-2f8e-438f-9895-494783df768a">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[por el NUEVO BANCO DEL CHACO S.A.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="450" y="16" width="105" height="16" uuid="cb0ba661-0d8d-4b82-822c-cc4f341cee84">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="450" y="0" width="105" height="16" uuid="ba684647-43e3-4df6-8d44-06dd0a3cf6a0">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="0" y="110" width="40" height="16" uuid="4201c3f6-a383-4470-8ef5-5e00c9212ed7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<textField>
+				<reportElement x="0" y="44" width="555" height="66" uuid="11d7acbc-fbc0-4e17-b66d-ec7a14057c0b">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Left" markup="html"/>
+				<textFieldExpression><![CDATA["Por la presente informamos a Ud./Uds. que vuestra Caja de Ahorro "+$F{CUENTA}+" / Cuenta Sueldo N° "+$F{CUENTA}+" habilitada en la Sucursal "+$F{NOMSUC}+" de NUEVO BANCO DEL CHACO S.A. fue cerrada el día "+new SimpleDateFormat("dd/MM/yyyy").format($F{FECHA_CANCELACION})+" (fecha de efectivo cierre según procedimiento del Manual de Depósitos en Caja de Ahorro, Cuenta Sueldo y Especiales) de acuerdo a vuestra solicitud (Marcar con  -X- el casillero correspondiente)"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="164" width="555" height="16" uuid="cf27d721-2a24-4695-8e34-a337f5c36395">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Aprovechamos la oportunidad para saludarlo cordialmente.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="110" width="515" height="16" uuid="045fc1bb-1d33-4fc5-9a98-db7aa92cc0fd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[ingresada por canales electrónicos.]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="0" y="126" width="40" height="16" uuid="b71169f1-c1bd-4bbd-893f-ee5f6f4910b8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="40" y="126" width="515" height="16" uuid="124e19d3-ab3e-48b3-9037-89bb8fb6df1d">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<paragraph leftIndent="10"/>
+				</textElement>
+				<text><![CDATA[efectuada en dependencias de la Entidad.]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/usogeneral/operaFechaNegocio/{fecha}/{tipo}/{cantidad}</uri>
+    <serviceDescription>Este servicio devuelve la fecha habil a partir de los parametros recibidos. </serviceDescription>
+    <title>Tarjeta Debito</title>
+    <querys>
+        <query id="1" name="tarjetas" type="SIMPLE">
+            <sql>
+DECLARE @fechaParametro DATE = CONVERT(DATE, ?,120);
+DECLARE @TIPO VARCHAR(5) = ?;
+DECLARE @VALOR VARCHAR(50) = ?;
+DECLARE @CANTIDAD NUMERIC(5,0) = 0;
+
+DECLARE @SECUENCIA VARCHAR(1) = 'A';
+DECLARE @FECHA DATE;
+
+IF @TIPO NOT IN ('A', 'M', 'D') 
+    THROW 50001, 'Error en parametro TIPO, valor no admitido', 2;
+    
+IF @VALOR LIKE '%.%'
+    THROW 50000, 'El valor no puede contener decimales.', 3;
+
+SET @CANTIDAD = CONVERT(NUMERIC(5,0), @VALOR);
+
+IF @CANTIDAD &lt; 0
+BEGIN
+    SET @SECUENCIA = 'N';
+END;
+
+SET @FECHA = CASE 
+    WHEN @CANTIDAD = 0 THEN 
+        dbo.DiaHabil(DATEADD(day, @CANTIDAD, @fechaParametro), @SECUENCIA)
+    WHEN @TIPO = 'D' THEN 
+        CASE 
+            WHEN @CANTIDAD &gt; 0 THEN 
+                dbo.AgregarDiasHabiles(@fechaParametro, @CANTIDAD)
+            ELSE 
+                dbo.ReducirDiasHabiles(@fechaParametro, ABS(@CANTIDAD))
+        END
+    WHEN @TIPO = 'M' THEN 
+        dbo.DiaHabil(DATEADD(MONTH, @CANTIDAD, @fechaParametro), @SECUENCIA)
+    WHEN @TIPO = 'A' THEN 
+        dbo.DiaHabil(DATEADD(YEAR, @CANTIDAD, @fechaParametro), @SECUENCIA)
+    ELSE 
+        NULL
+END;
+
+SELECT
+    TRY_CONVERT(DATE, @FECHA, 120) AS fechaResultado
+</sql>
+            <input>
+                <inParameter description="fecha" type="STRING">fecha</inParameter>
+                <inParameter description="tipo" type="STRING">tipo</inParameter>
+                <inParameter description="cantidad" type="STRING">cantidad</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="datos">
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaResultado</queryname>
+                        <servicename>fechaResultado</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

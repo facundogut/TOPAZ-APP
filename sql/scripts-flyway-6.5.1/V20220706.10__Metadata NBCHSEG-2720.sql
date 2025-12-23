@@ -1,0 +1,11 @@
+﻿EXECUTE('
+--------------------
+--CAMBIO DE TITULO--
+--------------------
+UPDATE dbo.REPORTES
+SET TITULO = 9500
+WHERE TITULO = 5000 AND IDENTIFICACION = 5039
+----
+')
+
+

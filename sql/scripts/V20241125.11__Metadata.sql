@@ -1,0 +1,8 @@
+﻿EXECUTE('
+DELETE FROM AYUDAS WHERE NUMERODEAYUDA = 3455
+')
+
+EXECUTE('
+INSERT INTO dbo.AYUDAS (NUMERODEARCHIVO, NUMERODEAYUDA, DESCRIPCION, FILTRO, MOSTRARTODOS, CAMPOS, CAMPOSVISTA, BASEVISTA, NOMBREVISTA, AYUDAGRANDE)
+VALUES (0, 3455, ''Reservas de saldo'', '''', 0, ''25109R;503;504;3114R;4990;1239;4991;2844;2618;2612;2615;910;2613;4968;2614;'', ''Nro Reserva;Importe Origen;Importe Disponible;Tipo Reserva;Descripcion;Estado;Descripcion Estado;Fecha Vigencia;Fecha Vencimiento;Sucursal;Cuenta;Nombre;Producto;Descripcion Prod;Moneda;'', ''TOP/CLIENTES'', ''VW_RESERVAS_SALDO'', 0)
+')

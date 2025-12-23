@@ -1,0 +1,22 @@
+EXECUTE('
+DROP VIEW IF EXISTS VW_IMPUESTOS_X_CARGO
+')
+
+EXECUTE('
+CREATE VIEW VW_IMPUESTOS_X_CARGO
+AS
+SELECT TOP 9223372036854775807 WITH TIES
+r.id_cargo,
+r.id_impuesto,
+i.descripcion,
+i.pivot_,
+i.condicion
+FROM CI_IMPUESTOS_X_CARGO r WITH(NOLOCK)
+INNER JOIN CI_IMPUESTOS i WITH(NOLOCK)ON r.id_impuesto=i.id_impuesto
+AND ( (r.tz_lock < 300000000000000 OR r.tz_lock >= 400000000000000)
+AND (r.tz_lock < 100000000000000 OR r.tz_lock >= 200000000000000) )
+AND ( (i.tz_lock < 300000000000000 OR i.tz_lock >= 400000000000000)
+AND (i.tz_lock < 100000000000000 OR i.tz_lock >= 200000000000000) )
+ORDER BY r.id_cargo,
+R.id_impuesto
+')

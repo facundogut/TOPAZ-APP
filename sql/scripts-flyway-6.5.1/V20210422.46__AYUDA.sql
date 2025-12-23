@@ -1,0 +1,7 @@
+﻿EXECUTE('
+
+UPDATE AYUDAS
+SET DESCRIPCION=''Certificados disponibles''
+WHERE NUMERODEAYUDA=34372;
+
+')

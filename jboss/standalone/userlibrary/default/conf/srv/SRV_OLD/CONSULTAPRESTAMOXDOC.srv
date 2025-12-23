@@ -1,0 +1,54 @@
+service CONSULTAPRESTAMOXDOC;
+description "Consulta de Prestamos por Documento";
+
+ action: SQLCall CARGODATOS(
+	   
+      TipoDocumento: string,
+      NroDocumento: string,
+      PaisDocumento: numeric
+	 
+	  ): [ 
+	   
+	 
+	 	
+	]
+	{ 
+	
+	  	properties { 
+	  	("statement", "{call SP_ITF_PRESTAMOSXDOC (?, ?, ?, ?)}"),
+		("0", "TipoDocumento"), 
+		("1", "NroDocumento"), 
+		("2", "PaisDocumento"), 
+		("3", "out SCARGO : numeric")
+		 
+		 
+		     
+	      }; 
+
+    	
+    	action: SQLQuery PRESTAMOS(): [ 
+    		 	XML_TAG: string,
+    		 	COD_ERROR: numeric as CodError,
+    			OPERACION: numeric as Operacion,
+    			DESCRIPCION: string as Descripcion, 
+    			CUOTA: float as Cuota,
+    			MONEDA: numeric as Moneda,
+    			FECHAVTO: date as FechaVto
+    		]  {
+    	
+    	    properties 
+    			{ 
+    			("statement", "SELECT 'Prestamos' as XML_TAG, 0 as COD_ERROR, OPERACION, Descripcion_Prod as DESCRIPCION, CUOTA, MONEDA , FECHAVTO FROM ITF_PRESTAMOSXDOC WHERE TipoDoc=? AND NroDoc=? AND PaisDoc=? ORDER BY Ordinal_Mov"), 
+     			  ("0", "TipoDocumento"), 
+			  ("1", "NroDocumento"), 
+		          ("2", "PaisDocumento")
+    			  
+    
+                        }
+                   }
+    
+    
+     
+         
+
+}

@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-04-30T16:00:16 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report_alta_solicitud de credito" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isTitleNewPage="true" whenResourceMissingType="Error" uuid="b87569ae-99cc-4c21-ab09-d7d410d61f79">
+	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="92"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="JTS_OID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[JTS_OID]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUCURSAL" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT q.C1704 AS N_SOLICITUD,
+       g.NUM_GARANTIA AS NUM_GARANTIA,
+       gb.TIPO_BIEN AS COD_TIPO_BIEN,
+       (SELECT o.DESCRIPCION FROM OPCIONES o WITH(NOLOCK)
+         WHERE o.NUMERODECAMPO = 5873
+           AND o.OPCIONINTERNA = gb.TIPO_BIEN
+           AND o.IDIOMA = 'E') AS TIPO_BIEN,
+       tg.TIPO_GARANTIA AS COD_TIPO_GARANTIA,
+       tg.DSC_TIPO_GARANTIA AS TIPO_GARANTIA,
+       CONCAT(m.C6399,' - ',m.C6400) AS MONEDA,
+       FORMAT(gr.IMPORTE_REAL,'#,0.00') AS IMPORTE,
+       (SELECT o.DESCRIPCION FROM OPCIONES o WITH(NOLOCK)
+         WHERE o.NUMERODECAMPO = 6098
+           AND o.OPCIONINTERNA = gr.ESTADO_GARANTIA
+           AND o.IDIOMA = 'E') AS ESTADO_GARANTIA,
+       FORMAT(gr.FECHA_INICIO,'dd/MM/yyyy') AS F_DESDE,
+       FORMAT(gr.FCHVTO_GARANTIA,'dd/MM/yyyy') AS F_HASTA,
+       CASE WHEN ad.TIPO_SEGURO = 'M' THEN
+       			CONCAT('Seguro de Vida Individual                    ', + char(10) + 'Compañía Aseguradora: ', a.CODIGO,' - ',a.DESCRIPCION, + char(10) + 'Póliza: '  ,ad.NUMERO_POLIZA)
+       		WHEN ad.TIPO_SEGURO = 'A' THEN
+       			CONCAT('Seguro de Vida Colectivo de Saldo Deudor                    ', + char(10) + 'Compañía Aseguradora: ',  a.CODIGO,' - ',a.DESCRIPCION, + char(10) + 'Póliza: '  ,ad.NUMERO_POLIZA	)
+       		ELSE 'Sin Seguros' END	AS ASEGURADORA,
+       (CASE WHEN(GETDATE()>= gr.FECHA_INICIO AND GETDATE()<= gr.FCHVTO_GARANTIA) THEN 'Vigente' ELSE 'No Vigente' END) AS VIGENCIA,
+       qde.CUENTA AS CUENTA_ENTREGA,
+       (SELECT prod.C6251
+          FROM PRODUCTOS prod WITH(NOLOCK)
+         WHERE prod.C6250 = qde.PRODUCTO AND prod.TZ_LOCK = 0) AS DESC_PRODUCTO,
+       (SELECT suc.NOMBRESUCURSAL
+          FROM SUCURSALES suc WITH(NOLOCK)
+         WHERE suc.SUCURSAL = qde.SUCURSAL AND suc.TZ_LOCK = 0) AS SUCURSAL,
+       qd.CUENTA AS CUENTA_DEBITO,
+       (SELECT prod.C6251
+          FROM PRODUCTOS prod WITH(NOLOCK)
+         WHERE prod.C6250 = qd.PRODUCTO AND prod.TZ_LOCK = 0) AS DESC_PRODUCTO_DEBITO,
+       (SELECT suc.NOMBRESUCURSAL
+          FROM SUCURSALES suc WITH(NOLOCK)
+         WHERE suc.SUCURSAL = qd.SUCURSAL AND suc.TZ_LOCK = 0) AS SUCURSAL_DEBITO,
+	   FORMAT(q.C1601,'#,0.00') CAPITAL,
+       (SELECT prod.C6251
+          FROM PRODUCTOS prod WITH(NOLOCK)
+         WHERE prod.C6250 = cue.PRODUCTO AND prod.TZ_LOCK = 0) AS DESC_PRODUCTO_GARANTE,
+       (SELECT suc.NOMBRESUCURSAL
+          FROM SUCURSALES suc WITH(NOLOCK)
+         WHERE suc.SUCURSAL = cue.SUCURSAL AND suc.TZ_LOCK = 0) AS SUCURSAL_GARANTE,
+       cue.CUENTA AS CUENTA_DEBITO_GARANTE,
+		(SELECT isnull(sum(l.MONTO_FACTURABLE),0) AS SELLOS
+		FROM CI_FACTURA_LINEA l
+		JOIN BS_HISTORIA_PLAZO h ON l.ASIENTO = h.NROASIENTOMOV AND l.SUCURSAL_ASIENTO = h.SUCURSALMOV AND l.FECHA_PROCESO_ASIENTO = h.FECHAPROCESOMOV AND h.SALDOS_JTS_OID = $P{JTS_OID}
+		WHERE l.ID_CARGO = 255) AS SELLOS
+  FROM SALDOS q WITH(NOLOCK)
+  	   LEFT OUTER JOIN CRE_SOLICITUDCREDITO sol ON q.C1704 = sol.NUMEROSOLICITUD
+  	   LEFT OUTER JOIN saldos qde WITH(NOLOCK) ON qde.JTS_OID = sol.JTS_CUENTA_ACREDITAR
+       LEFT OUTER JOIN CRE_GARANTIACREDITO g WITH(NOLOCK) ON g.COD_CLIENTE= q.C1803 AND g.JTSOID_SALDO= q.JTS_OID
+       LEFT OUTER JOIN CRE_GARANTIA_BIENES gb WITH(NOLOCK) ON gb.NUM_GARANTIA= g.NUM_GARANTIA
+       LEFT OUTER JOIN CRE_GARANTIASRECIBIDAS gr WITH(NOLOCK) ON gr.NUM_GARANTIA=gb.NUM_GARANTIA AND gr.NUM_GARANTIA=g.NUM_GARANTIA
+       LEFT OUTER JOIN CRE_TIPOSGARANTIAS tg WITH(NOLOCK) ON tg.TIPO_GARANTIA = gr.TIPOGARANTIA
+       LEFT OUTER JOIN MONEDAS m WITH(NOLOCK) ON m.C6399=q.MONEDA
+       LEFT OUTER JOIN CRE_SEGURO_SALDO_DEUDOR ad WITH(NOLOCK) ON ad.SALDOS_JTS_OID =q.JTS_OID
+       LEFT OUTER JOIN CRE_Aseguradoras a WITH(NOLOCK) ON a.CODIGO = ad.ASEGURADORA
+       LEFT OUTER JOIN saldos qd WITH(NOLOCK) ON qd.JTS_OID = q.C1665
+       LEFT OUTER JOIN (SELECT TOP 1 JTS_CONTRACUENTA, JTS_OID_PRESTAMO FROM CRE_COBRANZA_CONTRA_CTAS WITH(NOLOCK)
+       					WHERE JTS_OID_PRESTAMO = $P{JTS_OID}
+       					ORDER BY ORDEN_COBRO ASC) sb ON sb.JTS_OID_PRESTAMO = q.JTS_OID
+	   LEFT OUTER JOIN saldos cue WITH(NOLOCK) ON cue.JTS_OID = sb.JTS_CONTRACUENTA
+ WHERE q.jts_oid = $P{JTS_OID}]]>
+	</queryString>
+	<field name="N_SOLICITUD" class="java.math.BigDecimal"/>
+	<field name="NUM_GARANTIA" class="java.math.BigDecimal"/>
+	<field name="COD_TIPO_BIEN" class="java.math.BigDecimal"/>
+	<field name="TIPO_BIEN" class="java.lang.String"/>
+	<field name="COD_TIPO_GARANTIA" class="java.math.BigDecimal"/>
+	<field name="TIPO_GARANTIA" class="java.lang.String"/>
+	<field name="MONEDA" class="java.lang.String"/>
+	<field name="IMPORTE" class="java.lang.String"/>
+	<field name="ESTADO_GARANTIA" class="java.lang.String"/>
+	<field name="F_DESDE" class="java.lang.String"/>
+	<field name="F_HASTA" class="java.lang.String"/>
+	<field name="ASEGURADORA" class="java.lang.String"/>
+	<field name="VIGENCIA" class="java.lang.String"/>
+	<field name="CUENTA_ENTREGA" class="java.math.BigDecimal"/>
+	<field name="DESC_PRODUCTO" class="java.lang.String"/>
+	<field name="SUCURSAL" class="java.lang.String"/>
+	<field name="CUENTA_DEBITO" class="java.math.BigDecimal"/>
+	<field name="DESC_PRODUCTO_DEBITO" class="java.lang.String"/>
+	<field name="SUCURSAL_DEBITO" class="java.lang.String"/>
+	<field name="CAPITAL" class="java.lang.String"/>
+	<field name="DESC_PRODUCTO_GARANTE" class="java.lang.String"/>
+	<field name="SUCURSAL_GARANTE" class="java.lang.String"/>
+	<field name="CUENTA_DEBITO_GARANTE" class="java.math.BigDecimal"/>
+	<field name="SELLOS" class="java.math.BigDecimal"/>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="38">
+			<staticText>
+				<reportElement x="165" y="18" width="170" height="20" uuid="af400085-b3f5-4116-b7a6-3c272213dd0d"/>
+				<textElement textAlignment="Center">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Principales datos de la Solicitud número:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="335" y="18" width="66" height="20" uuid="882184eb-7c19-4dc2-ab5e-2891d349e8ef"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{N_SOLICITUD}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="159" height="20" uuid="a76df43d-396e-4610-90bd-b41f82afd01a"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nuevo Banco del Chaco SA]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="507" y="1" width="48" height="19" uuid="e694e25a-800a-41bf-8526-91823667c4c1"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="419" y="1" width="88" height="19" uuid="26e57e5d-55a2-433d-83d9-0487d8c46c1b">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{SUCURSAL}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="326">
+			<staticText>
+				<reportElement x="0" y="0" width="80" height="13" uuid="29b53d9f-d528-4d9c-b7b0-b286f950541a"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[LIQUIDACION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="313" width="117" height="13" uuid="46a4a446-0140-46ba-81b1-eb1bcf7c96a2"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[GARANTIAS RECIBIDAS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="124" width="117" height="13" uuid="8b1d7ccb-606b-4a1b-be06-ccfed478be54"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[SEGUROS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="183" width="117" height="13" uuid="52c04a46-e207-4e23-ab43-dfd8d1eb3f1f"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA DE ENTREGA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="196" width="116" height="13" uuid="ec379757-a994-4c5a-9f4a-632aefe7aec2"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tipo de Cuenta del titular:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="209" width="45" height="13" uuid="7670f511-f44d-49d5-bfab-9c9699b231e5"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="292" y="209" width="55" height="13" uuid="596a588d-7d3c-42dd-ac03-ca51dfabdb8a"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[CUENTA N°:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="294" y="260" width="55" height="13" uuid="124a3597-97fd-4f04-a4c9-898afdcedab7"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[CUENTA N°:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="260" width="45" height="13" uuid="135aff2f-1a48-4512-bedf-ce4ebbd167e7"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="247" width="116" height="13" uuid="c4f9c5f1-2335-4522-8087-130eb2101cb6"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tipo de Cuenta del titular:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="234" width="117" height="13" uuid="98c15108-9293-4621-b83d-b10a11ac6d9e"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CUENTA DE COBRO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="283" width="116" height="13" uuid="66189707-d48e-4442-9e46-8c9e5bede849">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{CUENTA_DEBITO_GARANTE}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Tipode Cuenta del garante:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="296" width="45" height="13" uuid="e9eb835c-b984-4ee5-a49e-c34553ece1a6">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+					<printWhenExpression><![CDATA[$F{CUENTA_DEBITO_GARANTE}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="294" y="296" width="55" height="13" uuid="bbba7c46-9687-4585-85fd-23b5b3d14644">
+					<printWhenExpression><![CDATA[$F{CUENTA_DEBITO_GARANTE}!=null]]></printWhenExpression>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[CUENTA N°:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="347" y="209" width="143" height="13" uuid="79fe6d50-2a8c-4bd5-8448-c5c1460d68c5"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA_ENTREGA}==null?" ":$F{CUENTA_ENTREGA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="135" y="196" width="127" height="13" uuid="61a63e17-ae1f-4c95-aa29-34df91e151be"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESC_PRODUCTO}==null?" ":$F{DESC_PRODUCTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="64" y="209" width="127" height="13" uuid="29c009db-5492-46cf-a193-6ec3a89dca5f"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}==null?" ":$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="135" y="247" width="127" height="13" uuid="74dbd835-eb00-489b-b538-17581c51f718">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESC_PRODUCTO_DEBITO}==null?" ":$F{DESC_PRODUCTO_DEBITO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="349" y="260" width="141" height="13" uuid="5b9de812-21ec-4a0e-bb84-76ad9d5fae50"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA_DEBITO}==null?" ":$F{CUENTA_DEBITO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="64" y="260" width="127" height="13" uuid="6e14cd25-ff0f-497f-8123-831bbe2a8a56">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL_DEBITO}==null?" ":$F{SUCURSAL_DEBITO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="19" y="137" width="471" height="46" forecolor="#000000" backcolor="#FFFFFF" uuid="4ba8b53c-ef7f-47ec-b58e-1c375170c4c8"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ASEGURADORA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="135" y="283" width="127" height="13" uuid="7f4b86d2-1092-4001-a95f-8ede56437d92">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DESC_PRODUCTO_GARANTE}==null?" ":$F{DESC_PRODUCTO_GARANTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="64" y="296" width="127" height="13" uuid="028f86b6-46e4-43eb-8afd-f89ccf922473">
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL_GARANTE}==null?" ":$F{SUCURSAL_GARANTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement key="" x="349" y="296" width="141" height="13" uuid="d1d68e49-f1e6-42e1-90da-d4345cf9788a"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CUENTA_DEBITO_GARANTE}==null?" ":$F{CUENTA_DEBITO_GARANTE}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement positionType="Float" x="19" y="13" width="536" height="25" uuid="9f6dab89-9061-4872-ba47-de5e354cedc8">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="CAPITAL">
+					<subreportParameterExpression><![CDATA[$F{CAPITAL}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="JTS_OID">
+					<subreportParameterExpression><![CDATA[$P{JTS_OID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR}+"8074_SubreporteGastos.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="90">
+			<textField>
+				<reportElement x="59" y="0" width="136" height="13" uuid="58ed0206-6838-4b3d-bcd1-870b80ff16dc"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":$F{NUM_GARANTIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="259" y="13" width="160" height="13" uuid="78a79ba8-3d31-435b-96ea-9af1a43d10fc"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_BIEN}==null?" ":$F{TIPO_BIEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="144" y="13" width="70" height="13" uuid="047cc724-c77a-46b2-a263-489ff8191d3e"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COD_TIPO_BIEN}==null?" ":$F{COD_TIPO_BIEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="144" y="26" width="59" height="13" uuid="4b7717d3-f317-4917-9311-3009c004a3ac"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COD_TIPO_GARANTIA}==null?" ":$F{COD_TIPO_GARANTIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="259" y="26" width="160" height="13" uuid="4064b705-db14-498f-b8fc-76eaf63dbe9c"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_GARANTIA}==null?" ":$F{TIPO_GARANTIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="59" y="51" width="155" height="13" uuid="88835988-4ca9-4caf-bac9-d43b1e90ee53"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":$F{MONEDA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="245" y="51" width="174" height="13" uuid="daca2681-f89a-4aef-a296-1cd75e6767cd"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IMPORTE}==null?" ":$F{IMPORTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="77" width="127" height="13" uuid="ca7d6db5-5ca4-48c3-8f01-20cd303c15a1"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESTADO_GARANTIA}==null?" ":$F{ESTADO_GARANTIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="214" y="64" width="61" height="13" uuid="46babaa8-7a76-41bb-bcc9-8ef6b24f5edb"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{F_DESDE}==null?" ":$F{F_DESDE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="322" y="64" width="97" height="13" uuid="195b234a-7228-4dc6-aabf-dcf14378e723"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{F_HASTA}==null?" ":$F{F_HASTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="87" y="64" width="78" height="13" uuid="0a2e4c37-2b9e-474c-a6de-f864c3bad069"/>
+				<textElement>
+					<font size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":$F{VIGENCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="19" y="0" width="40" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="f4585e34-212f-4589-af27-dcbd249ef9a1"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Numero:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="19" y="13" width="125" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="c124db97-ac35-4959-9168-ff44333df07b"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Tipo de Instrumentación NBCH:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="214" y="13" width="45" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="e7b1d776-3ff7-40fb-b2d7-9afcd2e2284e"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Descipción:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="214" y="26" width="45" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="08f2bf11-75ef-4c94-b670-774ecb7304db"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Descipción:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="19" y="26" width="125" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="2952883b-622f-47ff-995b-166a27a1221e"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Tipo de Garantía BCRA:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="19" y="51" width="40" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="a4d22eab-daec-4f8a-8cf3-1fd948539330"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Moneda"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="214" y="51" width="31" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="8e4f30d9-1aa1-4d00-9f1c-1fc54054d52b"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Monto"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="19" y="64" width="68" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="800165b8-2057-48a2-815e-0329d45064b9"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Situación Vigente:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="165" y="64" width="49" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="788879f7-0846-4b93-bdc1-2b690d75219d"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Desde:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="275" y="64" width="47" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="e3ef13e1-22e6-4a9c-8a31-b6cc4d5b9115"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Hasta:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="19" y="77" width="68" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="64cfb71c-6ac6-4144-b769-d7b4fd12a022"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?" ":"Estado:"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement mode="Transparent" x="19" y="0" width="151" height="13" forecolor="#000000" backcolor="#FFFFFF" uuid="4efc902b-7e89-4004-a6b2-9e2e06912105"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="8" isBold="false" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_GARANTIA}==null?"Sin Garantías":""]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

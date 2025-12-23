@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.automaticprocess.clientesactivos.HistoricoContador</class-name>
+        <entity-name>core.vo_Historico_Contador_Clientes</entity-name>
+        <table-name>CLI_HISTORICO_CANTIDAD_ACTIVOS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>fechaHoraSistema</attribute-name>
+            <column-name>FECHAHORASISTEMA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>cantidadClientes</attribute-name>
+            <column-name>CANTIDADCLIENTES</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.clientesactivos.HistoricoContador</class-name>
+        <query-name>query.vo_ContadorClientesActivos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					select count(distinct c1803) as CANTIDADCLIENTES
+					  from saldos 
+					 where tz_lock = 0 
+					   and c1803 &lt;&gt; 0 
+					   and ((C1785 &lt; 4 and C1651 &lt;&gt; '1') or (C1785 &gt;= 4 and C1604 &lt;&gt; 0))
+				</sentence>
+        <attribute>
+            <attribute-name>cantidadClientes</attribute-name>
+            <column-name>CANTIDADCLIENTES</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

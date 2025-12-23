@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.reservassobresaldos.QueryReservaSobreSaldos</class-name>
+        <query-name>query.QueryReservaSobreSaldos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT NRO_RESERVA, SALDO_JTS_OID, TIPO_RESERVA
+						  FROM VTA_RESERVAS RES
+						 INNER JOIN VTA_TIPO_RESERVAS TPO
+							   ON RES.TIPO_RESERVA = TPO.TIPO
+								 AND RES.ESTADO IN (0, 1)
+								 AND TPO.VTO_AUTOMATICO = 'S'
+								 AND RES.TZ_LOCK = 0
+								 AND TPO.TZ_LOCK = 0
+								 ORDER BY SALDO_JTS_OID
+					</sentence>
+        <attribute>
+            <attribute-name>nroReserva</attribute-name>
+            <column-name>NRO_RESERVA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoReserva</attribute-name>
+            <column-name>TIPO_RESERVA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.servicio.reservasjudiciales.objectdomain.QueryReservasJudicial</class-name>
+        <query-name>query.QueryReservasJudicial</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT SUM(IMPORTE_ORIGEN) *-1 AS IMPORTE
+			  FROM VTA_RESERVAS RES
+			 INNER JOIN VTA_TIPO_RESERVAS TPO
+				 ON RES.TIPO_RESERVA = TPO.TIPO
+				 AND RES.ESTADO = 1
+				 AND TPO.CONSIDERAR &lt;= ?
+				 AND RES.TZ_LOCK = 0
+				 AND TPO.TZ_LOCK = 0
+				 AND RES.SALDO_JTS_OID = ?
+			</sentence>
+        <attribute>
+            <attribute-name>importe</attribute-name>
+            <column-name>IMPORTE</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.reservasjudiciales.ReservaJudicial</class-name>
+        <query-name>query.vo_InformarReservasJudiciales</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				        select SALDO_JTS_OID, ESTADO, IMPORTE_ORIGEN, p.c6251 descripcion   from 
+					           (SELECT SALDO_JTS_OID, ESTADO, sum(IMPORTE_ORIGEN) IMPORTE_ORIGEN
+					                               FROM VTA_RESERVAS RES
+					                                     where 
+					                  ((RES.TIPO_RESERVA = ?
+					                                        AND RES.ESTADO = 1
+					                                        AND RES.TZ_LOCK = 0
+					                  AND RES.FECHA_ENVIADO is null) or 
+					                  (RES.TIPO_RESERVA = ?
+					                                        AND RES.ESTADO = 2
+					                                        AND RES.TZ_LOCK = 0 AND RES.estado_enviado != 2))
+					                  group by RES.SALDO_JTS_OID, ESTADO) sm, saldos s, productos p
+				             where sm.SALDO_JTS_OID = s.jts_oid and s.producto = p.c6250 and s.tz_lock = 0	
+						</sentence>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importe_origen</attribute-name>
+            <column-name>IMPORTE_ORIGEN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>descripcion</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.topaz.server.objectsdomain.HistoricoReservasNegocio</class-name>
+        <entity-name>core.vo_Historico_Reservas_Negocio</entity-name>
+        <table-name>VTA_HIST_RN</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>jts_oid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <key>primary</key>
+            <attribute-id-generator>selfNumerator</attribute-id-generator>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>nroReserva</attribute-name>
+            <column-name>NRO_RESERVA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoReserva</attribute-name>
+            <column-name>TIPO_RESERVA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importe</attribute-name>
+            <column-name>IMPORTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>SIGNO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>DESCRIPCION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.topaz.server.objectsdomain.TipoReservas</class-name>
+        <entity-name>core.vo_Tipo_Reservas</entity-name>
+        <table-name>VTA_TIPO_RESERVAS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tipoReserva</attribute-name>
+            <column-name>TIPO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>vtoAutomatico</attribute-name>
+            <column-name>VTO_AUTOMATICO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>descripcion</attribute-name>
+            <column-name>DESCRIPCION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>considerar</attribute-name>
+            <column-name>CONSIDERAR</column-name>
+        </attribute>
+    </class>
+</map>

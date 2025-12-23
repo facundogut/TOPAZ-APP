@@ -1,0 +1,34 @@
+EXECUTE('
+
+CREATE OR ALTER PROCEDURE [dbo].[SP_ITF_ACT_IND_REGISTRO] 
+
+AS 
+ 
+   BEGIN
+   
+   DECLARE @flag INT; 
+   DECLARE @idmax NUMERIC(15);
+
+	SET @flag = (SELECT count(id) FROM dbo.ITF_CUENTAS_BEE_AUX);
+   
+	IF @flag > 0
+		BEGIN
+			SELECT @idmax = max(id) FROM dbo.ITF_CUENTAS_BEE_AUX
+			
+			UPDATE ITF_CUENTAS_BEE_AUX
+		    SET TIPO_REGISTRO = ''1''
+		    WHERE ID = 1 AND LINEA LIKE ''0311%''
+		    
+			UPDATE ITF_CUENTAS_BEE_AUX
+		    SET TIPO_REGISTRO = ''3''
+		    WHERE ID = @idmax AND LINEA LIKE ''0311%''
+		
+		    UPDATE ITF_CUENTAS_BEE_AUX
+		    SET TIPO_REGISTRO = ''2''
+		    WHERE TIPO_REGISTRO IS null
+		END
+      	 	
+   END;
+')
+
+

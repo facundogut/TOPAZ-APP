@@ -1,0 +1,6 @@
+﻿EXECUTE('
+UPDATE dbo.OPCIONES
+SET DESCRIPCION = ''Renueva Monto (capital + intereses)''
+WHERE NUMERODECAMPO = 1659 AND IDIOMA = ''E'' AND OPCIONINTERNA = ''M''
+')
+

@@ -1,0 +1,92 @@
+VERSION:051
+TN  NN 1006TValida SWIFT                            C0000 00
+ NSSNN 0891   Cant. cuotas   INNSNL00000701520027020200001100010000700070027013700
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 7928   Nro. Orden PagoINNSNL00002901810153069500101100000003300190052012200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0929   Numérico       INNSNL00201720172037213700001100000201720172037213600
+ NSSNN 2488   Numerico 9     INNSNL00201720172037213700001100000201720172037213600
+ NSSNN 2489   Numerico 9     INNSNL00201720172037213700001100000201720172037213600
+ NNNNN 0532   Numerico2      INNSNF00000701500027021000001100000000700070027012600
+/V=F(ValidateSwiftFun,C2488)
+ NNNNN 0533   Cant. cheques  INNSNF00000701500027021000001100000000700070027012600
+/?=C2489#0
+/V=F(ValidateSwiftFun,C2489)
+CNNNNN M 00000000000000000000110
+/F=C532=0
+/P=I202
+/M="El swift "+C2488+ " tiene errores. Modifiquelo"
+CNNNNN M 00000000000000000000110
+/?=C2489#0
+/F=C533=0
+/P=I203
+/M="El swift "+C2489+ " tiene errores. Modifiquelo"
+ NNNNN 0546   Numerico2      INNSNF00000701500027021000001100000000700070027012600
+/?=!I202
+/V=F(PrintToPrinterByClient,0,"Mensajes Swift",C2488.1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3268   Ordinal        INNSNF00000701500027021000001100000000700070027012600
+/?=C2489#0Y!I203
+/V=F(PrintToPrinterByClient,0,"Mensajes Swift",C2489.1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0028   Concepto       INNNNF00003401350054049200101100000003400270054014700
+/?=C7928>0
+/V="O.Pago" + "   " + C7928.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificacion Status Swift para envío    M4341U00
+/?=!I202YC2488#0
+ NNNNN 5546   Identificacion INNSNA00000701500027027000001100000000700070027012600
+/V=C2488.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 5566   Status         INNSNK00000701500027027000001100000000700070027012600
+/V=0
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 5575                  INNSNK00000701500027027000001100000000700070027012600
+/V=P
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+TN  NN 1009TModificacion Status Swift para envío    M4341U00
+/?=!I203YC2489#0
+ NNNNN 5546   Identificacion INNSNA00000701500027027000001100000000700070027012600
+/V=C2489.1
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 5566   Status         INNSNK00000701500027027000001100000000700070027012600
+/V=0
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 5575                  INNSNK00000701500027027000001100000000700070027012600
+/V=P
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+TN  NN 1009TModificacion Generica                   M3211U00
+/?=I202
+ NNNNN 7928   Nro. Orden PagoINNSNA00002901810153069500101100000003300190052012200
+/V=C7928.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7933   Estado         INNSNK00002901810153069500101100000003300190052012200
+/V=D
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9713   jts oid caja   INNSNK00002901810153069500101100000003300190052012200
+/V=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TFinaliza                                C0001 00
+DN  NN 0000Ov00
+*#I202#Swift con errores
+*#I203#1

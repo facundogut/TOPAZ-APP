@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/sibe/ListaSectores</uri>
+    <serviceDescription>Consulta SIBE Sectores</serviceDescription>
+    <title>Consulta SIBE Sectores</title>
+    <querys>
+        <query id="1" name="ListaSectores" type="MULTIPLE">
+            <sql>SELECT TIPO AS tipo, ID AS id, DESCRIPCION AS descripcionSector
+FROM SIBE_SECTORES
+WHERE TZ_LOCK = 0</sql>
+            <input/>
+            <output>
+                <level groupby="" name="sectores">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>id</queryname>
+                        <servicename>id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionSector</queryname>
+                        <servicename>descripcionSector</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tipo</queryname>
+                        <servicename>tipo</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="vacio" type="SIMPLE">
+            <sql>select '' as campo from parametros where 1 = 0</sql>
+            <input/>
+            <output>
+                <level groupby="" name="vacio">
+                    <outParameter description="" type="STRING">
+                        <queryname>campo</queryname>
+                        <servicename>vacio</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

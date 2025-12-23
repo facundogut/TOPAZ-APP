@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="C. Datos sobre actividad economica PN" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="2.415765000000001"/>
+	<property name="ireport.x" value="164"/>
+	<property name="ireport.y" value="137"/>
+	<parameter name="idPersona" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT t.RowNum
+, t.numero
+, isnull( convert(varchar(50),t.IDPERSONA),'') AS IDPERSONA
+, isnull(t.CARGO,'') AS CARGO
+, isnull( t.PROFESION,'') AS PROFESION
+, isnull( convert(NVARCHAR(50),t.ANTIGUEDAD),'') AS ANTIGUEDAD
+, isnull( t.NOMBRENEGOCIO,'') AS NOMBRENEGOCIO
+, t.PROMVTAS
+, isnull( t.TEL1,'') AS TEL1
+, isnull( t.EMAIL,'') AS EMAIL
+, isnull( t.WEB,'') AS WEB
+, isnull( t.DIRECCION ,'') AS DIRECCION
+,ISNULL(act.C1266,'') AS DES_ACTIVIDAD_ECON
+ FROM(
+select ROW_NUMBER() OVER (ORDER BY idpersona) AS RowNum
+,*
+ from  (SELECT $P{idPersona}
+ AS numero) b
+
+LEFT JOIN vlc_ActividadEconomicaPN v on v.idpersona =b.numero) AS t
+LEFT JOIN CL_NEGOCIOS cn ON t.IDPERSONA =cn.IDPERSONA
+LEFT JOIN TC_ACIVIDADESCIIU act ON act.C1265 =cn.CODACTINTERNO
+ WHERE rownum=1]]>
+	</queryString>
+	<field name="RowNum" class="java.lang.Long"/>
+	<field name="numero" class="java.lang.Boolean"/>
+	<field name="IDPERSONA" class="java.lang.String"/>
+	<field name="CARGO" class="java.lang.String"/>
+	<field name="PROFESION" class="java.lang.String"/>
+	<field name="ANTIGUEDAD" class="java.lang.String"/>
+	<field name="NOMBRENEGOCIO" class="java.lang.String"/>
+	<field name="PROMVTAS" class="java.math.BigDecimal"/>
+	<field name="TEL1" class="java.lang.String"/>
+	<field name="EMAIL" class="java.lang.String"/>
+	<field name="WEB" class="java.lang.String"/>
+	<field name="DIRECCION" class="java.lang.String"/>
+	<field name="DES_ACTIVIDAD_ECON" class="java.lang.String"/>
+	<detail>
+		<band height="180" splitType="Stretch">
+			<staticText>
+				<reportElement x="56" y="67" width="115" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Nombre de la Empresa:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="240" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[C. Datos sobre la Actividad económica o empleo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="276" y="20" width="51" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Profesión:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="43" y="81" width="43" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Dirección:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="140" width="180" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Descripción de la Actividad de la Empresa:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="127" y="123" width="44" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Sitio Web:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="43" y="95" width="43" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Teléfono:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="53" width="54" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Antiguedad:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="53" width="204" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Cobertura(En caso de ser negocio propio):]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="113" y="164" width="127" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Promedio de Vtas Mensuales:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="32" y="109" width="128" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Correo electrónico del trabajo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="16" y="20" width="63" height="14"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Puesto/Cargo:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="171" y="67" width="372" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRENEGOCIO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="86" y="81" width="457" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DIRECCION}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="86" y="95" width="457" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{TEL1}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="160" y="109" width="383" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{EMAIL}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="171" y="123" width="372" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{WEB}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement x="240" y="164" width="303" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PROMVTAS}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="79" y="20" width="181" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CARGO}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="327" y="20" width="216" height="14"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{PROFESION}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="179" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="240" y="0" width="303" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{DES_ACTIVIDAD_ECON}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="86" y="53" width="105" height="14"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{ANTIGUEDAD}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="212" y="153" width="331" height="1"/>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+</jasperReport>

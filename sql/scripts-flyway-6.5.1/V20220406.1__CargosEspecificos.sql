@@ -1,0 +1,1 @@
+﻿Execute('ALTER TABLE ITF_CONVENIOS_SACHEEP_SAMEEP ALTER COLUMN importe_cargo_especifico NUMERIC(10,2); ')

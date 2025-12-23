@@ -1,0 +1,24 @@
+service DireccionCliente; 
+description "Servicio Direccion Cliente"; 
+
+action:	SQLQuery Entity ( 
+ IDCLIENTE: string
+): [ 
+	TIPODIRECCION: string,
+	PAIS: string,
+	DPTOCIUDAD: string,
+   	BARRIOZONA: string,
+	CALLE: string,
+	NUMERO: string,
+	APTO: string,
+	EMAIL: string,
+	TELEFONOS: string,
+   	ESTADO: string
+]
+{ 
+  	properties { 
+  	("statement", "SELECT o.DESCRIPCION AS TIPODIRECCION, trim(p.NOMBREPAIS) AS PAIS, trim(d.CIUDADLOCALIDAD) || '/'|| trim(d.DEPARTAMENTOPROVINCIAESTADO) AS DPTOCIUDAD, d.BARRIOZONA AS BARRIOZONA, d.CALLE AS CALLE, d.NUMEROPUERTA AS NUMERO, ltrim('Apto. ' ||d.APARTAMENTO || ' - Piso ' || d.PISO) AS APTO, d.TELEFONOS AS TELEFONOS, d.EMAIL AS EMAIL, d.ESTADO AS ESTADO FROM CLI_DIRECCIONES_CLIENTES d JOIN OPCIONES o ON o.NUMERODECAMPO = 1249 AND o.OPCIONDEPANTALLA = d.TIPODIRECCION AND o.IDIOMA = 'E' JOIN CLI_PAISES p ON p.CODIGOPAIS = d.CODIGOPAIS AND p.TZ_LOCK = 0 WHERE d.CODIGOCLIENTE = ? AND d.TZ_LOCK = 0 "),
+	("0", "IDCLIENTE")
+	}
+}
+

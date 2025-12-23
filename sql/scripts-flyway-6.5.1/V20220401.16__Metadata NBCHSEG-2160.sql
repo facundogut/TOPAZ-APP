@@ -1,0 +1,10 @@
+﻿EXECUTE('
+-----------------------
+--CORRECCIÓN DE AYUDA--
+-----------------------
+UPDATE dbo.AYUDAS
+SET DESCRIPCION = ''Ayuda Convenios Recaudos''
+	, CAMPOS = ''44741R;44742;44743;44744;44747;44750;44756;44757;44758;44759;44760;44761;''
+WHERE NUMERODEAYUDA = 44691
+----
+')

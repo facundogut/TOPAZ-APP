@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Prevision_Crediticia" language="groovy" pageWidth="850" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="810" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="99"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="TOPAZ_FECHA_SISTEMA" class="java.util.Date" isForPrompting="false"/>
+	<parameter name="TOPAZ_INICIALES_USUARIO" class="java.lang.String" isForPrompting="false"/>
+	<parameter name="FECHAP" class="java.util.Date"/>
+	<parameter name="FECHA_PROCESO" class="java.util.Date" isForPrompting="false">
+		<defaultValueExpression><![CDATA[$P{FECHAP} == null ? $P{TOPAZ_FECHA_SISTEMA} : $P{FECHAP}]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+     s."SUCURSAL",
+     s."C1803" AS CLIENTE,
+     c."C1000" AS NOMBRE,
+     s."CUENTA",
+     s."C1701" AS CALIF_SALDO,
+     c."C1046" AS CALIF_CLIENTE,
+     datediff(day,S.c1628,i.FECHA_PROCESO)AS DIAS_ATRASO,
+     i.porcentaje_Provision AS "PORCENTAJE_PREVISION",
+     i.PROVISIOn AS "PROVISION_CALCULADA",
+     s."C1645" AS CUOTA,
+     s."C1627" AS FECHA_VTO,
+     S.C1624 AS ULT_PAGO,
+     i."FECHA_PROCESO"
+FROM
+     "SALDOS" s,
+     "HISTORICO_PREVISIONES" i,
+     "CL_CLIENTES" c
+WHERE
+     s.JTS_OID = i.SALDO_JTS_OID
+ AND c.C0902 = s.C1803
+     and s.tz_lock = 0
+     and c.tz_lock = 0
+     AND s.C1604<0
+ AND i.FECHA_PROCESO = $P{FECHA_PROCESO}]]>
+	</queryString>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="CLIENTE" class="java.math.BigDecimal"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="CALIF_SALDO" class="java.lang.String"/>
+	<field name="CALIF_CLIENTE" class="java.lang.String"/>
+	<field name="DIAS_ATRASO" class="java.lang.Integer"/>
+	<field name="PORCENTAJE_PREVISION" class="java.math.BigDecimal"/>
+	<field name="PROVISION_CALCULADA" class="java.math.BigDecimal"/>
+	<field name="CUOTA" class="java.math.BigDecimal"/>
+	<field name="FECHA_VTO" class="java.sql.Timestamp"/>
+	<field name="ULT_PAGO" class="java.sql.Timestamp"/>
+	<field name="FECHA_PROCESO" class="java.sql.Timestamp"/>
+	<variable name="CUENTA_1" class="java.lang.Integer" resetType="Group" resetGroup="SUCURSAL" calculation="Count">
+		<variableExpression><![CDATA[$F{CUENTA}]]></variableExpression>
+	</variable>
+	<variable name="IMPONIBLE_1" class="java.lang.Double" resetType="Group" resetGroup="CLIENTE" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="MONTO_PREV_1" class="java.lang.Double" resetType="Group" resetGroup="CLIENTE" calculation="Sum">
+		<variableExpression><![CDATA[$F{PROVISION_CALCULADA}]]></variableExpression>
+	</variable>
+	<group name="SUCURSAL">
+		<groupExpression><![CDATA[$F{SUCURSAL}]]></groupExpression>
+		<groupHeader>
+			<band height="24">
+				<staticText>
+					<reportElement x="38" y="0" width="59" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Sucursal]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="97" y="0" width="25" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.Long"><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="22"/>
+		</groupFooter>
+	</group>
+	<group name="CLIENTE">
+		<groupExpression><![CDATA[$F{CLIENTE}]]></groupExpression>
+		<groupHeader>
+			<band height="4"/>
+		</groupHeader>
+		<groupFooter>
+			<band height="22">
+				<staticText>
+					<reportElement x="87" y="0" width="112" height="20"/>
+					<textElement>
+						<font size="12" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Totales Cliente]]></text>
+				</staticText>
+				<textField pattern="#,##0.00;-#,##0.00">
+					<reportElement x="526" y="0" width="58" height="18"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$V{MONTO_PREV_1}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="58" splitType="Stretch">
+			<textField>
+				<reportElement x="700" y="29" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{TOPAZ_INICIALES_USUARIO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="329" y="34" width="30" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="650" y="29" width="50" height="20"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[USUARIO:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="303" y="9" width="223" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PREVISIÓN DE CRÉDITOS]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="650" y="9" width="50" height="20"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<textField pattern="dd MMMMM yyyy">
+				<reportElement x="359" y="34" width="156" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{FECHA_PROCESO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="700" y="9" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{TOPAZ_FECHA_SISTEMA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="49" height="38"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="268" y="0" width="51" height="38"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[CUENTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="479" y="0" width="37" height="38"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[PORC. PREV.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="527" y="2" width="59" height="36"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[MONTO PREVISIÓN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="49" y="0" width="57" height="38"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="330" y="0" width="43" height="38"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[CALIF. SALDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="426" y="0" width="43" height="38"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[DIAS ATRASO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="673" y="1" width="59" height="37"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[ULTIMO PAGO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="378" y="0" width="43" height="38"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[CALIF. CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="601" y="2" width="59" height="36"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[FECHA VENCIM.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="1" width="810" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="39" width="810" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="49" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{CLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="49" y="0" width="161" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="252" y="0" width="77" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="329" y="0" width="42" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CALIF_SALDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="378" y="1" width="43" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CALIF_CLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="426" y="0" width="43" height="20">
+					<printWhenExpression><![CDATA[($F{DIAS_ATRASO})>0]]></printWhenExpression>
+				</reportElement>
+				<textElement/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{DIAS_ATRASO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="479" y="0" width="36" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.Long"><![CDATA[$F{PORCENTAJE_PREVISION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00;-#,##0.00">
+				<reportElement x="526" y="0" width="58" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{PROVISION_CALCULADA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="601" y="0" width="59" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHA_VTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="673" y="0" width="59" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{ULT_PAGO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+	<noData>
+		<band height="50">
+			<staticText>
+				<reportElement x="337" y="21" width="413" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[No hay datos para procesar Previsión Crediticia]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/saldos/cuentaVista/getAsientosIB/{fechaHoraDesde}/{fechaHoraHasta}/{pagina}/{largopagina}</uri>
+    <serviceDescription>ConsultaAsientosIB</serviceDescription>
+    <title>ConsultaAsientosIB</title>
+    <querys>
+        <query id="1" name="paginado" type="MULTIPLE">
+            <sql>
+				DECLARE 
+				@Desde VARCHAR(30), 
+				@Hasta VARCHAR(30), 
+				@pagina  AS INT, 
+				@largopagina AS INT, 
+				@TotalRegistros INT = 0, 
+				@resto INT = 0, 
+				@primerRegistroPag INT = 0, 
+				@ultimoRegistroPag INT = 0; 
+				
+				SET @Desde =?;
+				SET @Hasta =?;
+				SET @pagina =?;
+				SET @largopagina =?;
+				
+				if(@Desde &gt; @Hasta) 
+				BEGIN 
+					THROW 51000, 'Error fechas, desde mayor que hasta.', 1; 
+				END 
+				
+				SET @TotalRegistros = ( 
+					select 
+					count(*) 
+					from dbo.MOVIMIENTOS_CONTABLES (nolock) mc 
+					inner join dbo.ASIENTOS (nolock) a on a.ASIENTO = mc.ASIENTO and a.SUCURSAL = mc.SUCURSAL and a.FECHAPROCESO = mc.FECHAPROCESO and a.ESTADO = 77 
+					inner join dbo.HISTORY (nolock) h on h.TRANSACTIONID = a.ASIENTO and h.BRANCH = a.SUCURSAL and h.PROCESSDATE = a.FECHAPROCESO and h.STATE = 77 
+					inner join dbo.SALDOS (nolock) s on s.JTS_OID = mc.SALDO_JTS_OID and s.C1785 in (2,3) and s.TZ_LOCK = 0 
+					inner join dbo.VTA_SALDOS (nolock) vs on vs.JTS_OID_SALDO = s.JTS_OID and vs.OPERAIB = 'S' and vs.TZ_LOCK = 0 
+					inner join dbo.PRODUCTOS (nolock) p on p.C6250 = s.PRODUCTO and p.TZ_LOCK = 0 
+					inner join dbo.MONEDAS (nolock) m on m.C6399 = s.MONEDA and m.TZ_LOCK = 0 
+					left join dbo.TTR_CODIGO_TRANSACCION_DEF (nolock) tctd on tctd.CODIGO_TRANSACCION = mc.COD_TRANSACCION and tctd.TZ_LOCK = 0 
+					left join dbo.ITF_IB_CODTR_CODIB (nolock) icc on mc.COD_TRANSACCION = icc.CODIGO_TRANSACCION 
+					left join dbo.HISTORICO_MOVIMIENTOS (nolock) hm on hm.JTS_OID = s.JTS_OID and hm.fechaAsiento = mc.FECHAPROCESO and hm.sucursalAlta = mc.SUCURSAL and hm.asiento = mc.ASIENTO and hm.movJtsOid = mc.JTS_OID and hm.TZ_LOCK = 0 
+					where h.DATE_ &gt;= @Desde 
+					and h.DATE_ &lt;= @Hasta 
+					and mc.CAPITALREALIZADO > 0 
+				); 
+				
+				SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina); 
+				SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1; 
+				SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina); 
+				
+				IF (@resto &lt; 0) 
+				BEGIN 
+					SET @resto = 0; 
+				END 
+				
+				IF (@ultimoRegistroPag &gt; @TotalRegistros) 
+				BEGIN 
+					SET @ultimoRegistroPag = @TotalRegistros; 
+				END 
+				
+				IF (@pagina &gt; (select dbo.ITFcantPaginas (@TotalRegistros, @largopagina))) 
+				BEGIN 
+					SELECT 
+					@pagina as paginaActual, 
+					(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) as cantidadPaginas, 
+					@largopagina as registroPorPag, 
+					@TotalRegistros as totalRegistros, 
+					@primerRegistroPag as primerRegistroPag, 
+					@ultimoRegistroPag as ultimoRegistroPag, 
+					@resto as siguientesRegistros, 
+					NULL as SUCURSAL, 
+					NULL as NROCUENTA, 
+					NULL as MODULO, 
+					NULL as CODIGO_MONEDA, 
+					NULL as FECHA_MOVIMIENTO, 
+					NULL as FECHA_VALOR, 
+					NULL as FECHA_ALTA, 
+					NULL as ACCION_MOVIMIENTO, 
+					NULL as CONFORMADO_DIFERIDO, 
+					NULL as IMPORTE, 
+					NULL as NUMERO_COMPROBANTE, 
+					NULL as SUCURSAL_ORIGEN_MOV, 
+					NULL as IDENTIFICACION_DEPOSITANTE, 
+					NULL as CONCEPTO, 
+					NULL as CUIT_ORIGINANTE, 
+					NULL as NUMERO_EXTRACTO, 
+					NULL as FECHA_EXTRACTO, 
+					NULL as ID_ASIENTO, 
+					NULL as ASIENTO_EXTORNADO, 
+					NULL as CODIGO_TRANSACCION, 
+					NULL as CODIGO_MOVIMIENTO, 
+					NULL as CBU, 
+					NULL as DESCRIPCION_PRODUCTO, 
+					NULL as ID_PRODUCTO, 
+					NULL as DESCRIPCION_TIPO_PRODUCTO, 
+					NULL as ID_TIPO_PRODUCTO, 
+					NULL as ID_CLIENTE, 
+					NULL as DESCRIPCION_MONEDA, 
+					NULL as REVERSO 
+				END 
+				ELSE 
+				BEGIN 
+					SELECT 
+					paginaActual, 
+					cantidadPaginas, 
+					registroPorPag, 
+					totalRegistros, 
+					primerRegistroPag, 
+					ultimoRegistroPag, 
+					siguientesRegistros, 
+					SUCURSAL, 
+					NROCUENTA, 
+					MODULO, 
+					CODIGO_MONEDA, 
+					FECHA_MOVIMIENTO, 
+					FECHA_VALOR, 
+					FECHA_ALTA, 
+					ACCION_MOVIMIENTO, 
+					CONFORMADO_DIFERIDO, 
+					IMPORTE, 
+					NUMERO_COMPROBANTE, 
+					SUCURSAL_ORIGEN_MOV, 
+					IDENTIFICACION_DEPOSITANTE, 
+					CONCEPTO, 
+					CUIT_ORIGINANTE, 
+					NUMERO_EXTRACTO, 
+					FECHA_EXTRACTO, 
+					ID_ASIENTO, 
+					ASIENTO_EXTORNADO, 
+					CODIGO_TRANSACCION, 
+					CODIGO_MOVIMIENTO, 
+					CBU, 
+					DESCRIPCION_PRODUCTO, 
+					ID_PRODUCTO, 
+					DESCRIPCION_TIPO_PRODUCTO, 
+					ID_TIPO_PRODUCTO, 
+					ID_CLIENTE, 
+					DESCRIPCION_MONEDA, 
+					REVERSO 
+					from 
+					(
+						select 
+						@pagina as paginaActual, 
+						(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) as cantidadPaginas, 
+						@largopagina as registroPorPag, 
+						@TotalRegistros as totalRegistros, 
+						@primerRegistroPag as primerRegistroPag, 
+						@ultimoRegistroPag as ultimoRegistroPag, 
+						@resto as siguientesRegistros, 
+						ROW_NUMBER() OVER (order by s.JTS_OID ASC, CONVERT(DATE,mc.FECHACONTABLE) DESC, h.DATE_ DESC, mc.JTS_OID DESC) as ORDEN, 
+						s.SUCURSAL, 
+						CONVERT(NUMERIC(12), s.CUENTA) AS NROCUENTA, 
+						(CASE WHEN s.C1785 = 2 THEN 'CC' WHEN s.C1785 = 3 THEN 'CA' END) AS MODULO, 
+						CONVERT(NUMERIC(4), s.MONEDA) AS CODIGO_MONEDA, 
+						FORMAT(CONVERT(datetime, mc.FECHAPROCESO,120), 'yyyy-MM-ddTHH:mm:ss.fffZ') AS FECHA_MOVIMIENTO, 
+						FORMAT(CONVERT(datetime, mc.FECHAVALOR,120), 'yyyy-MM-ddTHH:mm:ss.fffZ') AS FECHA_VALOR, 
+						FORMAT(CONVERT(datetime, h.DATE_,120), 'yyyy-MM-ddTHH:mm:ss.fffZ') AS FECHA_ALTA, 
+						CONVERT(CHAR(1), mc.DEBITOCREDITO) AS ACCION_MOVIMIENTO, 
+						'C' AS CONFORMADO_DIFERIDO, 
+						mc.CAPITALREALIZADO AS IMPORTE, 
+						mc.JTS_OID AS NUMERO_COMPROBANTE, 
+						mc.SUCURSAL AS SUCURSAL_ORIGEN_MOV, 
+						case 
+							when mc.DEBITOCREDITO = 'C' and TRIM(JSON_VALUE(hm.infoExtendidaMeta,'$.origen.nombre')) is not null and TRIM(JSON_VALUE(hm.infoExtendidaMeta,'$.origen.nombre')) &lt;&gt; '' then SUBSTRING(TRIM(JSON_VALUE(hm.infoExtendidaMeta,'$.origen.nombre')), 1, 39) 
+							when mc.DEBITOCREDITO = 'D' and TRIM(JSON_VALUE(hm.infoExtendidaMeta,'$.destino.nombre')) is not null and TRIM(JSON_VALUE(hm.infoExtendidaMeta,'$.destino.nombre')) &lt;&gt; '' then SUBSTRING(TRIM(JSON_VALUE(hm.infoExtendidaMeta,'$.destino.nombre')), 1, 39) 
+							else ' ' 
+						end as IDENTIFICACION_DEPOSITANTE, 
+						case 
+							when tcpt.formato = 10 and hm.infoExtendidaMeta is not null then CONCAT(ade.descripcion+' No:', TRIM(JSON_VALUE(hm.infoExtendidaMeta,'$.nroCheque')))
+							when tcpt.formato = 10 then ade.descripcion						
+							when tcpt.formato = 1 then ade.descripcion
+							when hm.infoExtendidaMeta is not null and tctd.DESCRIPCION is not null then SUBSTRING(CONCAT(tctd.DESCRIPCION, ': ', hm.infoExtendida), 1, 255 ) 
+							when hm.infoExtendidaMeta is not null then SUBSTRING(CONCAT(mc.CONCEPTO, ': ', hm.infoExtendida), 1, 255 ) 
+							when tctd.DESCRIPCION is not null and tctd.DESCRIPCION &lt;&gt; '' then tctd.DESCRIPCION 
+							when mc.CONCEPTO is not null and mc.CONCEPTO &lt;&gt; '' then mc.CONCEPTO 
+							else ' ' 
+						end as CONCEPTO, 
+						case 
+							when mc.DEBITOCREDITO = 'C' and TRY_PARSE(JSON_VALUE(hm.infoExtendidaMeta,'$.origen.cuit') as numeric(12,0)) is not null then TRY_PARSE(JSON_VALUE(hm.infoExtendidaMeta,'$.origen.cuit') as numeric(12,0)) 
+							when mc.DEBITOCREDITO = 'D' and TRY_PARSE(JSON_VALUE(hm.infoExtendidaMeta,'$.destino.cuit') as numeric(12,0)) is not null then TRY_PARSE(JSON_VALUE(hm.infoExtendidaMeta,'$.destino.cuit') as numeric(12,0)) 
+							else CONVERT(numeric(12,0),0) 
+						end as CUIT_ORIGINANTE, 
+						CONVERT(NUMERIC(10), 0) AS NUMERO_EXTRACTO, 
+						CONVERT(NUMERIC(8), CONVERT(VARCHAR, mc.FECHAPROCESO, 112)) AS FECHA_EXTRACTO, 
+						mc.JTS_OID AS ID_ASIENTO, 
+						0 AS ASIENTO_EXTORNADO, 
+						mc.COD_TRANSACCION AS CODIGO_TRANSACCION, 
+						CASE 
+							when icc.CODIGO_INTERBANKING is null or TRIM(icc.CODIGO_INTERBANKING) = '' then 
+								case 
+									WHEN mc.DEBITOCREDITO = 'C' THEN 'M55' 
+									WHEN mc.DEBITOCREDITO = 'D' THEN 'M56' 
+								end 
+							else icc.CODIGO_INTERBANKING 
+						END AS CODIGO_MOVIMIENTO, 
+						TRY_PARSE(vs.CTA_CBU AS NUMERIC(22, 0)) AS CBU, 
+						p.C6251 as DESCRIPCION_PRODUCTO, 
+						p.C6250 as ID_PRODUCTO, 
+						case 
+							when p.C6252 = 2 THEN 'cuenta corriente' 
+							when p.C6252 = 3 THEN 'cuenta ahorro' 
+							else ' ' 
+						end as DESCRIPCION_TIPO_PRODUCTO, 
+						p.C6252 as ID_TIPO_PRODUCTO, 
+						s.C1803 as ID_CLIENTE, 
+						m.C6400 as DESCRIPCION_MONEDA, 
+						'false' as REVERSO 
+						from dbo.MOVIMIENTOS_CONTABLES (nolock) mc 
+						inner join dbo.ASIENTOS (nolock) a on a.ASIENTO = mc.ASIENTO and a.SUCURSAL = mc.SUCURSAL and a.FECHAPROCESO = mc.FECHAPROCESO and a.ESTADO = 77 
+						inner join dbo.HISTORY (nolock) h on h.TRANSACTIONID = a.ASIENTO and h.BRANCH = a.SUCURSAL and h.PROCESSDATE = a.FECHAPROCESO and h.STATE = 77 
+						inner join dbo.SALDOS (nolock) s on s.JTS_OID = mc.SALDO_JTS_OID and s.C1785 in (2,3) and s.TZ_LOCK = 0 
+						inner join dbo.VTA_SALDOS (nolock) vs on vs.JTS_OID_SALDO = s.JTS_OID and vs.OPERAIB = 'S' and vs.TZ_LOCK = 0 
+						inner join dbo.PRODUCTOS (nolock) p on p.C6250 = s.PRODUCTO and p.TZ_LOCK = 0 
+						inner join dbo.MONEDAS (nolock) m on m.C6399 = s.MONEDA and m.TZ_LOCK = 0 
+						left join dbo.TTR_CODIGO_TRANSACCION_DEF (nolock) tctd on tctd.CODIGO_TRANSACCION = mc.COD_TRANSACCION and tctd.TZ_LOCK = 0 
+						left join dbo.ITF_IB_CODTR_CODIB (nolock) icc on mc.COD_TRANSACCION = icc.CODIGO_TRANSACCION 
+						left join dbo.HISTORICO_MOVIMIENTOS (nolock) hm on hm.JTS_OID = s.JTS_OID and hm.fechaAsiento = mc.FECHAPROCESO and hm.sucursalAlta = mc.SUCURSAL and hm.asiento = mc.ASIENTO and hm.movJtsOid = mc.JTS_OID and hm.TZ_LOCK = 0 
+						left join dbo.ADECUACION_DESCRIPCION_ATE (nolock) ade on mc.COD_TRANSACCION = ade.codigoTransaccion and ade.TZ_LOCK = 0 
+						left join dbo.TTR_CODIGO_TRANSACCION_INFO_EXTENDIDA (nolock) tctie on mc.COD_TRANSACCION = tctie.codigoTransaccion and tctie.TZ_LOCK = 0 
+						left join dbo.TTR_CODIGO_PROGRAMA_TRANSACCION (nolock) tcpt on tctie.infoExtendidaTipo = tcpt.codigoPrograma and tcpt.TZ_LOCK = 0 
+						where h.DATE_ &gt;= @Desde 
+						and h.DATE_ &lt;= @Hasta 
+						and mc.CAPITALREALIZADO &gt; 0 
+					) DATOS 
+					order by ORDEN 
+					OFFSET ((@pagina - 1) * @largopagina) ROWS 
+					FETCH NEXT @largopagina ROWS ONLY; 
+				END
+			</sql>
+            <input>
+                <inParameter description="fechaHoraDesde" type="STRING">fechaHoraDesde</inParameter>
+                <inParameter description="fechaHoraHasta" type="STRING">fechaHoraHasta</inParameter>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="asientos">
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>IMPORTE</queryname>
+                        <servicename>importe</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CONCEPTO</queryname>
+                        <servicename>concepto</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>SUCURSAL</queryname>
+                        <servicename>logicalId.sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>NROCUENTA</queryname>
+                        <servicename>logicalId.cuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCRIPCION_PRODUCTO</queryname>
+                        <servicename>producto.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>ID_PRODUCTO</queryname>
+                        <servicename>producto.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCRIPCION_TIPO_PRODUCTO</queryname>
+                        <servicename>tipoProducto.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>ID_TIPO_PRODUCTO</queryname>
+                        <servicename>tipoProducto.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>ID_CLIENTE</queryname>
+                        <servicename>numeroCliente</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCRIPCION_MONEDA</queryname>
+                        <servicename>moneda.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>CODIGO_MONEDA</queryname>
+                        <servicename>moneda.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_MOVIMIENTO</queryname>
+                        <servicename>fechaProceso</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_VALOR</queryname>
+                        <servicename>fechaValor</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_ALTA</queryname>
+                        <servicename>fechaAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ACCION_MOVIMIENTO</queryname>
+                        <servicename>accionMovimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CONFORMADO_DIFERIDO</queryname>
+                        <servicename>tipoMovimiento</servicename>
+                    </outParameter>
+					<outParameter description="" type="STRING">
+                        <queryname>CODIGO_MOVIMIENTO</queryname>
+                        <servicename>codigoMovimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>REVERSO</queryname>
+                        <servicename>reverso</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CBU</queryname>
+                        <servicename>cbuOriginante</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IDENTIFICACION_DEPOSITANTE</queryname>
+                        <servicename>razonSocialOriginante</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>CUIT_ORIGINANTE</queryname>
+                        <servicename>cuitOriginante</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>ID_ASIENTO</queryname>
+                        <servicename>idAsiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>SUCURSAL_ORIGEN_MOV</queryname>
+                        <servicename>sucursalOrigen</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>CODIGO_TRANSACCION</queryname>
+                        <servicename>codigoTransaccion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

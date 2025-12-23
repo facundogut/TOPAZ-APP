@@ -1,0 +1,11 @@
+﻿EXECUTE('
+---------------------------
+--NUEVO CÓDIGO DE BLOQUEO--
+---------------------------
+INSERT INTO dbo.GRL_COD_BLOQUEOS (COD_BLOQUEO, DESCRIPCION, ACCIONES_DEBITO, ACCIONES_CREDITO, ACCIONES_MODIFICACION, TZ_LOCK)
+VALUES (19, ''Bloqueo Total por Inmovilización'', 3, 3, 3, 0)
+----
+INSERT INTO dbo.PARAMETROSGENERALES (CODIGO, DESCRIPCION, ALFA, NUMERICO, FECHA, IMPORTE, TASA, TZ_LOCK)
+VALUES (237, ''Código de Bloqueo Inmov. Cta.'', '''', 19, NULL, 0, 0, 0)
+----
+')

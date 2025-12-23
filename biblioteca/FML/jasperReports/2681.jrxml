@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-08-20T15:25:49 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Transporte de caudales" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="917d64dc-8b97-415a-a8aa-56031f49f00d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH Data Adapter "/>
+	<parameter name="NRO_CONVENIO" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Número de Convenio]]></parameterDescription>
+	</parameter>
+	<parameter name="TOPAZ_SUCURSAL_SISTEMA" class="java.lang.Integer" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT TOP 1
+		--CONVENIO--
+		(SELECT CASE CONCAT('',a.Cuit) WHEN '0' THEN REPLICATE('_',11) WHEN '' THEN REPLICATE('_',11) ELSE CONCAT('',a.Cuit) END) AS Cuit,
+		(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',5) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',a.Plazo) END) AS Plazo, 
+		(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',10) ELSE dbo.Fn_NumberToWords(a.Plazo) END) AS W_Plazo,
+		a.FecAlta, 
+		a.Id_ConvRec, 
+		(SELECT CASE CONCAT('',a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE LEFT(CONVERT(VARCHAR,a.FecAlta,106),2) END) AS DIA,  
+		(SELECT CASE CONCAT('', a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE (SELECT dbo.Fn_NumberToWords(RIGHT(CONVERT(VARCHAR,FecAlta,106),4))) END) AS AÑO,
+		
+		-- CUENTA REC -- 
+		(SELECT CASE CONCAT('',b.CUENTA) WHEN '' THEN REPLICATE('_',12)  ELSE CONCAT('',b.CUENTA) END)AS CUENTA_REC, 
+		(SELECT CASE CONCAT('',e.C6251) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',e.C6251) END )AS TIPO_CUENTA_REC,
+		(SELECT CASE CONCAT('',b.SUCURSAL) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',b.SUCURSAL) END) AS SUCURSAL_REC, 
+		(SELECT CASE CONCAT('',d.NOMBRESUCURSAL) WHEN ''  THEN REPLICATE('_',40)  ELSE CONCAT('',d.NOMBRESUCURSAL) END) AS LOC_SUC_REC, 
+		
+		-- CUENTA COM -- 
+		(SELECT CASE CONCAT('',f.CUENTA) WHEN '' THEN REPLICATE('_',12) ELSE CONCAT('',f.CUENTA) END) AS CUENTA_COM, 
+		(SELECT CASE CONCAT('',i.C6251) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',i.C6251) END)AS TIPO_CUENTA_COM, 
+		(SELECT CASE CONCAT('',f.SUCURSAL) WHEN '' THEN REPLICATE('_',5) ELSE CONCAT('',f.SUCURSAL) END)  AS SUCURSAL_COM,
+		(SELECT CASE CONCAT('',h.NOMBRESUCURSAL) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',h.NOMBRESUCURSAL) END) AS LOC_SUC_COM,
+		
+		--CUNETA CAR -- 
+		(SELECT CASE CONCAT('',j.CUENTA) WHEN '' THEN REPLICATE('_',12) ELSE CONCAT('',j.CUENTA) END) AS CUENTA_CAR, 
+		(SELECT CASE CONCAT('',m.C6251) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',m.C6251) END) AS TIPO_CUENTA_CAR, 
+		(SELECT CASE CONCAT('',j.SUCURSAL) WHEN '' THEN REPLICATE('_',5) ELSE CONCAT('',j.SUCURSAL) END) AS SUCURSAL_CAR, 
+		(SELECT CASE CONCAT('',l.NOMBRESUCURSAL) WHEN '' THEN REPLICATE('_',5) ELSE CONCAT('',l.NOMBRESUCURSAL) END)  AS LOC_SUC_CAR,
+		
+		-- DIRECCION FISCAL --
+		(SELECT CASE CONCAT('',tf.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',tf.NUMERO) END) AS TEL_DF,
+		(SELECT  CASE CONCAT('',n.CALLE) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',n.CALLE)  END) AS CALLE_DF, 
+		(SELECT CASE CONCAT('',n.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',n.NUMERO) END) AS NRO_DF, 
+		(SELECT CASE CONCAT('apto ',n.APARTAMENTO) WHEN 'apto ' THEN '' ELSE CONCAT('apto ',n.APARTAMENTO) END)AS APTO_DF, 
+	   	(SELECT CASE CONCAT('piso ',n.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ',n.PISO)  END) AS PISO_DF,
+		(SELECT CASE CONCAT('',p.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',p.DESCRIPCION_DIM3) END) AS LOCALIDAD_DF,
+		(SELECT CASE CONCAT('', o.DESCRIPCION) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('', o.DESCRIPCION) END) AS PROVINCIA_DF,
+		
+		--DIRECCION REAL --
+		(SELECT CASE CONCAT('',tr.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',tr.NUMERO) END ) AS TEL_DR,
+		(SELECT CASE CONCAT('',r.CALLE) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',r.CALLE) END) AS CALLE_DR,
+		(SELECT CASE CONCAT('',r.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',r.NUMERO) END) AS NRO_DR,
+		(SELECT CASE CONCAT('apto ',r.APARTAMENTO) WHEN 'apto ' THEN '' ELSE  CONCAT('apto ',r.APARTAMENTO) END) AS APTO_DR,
+		(SELECT CASE CONCAT('piso ', r.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ', r.PISO) END) AS PISO_DR,
+		(SELECT CASE CONCAT('',t.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',t.DESCRIPCION_DIM3) END) AS LOCALIDAD_DR,
+		(SELECT CASE CONCAT('',s.DESCRIPCION) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',s.DESCRIPCION) END)  AS PROVINCIA_DR,
+		
+		-- SUCURSAL -- 
+		(SELECT CASE CONCAT('',v.NOMBREDEP) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',v.NOMBREDEP) END) AS DEP_CONTRATO,
+		
+		--CLIENTE  --
+		(SELECT CASE CONCAT('', w.NOMBRECLIENTE) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('', w.NOMBRECLIENTE) END) AS NOMBRECLIENTE,
+		(SELECT CASE CONCAT('',w.TIPO) WHEN '' THEN REPLICATE('_',15) WHEN 'J' THEN 'la Empresa' WHEN 'I' THEN 'la Institución' WHEN 'F' THEN 'la Persona' END) AS REPRESENTACION
+		
+		
+		FROM CONV_CONVENIOS_REC a 
+		
+	    --CUENTA REC --
+	    LEFT JOIN SALDOS b ON a.CuentaRec = b.JTS_OID AND b.TZ_LOCK = 0
+	    LEFT JOIN CLI_DIRECCIONES c ON b.SUCURSAL = c.ID AND c.FORMATO = 'S' AND c.TIPODIRECCION = 'R' AND c.TZ_LOCK = 0
+	    LEFT JOIN SUCURSALES d ON d.SUCURSAL = b.SUCURSAL AND d.TZ_LOCK = 0
+	    LEFT JOIN PRODUCTOS e ON b.PRODUCTO = e.C6250 AND e.TZ_LOCK = 0
+	    
+	    --CUENTA COM --
+	    LEFT JOIN SALDOS f ON a.CuentaCom = f.JTS_OID AND f.TZ_LOCK = 0
+	    LEFT JOIN CLI_DIRECCIONES g ON f.SUCURSAL = g.ID AND c.FORMATO = 'S' AND c.TIPODIRECCION = 'R' AND g.TZ_LOCK = 0
+	    LEFT JOIN SUCURSALES h ON h.SUCURSAL = f.SUCURSAL AND h.TZ_LOCK = 0
+	    LEFT JOIN PRODUCTOS i ON f.PRODUCTO = i.C6250 AND i.TZ_LOCK = 0
+	    
+	    --CUENTA CARG -- 
+	    LEFT JOIN SALDOS j ON a.CuentaCargos = j.JTS_OID AND j.TZ_LOCK = 0
+	    LEFT JOIN CLI_DIRECCIONES k ON j.SUCURSAL = k.ID AND c.FORMATO = 'S' AND c.TIPODIRECCION = 'R' AND k.TZ_LOCK = 0
+	    LEFT JOIN SUCURSALES l ON l.SUCURSAL = j.SUCURSAL AND l.TZ_LOCK = 0
+	    LEFT JOIN PRODUCTOS m ON m.C6250 = j.PRODUCTO AND m.TZ_LOCK = 0
+	    
+	   --DIRECCION FISCAL--
+	    LEFT JOIN CLI_ClientePersona x ON a.Cliente = x.CODIGOCLIENTE AND x.TITULARIDAD = 'T' AND x.TZ_LOCK = 0
+		LEFT JOIN CLI_DIRECCIONES n ON x.NUMEROPERSONA = n.ID AND n.TIPODIRECCION IN ('F') AND n.FORMATO IN ('PF', 'PJ') AND n.ORDINAL_DIR = 1 AND n.TZ_LOCK = 0
+		LEFT JOIN CLI_TELEFONOS tf ON tf.ID = x.NUMEROPERSONA AND tf.FORMATO IN ('PF','PJ') AND tf.ORDINAL = 1 AND tf.TIPO = 'LE' AND tf.TZ_LOCK = 0
+		LEFT JOIN CLI_PROVINCIAS o ON o.CODIGOPAIS =n.PAIS AND o.DIM1 = n.PROVINCIA AND o.TZ_LOCK = 0
+		LEFT JOIN CLI_LOCALIDADES p ON p.DIM1 = n.PROVINCIA AND p.DIM2 = n.DEPARTAMENTO AND p.DIM3 = n.LOCALIDAD AND p.TZ_LOCK = 0
+	    
+	    --DIRECCION REAL--
+	    LEFT JOIN CLI_ClientePersona z ON a.Cliente = z.CODIGOCLIENTE AND z.TITULARIDAD = 'T' AND z.TZ_LOCK = 0
+		LEFT JOIN  CLI_DIRECCIONES r ON z.NUMEROPERSONA = r.ID AND a.Dir_Formato = r.FORMATO AND r.TIPODIRECCION  IN ('R', 'L') AND r.TZ_LOCK = 0
+		LEFT JOIN CLI_TELEFONOS tr ON z.NUMEROPERSONA = tr.ID AND tr.FORMATO IN ('PF','PJ') AND tr.ORDINAL = 1 AND tr.TIPO IN ('LE','PE') AND tr.TZ_LOCK = 0
+	    LEFT JOIN  CLI_PROVINCIAS s ON s.CODIGOPAIS = r.PAIS AND s.DIM1 = r.PROVINCIA AND s.TZ_LOCK = 0 AND s.TZ_LOCK = 0
+		LEFT JOIN CLI_LOCALIDADES t ON t.DIM1 = r.PROVINCIA AND t.DIM2 = r.DEPARTAMENTO AND t.DIM3 = r.LOCALIDAD AND t.TZ_LOCK = 0
+	    
+	    --SUCURSAL --
+	    LEFT JOIN CLI_DIRECCIONES u ON u.ID =  $P{TOPAZ_SUCURSAL_SISTEMA} AND u.FORMATO = 'S' AND u.TIPODIRECCION = 'R' AND u.TZ_LOCK = 0
+	    LEFT JOIN CLI_DEPARTAMENTOS v ON v.CODIGOPAIS = u.PAIS AND v.DEPARTAMENTO = u.DEPARTAMENTO AND v.PROVINCIA = u.PROVINCIA AND v.TZ_LOCK = 0
+	    
+	    --CLIENTE ---
+	    LEFT JOIN CLI_CLIENTES w ON w.CODIGOCLIENTE = a.Cliente  AND w.TZ_LOCK = 0
+	    WHERE a.Id_ConvRec =  $P{NRO_CONVENIO}  AND a.TZ_LOCK = 0]]>
+	</queryString>
+	<field name="Cuit" class="java.lang.String"/>
+	<field name="Plazo" class="java.lang.String"/>
+	<field name="W_Plazo" class="java.lang.String"/>
+	<field name="FecAlta" class="java.sql.Timestamp"/>
+	<field name="Id_ConvRec" class="java.math.BigDecimal"/>
+	<field name="DIA" class="java.lang.String"/>
+	<field name="AÑO" class="java.lang.String"/>
+	<field name="CUENTA_REC" class="java.lang.String"/>
+	<field name="TIPO_CUENTA_REC" class="java.lang.String"/>
+	<field name="SUCURSAL_REC" class="java.lang.String"/>
+	<field name="LOC_SUC_REC" class="java.lang.String"/>
+	<field name="CUENTA_COM" class="java.lang.String"/>
+	<field name="TIPO_CUENTA_COM" class="java.lang.String"/>
+	<field name="SUCURSAL_COM" class="java.lang.String"/>
+	<field name="LOC_SUC_COM" class="java.lang.String"/>
+	<field name="CUENTA_CAR" class="java.lang.String"/>
+	<field name="TIPO_CUENTA_CAR" class="java.lang.String"/>
+	<field name="SUCURSAL_CAR" class="java.lang.String"/>
+	<field name="LOC_SUC_CAR" class="java.lang.String"/>
+	<field name="TEL_DF" class="java.lang.String"/>
+	<field name="CALLE_DF" class="java.lang.String"/>
+	<field name="NRO_DF" class="java.lang.String"/>
+	<field name="APTO_DF" class="java.lang.String"/>
+	<field name="PISO_DF" class="java.lang.String"/>
+	<field name="LOCALIDAD_DF" class="java.lang.String"/>
+	<field name="PROVINCIA_DF" class="java.lang.String"/>
+	<field name="TEL_DR" class="java.lang.String"/>
+	<field name="CALLE_DR" class="java.lang.String"/>
+	<field name="NRO_DR" class="java.lang.String"/>
+	<field name="APTO_DR" class="java.lang.String"/>
+	<field name="PISO_DR" class="java.lang.String"/>
+	<field name="LOCALIDAD_DR" class="java.lang.String"/>
+	<field name="PROVINCIA_DR" class="java.lang.String"/>
+	<field name="DEP_CONTRATO" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="REPRESENTACION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="80" splitType="Stretch">
+			<image>
+				<reportElement x="53" y="10" width="137" height="60" uuid="05e81960-0a67-4496-9a75-1857e2718453"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="460" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="52" y="40" width="450" height="240" uuid="d9dc057f-84cf-4d90-8564-b8f57465ad1d"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p>En la Ciudad de Resistencia, el "+$F{DIA}+" de "+ new SimpleDateFormat("MMMM").format($F{FecAlta})+" del año "+$F{AÑO}+", entre <b>Nuevo Banco del Chaco S.A.</b>, con domicilio en calle Güemes Nº 102 de la ciudad de Resistencia, en adelante \"BANCO\", representado en este acto por los abajo firmantes, los cuales comparecen en el carácter de apoderados, con facultades suficientes para este acto, otorgadas mediante Poder General Amplio de Administración y Disposición instrumentado en Escritura Nº 75 de fecha 15/07/2016 pasada ante el Escribano Ariel Alfredo Farías, por una parte y por la otra "+$F{NOMBRECLIENTE}+" CUIT Nº "+$F{Cuit}+", con domicilio en "+$F{CALLE_DR}+" Nº "+$F{NRO_DR}+", de la localidad de "+$F{LOCALIDAD_DR}+" "+$F{PROVINCIA_DR}+", con domicilio fiscal en "+$F{CALLE_DF}+" Nº"+$F{NRO_DF}+", de la localidad de "+$F{LOCALIDAD_DF}+", provincia de "+$F{PROVINCIA_DF}+", representada en este acto por los abajo firmantes, los que comparecen en su nombre y representación, en adelante \"ENTIDAD\", convienen en celebrar el presente Contrato de <b>RECAUDACIÓN</b>, que se regirá por las siguientes clausulas y condiciones:</p><br>"+
+
+"<p><b>1- </b>El BANCO recaudará, en los horarios y con la periodicidad a convenir y en el radio de la ciudad de __________________, _________________, exclusivamente, las sumas de billete de curso legal en el país \"peso\" que entregue la ENTIDAD, a través de la empresa transportadora \"Norte Transportadora de Caudales S.A.\" –en adelante \"TRANSPORTADOR\"-, desde sus oficinas recaudadoras detalladas a continuación, hasta el BANCO. El servicio no incluye el transporte de correspondencia y/o documentación de índole financiera.</p><br>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="10" width="554" height="20" uuid="d1c44a64-a27a-44e4-b69d-9cef85242b16"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<b><u>CONVENIO DE RECAUDACIÓN Nº "+$P{NRO_CONVENIO}+"</u></b>"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement mode="Opaque" x="50" y="315" width="120" height="40" backcolor="#B3B3B3" uuid="61ff5ec6-331d-40c1-b01c-cc64a049476a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="53" y="315" width="116" height="16" uuid="17771169-022d-4761-997a-fd72c405be59"/>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Días de retiro en horario de ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Opaque" x="170" y="315" width="240" height="40" forecolor="#000000" backcolor="#B3B3B3" uuid="ab7db9b4-36c9-4435-be9c-2db08b7bfbb5"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Opaque" x="410" y="315" width="91" height="40" forecolor="#000000" backcolor="#B3B3B3" uuid="ccd04301-91e0-41e7-a9d2-8cfd41b7f4e0"/>
+			</rectangle>
+			<line>
+				<reportElement x="55" y="345" width="110" height="1" uuid="50a9f028-6490-4a5a-8e9f-fd9455d063e0"/>
+			</line>
+			<staticText>
+				<reportElement x="266" y="328" width="48" height="15" uuid="b1cb922d-e7ef-4597-82b3-49a6a4e7d06f"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Domicilio]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="170" y="355" width="240" height="20" uuid="f9f63d57-b35a-4b28-86aa-66ff7537ab39"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="50" y="355" width="120" height="20" uuid="8aca91fe-59bf-442e-bc69-60e488685d16"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="410" y="355" width="91" height="20" uuid="f8c2736c-476d-4e89-a221-d7090eeb1453"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="410" y="320" width="90" height="30" backcolor="#CCCCCC" uuid="25ff188a-0ebd-4abe-b8d9-5bbdc8e080fb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cant.Viajes
+mensuales]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement mode="Transparent" x="50" y="375" width="120" height="20" uuid="4407d9ad-fea2-4f45-944b-91b13527415f"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="170" y="375" width="240" height="20" uuid="1dde1704-5684-438d-bf2f-bd4fd593eb51"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="410" y="375" width="91" height="20" uuid="1d6c78af-2008-488c-a107-4dbf0960a96d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="50" y="395" width="120" height="20" uuid="205c83f0-4154-4f41-9980-e181c7b1a35e"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="170" y="395" width="240" height="20" uuid="199c05b2-8238-42d8-a782-75c52e72f6d8"/>
+			</rectangle>
+			<rectangle>
+				<reportElement mode="Transparent" x="410" y="395" width="91" height="20" uuid="6b05a3eb-507c-4b9d-83fe-0bb8ca2654b8"/>
+			</rectangle>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="53" y="431" width="449" height="20" uuid="2b1673d0-a5bd-4c8d-a827-e36663bdef7c"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p><b>2- Obligaciones de la ENTIDAD.</b> El cliente se compromete a:</p><br>"+
+
+"<p>2.1. Facilitar estacionamiento próximo a sus oficinas al vehículo de transporte de caudales, reduciendo al máximo posible el recorrido del personal del camión con la custodia policial y/o agente de seguridad – para efectuar su carga.</p><br>"+
+"<p>2.2. Informar a la TRANSPORTADORA, con 24 horas de anticipación, la suspensión del servicio a los correos electrónicos:</p>"+
+"<p>BANCO: ______________________________________________________________________</p>"+
+"<p>TRANSPORTADORA: <u>atm@nortetransportadora.com.ar</u> / <u>tesoreria@nortetransportadora.com.ar</u></p><br>"+
+
+"<p><b>3- El servicio se presentará del siguiente modo:</b></p>"+
+
+"<p>3.1. Personal designado por la TRANSPORTADORA se presentará e identificará en las oficinas recaudadoras de la ENTIDAD los días y horarios indicados, y recibirá de ésta en depósito una suma de dinero -que no podrá superar el valor máximo de PESOS TRES MILLONES por bolsa-. Dichas sumas deberán ser previamente embolsadas por la ENTIDAD en bolsas numeradas, a tal fin entregadas por la TRANSPORTADORA, cerradas y precintadas por la ENTIDAD mediante (1) precinto también suministrado por la TRANSPORTADORA, contra entrega de un recibo de Transporte de Valores numerado. El incumplimiento de los recaudos previstos en esta cláusula con respecto al embolsado de las sumas transportadas, implicará la asunción de riesgos de transporte por la ENTIDAD.</p><br>"+
+
+"<p>3.2. El peso total de cada una de las bolsas incluyendo su contenido, no superara los quince (15) kilogramos.</p><br>"+
+
+"<p>3.3. EL personal de la TRANSPORTADORA podrá rechazar el transporte en caso de no entregarse las bolsas conforme se establece en esta cláusula.</p><br>"+
+
+"<p>3.4. Las bolsas serán abiertas en instalaciones de la TRANSPORTADORA, quien procederá a recontar el dinero para verificar la exactitud del conteo, y a identificar los billetes falsos, informando a la ENTIDAD las posibles diferencias existentes, todo ello bajo estrictas medidas de seguridad y con un seguimiento constante de un sistema de video.</p><br>"+
+
+"<p>3.5. Para el caso de encontrarse diferencias, los videos grabados quedaran a disposición de la ENTIDAD por un plazo de 10 (diez) días hábiles bancarios siguientes a la acreditación en cuenta de la recaudación, transcurrido el cual cesará la obligación de conservación.</p><br>"+
+
+"<p>3.6. El BANCO depositará diariamente las sumas resultantes del recuento arriba citado en la <b>"+$F{TIPO_CUENTA_REC}+" N° "+$F{CUENTA_REC}+" de Sucursal "+$F{LOC_SUC_REC}+" ("+$F{SUCURSAL_REC}+")</b>, de titularidad de la ENTIDAD –en adelante \"CUENTA RECAUDADORA\"-. <b>En los casos imposibilidad de acreditación de los fondos, el BANCO contará con un periodo de 24 hs. para su imputación.</b></p><br>"+
+
+"<p>3.7. Será constancia del depósito la acreditación en CUENTA RECAUDADORA de la ENTIDAD. Quedarán en oficinas de la TRANSPORTADORA y a disposición de la ENTIDAD para su retiro, documentación generada por la TRANSPORTADORA relativa a acreditación en CUENTA RECAUDADORA, destrucción y/o retención e billetes falsos, por plazo de 48 HORAS a contar desde cada depósito.</p><br>"+
+
+"<p><b>4-</b> El BANCO percibirá de la ENTIDAD una comisión mensual de 1,50 %o (uno coma cincuenta por mil) más IVA -e impuestos que en el futuro se creen sobre operatorias de esta naturaleza-. Esta comisión se calculará sobre el monto transportado con un mínimo de $1.500,00 por cada viaje. En caso de solicitarse servicios adicionales a los previstos por cada oficina recaudadora según lo detallado en cláusula 1 del presente convenio o por mayor kilometraje recorrido, el BANCO trasladará el costo a la ENTIDAD.</p>"+
+"<p>Estas comisiones, junto con los gastos que se originen en virtud de la operatoria, serán cobradas por el BANCO, mediante débito en la CUENTA RECAUDADORA mencionada en el punto 3.6 y/o de cualquier otra cuenta y/o saldo acreedor que la ENTIDAD registre en el BANCO.</p><br>"+
+
+"<p><b>5-</b> El BANCO podrá ajustar las comisiones establecidas, para lo cual comunicará a la ENTIDAD la variación, con treinta (30) días de anticipación a la aplicación de los nuevos valores. En caso de disconformidad con los mismos, la ENTIDAD podrá rescindir del presente convenio a partir de la fecha de entrada en vigencia de los nuevos valores, sin que ello genere derecho a indemnización alguna para las partes.</p><br>"+
+
+"<p><b>6-</b> El BANCO se limitará única y exclusivamente a la acreditación de recaudación que solicite la ENTIDAD en el marco del presente acuerdo, previo transporte por la TRANSPORTADORA arriba citada, sin que esté obligado al cumplimiento de cualquier otra función no determinada expresamente en el mismo.</p><br>"+
+
+"<p><b>7-</b> El BANCO informa a la ENTIDAD que la TRANSPORTADORA se abstendrá de prestar el servicio cuando circunstancias de cualquier origen puedan alterar el orden público o cuando situaciones de fuerza mayor incrementen los riesgos propios de dicho transporte, entre ellas cualquier hecho que ocurra excediendo la capacidad de control de la TRANSPORTADORA, como conmoción, huelgas o cualquier tipo de disturbios, insurrección, guerras o actos de gobierno. A requerimiento de la ENTIDAD, la TRANSPORTADORA podrá prestar el servicio, asumiendo la ENTIDAD en tal caso la responsabilidad total por los riesgos derivados del transporte. Asimismo, se considerarán casos de fuerza mayor que eximen a la TRANSPORTADORA de prestar el servicio: falta de disponibilidad de servicio de seguridad pública adecuada, sabotaje, incendio, inundación, explosión.</p><br>"+
+
+"<p><b>8- Comunicaciones del BANCO a la ENTIDAD.</b></p>"+
+"<p>Notificaciones: La ENTIDAD acepta como medio de comunicación fehaciente a los fines del presente contrato, el envío por el BANCO de un correo electrónico a la dirección que a continuación y en forma manuscrita la ENTIDAD inserta, obligándose a consultar diariamente la misma. Las comunicaciones así remitidas se consideran realizadas en la fecha de su emisión.</p><br>"+
+
+"<p><b>Dirección/es de correo electrónico de la entidad:</b></p>"+
+"________________________________________________________________________________<br>"+
+
+"<p><b>9-</b> El presente convenio y sus anexos constituye el acuerdo integral y único respecto de la materia en él reglada, por lo que prevalecerá sobre cualquier comunicación habida entre las partes con anterioridad al mismo, y/u otros convenios o acuerdos anteriores sobre el mismo objeto. La nulidad, inoponibilidad o inejecutabilidad de cualquiera de las cláusulas del presente contrato no afectara la validez, oponibilidad o ejecutabilidad de las restantes o del contrato. Las partes acuerdan modificar cualquier cláusula que se tornare nula, inoponible o ejecutable por cualquier motivo, procurando su ajuste al espíritu del contrato e intención delas partes al celebrarlo.</p><br>"+
+
+"<p><b>10-</b> Si se suscitaran casos no específicamente contemplados en este convenio, las partes acuerdan que negociaran de buena fe la incorporación de las Cláusulas necesarias destinadas a subsanarlos, cuyas modificaciones serán incorporadas al Convenio a través de Anexos.</p><br>"+
+
+"<p><b>11-</b> El presente acuerdo se ejecutará a partir de su fecha con vencimiento a los "+$F{W_Plazo}+" ("+$F{Plazo}+") meses. Los convenios no operativos por un plazo de 12 meses corridos serán dados de baja por el BANCO sin aviso previo a la ENTIDAD. Sin perjuicio de ello, podrá ser rescindido por cualquiera de las partes, sin invocación de la causa, en cualquier momento, previa denuncia del mismo formulada en forma fehaciente al otro contratante con 30 (treinta) días corridos de anticipación al de su efectivizarían, sin que tal actitud genere responsabilidad alguna para el denunciante.</p><br>"+
+
+"<p><b>12-</b> El BANCO no tendrá responsabilidad alguna para el caso de que por fuerza mayor y/o por causas ajenas no pudiere cumplimentar alguna de las obligaciones establecidas y/o se demorase en la ejecución de las mismas. Entiéndase por hecho de fuerza mayor, cualquier hecho que ocurra excediendo la capacidad de control del BANCO, incluyendo sin restricciones: falta de disponibilidad de sistema de comunicación, sabotaje, incendio, inundación, explosión, caso de fortuito, conmoción, huelgas o cualquier tipo de disturbios, insurrección, guerras o actos de gobierno. Asimismo, en estos supuestos, y si los mismos duraras más de tres meses, cualquiera de las partes podrá rescindir el acuerdo previa comunicación fehaciente a la contraparte y sin que dicho acto genere derecho a resarcimiento alguno.</p><br>"+
+
+"<p><b>13-</b> Ni la ENTIDAD ni el BANCO podrán en ningún momento durante la vigencia del presente Convenio, e inclusive una vez extinguido el mismo, sin el consentimiento otorgado por escrito por la otra parte, divulgar, revelar o hacer público cualquier tipo de información, cualquiera sea la naturaleza de la misma, ya sea: 1) en conexión con los negocios u otros temas del BANCO o de la ENTIDAD de los cuales cualquiera de las partes tomara conocimiento en virtud del presente Acuerdo, 2) relacionada con planes, estrategias o promociones relativos a los servicios, 3) información no relacionada con los negocios pero que pueda ser considerada confidencial ya sea por el BANCO o por la ENTIDAD. Dicha información será tratada como estrictamente confidencial, excepto aquella que deba ser revelada por el BANCO o por la ENTIDAD como consecuencia de una ley, regulación u orden judicial.</p><br>"+
+
+"<p><b>14-</b> El impuesto de sellos estará a cargo de ambas partes. Cualquier otro gasto o impuesto que pudiere corresponder estará a cargo en su totalidad de la ENTIDAD.</p><br>"+
+
+"<p><b>15-</b> A todos los efectos legales, judiciales o extrajudiciales, las partes fijan domicilios especiales en los arriba indicados. Para cualquier controversia que pudiera surgir vinculada al presente contrato, las partes someterán la cuestión a la intervención del Centro de Mediación del Poder Judicial del Chaco. Manifiestan asimismo que en caso de fracasar dicha instancia dirimirán la cuestión por ante los tribunales civiles ordinarios de la ciudad de resistencia, con renuncia a cualquier otro fuero o jurisdicción, en especial al fuero federal.</p><br>"+
+
+"<p>En prueba de conformidad se firman dos (2) ejemplares de un mismo tenor y a un solo efecto, en el lugar y fecha indicados al comienzo.</p>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="41" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="10" width="100" height="20" uuid="f9cadf8e-ee88-4778-b7fb-e9eb710e7f60"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="10" width="100" height="20" uuid="1f5ba77b-9831-45f9-a8cf-dd869f9b1bf3"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

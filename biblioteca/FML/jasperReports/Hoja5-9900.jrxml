@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Hoja1" language="groovy" pageWidth="595" pageHeight="842" columnWidth="581" leftMargin="7" rightMargin="7" topMargin="7" bottomMargin="7">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="320"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 4">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 4_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 4_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1"/>
+	<subDataset name="Nombre Deudor">
+		<parameter name="Id_Solicitud" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT c.C1000 AS Nombre FROM CL_CLIENTES c , SL_SOLICITUDCREDITO s
+WHERE C0902=s.C5187
+AND s.C5000=$P{Id_Solicitud}
+AND (s.tz_lock < 300000000000000 OR s.tz_lock >= 400000000000000) AND (s.tz_lock < 100000000000000 OR s.tz_lock >= 200000000000000) AND(c.tz_lock < 300000000000000 OR c.tz_lock >= 400000000000000) AND (c.tz_lock < 100000000000000 OR c.tz_lock >= 200000000000000)]]>
+		</queryString>
+		<field name="Nombre" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="DocDeudor">
+		<parameter name="Id_Solicitud" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT  td.DESCRIPCION+' No. '+d.NRODOCUMENTO AS cedula  FROM CL_CLIENTES c ,CL_RELPERDOC  d , SL_SOLICITUDCREDITO s , CL_TIPOSDOCUMENTO td
+WHERE C0902=s.C5187 AND d.IDPERSONA=C0902 AND d.Principal='S' AND  td.TIPODOC=d.TIPODOC
+AND s.C5000=$P{Id_Solicitud}
+AND (s.tz_lock < 300000000000000 OR s.tz_lock >= 400000000000000) AND (s.tz_lock < 100000000000000 OR s.tz_lock >= 200000000000000) AND(c.tz_lock < 300000000000000 OR c.tz_lock >= 400000000000000) AND (c.tz_lock < 100000000000000 OR c.tz_lock >= 200000000000000) AND
+(d.tz_lock < 300000000000000 OR d.tz_lock >= 400000000000000) AND (d.tz_lock < 100000000000000 OR d.tz_lock >= 200000000000000)]]>
+		</queryString>
+		<field name="cedula" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="NombreFiador">
+		<parameter name="NroGarantia" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT f.NOMBRE FROM GR_GARANTIAS g, VCL_AYUDAPERSONASNATURALES f WHERE g.IDPERSONATITULAR=f.IDPERSONA and g.NroGarantia=$P{NroGarantia}]]>
+		</queryString>
+		<field name="NOMBRE" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="CedulaFiador">
+		<parameter name="NroGarantia" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT t.DESCRIPCION+' No. '+d.NRODOCUMENTO as cedula FROM GR_GARANTIAS g, VCL_AYUDAPERSONASNATURALES f ,CL_RELPERDOC d, CL_TIPOSDOCUMENTO t WHERE g.IDPERSONATITULAR=f.IDPERSONA and g.NroGarantia=$P{NroGarantia} AND d.IDPERSONA=f.IDPERSONA AND  t.TIPODOC=d.TIPODOC]]>
+		</queryString>
+		<field name="cedula" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="SUCURSAL" class="java.math.BigDecimal" isForPrompting="false"/>
+	<parameter name="Id_Solicitud" class="java.math.BigDecimal" isForPrompting="false"/>
+	<parameter name="NroGarantia" class="java.math.BigDecimal" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[Select 'A' as a]]>
+	</queryString>
+	<field name="a" class="java.lang.String"/>
+	<detail>
+		<band height="788" splitType="Stretch">
+			<staticText>
+				<reportElement x="6" y="2" width="575" height="786"/>
+				<textElement textAlignment="Justified">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Que por lo anterior, EL ACREEDOR se constituye, en su carácter de primer beneficiario de la Póliza, en el único y exclusivo representante de EL DEUDOR para los efectos de reclamos y negociaciones con la Sociedad de Seguros, relativas al cumplimiento -por parte de la misma-, de los términos de la Póliza en mención; por lo que, desde este momento, EL DEUDOR acepta cualquier resolución que se derive de las gestiones de reclamo llevadas a efectos por EL ACREEDOR con la Sociedad de Seguros.
+
+4.	Costo de la Póliza: Que el costo de la póliza de seguro y de sus sucesivas renovaciones se regirá por lo dispuesto en las cláusulas precedentes de este contrato.
+
+5.	Negativa de la Asegurador: Que la negativa de la Sociedad Aseguradora elegida por EL DEUDOR a renovar la Póliza de Seguro, o su negativa a aceptar la cesión o endoso de la póliza dada en garantía a EL ACREEDOR, facultará a éste a dar por terminado anticipadamente el presente contrato y a exigir la cancelación inmediata de las obligaciones pendientes de pago.
+
+6.	Gastos Funerarios: EL DEUDOR acepta que el gasto funerario, contenido como beneficio adicional de la póliza, sea pagado al beneficiario nombrado por EL DEUDOR y en caso de no existir ningún beneficiario EL ACREEDOR se reserva el derecho de elegir a quien demuestre haber asumido los gastos de sepelio.
+
+Décima Cuarta: FIANZA SOLIDARIA: Es expresamente convenido que el Señor________________________________________, cuyos generales de ley y cédula de identidad se indican al pie de este documento, actuando en su propio nombre y representación, se constituye, a favor de EL ACREEDOR, como FIADOR SOLIDARIO Y PRINCIPAL PAGADOR DE EL DEUDOR por cualquier obligación y/o saldo deudor, de capital, intereses, comisiones, costas procesales, gastos de cobranza y recuperación judicial,  honorarios y cualquier otro gasto que se deriven del presente Mutuo.
+
+EL FIADOR SOLIDARIO E INCONDICIONAL declara que conoce y acepta como propias las obligaciones, estipulaciones y renuncias hechas por EL DEUDOR y garantiza con la responsabilidad de su firma y con todos sus bienes, presentes y futuros, el estricto y fiel cumplimiento que dará EL DEUDOR a todas y cada una de las obligaciones contraídas en el presente contrato, cualquiera fuere su monto o causa.
+
+Para tales efectos, EL FIADOR SOLIDARIO renuncia expresamente al beneficio de excusión y de división de la deuda, reconociendo el derecho que asiste a EL ACREEDOR a perseguir indistintamente los bienes de EL FIADOR SOLIDARIO, sin tener que perseguir de primero los bienes de EL DEUDOR; así como el derecho que asiste a EL ACREEDOR a reclamar a EL FIADOR SOLIDARIO la totalidad del saldo deudor.
+
+EL FIADOR SOLIDARIO expresamente conviene que esta fianza no se considerará extinguida, ni perjudicada en forma alguna, por el hecho que EL ACREEDOR conceda prórrogas o esperas a EL DEUDOR, pues la presente fianza solidaria e incondicional subsistirá mientras las obligaciones garantizadas no hayan sido canceladas totalmente sea por principal, intereses, comisiones, costas y gastos de cobranza y cobro judicial.
+
+De igual forma, EL FIADOR SOLIDARIO renuncia a invocar la extinción del carácter solidario e incondicional de la presente fianza en caso que EL ACREEDOR aceptare la constitución, simultánea o posterior, de otras fianzas adicionales para responder parcial o totalmente por el cumplimiento de las obligaciones resultantes del presente contrato. Asimismo, EL FIADOR SOLIDARIO renuncia a invocar la extinción de la presente FIANZA SOLIDARIA E INCONDICIONAL en caso que EL ACREEDOR cediere sus derechos crediticios a un tercero en la forma establecida en el presente contrato.
+
+Decima Quinta. Prenda Comercial. Para garantizar el cumplimiento de todas  o cada una de las  obligaciones contraídas por el deudor el  Señor ________________________________________.          Según__________________________________________ yo________________________________________________  identificado con _____________________________________ suministro o  hago    entrega al acreedor  fundeser  a titulo de prenda comercial el o los bienes muebles usados,  que se describen en a continuación ________________________________________________________________________________________________________________________ o en el  anexo, quedando en posesión de los bienes pignorados el  deudor o prendatario, en el entendido de que la entrega de ninguna manera  convierte al acreedor en propietario de la prenda comercial, ni implica el reconocimiento  por parte de este, de que tal bien sea propiedad del acreedor .
+Así mismo  el valor de la prenda comercial  es el que se plasmara  en el presente contrato  de acuerdo  a la valoración hecha por ambas parte o factura
+El acuerdo manifiesta que es el legal, legitimo e indiscutible propietario de la prenda y de todo cuanto por derecho, uso, y costumbre  le corresponde y acredita  dicha calidad jurídica ante terceros que lo requieran.
+El deudor se obliga  a no variar la condición jurídica de la prenda por lo que no podrá enajenarla,  gravarla ni comprometerla  en forma alguna  y si se deteriora o se destruyera el deudor está obligado a sustituirla  a satisfacción del acreedor, el deudor pagara por reposición de contrato si así lo solicitara al acreedor  la cantidad de
+
+Decima Sexta. Prenda Agraria o Industrial .con el fin de garantizar el buen cumplimiento de todas y cada una de las obligaciones  contraídas por el señor ________________________________________ cedula No. ____________________   suministro o pongo en garantía  de prenda agraria o industrial el o los bienes  que a continuación se describen ________________________________________________________________________________________________________________________ en mi calidad de prendatario.
+Asi mismo  esta garantía prendaria podrá ser transferida por endoso para garantizar crédito a otro acreedor.
+El deudor conservara  la posesión de  la prenda a nombre del acreedor, y podrá hacer uso de ellos, y será responsable de la misma  en su cuido y mantenimiento en buen estado  para su conservación, reparación y administración y tendrá deberes y responsabilidad de depositario.
+No se podrán trasladar  los bienes pignorados del lugar donde se  constituyo  la garantía,  sin la autorización del acreedor.
+Esta garantía podrá ser liberada en cualquier momento  antes del vencimiento  siempre que el importe sea cancelado  en su totalidad  por el deudor
+]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table" style="table" x="0" y="478" width="330" height="9"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Nombre Deudor">
+						<datasetParameter name="Id_Solicitud">
+							<datasetParameterExpression><![CDATA[$P{Id_Solicitud}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="219">
+						<jr:detailCell style="table_TD" height="14" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="219" height="14"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{Nombre}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="368" y="478" width="197" height="9"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DocDeudor">
+						<datasetParameter name="Id_Solicitud">
+							<datasetParameterExpression><![CDATA[$P{Id_Solicitud}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="196">
+						<jr:detailCell style="table 1_TD" height="11" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="196" height="11"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{cedula}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 2" style="table 2" x="13" y="488" width="237" height="10"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="NombreFiador">
+						<datasetParameter name="NroGarantia">
+							<datasetParameterExpression><![CDATA[$P{NroGarantia}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="236">
+						<jr:detailCell style="table 2_TD" height="13" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="234" height="13"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 3" style="table 3" x="346" y="180" width="193" height="10"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="NombreFiador">
+						<datasetParameter name="NroGarantia">
+							<datasetParameterExpression><![CDATA[$P{NroGarantia}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="192">
+						<jr:detailCell style="table 3_TD" height="13" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="192" height="13"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 4" style="table 4" x="335" y="490" width="188" height="6"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="CedulaFiador">
+						<datasetParameter name="NroGarantia">
+							<datasetParameterExpression><![CDATA[$P{NroGarantia}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="185">
+						<jr:detailCell style="table 4_TD" height="13" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="185" height="13"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{cedula}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

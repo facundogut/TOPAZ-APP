@@ -1,0 +1,161 @@
+VERSION:051
+TN  NN 1006TConsulta Genérica                       C0001 00
+ NNNNN 9500   Fecha Sistema  INNNN 00000701520030030200121100300000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+VNSSNS 010002000203390800SSSD000000000000000000000000000000000000000
+/T=Informar al BCU de la Suspención de Cuentas
+/C=192192192
+KNSSNS 010025001600470773010100
+/T=Cheques Rechazados
+/F=0013700NNN000000000Arial                                   
+*N  NN ********************************************************
+*N  NN *** FILTRO- (Estado=9) y FechaEstado<=Hoy 
+*N  NN ***              
+*N  NN ********************************************************
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030030202121100300000700070030013700
+/V=" ESTADO=9 AND (FECHA_ESTADO< TO_DATE('" + C9500 + "' , 'DD/MM/YYYY')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030030202121100300000700070030013700
+/V=C8010 + " OR FECHA_ESTADO= TO_DATE('" + C9500 + "' , 'DD/MM/YYYY'))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 2080   Ayu Che.Rechaz IENSN 01008500270240076400101160000010900640129022000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 010060001602600773000101
+/T=Datos
+/F=0012700NNN000000000Arial                                   
+ NNNNN 0603   FechaNull      INNSNK00003101460054026400001100000003100400051015900
+/V=18000101
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3144   Campo :39A:    INNSNK00003101460054026400001100000003100400051015900
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TConsulta Sec. Generica                  S1121 00
+/F=C7614=9 and C6890<=C9500 
+ NNNNN 2087   Importe Cheque INNNN 00000701330027024300001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I50
+ NNNNN 1810   OID Saldo      INNNNA00000701330027024300001100000000700070027012600
+/?=!I50
+/V=C2092.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 1679   Bloqueo/Afect  INNNN 00000701330027024300001100000000700070027012600
+/?=!I50
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 1651   Codigo Cancel  INNNN 00000701330027024300001100000000700070027012600
+/?=!I50
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+TN  NN 1009TModificacion Generica                   M1121 00
+/?=!I50
+ NNNNN 2081   Sucursal       INNSNA00003602020056026202121100300003600590056017800
+/V=C2081.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2084   Moneda         INNSNA00008802020108026202121100300008800590108017800
+/V=C2084.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2086   Producto       INNSNA00006202020082026202121100300006200590082017800
+/V=C2086.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2090   Cuenta         INNSNA00011402020134030202121100300011400590134017800
+/V=C2090.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2082   Serie Cheque   INNSNA00016402020184026202121100300016400590184017800
+/V=C2082.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2083   Cheque Nro     INNSNA00016403650184046602121100300016402850184035800
+/V=C2083.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2087   Importe Cheque INNNN 00000701330027024300001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*N  NN *** Marco Estado en 11 - Informado al BCU Reincidente
+ NNNNN 7614   Estado         INNNNK00000701330027024300001100000000700070027012600
+/V=11
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 6890   Fecha Estado   INNNNA00000701330027024300001100000000700070027012600
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 4173   Fecha NULL     INNNNK00000701330027024300001100000000700070027012600
+/V=18000101
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*N  NN *** I52- Clase C
+*N  NN *** Estado=8 y (FechaReint is NULL or FechaReinteg>FechaMaxReint)
+*N  NN                           y  (C1679='L,C,D,' or Causal=15)
+CNNNNN   00000000000000000000100
+/?=C7614.2=8 Y (C7612.2=C4173.2 O C7612.2>C7611.2)
+/P=I52
+/M=Clase C
+CNNNNN   00000000000000000000100
+/?=I52 Y A(C1679.2="L") O A(C1679.2="C") O A(C1679.2="D") O C3655.2=15
+/P=I54
+/M=Clase C
+ NNNNN 6498   Clase Reincid. INNSNK00003101460054026400001100000003100400051015900
+/?=I52YI54
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** I53- Clase D
+*N  NN *** Estado=8 y (FechaReint is NULL or FechaReinteg>FechaMaxReint)
+*N  NN *** Clase=Vacio y (C1651='1' or Causal=20)
+CNNNNN   00000000000000000000100
+/?=C7614.2=8 Y (C7612.2=C4173.2 O C7612.2>C7611.2)Y(A(C1651.2="1") O C3655.2=20)
+/P=I53
+ NNNNN 6498   Clase Reincid. INNSNK00003101460054026400001100000003100400051015900
+/?=I53
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0490   Cont           INNNNK00000701330027024300001100000000700070027012600
+/V=1
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+TN  NN 1006TItero a la 2                            C0001 00
+/?=!I50
+CNNNNN   00000000000000000000100
+/?=I52
+/A=I52
+CNNNNN   00000000000000000000100
+/?=I54
+/A=I54
+CNNNNN   00000000000000000000100
+/?=I53
+/A=I53
+CNNNNN  I00000000000000000000100
+/M=Itero
+/R=2
+TN  NN 1006TImp. formulario                         C0001 00
+/?=I50YC490=1
+CNNNNN M 00000000000000000000100
+/M=Imprimo Reporte
+DN  NN 3636Ov10
+*#I50#
+*#I52#Clase C
+*#I53#
+*#I54#Clase C

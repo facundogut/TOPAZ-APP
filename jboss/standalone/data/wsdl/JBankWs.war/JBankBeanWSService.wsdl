@@ -1,0 +1,96 @@
+<?xml version='1.0' encoding='UTF-8'?><wsdl:definitions xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://jbankws.jbank.topsystems/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:ns1="http://schemas.xmlsoap.org/soap/http" name="JBankBeanWSService" targetNamespace="http://jbankws.jbank.topsystems/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://jbankws.jbank.topsystems/" elementFormDefault="unqualified" targetNamespace="http://jbankws.jbank.topsystems/" version="1.0">
+
+  <xs:element name="executeService" type="tns:executeService"/>
+
+  <xs:element name="executeServiceResponse" type="tns:executeServiceResponse"/>
+
+  <xs:element name="executeUndo" type="tns:executeUndo"/>
+
+  <xs:element name="executeUndoResponse" type="tns:executeUndoResponse"/>
+
+  <xs:complexType name="executeUndo">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="executionInfo" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="executeUndoResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="undoServiceResult" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="executeService">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="executionInfo" type="xs:string"/>
+      <xs:element minOccurs="0" name="request" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="executeServiceResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="executeServiceResult" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="executeUndo">
+    <wsdl:part element="tns:executeUndo" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeUndoResponse">
+    <wsdl:part element="tns:executeUndoResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeServiceResponse">
+    <wsdl:part element="tns:executeServiceResponse" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="executeService">
+    <wsdl:part element="tns:executeService" name="parameters">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="JBankBeanWS">
+    <wsdl:operation name="executeUndo">
+      <wsdl:input message="tns:executeUndo" name="executeUndo">
+    </wsdl:input>
+      <wsdl:output message="tns:executeUndoResponse" name="executeUndoResponse">
+    </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeService">
+      <wsdl:input message="tns:executeService" name="executeService">
+    </wsdl:input>
+      <wsdl:output message="tns:executeServiceResponse" name="executeServiceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="JBankBeanWSServiceSoapBinding" type="tns:JBankBeanWS">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="executeUndo">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="executeUndo">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="executeUndoResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="executeService">
+      <soap:operation soapAction="" style="document"/>
+      <wsdl:input name="executeService">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="executeServiceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="JBankBeanWSService">
+    <wsdl:port binding="tns:JBankBeanWSServiceSoapBinding" name="JBankBeanWSPort">
+      <soap:address location="http://10.70.0.31:8080/jbankws/services/JBankBeanWS"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

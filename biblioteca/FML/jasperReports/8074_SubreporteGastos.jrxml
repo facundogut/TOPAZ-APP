@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-10-04T10:14:20 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="8074_SubreporteGastos" pageWidth="400" pageHeight="200" columnWidth="400" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="d71fa8db-3e18-4721-bf74-97c3df0e2544">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="ireport.zoom" value="1.9487171000000014"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CAPITAL" class="java.lang.String"/>
+	<parameter name="JTS_OID" class="java.lang.Integer"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT NULL AS CONCEPTO_COBRO,S.C1601,S.C1685 AS INT_ADELANTADO, 0 AS MONTO_IMPONIBLE,NULL AS ID_CARGO,NULL AS ID_IMPUESTO
+FROM SALDOS S WITH(NOLOCK)
+WHERE S.JTS_OID=$P{JTS_OID}
+UNION
+SELECT L.CONCEPTO_COBRO,S.C1601,0 AS INT_ADELANTADO,isnull(L.MONTO_FACTURABLE,0) AS MONTO_IMPONIBLE,L.ID_CARGO,L.ID_IMPUESTO
+FROM SALDOS S WITH(NOLOCK)
+INNER JOIN BS_HISTORIA_PLAZO P WITH(NOLOCK)
+ON S.JTS_OID=P.SALDOS_JTS_OID AND P.TIPOMOV='A'
+INNER JOIN CI_FACTURA_LINEA L WITH(NOLOCK) ON L.ASIENTO=P.NROASIENTOMOV AND L.SUCURSAL_ASIENTO=P.SUCURSALMOV
+AND L.FECHA_PROCESO_ASIENTO = P.FECHAPROCESOMOV AND ((L.ID_CARGO NOT IN (SELECT ID_CARGO FROM CI_CARGOS WITH(NOLOCK) WHERE ID_CARGO NOT IN (705,706) AND TIPO_CARGO_IMPOSITIVO IN (1,2,6))) OR 
+(L.ID_CARGO IS NULL AND L.ID_IMPUESTO NOT IN (SELECT ID_IMPUESTO FROM CI_IMPUESTOS WITH(NOLOCK) WHERE TIPO_IMPUESTO = 6)))
+INNER JOIN CI_FACTURA F WITH(NOLOCK) ON F.SUCURSAL_ASIENTO=l.SUCURSAL_ASIENTO AND F.ASIENTO=l.ASIENTO AND f.FECHA_PROCESO_ASIENTO=l.FECHA_PROCESO_ASIENTO
+AND F.ORDINAL_MOVIMIENTO=L.ORDINAL_MOVIMIENTO
+AND F.TR_REAL=L.TR_REAL
+AND F.TR_VIRTUAL=L.TR_VIRTUAL
+AND F.TR_TIPO=L.TR_TIPO 
+AND F.JTS_SALDO_CLIENTE IN (SELECT JTS_OID FROM SALDOS WITH(NOLOCK) WHERE C1803=s.C1803)
+WHERE S.JTS_OID=$P{JTS_OID}]]>
+	</queryString>
+	<field name="CONCEPTO_COBRO" class="java.lang.String"/>
+	<field name="C1601" class="java.math.BigDecimal"/>
+	<field name="INT_ADELANTADO" class="java.math.BigDecimal"/>
+	<field name="MONTO_IMPONIBLE" class="java.math.BigDecimal"/>
+	<field name="ID_CARGO" class="java.math.BigDecimal"/>
+	<field name="ID_IMPUESTO" class="java.math.BigDecimal"/>
+	<variable name="VMonto_Imponible" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{MONTO_IMPONIBLE}.add($F{INT_ADELANTADO})]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="26">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="13" width="200" height="13" uuid="3c9ede61-363d-4683-8187-7f36ab50565f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[($F{INT_ADELANTADO}.floatValue() != 0.0)]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Interes Adelantado]]></text>
+			</staticText>
+			<textField pattern="#,##0.00#">
+				<reportElement x="200" y="0" width="200" height="13" uuid="5d6252d0-2970-4535-bd12-b1176944666f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{C1601}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#">
+				<reportElement x="200" y="13" width="200" height="13" uuid="a27c62b2-7c60-4a20-bb5d-ad6d50d12321">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<printWhenExpression><![CDATA[($F{INT_ADELANTADO}.floatValue() != 0.0)]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{INT_ADELANTADO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="0" width="200" height="13" uuid="283508aa-b1fd-448c-bbfc-993a5e68f3fb">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Capital]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="0" y="0" width="200" height="14" uuid="9f3dae41-723b-41b5-babd-765467a6b8ee"/>
+				<box>
+					<rightPen lineWidth="0.0"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONCEPTO_COBRO}.substring(0,1).toUpperCase()+$F{CONCEPTO_COBRO}.substring(1,$F{CONCEPTO_COBRO}.length()).toLowerCase()]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00#" isBlankWhenNull="true">
+				<reportElement x="200" y="0" width="200" height="14" uuid="5b3cddcf-7b23-4d9a-8fd9-7f5848bd6043">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CONCEPTO_COBRO}==null?" ":$F{MONTO_IMPONIBLE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<staticText>
+				<reportElement x="0" y="7" width="200" height="13" uuid="3f4d7bae-f2bd-4049-958b-1c4b4ba193a4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[NETO DE LA OPERACIÓN $]]></text>
+			</staticText>
+			<line>
+				<reportElement x="199" y="6" width="200" height="1" uuid="91dc5bf9-0b40-4909-a304-78a7a6d2582e">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<textField pattern="#,##0.00#">
+				<reportElement x="200" y="7" width="200" height="13" uuid="73950cd0-6c9a-45e5-95fd-1972d2eddf95">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{C1601}
+.subtract($V{VMonto_Imponible})
+.setScale( 2, BigDecimal.ROUND_HALF_UP)]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

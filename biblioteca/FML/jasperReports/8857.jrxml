@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-10-26T10:47:22 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Representantes Legales" pageWidth="595" pageHeight="850" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="69d1d3a1-73ba-4ac0-966c-1063ad7b6338">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Data Adapter NBCH"/>
+	<parameter name="JTS_OID" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[JTS OID:]]></parameterDescription>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+		<defaultValueExpression><![CDATA[java.lang.System.getProperty("Topaz.reportesJR")]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+DISTINCT S.JTS_OID
+FROM SALDOS AS S
+INNER JOIN CLI_CLIENTEPERSONA AS CP ON S.C1803 = CP.CODIGOCLIENTE AND CP.TZ_LOCK = 0
+INNER JOIN CLI_INTEGRANTESPJ AS I ON CP.NUMEROPERSONA = I.NUMEROPERSONAJURIDICA AND I.TZ_LOCK = 0 
+AND (I.CODIGOCARGO = 'REP' OR I.CODIGOCARGO IN (
+SELECT CARGO FROM CLI_ROLES_OBL_CARGO AS C WHERE C.OBLIGATORIO = 'S' AND C.TZ_LOCK = 0 AND C.TIPO_SOCIEDAD IN (
+SELECT TIPOSOCIEDAD FROM CLI_PERSONASJURIDICAS AS PJ WHERE PJ.NUMEROPERSONAJURIDICA = I.NUMEROPERSONAJURIDICA AND
+PJ.TZ_LOCK = 0)))
+INNER JOIN CLI_PERSONASFISICAS AS PF ON I.NUMEROPERSONAFISICA = PF.NUMEROPERSONAFISICA AND PF.TZ_LOCK = 0
+INNER JOIN CLI_DOCUMENTOSPFPJ AS D ON PF.NUMEROPERSONAFISICA = D.NUMEROPERSONAFJ AND D.TZ_LOCK = 0
+WHERE S.TZ_LOCK = 0 AND S.JTS_OID = $P{JTS_OID}]]>
+	</queryString>
+	<field name="JTS_OID" class="java.math.BigDecimal"/>
+	<pageHeader>
+		<band height="64" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image>
+				<reportElement x="-20" y="-20" width="595" height="84" uuid="e33aa296-0ba0-43a6-8c11-7ca093b5fc4b"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logolargo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="200" y="10" width="355" height="20" uuid="dce06766-79e7-45d4-b9d2-0d515acf8325">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPRESENTANTES LEGALES Y/O CONVENCIONALES]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="100" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<subreport>
+				<reportElement positionType="Float" x="0" y="0" width="555" height="100" uuid="b96db7e2-d67d-428b-8af4-1a015b37e8b3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<subreportParameter name="JTS_OID">
+					<subreportParameterExpression><![CDATA[$F{JTS_OID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "8857_Subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+		</band>
+	</pageFooter>
+	<noData>
+		<band height="120">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<image>
+				<reportElement x="-20" y="0" width="595" height="84" uuid="b66c5852-96a7-418c-855d-1fe0ccd26866"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logolargo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement positionType="Float" x="200" y="30" width="355" height="20" uuid="0a2421a3-09f7-45aa-bad2-f83e061f04ab">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<box>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REPRESENTANTES LEGALES Y/O CONVENCIONALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="100" width="555" height="20" uuid="6eaa1415-2c3e-4ff8-85eb-0da4a4f2ed7f">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="11" isBold="false"/>
+				</textElement>
+				<text><![CDATA[No hay datos para procesar]]></text>
+			</staticText>
+		</band>
+	</noData>
+</jasperReport>

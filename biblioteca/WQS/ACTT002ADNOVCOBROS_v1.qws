@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/activas/pagosTCPorFechaCuenta/{fecha}/{codigoAdministradora}/{numeroSocio}/{pagina}/{largopagina}</uri>
+    <serviceDescription>ACTT002ADNOVCOBROS</serviceDescription>
+    <title>ACTT002ADNOVCOBROS</title>
+    <querys>
+        <query id="1" name="query" type="MULTIPLE">
+            <sql>&#13;
+DECLARE&#13;
+-- PARAMETROS&#13;
+@fecha_param VARCHAR(20) = SUBSTRING(?, 1, 20), &#13;
+@administradora INT = ?,&#13;
+@usuario NUMERIC(20,0) = ?, &#13;
+@pagina INT = ?,&#13;
+@largo_pagina INT = ?,&#13;
+-- VARIABLES&#13;
+@total_registros INT = 0, &#13;
+@registros_restantes INT = 0, &#13;
+@primer_registro_pagina INT = 0, &#13;
+@ultimo_registro_pagina INT = 0,&#13;
+@offset INT = 0;&#13;
+&#13;
+DECLARE&#13;
+-- PARSEO&#13;
+@fecha DATE = TRY_CONVERT(DATE, @fecha_param, 112);&#13;
+&#13;
+&#13;
+IF ( LEN(@fecha_param) != 8 OR ISNUMERIC(@fecha_param) = 0 )&#13;
+BEGIN&#13;
+	THROW 50000, 'Fecha recibida no numerica', 1;&#13;
+END&#13;
+&#13;
+IF ( @pagina &lt; 1 )&#13;
+BEGIN&#13;
+	THROW 50001, 'Pagina negativa o 0', 1;&#13;
+END&#13;
+&#13;
+IF ( @largo_pagina &lt; 1 )&#13;
+BEGIN&#13;
+	THROW 50002, 'Largo de pagina negativo o 0', 1;&#13;
+END&#13;
+&#13;
+SET @offset = (@pagina - 1) * @largo_pagina&#13;
+&#13;
+SET @total_registros = ( &#13;
+	SELECT COUNT(u.USUARIO)&#13;
+	FROM TJC_MAESTRO_USUARIO u (NOLOCK)&#13;
+	INNER JOIN TJC_HISTORICO_PAGOS h (NOLOCK) ON u.ADMINISTRADORA = h.ADMINISTRADORA AND u.USUARIO = h.USUARIO AND h.TZ_LOCK = 0&#13;
+	INNER JOIN TJC_MAESTRO_ADMINISTRADORAS a (NOLOCK) ON a.COD_ADMINISTRADORA = u.ADMINISTRADORA AND a.TZ_LOCK = 0&#13;
+	INNER JOIN USUARIOS usu (NOLOCK) ON usu.INICIALES = h.USUARIO_MOD&#13;
+	WHERE &#13;
+		h.FECHA = @fecha AND &#13;
+		a.COD_ADMINISTRADORA = @administradora AND &#13;
+		u.USUARIO = @usuario AND &#13;
+		u.TZ_LOCK = 0&#13;
+	);&#13;
+&#13;
+SET @registros_restantes = @total_registros - @largo_pagina * (@pagina - 1)&#13;
+SET @primer_registro_pagina = 1 + @largo_pagina * (@pagina - 1)&#13;
+SET @ultimo_registro_pagina = @largo_pagina + @largo_pagina * (@pagina - 1)&#13;
+&#13;
+IF (@registros_restantes &lt; 0)&#13;
+BEGIN&#13;
+	SET @registros_restantes = 0&#13;
+END&#13;
+&#13;
+IF (@ultimo_registro_pagina &gt; @total_registros )&#13;
+BEGIN&#13;
+	SET @ultimo_registro_pagina = @total_registros&#13;
+END &#13;
+  &#13;
+&#13;
+IF( @pagina &gt; (SELECT dbo.ITFcantPaginas (@total_registros, @largo_pagina)) OR @total_registros = 0)&#13;
+BEGIN&#13;
+SELECT &#13;
+	@total_registros AS "paginado.totalRegistros", 	&#13;
+	@pagina AS "paginado.paginaActual",&#13;
+	@primer_registro_pagina AS "paginado.primerRegistroPag", 	&#13;
+	@largo_pagina AS "paginado.registroPorPag", &#13;
+	@ultimo_registro_pagina AS "paginado.ultimoRegistroPag", &#13;
+	@registros_restantes AS "paginado.siguientesRegistros", &#13;
+	(SELECT dbo.ITFcantPaginas (@total_registros, @largo_pagina)) AS "paginado.cantidadPaginas",&#13;
+	NULL AS "sucursal", &#13;
+	NULL AS "sucursalCuenta",&#13;
+	NULL AS "cuenta.numeroSocio", &#13;
+	NULL AS "cuenta.administradora.codigo",&#13;
+	NULL AS "cuenta.administradora.marca",&#13;
+	NULL AS "importe",&#13;
+	NULL AS "fechaAlta",&#13;
+	NULL AS "moneda.id",&#13;
+	NULL AS "moneda.descripcion",&#13;
+	NULL AS "auditoria.numeroAsiento",&#13;
+	NULL AS "auditoria.sucursal",&#13;
+	NULL AS "auditoria.usuario",&#13;
+	NULL AS "origen.codigo",&#13;
+	NULL AS "origen.descripcion"&#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+&#13;
+	SELECT &#13;
+		@total_registros AS "paginado.totalRegistros", &#13;
+		@pagina AS "paginado.paginaActual",&#13;
+		@primer_registro_pagina AS "paginado.primerRegistroPag", &#13;
+		@largo_pagina AS "paginado.registroPorPag", &#13;
+		@ultimo_registro_pagina AS "paginado.ultimoRegistroPag", &#13;
+		@registros_restantes AS "paginado.siguientesRegistros", &#13;
+		(SELECT dbo.ITFcantPaginas (@total_registros, @largo_pagina)) AS "paginado.cantidadPaginas", &#13;
+		u.SUC_USUARIO AS "sucursal", &#13;
+		u.SUC_CUENTA_COBRO AS "sucursalCuenta", &#13;
+		u.USUARIO AS "cuenta.numeroSocio", &#13;
+		a.COD_ADMINISTRADORA AS "cuenta.administradora.codigo", &#13;
+		a.DESCRIPCION AS "cuenta.administradora.marca", &#13;
+		CASE &#13;
+			WHEN h.PAGO_MN &gt; 0 THEN h.PAGO_MN&#13;
+			ELSE h.PAGO_ME&#13;
+		END AS "importe", &#13;
+		h.FECHA AS "fechaAlta",		&#13;
+		CASE &#13;
+			WHEN h.PAGO_MN &gt; 0 THEN 1&#13;
+			WHEN h.PAGO_ME &gt; 0 THEN 2&#13;
+			ELSE 0&#13;
+		END AS "moneda.id", &#13;
+		CASE &#13;
+			WHEN h.PAGO_MN &gt; 0 THEN 'PESO'&#13;
+			WHEN h.PAGO_ME &gt; 0 THEN 'DÓLAR ESTADOUNIDENSE'&#13;
+			ELSE ''&#13;
+		END AS "moneda.descripcion", &#13;
+		h.ASIENTO AS "auditoria.numeroAsiento",&#13;
+		usu.NROSUCURSAL AS "auditoria.sucursal",&#13;
+		usu.INICIALES AS "auditoria.usuario",&#13;
+		h.CANAL AS "origen.codigo",&#13;
+		CASE&#13;
+			WHEN h.CANAL = 1 THEN 'Cobranza por Caja'&#13;
+			WHEN h.CANAL = 2 THEN 'Cobranza por Debito Automatico'&#13;
+			WHEN h.CANAL = 4 THEN 'Cobranza por Rapipago'&#13;
+			WHEN h.CANAL = 5 THEN 'Cobranza por PagoFacil'&#13;
+			WHEN h.CANAL IS NULL THEN NULL&#13;
+			ELSE 'Origen Desconocido'&#13;
+		END AS "origen.descripcion"&#13;
+	FROM TJC_MAESTRO_USUARIO u (NOLOCK)&#13;
+	INNER JOIN TJC_HISTORICO_PAGOS h (NOLOCK) ON u.ADMINISTRADORA = h.ADMINISTRADORA AND u.USUARIO = h.USUARIO AND h.TZ_LOCK = 0&#13;
+	INNER JOIN TJC_MAESTRO_ADMINISTRADORAS a (NOLOCK) ON a.COD_ADMINISTRADORA = u.ADMINISTRADORA AND a.TZ_LOCK = 0&#13;
+	INNER JOIN USUARIOS usu (NOLOCK) ON usu.INICIALES = h.USUARIO_MOD&#13;
+	WHERE &#13;
+		h.FECHA = @fecha AND &#13;
+		a.COD_ADMINISTRADORA = @administradora AND &#13;
+		u.USUARIO = @usuario AND &#13;
+		u.TZ_LOCK = 0&#13;
+	ORDER BY u.USUARIO&#13;
+	OFFSET @offset ROWS &#13;
+	FETCH NEXT @largo_pagina ROWS ONLY;&#13;
+END&#13;
+            </sql>
+            <input>
+                <inParameter description="" type="STRING">fecha</inParameter>
+                <inParameter description="" type="INTEGER">codigoAdministradora</inParameter>
+                <inParameter description="" type="LONG">numeroSocio</inParameter>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+            </input>
+            <output>
+                <level groupby="paginado.paginaActual" name="paginado">
+                    <outParameter description="" type="LONG">
+                        <queryname>paginado.totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginado.paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginado.primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginado.registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginado.ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginado.siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginado.cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="pagos">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>sucursal</queryname>
+                        <servicename>sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>sucursalCuenta</queryname>
+                        <servicename>sucursalCuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>cuenta.numeroSocio</queryname>
+                        <servicename>cuenta.numeroSocio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cuenta.administradora.codigo</queryname>
+                        <servicename>cuenta.administradora.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>cuenta.administradora.marca</queryname>
+                        <servicename>cuenta.administradora.marca</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>importe</queryname>
+                        <servicename>importe</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaAlta</queryname>
+                        <servicename>fechaAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>moneda.id</queryname>
+                        <servicename>moneda.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>moneda.descripcion</queryname>
+                        <servicename>moneda.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>auditoria.numeroAsiento</queryname>
+                        <servicename>auditoria.numeroAsiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>auditoria.sucursal</queryname>
+                        <servicename>auditoria.sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>auditoria.usuario</queryname>
+                        <servicename>auditoria.usuario</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>origen.codigo</queryname>
+                        <servicename>origen.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>origen.descripcion</queryname>
+                        <servicename>origen.descripcion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

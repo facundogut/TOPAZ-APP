@@ -1,0 +1,427 @@
+VERSION:055_5
+TN  NN 1006TSelección de producto de cámara         C00001 00
+*$2023-08-22 15:51:46JBENTANCOU
+VNNNNN 010002000203000500SSSD000000000000000000000000000000000000000
+/T=Rechazo productos de cámara por feriado de Sucursal
+/C=192192192
+*$2023-08-22 15:54:01JBENTANCOU
+KNNNNN 010015002002150460000101
+/T=Selección producto de cámara
+/F=0012700NNN000000000Arial                                   
+*$2023-08-22 15:55:10JBENTANCOU
+ NNNNN 45450   Productos de cámara                               I NSN 010090021801130390001011110000093007301130203000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:43:17JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=A(C45450.0="")
+/M=Debe seleccionar un producto de cámara para continuar
+*$2023-08-22 16:47:05JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C45450="DD")
+/P=I10
+/M=Producto seleccionado débitos directos
+*$2023-08-22 16:47:54JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C45450="TR")
+/P=I11
+/M=Producto seleccionado transferencias
+*$2023-08-22 16:48:18JBENTANCOU
+CNNNNN ME00000000000000000000100
+/F=A(C45450.0#"DD")YA(C45450.0#"TR")
+/M=Error - Producto seleccionado incorrecto
+*$2023-08-22 16:49:02JBENTANCOU
+TN  NN 1006TConsulta débitos directos por Sucursal  C00000 00
+/?=I10
+*$2023-08-22 16:50:43JBENTANCOU
+VNNNNN 020002000204350725SSSD000000000000000000000000000000000000000
+/T=Rechazo débitos directos por feriado de Sucursal
+/C=192192192
+*$2023-08-22 15:53:31JBENTANCOU
+KNNNNN 020083001701330692000101
+/T=Opciones
+/F=0012700NNN000000000Arial                                   
+*$2023-12-12 11:37:03JBENTANCOU
+ NSSNS 35449   Sucursal                                          I NSN 020016017200390239021001000000019002700390157000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 11:37:23JBENTANCOU
+ NNNNN 35447   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C35449.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 11:11:17JBENTANCOU
+ NNNNN 35448   Nombre Sucursal                                   ICNSN 020016026500390565001011500000007000700300137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 11:37:23JBENTANCOU
+CN  NN ME00000000000000000000100
+/F=C9509=0
+/M=Error - Sucursal incorrecta
+*$2023-07-14 12:41:58JBENTANCOU
+ NNNNN 00056   Fecha de Vencimiento                              I NNNA020048017200710307011011000000051002700710157000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 11:37:16JBENTANCOU
+ NNNNN 00914   Mensaje                                           INNNNK000007015200300452001011000000007000700300137000
+/?=C56.0 < C9500
+/V=Fecha de Vencimiento debe ser mayor o igual a la fecha de proceso.
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 12:28:30JBENTANCOU
+CNNNNN ME00000000000000000000110
+/?=C56.0 < C9500
+/M=C914.0
+*$2023-12-12 12:28:34JBENTANCOU
+ NNNNN 00091   Fecha de Vencimiento formateada                   INNSNF000007015200270202000011000100007000700270137000
+/V=C56[7,4] + C56[4,2] +C56[1,2]
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-12-12 11:38:28JBENTANCOU
+ NSSNS 45421   Opciones                                          IENSNK020101011201240609011011300000261002002840150000
+/V=R
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 11:37:03JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C45421.0="P")
+/P=I21
+/M=Reversa de rechazo de ordenes por feriado
+*$2023-08-22 16:44:02JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C45421.0="R")
+/P=I20
+/M=Rechazo ordenes de Sucursal por feriado
+*$2023-08-22 16:43:46JBENTANCOU
+KNNNNN 020145001703500692000101
+/T=Rechazo débitos directos por feriado de Sucursal
+/F=0012700NNN000000000Arial                                   
+*$2023-12-12 11:37:07JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="SALDO_JTS_OID IN (SELECT JTS_OID FROM SALDOS WHERE (SUCURSAL = "+C35447.0+" OR -1 = "+C35447.0+") AND ((TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000) AND (TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000)))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 11:15:16JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/?=I20
+/V=C8010 + " AND ESTADO_DEBITO = (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO = 44701 AND IDIOMA = 'E' AND OPCIONINTERNA = 'PP')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:44:07JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/?=I20
+/V=C8010 + " AND FECHA_VTO = '"+C91.0+"'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 12:09:10JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/?=I21
+/V=C8010.0 + " AND FECHA_VTO='"+C091.0+"' AND ESTADO_DEBITO=(SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO = 44701 AND IDIOMA = 'E' AND OPCIONINTERNA = 'RC') AND MOTIVO_RECHAZO=45"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 12:29:36JBENTANCOU
+ NSSNS 45809   Listado órdenes déb. dir.2637                     ICNNN 020172003203270675021011600000255053102780643000
+/L=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-13 13:55:26LUIGIDA
+ NNNNN 44685   Id Débito:                                        INNSNA000007015200300302021011000000007000700300137000
+/V=C45809.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-01-13 13:55:59LUIGIDA
+ NNNNN 44701   Estado:                                           INNNN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-14 12:44:19JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=I20
+/F=C9509=0
+/M=Error - No se leyeron órdenes a rechazar
+*$2023-08-22 16:44:16JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=I21
+/F=C9509=0
+/M=Error - No se leyeron órdenes rechazadas a reversar
+*$2023-08-22 16:44:19JBENTANCOU
+ NNNNN 00910   Mensaje                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I20Y(C35447.0=-1)
+/V="Se rechazarán las órdenes de débito directo pendientes de procesar de todas las sucursales y con fecha de vencimiento "+C56.0+", con motivo R93 Día Feriado no laborable."
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 12:45:28JBENTANCOU
+ NNNNN 00910   Mensaje                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I20Y(C35447.0#-1)
+/V="Se rechazarán las órdenes de débito directo pendientes de procesar de la Sucursal "+C35448.0+" y con fecha de vencimiento "+C56.0+", con motivo R93 Día Feriado no laborable."
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 12:45:40JBENTANCOU
+ NNNNN 00910   Mensaje                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I21Y(C35447.0=-1)
+/V="Se reversará el rechazo de las órdenes de débito directo pendientes de procesar de todas las sucursales y fecha de vencimiento "+C56.0+", por motivo R93 Día Feriado no laborable."
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 12:48:08JBENTANCOU
+ NNNNN 00910   Mensaje                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I21Y(C35447.0#-1)
+/V="Se reversará el rechazo de las órdenes de débito directo pendientes de procesar de la Sucursal "+C35448.0+" y fecha de vencimiento "+C56.0+", por motivo R93 Día Feriado no laborable."
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 12:47:47JBENTANCOU
+CNNNNN A 00000000000000000000110
+/M=C910.0
+*$2023-07-13 17:00:14JBENTANCOU
+TN  NN 1006TModificación de registros débitos dir.  C00000 00
+/?=I10
+*$2023-08-22 16:53:02JBENTANCOU
+ NNNNN 05022   ID de Proceso (0)                                 INNNNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-14 14:37:46JBENTANCOU
+ NNNNN 45421   Opciones                                          INNSNA000078011201010609011011300000261002002840150000
+/V=C45421.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-13 16:48:11JBENTANCOU
+ NNNNN 35447   Sucursal                                          INNSNA000078011201010609011011000000261002002840150000
+/V=C35447.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 12:37:57JBENTANCOU
+ NNNNN 00056   Fecha                                             INNNNA000007015200300302011011000000007000700300137000
+/V=C056.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-12-12 12:39:25JBENTANCOU
+CNNNNN  m00000000000000000000100
+/R=TOP/CLIENTES SP_RECHAZO_REVERSA_DEBITOS_DIRECTOS, C5022 I, C9500 I, C35447 I, C56 I, C45421 I, C9501 I, C9502 I, C48 O, C49 O, C2970 O
+*$2023-12-12 12:41:01JBENTANCOU
+ NNNNN 02970   Respuesta del SP                                  INNNN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-13 16:47:37JBENTANCOU
+ NNNNN 00048   Código de retorno del proceso                     INNNN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-14 14:39:39JBENTANCOU
+ NNNNN 00049   Cantidad de registros modificados                 INNNN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-07-14 14:38:50JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=C48.0#1
+/M=Error - No se encontraron registros 
+*$2023-07-14 14:40:21JBENTANCOU
+CNNNNN A 00000000000000000000110
+/?=C48.0=1YA(C2970.0="A")
+/M="Se rechazaron "+C49.0+" registros de débitos directos"
+*$2023-08-22 17:18:53JBENTANCOU
+CNNNNN A 00000000000000000000110
+/?=C48.0=1YA(C2970.0="B")
+/M="Se reversaron "+C49.0+" registros de débitos directos"
+*$2023-08-22 17:18:58JBENTANCOU
+TN  NN 1006TConsulta transferencias por Sucursal    C00000 00
+/?=I11
+*$2023-08-22 16:52:37JBENTANCOU
+VNNNNN 030002000204350725SSSD000000000000000000000000000000000000000
+/T=Rechazo transferencias por feriado de Sucursal
+/C=192192192
+*$2023-08-22 16:54:29JBENTANCOU
+KNNNNN 030055001701350692000101
+/T=Opciones
+/F=0012700NNN000000000Arial                                   
+*$2023-08-22 16:54:32JBENTANCOU
+ NSSNS 00001   Sucursal                                          I NSN 030016016000390227021001000000019002700390157000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:54:34JBENTANCOU
+ NSSNS 06020   Nombre Sucursal                                   ICNSN 030016025700390675001011500000017012800400258000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:54:36JBENTANCOU
+CN  NN ME00000000000000000000100
+/F=C9509=0
+/M=Error - Sucursal incorrecta
+*$2023-08-22 16:52:22JBENTANCOU
+ NNNNN 00091   Fecha de Proceso formateada                       INNSNF000007015200270202000011000100007000700270137000
+/V=C9500[7,4] + C9500[4,2] +C9500[1,2]
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2023-08-22 16:52:22JBENTANCOU
+ NSSNS 45421   Opciones                                          IENSNK030084011201070609011011300000261002002840150000
+/V=R
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:54:50JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C45421.0="P")
+/P=I21
+/M=Reversa de rechazo de ordenes por feriado
+*$2023-08-22 16:52:22JBENTANCOU
+CNNNNN   00000000000000000000100
+/F=A(C45421.0="R")
+/P=I20
+/M=Rechazo ordenes de Sucursal por feriado
+*$2023-08-22 16:52:22JBENTANCOU
+KNNNNN 030145001703500692000101
+/T=Rechazo transferencias por feriado de Sucursal
+/F=0012700NNN000000000Arial                                   
+*$2023-08-22 16:55:36JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="NRO_TRANSFERENCIA IN (SELECT NRO_TRANSFERENCIA FROM VTA_TRANSFERENCIAS WHERE BEN_JTS_OID_CUENTA IN (SELECT JTS_OID FROM SALDOS WHERE SUCURSAL = "+C001.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:08:41JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010 + " AND ((TZ_LOCK < 300000000000000 OR TZ_LOCK >= 400000000000000) AND (TZ_LOCK < 100000000000000 OR TZ_LOCK >= 200000000000000))))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:32:05JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/?=I20
+/V=C8010 + " AND ESTADO = (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO = 45446 AND IDIOMA = 'E' AND OPCIONINTERNA = 'PP')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:10:18JBENTANCOU
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/?=I21
+/V=C8010.0 + " AND FECHA_ESTADO='"+C091.0+"' AND ESTADO=(SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO = 45446 AND IDIOMA = 'E' AND OPCIONINTERNA = 'RC') AND MOTIVO_RECHAZO = (SELECT CONCAT(CODIGO_NACHA, ' - ', DESCRIPCION) FROM SNP_MOTIVOS_RECHAZO WHERE ID_MOTIVO = 25)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:24:41JBENTANCOU
+ NSSNS 45579   Listado de transferencias recibidas               ICNNN 030172003203270675021011600000255053102780643000
+/L=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:06:46JBENTANCOU
+ NNNNN 34220   Nro. Transferencia                                INNSNA000007015200300302021011000000007000700300137000
+/V=C45579.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:14:55JBENTANCOU
+ NNNNN 34228   Clase Transferencia                               INNSNK000007015200300202001011000000007000700300137000
+/V=R
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:15:17JBENTANCOU
+ NNNNN 45446   Estado                                            INNNN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:16:01JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=I20
+/F=C9509=0
+/M=Error - No se leyeron transferencias a rechazar
+*$2023-08-22 17:16:18JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=I21
+/F=C9509=0
+/M=Error - No se leyeron transferencias rechazadas a reversar
+*$2023-08-22 17:16:26JBENTANCOU
+ NNNNN 00910   Mensaje                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I20
+/V="Se rechazarán las transferencias pendientes de procesar de la Sucursal "+C6020.0+" con motivo R93 Día Feriado no laborable." 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:16:45JBENTANCOU
+ NNNNN 00910   Mensaje                                           INNNNF000007015200300452001011000000007000700300137000
+/?=I21
+/V="Se reversará el rechazo de las transferencias pendientes de procesar de la Sucursal "+C6020.0+" por motivo R93 Día Feriado no laborable."
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:17:29JBENTANCOU
+CNNNNN A 00000000000000000000110
+/M=C910.0
+*$2023-08-22 16:52:22JBENTANCOU
+TN  NN 1006TModificación de registros transferenciasC00000 00
+/?=I11
+*$2023-08-22 16:53:35JBENTANCOU
+ NNNNN 05022   ID de Proceso (0)                                 INNNNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:52:22JBENTANCOU
+ NNNNN 45421   Opciones                                          INNSNA000078011201010609011011300000261002002840150000
+/V=C45421.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:17:49JBENTANCOU
+ NNNNN 00001   Sucursal                                          INNSNA000078011201010609011011000000261002002840150000
+/V=C001.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:17:55JBENTANCOU
+CNNNNN  m00000000000000000000100
+/R=TOP/CLIENTES SP_RECHAZO_REVERSA_TRANSFERENCIAS, C5022 I, C9500 I, C1 I,C45421 I, C48 O, C49 O,C2970 O
+*$2023-08-22 17:30:12JBENTANCOU
+ NNNNN 02970   Respuesta del SP                                  INNNN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:52:22JBENTANCOU
+ NNNNN 00048   Código de retorno del proceso                     INNNN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:52:22JBENTANCOU
+ NNNNN 00049   Cantidad de registros modificados                 INNNN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:52:22JBENTANCOU
+CNNNNN ME00000000000000000000100
+/?=C48.0#1
+/M=Error - No se encontraron registros 
+*$2023-08-22 16:52:22JBENTANCOU
+CNNNNN A 00000000000000000000110
+/?=C48.0=1YA(C2970.0="A")
+/M="Se rechazaron "+C49.0+" registros de transferencias"
+*$2023-08-22 17:18:28JBENTANCOU
+CNNNNN A 00000000000000000000110
+/?=C48.0=1YA(C2970.0="B")
+/M="Se reversaron "+C49.0+" registros de transferencias"
+*$2023-08-22 17:18:33JBENTANCOU
+TN  NN 1006TFinaliza Operación                      C00001 00
+*$2023-07-13 16:55:04JBENTANCOU
+ NNNNN 00025   Fecha Valor                                       INNNNA000000013300200243000011000000000000000200119000
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2023-07-13 16:55:04JBENTANCOU
+ NNNNN 00028   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/?=(I10)Y(I20)
+/V="Rechazo órdenes Sucursal "+C001.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:51:36JBENTANCOU
+ NNNNN 00028   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/?=(I10)Y(I21)
+/V="Reversa rechazo Sucursal "+C001.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 16:51:46JBENTANCOU
+ NNNNN 00028   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/?=(I11)Y(I20)
+/V="Rechazo transferencias Sucursal "+C001.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:19:36JBENTANCOU
+ NNNNN 00028   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/?=(I11)Y(I21)
+/V="Reversa rechazo Sucursal "+C001.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-22 17:19:46JBENTANCOU
+DN  NN 2637Ov00
+*$2023-08-22 17:20:05JBENTANCOU
+*#I20#Rechazo ordenes de Sucursal por feriado
+*#I21#Reversa de rechazo de ordenes por feriado
+*#I11#Producto seleccionado transferencias
+*#I10#Producto seleccionado débitos directos

@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>clientes/plazoFijo/{sucursal}/{cuenta}/{producto}/{operacion}</uri>
+    <serviceDescription>Consulta Plazo Fijo por Sucursal, Producto, Cuenta y Operación</serviceDescription>
+    <title>DPF por Sucursal, Producto, Cuenta y Operación</title>
+    <querys>
+        <query id="1" name="DPF return" type="MULTIPLE">
+            <sql>&#13;
+DECLARE&#13;
+	@sucursal INT = ?,&#13;
+	@producto INT = ?,&#13;
+	@cuenta INT = ?,&#13;
+	@operacion INT = ?;&#13;
+	&#13;
+	&#13;
+	
+SELECT &#13;
+	@sucursal 									sucursal,&#13;
+	@cuenta 										cuenta,&#13;
+	@operacion 								operacionNumero,&#13;
+    CASE WHEN (SELECT o.DESCRIPCION FROM OPERACIONES o WHERE s.OPERACION = o.IDENTIFICACION AND o.TZ_LOCK = 0) IS NULL THEN ''&#13;
+	ELSE (SELECT o.DESCRIPCION FROM OPERACIONES o WHERE s.OPERACION = o.IDENTIFICACION AND o.TZ_LOCK = 0) END&#13;
+	 AS operacionDescripcion,&#13;
+	C1604 + C1608							capital,&#13;
+	C1601											capitalOriginal,&#13;
+	C1608											interesVencimiento,&#13;
+	C1600											montoOriginal,&#13;
+	C1632											tasaInteres,&#13;
+	(SELECT m.C6400 FROM MONEDAS m WHERE s.MONEDA = m.C6399 AND m.TZ_LOCK = 0) AS monedaDescripcion,&#13;
+	(SELECT m.c6399 FROM MONEDAS m WHERE s.MONEDA = m.C6399 AND m.TZ_LOCK = 0) AS monedaId,&#13;
+   	C1698											spread,&#13;
+	C1688											ordinalRenovacion,&#13;
+	replace(convert(VARCHAR(10),C1620,102),'.','-')		fechaApertura,&#13;
+	replace(convert(VARCHAR(10),C1627,102),'.','-')		fechaVencimiento,&#13;
+	DATEDIFF(DAY,C1621,C1627)											plazoDias,&#13;
+	C1659		   									accionAlVencimiento,&#13;
+	C1703											canalOrigen,&#13;
+	cast(round((s.C1632 * 30.41666 / 365),2,1) as decimal (4,2))			tna,&#13;
+    cast(round((POWER((1 + s.C1632/100),(CONVERT(FLOAT,1)/12))-1)*100,2,1) as decimal (4,2))		tem,&#13;
+	cast(s.C1632 as decimal (4,2))									tea,&#13;
+	cb.COD_BLOQUEO 						bloqueoCodigo,&#13;
+	cb.DESCRIPCION		   					bloqueoDescripcion,&#13;
+	C1604		   									saldoActual, &#13;
+	C1608		   									saldoInteres,&#13;
+	C1604 + C1608							totalVencimiento, &#13;
+	C1771											campanaCodigo,&#13;
+	(SELECT c.DESCRIPCION_CAMPANIA FROM CLI_CAMPANIAS c WHERE s.C1771 = c.COD_CAMPANIA) AS campanaDescripcion,&#13;
+	(SELECT ps.RETENCION FROM PZO_SALDOS ps WHERE ps.JTS_OID_SALDO = s.JTS_OID) AS retenciones,&#13;
+	(SELECT &#13;
+	 CASE WHEN m.C6399 IN (988,999)&#13;
+	 THEN s.C1604*m.TCCOMPRACOMUN  ELSE 0 END&#13;
+	 FROM MONEDAS m WHERE s.MONEDA = m.C6399 AND m.TZ_LOCK = 0 &#13;
+	) AS capitalAjustado,&#13;
+	(SELECT &#13;
+	 CASE WHEN m.C6399 IN (988,999)						&#13;
+		THEN s.C1609*m.TCCOMPRACOMUN  ELSE 0 END&#13;
+	 FROM MONEDAS m WHERE s.MONEDA = m.C6399 AND m.TZ_LOCK = 0 	&#13;
+	) AS interesAjustado,&#13;
+	(SELECT &#13;
+	 CASE WHEN m.C6399 IN (988,999) &#13;
+   		THEN m.TCCOMPRACOMUN ELSE 0 END&#13;
+   	 FROM MONEDAS m WHERE s.MONEDA = m.C6399 AND m.TZ_LOCK = 0 	&#13;
+   	) AS cotizacionUVFechaConst,&#13;
+	(SELECT &#13;
+	 CASE WHEN m.C6399 IN (988,999) &#13;
+		THEN m.C6440 ELSE 0 END&#13;
+	 FROM MONEDAS m WHERE s.MONEDA = m.C6399 AND m.TZ_LOCK = 0 			&#13;
+	) AS cotizacionUVFecha, S.JTS_OID&#13;
+			&#13;
+FROM SALDOS s &#13;
+LEFT JOIN GRL_BLOQUEOS b ON s.JTS_OID = b.SALDO_JTS_OID&#13;
+LEFT JOIN GRL_COD_BLOQUEOS cb ON b.COD_BLOQUEO = cb.COD_BLOQUEO&#13;
+	WHERE &#13;
+			s.SUCURSAL 	= @sucursal &#13;
+		AND s.PRODUCTO 	= @producto&#13;
+		AND s.CUENTA 	= @cuenta&#13;
+		AND s.OPERACION = @operacion&#13;
+		AND C1785 = 4 		&#13;
+		AND (s.TZ_LOCK = 0 OR CAST(s.TZ_LOCK AS VARCHAR(20)) LIKE '4%') &#13;
+ &#13;
+</sql>
+            <input>
+                <inParameter description="" type="INTEGER">sucursal</inParameter>
+                <inParameter description="" type="INTEGER">producto</inParameter>
+                <inParameter description="" type="INTEGER">cuenta</inParameter>
+                <inParameter description="" type="INTEGER">operacion</inParameter>
+            </input>
+            <output>
+                <level groupby="cuenta" name="DPF response">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>sucursal</queryname>
+                        <servicename>sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cuenta</queryname>
+                        <servicename>cuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>operacionNumero</queryname>
+                        <servicename>operacion.operacionNumero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>operacionDescripcion</queryname>
+                        <servicename>operacion.operacionDescripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>capital</queryname>
+                        <servicename>capital.capital</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>capitalOriginal</queryname>
+                        <servicename>capital.capitalOriginal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>interesVencimiento</queryname>
+                        <servicename>interesVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>montoOriginal</queryname>
+                        <servicename>montoOriginal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>tasaInteres</queryname>
+                        <servicename>tasaInteres</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>monedaDescripcion</queryname>
+                        <servicename>moneda.monedaDescripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>monedaId</queryname>
+                        <servicename>moneda.monedaId</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>spread</queryname>
+                        <servicename>spread</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>ordinalRenovacion</queryname>
+                        <servicename>ordinalRenovacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaApertura</queryname>
+                        <servicename>fechaApertura</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>plazoDias</queryname>
+                        <servicename>plazoDias</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>accionAlVencimiento</queryname>
+                        <servicename>accionAlVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>canalOrigen</queryname>
+                        <servicename>canalOrigen</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>tna</queryname>
+                        <servicename>tna</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>tem</queryname>
+                        <servicename>tem</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>tea</queryname>
+                        <servicename>tea</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>saldoActual</queryname>
+                        <servicename>importesMonedaOrigen.saldoActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>saldoInteres</queryname>
+                        <servicename>importesMonedaOrigen.saldoInteres</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>totalVencimiento</queryname>
+                        <servicename>importesMonedaOrigen.totalVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>campanaCodigo</queryname>
+                        <servicename>campana.campanaCodigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>campanaDescripcion</queryname>
+                        <servicename>campana.campanaDescripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>capitalAjustado</queryname>
+                        <servicename>capitalAjustado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>interesAjustado</queryname>
+                        <servicename>interesAjustado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>retenciones</queryname>
+                        <servicename>retenciones</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>cotizacionUVFechaConst</queryname>
+                        <servicename>cotizacionUVFechaConst</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>cotizacionUVFecha</queryname>
+                        <servicename>cotizacionUVFecha</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="bloqueos">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>bloqueoCodigo</queryname>
+                        <servicename>bloqueoCodigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>bloqueoDescripcion</queryname>
+                        <servicename>bloqueoDescripcion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

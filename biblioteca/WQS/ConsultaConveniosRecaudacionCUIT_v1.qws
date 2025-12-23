@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/conveniosRecaudacionCUIT/{CUIT}/{IdConvenio}/{Estado}</uri>
+    <serviceDescription>Consulta Convenios Recaudacion CUIT, Convenio y/o Estado.</serviceDescription>
+    <title>Consulta Convenios Recaudacion</title>
+    <querys>
+        <query id="1" name="GrupoConvenio" type="MULTIPLE">
+            <sql>
+                DECLARE
+                @CUIT VARCHAR(11) = ?,
+                @CONVENIO_ID VARCHAR(15) = ?,
+                @ESTADO VARCHAR(2) = ?,
+                @NUMERO_CAMPO_ESTADO INTEGER = 44756;
+
+                IF (ISNUMERIC(@CUIT) = 0)
+                BEGIN
+                    THROW 50000, 'Parámetro CUIT no numérico', 1;
+                END
+
+                IF ( @CUIT != '0' AND LEN(@CUIT) != 11)
+                BEGIN
+                    THROW 50001, 'Parámetro CUIT con largo distinto de 11', 1;
+                END
+
+                IF (ISNUMERIC(@CONVENIO_ID) = 0 AND @CONVENIO_ID != 'T')
+                BEGIN
+                    THROW 50002, 'Parámetro IdConvenio no numérico', 1;
+                END
+
+                IF ( @ESTADO NOT IN ('A', 'B', 'T') )
+                BEGIN
+                    THROW 50003, 'Parámetro Estado no se encuentra entre los valores válidos "A", "B", o "T"', 1;
+                END
+
+                SELECT
+                    CO.Id_ConvRec AS "IdConvenio",
+                    CO.NomConvRec AS "NomConvRec",
+                    CO.Id_TpoConv AS "IdTipoConvenio",
+                    CT.DscTpoConv AS "DescTipoConvenio",
+                    CO.Estado AS "EstadoConvenio",
+                    O.Descripcion AS "DescEstadoConvenio"
+                FROM CONV_CONVENIOS_REC CO
+                INNER JOIN CONV_TIPOS CT ON CT.Id_TpoConv = CO.Id_TpoConv
+                INNER JOIN OPCIONES O ON O.NUMERODECAMPO = @NUMERO_CAMPO_ESTADO AND O.OPCIONINTERNA = CO.Estado
+                WHERE
+                    TRY_CAST(@CUIT AS NUMERIC) IN (CO.Cuit, 0) AND
+                    (CO.Id_ConvRec = TRY_CAST(@CONVENIO_ID AS NUMERIC) OR @CONVENIO_ID = 'T') AND
+                    @ESTADO IN (CO.Estado, 'T') AND
+                    CO.TZ_LOCK=0
+                ORDER BY 
+                    CO.Id_TpoConv ASC,
+                    CO.Id_ConvRec ASC
+            </sql>
+            <input>
+                <inParameter description="CUIT" type="STRING">CUIT</inParameter>
+                <inParameter description="IdConvenio" type="STRING">IdConvenio</inParameter>
+                <inParameter description="Estado" type="STRING">Estado</inParameter>
+            </input>
+            <output>
+                <level groupby="IdTipoConvenio" name="Convenios">
+                    <outParameter description="" type="STRING">
+                        <queryname>IdTipoConvenio</queryname>
+                        <servicename>IdTipoConvenio</servicename>
+                    </outParameter>
+                    <outParameter>
+                        <queryname>DescTipoConvenio</queryname>
+                        <servicename>DescTipoConvenio</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="IdConvenio" name="Convenio">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>IdConvenio</queryname>
+                        <servicename>IdConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NomConvRec</queryname>
+                        <servicename>NomConvRec</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>EstadoConvenio</queryname>
+                        <servicename>EstadoConvenio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DescEstadoConvenio</queryname>
+                        <servicename>DescEstadoConvenio</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="contenedor" type="SIMPLE">
+            <sql>select '' as dato from parametros where 1=2</sql>
+            <input />
+            <output>
+                <level groupby="" name="nivell1" />
+            </output>
+        </query>
+
+    </querys>
+</serviceQuery>

@@ -1,0 +1,41 @@
+service CONSULTAMOVSFECHA; 
+description "Consulta de Movimientos de una saldo para un rango de fechas dado."; 
+
+
+action: SQLCall HAYDATOS(
+        SucursalDeb: numeric,
+			CuentaDeb: numeric,
+			MonedaDeb: numeric,
+			ProductoDeb: numeric,
+			OperacionDeb: numeric,
+			OrdinalDeb: numeric,
+			Fecha_Desde: date<"YYYY-MM-DD">,
+			Fecha_Hasta: date<"YYYY-MM-DD">,
+			NroRegProcesar: numeric,
+			NroAsientoSig: numeric
+		) : 
+		[
+		    SCARGO : numeric
+        
+	       ]
+	       { 
+		
+	  	properties { 
+	  	("statement", "{call SP_ITF_CONSULTAMOVSFECHA (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)}"),
+		("0", "SucursalDeb"), 
+		("1", "CuentaDeb"), 
+		("2", "MonedaDeb"), 
+		("3", "ProductoDeb"),
+		("4", "OperacionDeb"),
+		("5", "OrdinalDeb"),
+		("6", "Fecha_Desde"),
+		("7", "Fecha_Hasta"),
+		("8", "NroRegProcesar"),
+    		("9", "NroAsientoSig"),
+		("10", "out SCARGO : numeric")
+		 
+		 
+		     } 
+    	
+    
+          }

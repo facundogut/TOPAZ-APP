@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/direcciones/{ID}</uri>
+    <serviceDescription>Consultar Direcciones, Telefonos y Correos Personas</serviceDescription>
+    <title>Consultar Direcciones Personas</title>
+    <querys>
+        <query id="1" name="PERSONA" type="SIMPLE">
+            <sql>SELECT NUMEROPERSONA, CASE TIPOPERSONA WHEN 'F' THEN 'H' ELSE 'J' END AS TIPO_P FROM VW_PERSONAS_FYJ (NOLOCK) WHERE NUMEROPERSONA = ?	</sql>
+            <input>
+                <inParameter description="ID Persona" type="STRING">ID</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="persona">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NUMEROPERSONA</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIPO_P</queryname>
+                        <servicename>tipoPersona</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="TELEFONOS" type="MULTIPLE">
+            <sql>SELECT 	
+		T.ID AS ID_PER, 
+		CASE T.FORMATO WHEN 'PF' THEN 'H' 
+			 		 WHEN 'PJ' THEN 'J' 
+					 ELSE '' END AS TIPO_PER,
+		T.ORDINAL, 
+		T.TIPO as TIPOTEL,
+		T.TIPO_CEL_TEL, 
+		CASE T.TIPO_CEL_TEL WHEN 'C' THEN 'celular' 
+				 		  WHEN 'F' THEN 'fijo' 
+						  ELSE '' END AS DESC_TIPO,
+		T.NUMERO
+				
+FROM dbo.CLI_TELEFONOS (NOLOCK) AS T 
+
+WHERE T.FORMATO IN ('PF','PJ')  AND T.ID = ?  AND ((T.TZ_LOCK &lt; 300000000000000 OR T.TZ_LOCK &gt;= 400000000000000) AND (T.TZ_LOCK &lt; 100000000000000 OR T.TZ_LOCK &gt;= 200000000000000))
+
+ORDER BY ORDINAL
+</sql>
+            <input>
+                <inParameter description="ID Persona" type="STRING">ID</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="telefonos">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ORDINAL</queryname>
+                        <servicename>orden</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIPO_CEL_TEL</queryname>
+                        <servicename>tipo.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESC_TIPO</queryname>
+                        <servicename>tipo.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NUMERO</queryname>
+                        <servicename>numero</servicename>
+                    </outParameter>
+                    <outParameter description="Tipo de Telefono" type="STRING">
+                        <queryname>TIPOTEL</queryname>
+                        <servicename>tipo.tipo</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="3" name="DIRECCIONES" type="MULTIPLE">
+            <sql>SELECT 	
+		CASE D.NORMALIZADO 
+		WHEN 'S' THEN 'true' 
+				 ELSE 'false' 
+		END AS NORMALIZADO_BOOL,
+		D.ORDINAL_DIR, 
+		D.TIPODIRECCION,
+		(SELECT DESCRIPCION 
+		FROM OPCIONES O  WITH (NOLOCK)
+		WHERE O.IDIOMA = 'E' 
+		AND O.NUMERODECAMPO = 33052 
+		AND O.OPCIONINTERNA= D.TIPODIRECCION) AS DESC_TIPODIRECCION,
+		D.PAIS,
+		P.NOMBREPAIS,
+		D.PROVINCIA,
+		PP.DESCRIPCION,
+		D.DEPARTAMENTO,
+		DE.NOMBREDEP,
+		D.LOCALIDAD,
+		L.DESCRIPCION_DIM3,
+		D.CPA_VIEJO,
+		D.CPA_NUEVO,
+		D.CALLE,
+		D.NUMERO,
+		D.PISO,
+		D.APARTAMENTO,
+        COALESCE(D.OBSERVACIONES, '') AS OBSERVACIONES,
+        D.BARRIO,               
+        D.MANZANA,
+        D.PARCELA,
+        D.CASA,
+        D.MONOBLOCK,
+        D.TIRA,
+        D.CHACRA,
+        CONCAT(
+            D.CALLE, ' ', 
+            CASE WHEN D.NUMERO &lt;&gt; 0 THEN D.NUMERO ELSE NULL END,
+            CASE WHEN D.PISO &lt;&gt; 0 THEN CONCAT(' Piso: ', D.PISO) ELSE NULL END,
+            CASE WHEN D.APARTAMENTO NOT IN ('0', ' ', '0000') THEN CONCAT(' Dpto: ', D.APARTAMENTO) ELSE NULL END, 
+            CASE WHEN D.BARRIO NOT IN (' ') THEN CONCAT(' Barrio: ', D.BARRIO) ELSE NULL END,
+            CASE WHEN D.MANZANA NOT IN (' ') THEN CONCAT(' Manzana: ', D.MANZANA) ELSE NULL END,
+            CASE WHEN D.PARCELA NOT IN ('0', ' ') THEN CONCAT(' Parcela: ', D.PARCELA) ELSE NULL END,
+            CASE WHEN D.CASA NOT IN ('0', ' ') THEN CONCAT(' Casa: ', D.CASA) ELSE NULL END,
+            CASE WHEN D.MONOBLOCK NOT IN ('0', ' ') THEN CONCAT(' Monoblock: ', D.MONOBLOCK) ELSE NULL END,
+            CASE WHEN D.TIRA NOT IN ('0', ' ') THEN CONCAT(' Tira: ', D.TIRA) ELSE NULL END,
+            CASE WHEN D.CHACRA NOT IN ('0', ' ') THEN CONCAT(' Chacra: ', D.CHACRA) ELSE NULL END
+        ) AS DOMICILIO
+FROM dbo.CLI_DIRECCIONES AS D  (NOLOCK) 
+LEFT JOIN dbo.CLI_PAISES  AS P (NOLOCK) ON P.CODIGOPAIS = D.PAIS
+LEFT JOIN dbo.CLI_PROVINCIAS AS PP (NOLOCK)ON PP.DIM1 = D.PROVINCIA
+LEFT JOIN dbo.CLI_DEPARTAMENTOS AS DE (NOLOCK)ON (D.DEPARTAMENTO=DE.DEPARTAMENTO) 
+															AND (PP.DIM1=DE.PROVINCIA)
+LEFT JOIN dbo.CLI_LOCALIDADES AS L (NOLOCK) ON (D.LOCALIDAD=L.DIM3) 
+															AND (L.DIM1=PP.DIM1) 
+															AND (L.DIM2=DE.DEPARTAMENTO)
+WHERE
+    D.ID= ? 
+    AND D.FORMATO IN ('PF','PJ') 
+    AND LEFT(D.TZ_LOCK,1) IN (0,2,4)
+    AND LEFT(P.TZ_LOCK,1) IN (0,2,4)
+    AND LEFT(PP.TZ_LOCK,1) IN (0,2,4)
+    AND LEFT(DE.TZ_LOCK,1) IN (0,2,4)
+    AND LEFT(L.TZ_LOCK,1) IN (0,2,4)
+
+ORDER BY ORDINAL_DIR
+</sql>
+            <input>
+                <inParameter description="ID Persona" type="STRING">ID</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="domicilios">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ORDINAL_DIR</queryname>
+                        <servicename>orden</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIPODIRECCION</queryname>
+                        <servicename>tipo.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESC_TIPODIRECCION</queryname>
+                        <servicename>tipo.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>PAIS</queryname>
+                        <servicename>pais.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NOMBREPAIS</queryname>
+                        <servicename>pais.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>PROVINCIA</queryname>
+                        <servicename>provincia.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCRIPCION</queryname>
+                        <servicename>provincia.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DEPARTAMENTO</queryname>
+                        <servicename>departamento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NOMBREDEP</queryname>
+                        <servicename>departamento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>LOCALIDAD</queryname>
+                        <servicename>localidad.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCRIPCION_DIM3</queryname>
+                        <servicename>localidad.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CPA_VIEJO</queryname>
+                        <servicename>cp</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CPA_NUEVO</queryname>
+                        <servicename>cpa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CALLE</queryname>
+                        <servicename>calle</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NUMERO</queryname>
+                        <servicename>numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>PISO</queryname>
+                        <servicename>piso</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>APARTAMENTO</queryname>
+                        <servicename>apartamento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DOMICILIO</queryname>
+                        <servicename>domicilio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>NORMALIZADO_BOOL</queryname>
+                        <servicename>normalizado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>OBSERVACIONES</queryname>
+                        <servicename>observaciones</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>BARRIO</queryname>
+                        <servicename>barrio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>MANZANA</queryname>
+                        <servicename>manzana</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>PARCELA</queryname>
+                        <servicename>parcela</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>MONOBLOCK</queryname>
+                        <servicename>monoblock</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIRA</queryname>
+                        <servicename>tira</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CHACRA</queryname>
+                        <servicename>chacra</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="4" name="CORREOS" type="MULTIPLE">
+            <sql>SELECT 	
+		E.ID AS ID_PER, 
+		CASE E.FORMATO WHEN 'PF' THEN 'H' 
+			 		 WHEN 'PJ' THEN 'J' 
+					 ELSE '' END AS TIPO_PER,
+		E.ORDINAL, 
+		E.TIPO, 
+	    (SELECT DESCRIPCION 
+		FROM OPCIONES O WITH(NOLOCK) 
+		WHERE O.IDIOMA = 'E' 
+		AND O.NUMERODECAMPO = 33494 
+		AND O.OPCIONINTERNA= E.TIPO) AS DESC_TIPO,
+		E.EMAIL
+				
+FROM dbo.CLI_EMAILS AS E (NOLOCK)
+
+WHERE E.FORMATO IN ('PF','PJ')  AND E.ID = ?  AND ((E.TZ_LOCK &lt; 300000000000000 OR E.TZ_LOCK &gt;= 400000000000000) AND (E.TZ_LOCK &lt; 100000000000000 OR E.TZ_LOCK &gt;= 200000000000000))
+
+ORDER BY ORDINAL
+</sql>
+            <input>
+                <inParameter description="ID Persona" type="STRING">ID</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="emails">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ORDINAL</queryname>
+                        <servicename>orden</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIPO</queryname>
+                        <servicename>tipo.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESC_TIPO</queryname>
+                        <servicename>tipo.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>EMAIL</queryname>
+                        <servicename>email</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

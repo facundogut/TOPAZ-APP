@@ -1,0 +1,28 @@
+﻿/****** Object:  View [dbo].[VW_TJD_CANAL_ORIGEN]    Script Date: 24/02/2021 17:26:28 ******/
+DROP VIEW [dbo].[VW_TJD_CANAL_ORIGEN]
+GO
+
+/****** Object:  View [dbo].[VW_TJD_CANAL_ORIGEN]    Script Date: 24/02/2021 17:26:28 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[VW_TJD_CANAL_ORIGEN] (
+							CANAL,
+							DESCRIPCION_CANAL,
+							ORIGEN,
+							DESCRIPCION_ORIGEN
+							)
+AS
+				SELECT CO.CANAL, 
+						TC.DESCRIPCION, 
+						CO.ORIGEN, 
+						CO.DESCRIPCION
+				FROM TJD_CANAL_ORIGEN CO WITH (nolock)
+				INNER JOIN TJD_CANAL TC WITH (nolock)
+					ON CO.CANAL = TC.[CODIGO] 
+						AND CO.TZ_LOCK = 0 
+						AND TC.TZ_LOCK = 0
+GO

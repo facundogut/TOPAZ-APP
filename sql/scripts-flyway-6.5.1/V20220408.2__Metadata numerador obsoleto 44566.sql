@@ -1,0 +1,16 @@
+﻿EXECUTE('
+--------------------------------------------------
+--ELIMINO REGISTROS DE NUMERADOR QUE NO SE USARÁ--
+--------------------------------------------------
+DELETE FROM dbo.NUMERATORASIGNED
+WHERE OID IN (
+	SELECT OID FROM NUMERATORVALUES WHERE NUMERO = 44566
+)
+------------
+DELETE FROM dbo.NUMERATORVALUES
+WHERE NUMERO = 44566
+------------
+DELETE FROM dbo.NUMERATORDEFINITION
+WHERE NUMERO = 44566
+------------
+')

@@ -1,0 +1,166 @@
+VERSION:055_5
+TN  NN 1006TPantalla Principal                      C00000 00
+*$2021-06-15 11:52:41CSAAV
+VNNNNN 010002000105010859NNND000000000000000000000000000000000000000
+/T=Traspaso de cajeros entre Minifiliales
+/C=192192192
+*$2021-07-23 10:41:23FMK
+KNNNNN 010017001000370834010100
+/T=Traspaso de cajeros entre Minifiliales
+/F=0013700NNN000000000Arial                                   
+*$2021-07-23 10:41:27FMK
+ NNNNN 06021   Sucursal                                          IDNSNA010059010900820159021011500000059001900820102000
+/V=C9502
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 11:52:41CSAAV
+ NNNNN 06020   Nombre                                            ICNSN 010059018600820515001011500000007000700300137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 11:52:41CSAAV
+KNNNNN 010093001903980825000101
+/T=Seleccione un cajero
+/F=0012700NNN000000000Arial                                   
+*$2021-06-15 12:01:40CSAAV
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="SUCURSAL = " + C9502  + " AND MINIFILIAL > 0 AND ESTADO='Cerrada'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 17:01:27CSAAV
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010 + " AND NRO_CAJA NOT IN (SELECT v.NRO_CAJA FROM CAJ_CAJAS_MINIFILIALES v WHERE v.EsTesoro = 'S' AND v.Mini_Filial = MINIFILIAL AND v.NRO_CAJA = NRO_CAJA) "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 17:11:56CSAAV
+ NNNNN 49518   Ayuda cajas                                       IESSN 010111002503760815021011600000078006401010194000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-20 17:20:50FMK
+ NNNNN 03146   Número de Caja                                    INNSNA000007015200300202021011000000007000700300137000
+/V=C49518
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-20 17:21:03FMK
+ NNNNN 03150   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-20 17:21:15FMK
+ NNNNN 03147   Clave de Usuario                                  INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 14:23:28CSAAV
+ NNNNN 03151   Minifilial                                        INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-20 17:24:59FMK
+TN  NN 1006TModificacion de registro                C00000 00
+*$2021-06-15 11:59:48CSAAV
+VNNNNN 020116000102000576SSSD000000000000000000000000000000000000000
+/T=Modificación de registro
+/C=192192192
+*$2021-06-15 15:23:13CSAAV
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="SUCURSAL = " + C9502+ " AND Mini_Filial<>"+C3151.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-20 17:22:54FMK
+ NNNNN 05583   Minifilial                                        I NSN 020021015800440208021011000000021001300440143000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-23 10:34:43FMK
+CNNNNN ME00000000000000000000100
+/?=C5583.0=F(VAL,C3151.1)
+/M=Minifilial inválida.
+*$2021-07-20 17:29:36FMK
+ N  NN 05580   Minifilial                                        INNSNA000007015200300202021011000000007000700300137000
+/V=C5583.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-23 10:34:10FMK
+ NNNNN 05581   Descripción                                       ICNSN 020021023900440539001011500000007000700300137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-17 15:45:12FMK
+*N  NN *********************** Controles integridad ***********************
+*$2021-06-15 17:02:31CSAAV
+ NNNNN 00549   Numerico9                                         INNSNK000007015200300452001011000000007000700300137000
+/V=480
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 17:04:00CSAAV
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/V="MINI_FILIAL = " + C5583 +" AND SUCURSAL = " + C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 17:04:40CSAAV
+CNNNNN ME00000000000000000000100
+/?=F(CANTIDAD,C549,C910)=0
+/M=Nro. de Minifilial inválido.
+*$2022-01-14 13:08:27FMK
+*N  NN *********************** Controles integridad ***********************
+*$2021-06-15 17:02:31CSAAV
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="Minifilial = " + C5583 + " AND [Es Tesoro] = 'No'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 17:13:53CSAAV
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V= C8010 + " AND [Número de Caja] NOT IN (SELECT NRODECAJA FROM USUARIOS WHERE NROSUCURSAL="+C9502+" AND NRODECAJA=[Número de Caja] )"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-14 13:01:59FMK
+ NNNNN 05587   Nro. de Caja                                      I NSN 020058015800810208021011000000058001300810143000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-17 15:45:19FMK
+ N  NN 01930   Nro de Caja                                       INNSNA000007015200300202021011000000007000700300137000
+/V=C5587
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-17 15:43:31FMK
+ NNNNN 01932   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-17 15:44:40FMK
+ NNNNN 01931   Descripción                                       ICNSN 020058023900810539001011500000007000700300137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-17 15:46:17FMK
+ NNNNN 00080   Numerico                                          INNSNK000007015200300302021011000000007000700300137000
+/V=481
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-23 10:50:30FMK
+ NNNNN 00231   WFObservaciones                                   INNNNF000007015200300452001011000000007000700300137000
+/V="NRO_CAJA in (SELECT [Número de Caja] FROM VW_CAJ_CAJAS_MINIFILIALES WHERE Minifilial = " + C5583 + " AND [Es Tesoro] = 'No'  AND [Número de Caja]="+ C5587 +" AND [Número de Caja] NOT IN (SELECT NRODECAJA FROM USUARIOS WHERE NROSUCURSAL="+C9502+" AND NRODECAJA=[Número de Caja] ))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-14 13:05:51FMK
+ NNNNN 00198   Nro.Documento                                     INNSNF000007015200300302021011000000007000700300137000
+/V=F(CANTIDAD,C80.0,C231.0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-23 11:01:38FMK
+CNNNNN ME00000000000000000000100
+/?=C198=0
+/M=Nro. de Caja Inválido.
+*$2021-07-23 10:57:50FMK
+TN  NN 1009TModificacion Generica                   M09901 00
+*$2021-06-15 14:19:02CSAAV
+ NNNNN 04411   Clave Usuario                                     INNSNA000007015200300302001011000000007000700300137000
+/V=C3147.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 14:22:06CSAAV
+ NNNNN 04586   Nro. de Caja                                      INNNNA000007015200300202021011000000007000700300137000
+/V=C5587.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-06-15 15:23:27CSAAV

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.ajusteopercambio.objectsdomain.VOHistoricoOperCambio</class-name>
+        <query-name>query.AjusteOperCambio</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT A.FECHAVALOR, A.SUCURSAL_CUENTA AS SUCURSAL, A.MONEDA, SUM(A.IMPORTE_ME) AS IMPORTE_ME_TOTAL, SUM(A.IMPORTE_MN) AS IMPORTE_MN_TOTAL
+			FROM
+			(SELECT M.FECHAVALOR AS FECHAVALOR,
+			(CASE
+			WHEN M.DEBITOCREDITO = 'D' THEN
+			-1*M.CAPITALREALIZADO
+			ELSE
+			M.CAPITALREALIZADO
+			END) AS IMPORTE_ME,
+			(CASE
+			WHEN M.DEBITOCREDITO = 'D' THEN
+			-1*M.EQUIVALENTEMN
+			ELSE
+			M.EQUIVALENTEMN
+			END) AS IMPORTE_MN,
+			M.MONEDA AS MONEDA,
+			M.SUCURSAL_CUENTA
+			FROM MOVIMIENTOS_CONTABLES M , ASIENTOS S
+			WHERE M.FECHAPROCESO=S.FECHAPROCESO AND M.SUCURSAL=S.SUCURSAL AND M.ASIENTO=S.ASIENTO AND S.ESTADO=77 AND
+			M.MONEDA &lt;&gt; (SELECT MONNAC FROM PARAMETROS) AND M.FECHAVALOR&lt;M.FECHAPROCESO AND M.FECHAPROCESO=(SELECT FECHAPROCESO FROM PARAMETROS) 
+			AND M.MARCAAJUSTE='A' AND M.RUBROCONTABLE IN ( SELECT DISTINCT C6433 FROM monedas) 
+			AND NOT EXISTS (SELECT * FROM HISTORICO_OPE_CAMBIO H WHERE H.FECHAPROCESO=(SELECT FECHAPROCESO FROM PARAMETROS) 
+			AND H.FECHAVALOR=M.FECHAVALOR AND H.MONEDA=M.MONEDA AND H.SUCURSAL=M.SUCURSAL )) A
+			GROUP BY A.MONEDA, A.SUCURSAL_CUENTA, A.FECHAVALOR
+			ORDER BY A.MONEDA, A.SUCURSAL_CUENTA, A.FECHAVALOR ASC
+		</sentence>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHAVALOR</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeMETotal</attribute-name>
+            <column-name>IMPORTE_ME_TOTAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>importeMNTotal</attribute-name>
+            <column-name>IMPORTE_MN_TOTAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.ajusteopercambio.objectsdomain.VOHistoricoOperCambio</class-name>
+        <entity-name>vo.HistoricoOpeCambio</entity-name>
+        <table-name>HISTORICO_OPE_CAMBIO </table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHAVALOR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importeMETotal</attribute-name>
+            <column-name>IMPORTE_ME_TOTAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>importeMNTotal</attribute-name>
+            <column-name>IMPORTE_MN_TOTAL</column-name>
+        </attribute>
+    </class>
+</map>

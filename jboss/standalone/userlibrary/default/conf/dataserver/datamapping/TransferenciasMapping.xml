@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.transferencias.valueobjects.QueryConvenios</class-name>
+        <query-name>query.vo_QueryConvenios</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT CONV.CLIENTE AS CLIENTE, CONVSAL.PAGO_JTS_OID AS CUENTA, CLI.TIPO AS TIPO
+			FROM PCT_CONVENIOS_PAGOS CONV
+			INNER JOIN PCT_CONVENIOS_SALDOS CONVSAL ON CONVSAL.ID_CONVENIO = CONV.ID_CONVENIO
+			INNER JOIN CLI_CLIENTES CLI ON CLI.CODIGOCLIENTE = CONV.CLIENTE
+			WHERE CONV.ID_CONVENIO = ?
+			AND CONVSAL.MONEDA = ?
+			AND CONV.TZ_LOCK = 0
+			AND CONVSAL.TZ_LOCK = 0
+			AND CLI.TZ_LOCK = 0
+		</sentence>
+        <attribute>
+            <attribute-name>cliente</attribute-name>
+            <column-name>CLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cuenta</attribute-name>
+            <column-name>CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.transferencias.valueobjects.QueryDatosCliente</class-name>
+        <query-name>query.vo_QueryDatosJuridica</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			 SELECT RAZONSOCIAL AS NOMBRE,
+			 	       CALLE || ' ' || NUMEROPUERTA || ' ' || APARTAMENTO AS DIRECCION,
+			 	       P.PAISRESIDENCIA AS PAIS
+			 	  FROM CLI_PERSONASJURIDICAS P
+			 WHERE P.NUMEROPERSONAJURIDICA = ? AND P.TZ_LOCK = 0
+		</sentence>
+        <attribute>
+            <attribute-name>nombre</attribute-name>
+            <column-name>NOMBRE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>direccion</attribute-name>
+            <column-name>DIRECCION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>pais</attribute-name>
+            <column-name>PAIS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.transferencias.valueobjects.QueryDatosCliente</class-name>
+        <query-name>query.vo_QueryDatosFisica</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			 SELECT PRIMERNOMBRE || ' ' || SEGUNDONOMBRE || ' ' || APELLIDOPATERNO || ' ' ||
+			        APELLIDOMATERNO AS NOMBRE,
+			        CALLE || ' ' || NUMEROPUERTA || ' ' || APARTAMENTO AS DIRECCION,
+			        F.PAISRESIDENCIA AS PAIS
+			   FROM CLI_PERSONASFISICAS F
+			  WHERE F.NUMEROPERSONAFISICA = ? AND F.TZ_LOCK = 0
+		</sentence>
+        <attribute>
+            <attribute-name>nombre</attribute-name>
+            <column-name>NOMBRE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>direccion</attribute-name>
+            <column-name>DIRECCION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>pais</attribute-name>
+            <column-name>PAIS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.transferencias.valueobjects.QueryPaisBeneficiario</class-name>
+        <query-name>query.vo_QueryPaisBeneficiario</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT P.CODIGOPAIS AS PAIS
+			  FROM CLI_BANCOSPLAZA B
+			 INNER JOIN CLI_PAISES P ON P.CODIGOSWIFT = SUBSTR(B.CODIGOSWIFT, 5, 2)
+                        AND B.CODIGOBC = ? AND B.TZ_LOCK = 0 AND P.TZ_LOCK = 0
+		</sentence>
+        <attribute>
+            <attribute-name>pais</attribute-name>
+            <column-name>PAIS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.transferencias.valueobjects.QueryDatosCliente</class-name>
+        <query-name>query.vo_QueryDatosCliente</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT RAZONSOCIAL AS NOMBRE,
+			       CALLE || ' ' || NUMEROPUERTA || ' ' || APARTAMENTO AS DIRECCION,
+			       P.PAISRESIDENCIA AS PAIS
+			  FROM CLI_PERSONASJURIDICAS P
+			WHERE P.NUMEROPERSONAJURIDICA = ? AND P.TZ_LOCK = 0
+			AND ? NOT IN ('F', 'E')
+			UNION
+			SELECT PRIMERNOMBRE || ' ' || SEGUNDONOMBRE || ' ' || APELLIDOPATERNO || ' ' ||
+			    APELLIDOMATERNO AS NOMBRE,
+			    CALLE || ' ' || NUMEROPUERTA || ' ' || APARTAMENTO AS DIRECCION,
+			    F.PAISRESIDENCIA AS PAIS
+			FROM CLI_PERSONASFISICAS F
+			WHERE F.NUMEROPERSONAFISICA = ? AND F.TZ_LOCK = 0
+			AND ? IN ('F', 'E')
+		</sentence>
+        <attribute>
+            <attribute-name>nombre</attribute-name>
+            <column-name>NOMBRE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>direccion</attribute-name>
+            <column-name>DIRECCION</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>pais</attribute-name>
+            <column-name>PAIS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

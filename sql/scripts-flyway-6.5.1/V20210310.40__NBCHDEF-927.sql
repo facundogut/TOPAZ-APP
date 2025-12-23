@@ -1,0 +1,13 @@
+﻿EXECUTE('
+UPDATE dbo.DICCIONARIO
+SET DESCRIPCION = ''Código de Profesión''
+	, PROMPT = ''Cód. Profesión''
+WHERE NUMERODECAMPO = 1502
+
+UPDATE dbo.DICCIONARIO
+SET DESCRIPCION = ''Descripción''
+	, PROMPT = ''Descripción''
+WHERE NUMERODECAMPO = 1503
+
+')
+

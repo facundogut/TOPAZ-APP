@@ -1,0 +1,19 @@
+﻿
+UPDATE dbo.DICCIONARIO
+SET DESCRIPCION = 'Categoría'
+	, PROMPT = 'Categoría'
+WHERE NUMERODECAMPO = 9870
+GO
+
+UPDATE dbo.DICCIONARIO
+SET DESCRIPCION = 'Descripción'
+	, PROMPT = 'Descripción'
+WHERE NUMERODECAMPO = 9871
+GO
+
+UPDATE dbo.OPERACIONES
+SET NOMBRE = 'ABMC Clasif. de Cliente Obj. por Calif Externa'
+	, DESCRIPCION = 'ABMC Clasif. de Cliente Obj. por Calif Externa'
+WHERE TITULO = 1000 AND IDENTIFICACION = 164
+GO
+

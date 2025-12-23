@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/sibe/deudaHistorica/{cuit}/{periodo}</uri>
+    <serviceDescription>Dado un CUIT y una fecha dada, el servicio devuelve la deuda total,
+        clasificación, previsión, fechaInfo. </serviceDescription>
+    <title>SIBE012 Total de Deuda Determinada CUIT x PERIODO</title>
+    <querys>
+        <query id="1" name="deuda" type="SIMPLE">
+            <sql>
+                BEGIN TRY
+                DECLARE
+                    @cuit VARCHAR(25) = ?,
+                    @periodo VARCHAR(8) = ?,
+                    @anio NUMERIC(4,0),
+                    @mes NUMERIC(2,0),
+                    @fechaProcesoAnio NUMERIC(4,0) = (SELECT YEAR(FECHAPROCESO) FROM PARAMETROS),
+                    @fechaProcesoMes NUMERIC(2,0) = (SELECT MONTH(FECHAPROCESO) FROM PARAMETROS)
+                ;
+                IF isnumeric(@cuit) = 0
+                BEGIN
+                    THROW 50001, 'Error: El cuit debe ser numérico', 1;
+                END
+                
+                IF isnumeric(@periodo) = 0
+                BEGIN
+                    THROW 50002, 'Error: El período debe ser numérico', 1;
+                END
+                
+                IF LEN(@cuit) &lt;&gt; 11 
+                BEGIN
+                    THROW 50003, 'Error: El cuit debe tener 11 dígitos', 1;
+                END
+
+                IF len(@periodo) &lt;&gt; 6
+                BEGIN
+                    THROW 50004, 'Error: El período debe tener 6 dígitos', 1;
+                END
+
+                SET @anio = @periodo / 100;
+				SET @mes = @periodo % 100;
+
+                IF NOT( @mes BETWEEN 1 AND 12)
+                BEGIN
+                    THROW 50005, 'Error: El mes del período debe ser entre 1 a 12', 1;
+                END
+
+                IF @anio &gt; @fechaProcesoAnio OR (@anio = @fechaProcesoAnio AND @mes &gt; @fechaProcesoMes )
+                BEGIN
+                    THROW 50006, 'Error: El período no puede ser mayor al actual', 1;
+                END
+
+                SELECT TOP 1
+                    S.cuit,
+                    S.periodo,
+                    S.errorCodigo,
+                    S.error,
+                    CASE WHEN cab.Clasificacion in ('', null, ' ') THEN 1 ELSE cab.Clasificacion END AS "clasificacion",
+                    cab.Deuda_Total AS "totalDeuda",
+                    cab.Prevision AS "prevision",
+                    convert(VARCHAR(8), cab.Fecha_Info , 112) AS "fechaDatos"
+                FROM (
+                    SELECT
+                        @cuit AS "cuit",
+                        @periodo AS "periodo",
+                        0 AS "errorCodigo",
+                        'Sin errores' as "error"
+                ) S
+                LEFT JOIN MEMO_CABECERA cab WITH (NOLOCK) ON cab.CUIT_CUIL_CDI = @cuit AND YEAR(cab.Fecha_Info) = @anio AND MONTH(cab.Fecha_Info) = @mes                    
+                ORDER BY cab.Fecha_Info DESC
+                
+                END TRY
+                
+                BEGIN CATCH
+                SELECT
+                    @cuit as "cuit",
+                    @periodo as "periodo",
+                    ERROR_NUMBER() AS "errorCodigo",
+                    ERROR_MESSAGE() AS "error",
+                    NULL AS "clasificacion",
+                    NULL AS "totalDeuda",
+                    NULL AS "prevision",
+                    NULL AS "fechaDatos"
+                ;
+                END CATCH
+            </sql>
+            <input>
+                <inParameter description="" type="STRING">cuit</inParameter>
+                <inParameter description="" type="STRING">periodo</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="estado">
+                    <outParameter description="" type="STRING">
+                        <queryname>cuit</queryname>
+                        <servicename>estado.cuit</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>periodo</queryname>
+                        <servicename>estado.periodo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>errorCodigo</queryname>
+                        <servicename>estado.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>error</queryname>
+                        <servicename>estado.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>clasificacion</queryname>
+                        <servicename>clasificacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>totalDeuda</queryname>
+                        <servicename>totalDeuda</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>prevision</queryname>
+                        <servicename>prevision</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>fechaDatos</queryname>
+                        <servicename>fechaDatos</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

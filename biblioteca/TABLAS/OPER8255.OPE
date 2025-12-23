@@ -1,0 +1,526 @@
+VERSION:055_5
+TN  NN 1006TIngreso de Remesa Minifilial            C01361 00
+*$2021-07-26 18:21:55CSAAV
+ N  NN 01932   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:25:59CSAAV
+VNSSNS 010026000103210644SSSD000000000000000000000000000000000000000
+/T=Seleccionar caja minifilial origen
+/C=192192192
+*$2021-07-27 12:55:44CSAAV
+KNNNNN 010013002402200615000101
+/T=Seleccione caja minifilial origen
+/F=0013700NNN000000000Arial                                   
+*$2021-07-27 12:56:52CSAAV
+CNNNNN ME00000000000000000000100
+/?=C9540#999
+/M=Usted debe ser tesorero.
+*$2021-07-27 11:57:23CSAAV
+ NNNNN 02599   Tipo de Origen                                    INNSNK000133013504730350020011120000133002201530109000
+/V=11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-27 12:01:47CSAAV
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="NRO_CAJA <> 999 AND SUCURSAL = " + C9502  + " AND MINIFILIAL > 0"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-11 17:03:46ANITAORTIZ
+*N  NN *****NBCHSEG-1947
+*$2022-12-28 14:35:29ANITAORTIZ
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010 + " AND NRO_CAJA IN (SELECT v.NRO_CAJA FROM CAJ_CAJAS_MINIFILIALES v WHERE v.EsTesoro = 'S' AND v.Mini_Filial = MINIFILIAL AND v.NRO_CAJA = NRO_CAJA) OR (NRO_CAJA=999 AND SUCURSAL = " + C9502 +")"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-12-28 12:46:22ANITAORTIZ
+ NNNNN 49198   Ayuda remesas minifiliales                        ICNSN 010045005302020587020011600000047006700700151000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-27 12:56:58CSAAV
+*N  NN *********************** Controles integridad ***********************
+*$2021-07-26 18:28:31CSAAV
+ NNNNN 00549   Numerico9                                         INNSNK000007015200300452001011000000007000700300137000
+/V=482
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:28:31CSAAV
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/V="NRO_CAJA = "+C49198+" AND SUCURSAL= "+C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-27 13:00:17CSAAV
+CNNNNN ME00000000000000000000100
+/?=F(CANTIDAD,C549,C910)=0
+/M=Nro. de caja no existe en la  sucursal.
+*$2021-07-26 18:28:31CSAAV
+ NNNNN 00549   Numerico9                                         INNSNK000007015200300452001011000000007000700300137000
+/V=482
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:28:31CSAAV
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/?=1=0
+/V="NRO_CAJA = "+C49198+" AND SUCURSAL= "+C9502+ " AND (MINIFILIAL=0 OR ESTADO='Cerrada')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-12-28 14:34:16ANITAORTIZ
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/V="NRO_CAJA = "+C49198+" AND SUCURSAL= "+C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-23 10:24:09EPINATO
+CNNNNN ME00000000000000000000100
+/?=F(CANTIDAD,C549,C910)>0Y1=0
+/M=Número de caja inválido.
+*$2023-02-23 10:53:56EPINATO
+*N  NN ********************* Fin  Controles integridad *********************
+*$2021-07-26 18:28:31CSAAV
+ NNNNN 03146   Número de Caja                                    INNSNF000007015200300202021011000000007000700300137000
+/V=C49198
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-23 11:43:55EPINATO
+ NNNNN 03150   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-23 11:43:52EPINATO
+ NNNNN 03151   Minifilial                                        INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-23 11:43:49EPINATO
+ NNNNN 49517   Descripción                                       INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-03-06 16:28:51TOP
+ NNNNN 01930   Nro de Caja                                       INNSNA000007015200300202021011000000007000700300137000
+/V=C3146.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-01 17:28:46SSB
+ NNNNN 01932   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-01 17:28:46SSB
+ NNNNN 01931   Descripción                                       INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-01 17:28:46SSB
+ NSSNN 00023   Caja/Diario                                       INNSNK000007015200300202001011000000007000700300137000
+/?=1=0
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-23 11:44:05EPINATO
+ NNNNN 00053   Numero de Caja                                    INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:39:59CSAAV
+CNNNNN ME00000000000000000000100
+/?=1=0
+/F=C053=0
+/M=No tiene caja asignada. No puede continuar.
+*$2023-02-23 11:44:57EPINATO
+TN  NN 1006TSeleccionar caja minifilial destino     C00001 00
+*$2021-07-26 18:48:45CSAAV
+VNSSNS 130026000103210644SSSD000000000000000000000000000000000000000
+/T=Seleccionar caja minifilial destino
+/C=192192192
+*$2021-07-27 13:17:53CSAAV
+KNNNNN 130013002402200615000101
+/T=Seleccione caja minifilial destino
+/F=0013700NNN000000000Arial                                   
+*$2021-07-27 13:18:12CSAAV
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="NRO_CAJA <> 999 AND SUCURSAL="+C9502+" AND MINIFILIAL >0 AND MINIFILIAL <> "+C3151.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-23 11:58:44EPINATO
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V=C8010 + " AND NRO_CAJA IN (SELECT v.NRO_CAJA FROM CAJ_CAJAS_MINIFILIALES v WHERE v.EsTesoro = 'S' AND v.Mini_Filial = MINIFILIAL AND v.NRO_CAJA = NRO_CAJA) OR (NRO_CAJA=999 AND SUCURSAL = " + C9502 +")"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-12-28 12:46:41ANITAORTIZ
+ NNNNN 49198   Ayuda remesas minifiliales                        ICNSN 130045005302020587020011600000047006700700151000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-27 13:18:01CSAAV
+*N  NN *********************** Controles integridad ***********************
+*$2021-07-26 18:49:09CSAAV
+ NNNNN 00549   Numerico9                                         INNSNK000007015200300452001011000000007000700300137000
+/V=482
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:49:09CSAAV
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/V="NRO_CAJA = "+C49198+" AND SUCURSAL= "+C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-27 13:00:32CSAAV
+CNNNNN ME00000000000000000000100
+/?=F(CANTIDAD,C549,C910)=0
+/M=Nro. de caja no existe en la  sucursal.
+*$2021-07-26 18:49:09CSAAV
+ NNNNN 00549   Numerico9                                         INNSNK000007015200300452001011000000007000700300137000
+/V=482
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:49:09CSAAV
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/?=1=0
+/V="NRO_CAJA = "+C49198+" AND SUCURSAL= "+C9502+ " AND (MINIFILIAL=0 OR ESTADO='Cerrada')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-12-28 14:34:57ANITAORTIZ
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/V="NRO_CAJA = "+C49198+" AND SUCURSAL= "+C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-23 10:24:51EPINATO
+CNNNNN ME00000000000000000000100
+/?=F(CANTIDAD,C549,C910)>0Y1=0
+/M=Número de caja inválido.
+*$2023-02-23 11:45:48EPINATO
+CNNNNN ME00000000000000000000100
+/F=C49198.1=C49198.2
+/M=No se puede realizar una remesa a la misma caja.
+*$2023-02-23 12:10:55EPINATO
+*N  NN ********************* Fin  Controles integridad *********************
+*$2021-07-26 18:49:09CSAAV
+ NNNNN 02606   Tipo de Destino                                   INNSNK000133013504730350020011120000133002201530109000
+/?=C49198#1
+/V=11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-27 13:01:44CSAAV
+ NNNNN 02609   Caja Origen                                       INNSNA000007015000270210020011000000007000700270126000
+/V=C49198.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-27 13:01:05CSAAV
+ NNNNN 03146   Número de Caja                                    INNSNF000007015200300202021011000000007000700300137000
+/V=C49198.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 15:35:42EPINATO
+ NNNNN 03150   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 15:35:29EPINATO
+ NNNNN 03151   Minifilial                                        INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 15:35:29EPINATO
+ NNNNN 49517   Descripción                                       INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-03-06 12:21:51TOP
+ NNNNN 01930   Nro de Caja                                       INNSNA000007015200300202021011000000007000700300137000
+/V=C3146.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-01 17:28:37SSB
+ NNNNN 01932   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-01 17:28:37SSB
+ NNNNN 01931   Descripción                                       INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-01 17:28:37SSB
+TN  NN 1001TEnvío de Remesa Minifilial              A01361 00
+*$2021-07-26 18:22:13CSAAV
+VNSSNS 020101000102240799SSSD000000000000000000000000000000000000000
+/T=Remesa
+/C=192192192
+*$2021-07-26 18:21:36CSAAV
+KNNNNN 020006001101440775000101
+/F=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ N  NN 01932   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-08-02 11:45:36CSAAV
+ NNNNN 00283   Nro. de Remesa                                    IDNSN 020033014400560222021011500000033002900560129000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02380   Nro.Solicitud                                     INNSNA000007015000270270020011000000007000700270126000
+/V=C283.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02599   Tipo de Origen                                    INNSNA000133013504730350020011120000133002201530109000
+/V=C2599.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02606   Tipo de Destino                                   INNSNA000133013504730350020011000000133002201530109000
+/V=C2606.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 19:00:07CSAAV
+ NNNNN 02607   Origen                                            INNSNA000007015000273210020011000000007000700270126000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 19:00:24CSAAV
+ NNNNN 02608   Destino                                           INNSNA000007015000273210020011000000007000700270126000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 19:00:29CSAAV
+ NNNNN 02609   Caja Origen                                       INNSNA020090015601130216021011000000090004101130141000
+/V=C49198.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-27 13:00:46CSAAV
+ NNNNN 02845   Caja Destino                                      INNSNA010025011500450164020011000000025002000450104000
+/V=C49198.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-27 13:00:50CSAAV
+ NNNNN 02846   Fecha Ingreso                                     IDNSNA020033064400560770001011500000033052900560629000
+/V=C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02390   Enviar                                            INNSNK010030032000520532000011300000097001801170137000
+/?=C2599#8
+/V=E
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02390   Enviar                                            INNSNK010030032000520532000011300000097001801170137000
+/?=C2599=8
+/V=R
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02847   Usuario Ingreso                                   IDNSNA020033041000560488021011500000033026700560386000
+/V=C9505
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02381   Sucursal                                          INNSNA030063016800830288000011000000063002500830144000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 08010   Filtro ayuda                                      INNSNF000007015200300452001011000000007000700300137000
+/V="C6403<>'I'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02392   Moneda                                            I NSN 020065014400880203020011000000065002900880098000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 00549   Numerico9                                         INNSNK000007015200300452001011000000007000700300137000
+/V=64
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 00910                                                     INNNNF000007015200300452001011000000007000700300137000
+/V="C6399="+C2392+" AND C6403='I'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+CNNNNN ME00000000000000000000100
+/?=F(CANTIDAD,C549,C910)>0
+/M=Moneda inválida.
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 06400   Descripcion                                       ICNSN 020065024000880480001011500000000000000000000000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 06401   Simbolo Moneda                                    INNSN 000063016800830288000011000000063002500830144000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02395   Importe                                           I NSN 020097014401200314020011000000097002901200121000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+CNNNNN ME00000000000000000000100
+/F=!(C2395>0)
+/M=Importe debe ser mayor a 0
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02861   Fecha Ejecución                                   INSSNA020130014001530220000011000000130002501530117000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+CNNNNN ME00000000000000000000100
+/F=C2861<C9500
+/M=Fecha de Ejecución no puede ser menor a fecha actual
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 00974   Hora sistema                                      INNSNF010011015000310330000011000000011000700310126000
+/V=F(LEFT,C9506,2)+F(MID,C9506,4,2)
+/m=  :  
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 03144   Hora Ejecución                                    INSSNA020129041701520503000011000000129030001520392000
+/V=C974
+/m=  :  
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02373   Hora                                              INNSNF000007015000270210020011000000007000700270126000
+/V=F(LEFT,C3144,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02612   Minutos                                           INNSNF000007015000270210020011000000007000700270126000
+/V=F(MID,C3144,3,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+CNNNNN ME00000000000000000000100
+/F=C2373>23OC2612>59
+/M=Hora incorrecta.
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02862   Hora Ejecución                                    INSSNF020097013901170379000011000000097002201170114000
+/V=F(LEFT,C3144,2)+":"+F(MID,C3144,3,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02850   Motivo                                            INSSN 020161014402140757000001000000161002901840121000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+VNSSNS 030104000202120798SSSD000000000000000000000000000000000000000
+/T=Remesa
+/C=192192192
+*$2021-07-26 18:21:36CSAAV
+KNNNNN 030006001401400775000101
+/F=0013700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+KNNNNN 030043004000630170000100
+/T=Medio de Transporte
+/F=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02848   Medio de Transp                                   IENSNK030043018000660289020011000000037004400600146000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 01781   Nombre                                            ICNSN 030043032700660594001011500000000000000000000000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 02866   Estado                                            INNSNK000007015000270210000011000000007000700270126000
+/V=P
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+ NNNNN 00955   Opcion S/N                                        INNSNK030100027001200370000010300000007000700270126000
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-07-26 18:21:36CSAAV
+TN  NN 1006TTicket                                  C00001 00
+*$2023-02-08 16:28:11EPINATO
+*N  NN Campos para el ticket
+*$2023-02-08 11:49:55EPINATO
+ NNNNN 00734   IMPORTE                                           INNNNA000007015200300302021011000000007000700300137000
+/V=C2395.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 11:57:56EPINATO
+ NNNNN 00114   Cajal Origen                                      INNNNA000007015200300452001011000000007000700300137000
+/V=C49517.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-03-06 16:29:47TOP
+ NNNNN 00118   Caja Destino                                      INNNNA000007015200300452001011000000007000700300137000
+/V=C49517.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-03-06 12:22:44TOP
+ NSSNS 00053   No. Caja Envia                                    INNNNA000061016500810200021011000000061003200810139000
+/V=C3146.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 15:45:45EPINATO
+ NNNNN 00359   Nro Caja Origen                                   INNNNA000007015200300202021011000000007000700300137000
+/V=C3146.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-24 10:07:18GASTON
+ NNNNN 00364   Nro Caja Destino                                  INNSNA000007015200300202021011000000007000700300137000
+/V=C3146.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-24 10:07:31GASTON
+ NNNNN 03146   Número de Caja Destino                            INNSNA000007015200300202021011000000007000700300137000
+/?=1=0
+/V=C3146.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-08-01 17:28:20SSB
+ NNNNN 03150   Sucursal                                          INNSNA000007015200300202021011000000007000700300137000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 11:49:36EPINATO
+ NNNNN 03155   Iniciales                                         INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 11:49:36EPINATO
+ NNNNN 08051   Identificacion                                    INNSNA000007015200300202021011000000007000700300137000
+/V=C9503
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 11:49:36EPINATO
+ NNNNN 08052   Nombre                                            INNNN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 11:49:36EPINATO
+ NNNNN 09211   Auxiliar                                          INNSNF000007015200300452001011000000007000700300137000
+/V="CUIT N°: " + C9516
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 11:49:36EPINATO
+ NSSNS 00001   Sucursal                                          INNNNA000010014800300172020011000000010001500300134000
+/V=C9502
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2023-02-08 11:49:36EPINATO
+ NSSNS 06020   Nombre                                            INNNN 000010021000300595000011000000010021000300595000
+/F=0013400NNN255255255Arial                                   
+/f=0013400NNN255255255Arial                                   
+*$2023-02-08 11:49:36EPINATO
+ NSSNS 00003   Moneda                                            INNNNA000013015100330183020011000000013001800330137000
+/V=C2392.3
+/f=0013700NNN000000000Arial                                   
+*$2023-02-08 15:48:17EPINATO
+ NSSNS 06400   Descripción                                       INNNN 000014026500340485000011000000036026400560484000
+/f=0013700NNN000000000Arial                                   
+*$2023-02-08 11:49:36EPINATO
+ NNNNN 33800   Código                                            INNNNK000007015200300302021011000000007000700300137000
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 11:49:36EPINATO
+ NNNNN 33803   Numérico                                          INNSN 000007015200300452021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-02-08 11:49:36EPINATO
+FNNNNN 7486002      N   
+*$2023-02-13 11:11:10EPINATO

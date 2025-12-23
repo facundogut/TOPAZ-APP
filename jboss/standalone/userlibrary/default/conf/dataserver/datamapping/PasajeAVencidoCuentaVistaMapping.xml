@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by TOP (TOP) -->
+<map>
+	<query>
+		<class-name>topsystems.automaticprocess.pasajeAVencidoVista.objectsdomain.CuentaActiva</class-name>
+		<query-name>query.CuentaActiva</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			select 
+			s.cuenta,
+			s.sucursal,
+			s.operacion,
+			s.ordinal,
+			s.moneda,
+			p.c6252,
+			p.c39998,
+			p.c6254,
+			s.c1728,
+			sum(s.c1604),
+			max(s.c1626),
+			sum(rsd.max_saldo_comercial),
+			rsd.fecha_minima_comercial,
+			sum(rsd.max_saldo_civil),
+			rsd.fecha_minima_civil,
+			count(*) cantidad,
+			max(s.jts_oid) as jts_oid_maximo,
+			min(s.jts_oid) as jts_oid_minimo,
+			max(s.C1679) as codigo_bloqueda_uno,
+			min(s.C1679) as codigo_bloqueda_dos
+			from 
+			saldos s,
+			productos p,
+			(select 
+			comerciales.saldo_jts_oid,
+			max_saldo_comercial,
+			fecha_minima_comercial,
+			max_saldo_civil,
+			fecha_minima_civil
+			from
+			(select
+			sd.saldo_jts_oid,
+			max(sd.saldo_al_corte) as max_saldo_comercial,
+			min(sd.fecha) as fecha_minima_comercial 
+			from 
+			saldos_diarios sd
+			where 
+			sd.tz_lock = 0 and
+			sd.fecha &gt;= ?
+			group by
+			sd.saldo_jts_oid) comerciales,
+			(select
+			sd.saldo_jts_oid,
+			max(sd.saldo_al_corte) as max_saldo_civil,
+			min(sd.fecha) as fecha_minima_civil 
+			from 
+			saldos_diarios sd
+			where 
+			sd.tz_lock = 0 and
+			sd.fecha &gt;= ?
+			group by
+			sd.saldo_jts_oid) civiles
+			where 
+			comerciales.saldo_jts_oid = civiles.saldo_jts_oid) rsd
+			where
+			s.tz_lock = 0 and
+			p.tz_lock = 0 and
+			s.jts_oid = rsd.saldo_jts_oid and
+			p.c6250 = s.producto and
+			s.c1651 &lt;&gt; '1' and
+			s.c1728 in (?,?) and
+			s.C1785 in (3,2) 
+			group by
+			s.cuenta,
+			s.sucursal,
+			s.operacion,
+			s.ordinal,
+			s.moneda,
+			p.c6252,
+			p.c39998,
+			p.c6254,
+			s.c1728,
+			rsd.fecha_minima_comercial,
+			rsd.fecha_minima_civil
+		</sentence>
+		<attribute>
+			<attribute-name>cuenta</attribute-name>
+			<column-name>cuenta</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>sucursal</attribute-name>
+			<column-name>sucursal</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>operacion</attribute-name>
+			<column-name>operacion</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>ordinal</attribute-name>
+			<column-name>ordinal</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>moneda</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>tipoDeProducto</attribute-name>
+			<column-name>c6252</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>subTipoDeProducto</attribute-name>
+			<column-name>c39998</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>diasParaCalculoInteres</attribute-name>
+			<column-name>c6254</column-name>
+			<column-type>String</column-type>
+		</attribute>		
+		<attribute>
+			<attribute-name>estadoActual</attribute-name>
+			<column-name>c1728</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>saldoActual</attribute-name>
+			<column-name>c1604</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaUltimoMovimiento</attribute-name>
+			<column-name>c1626</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>maximoSaldoPeriodoComerciales</attribute-name>
+			<column-name>max_saldo_comercial</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaMinimaPeriodoComerciales</attribute-name>
+			<column-name>fecha_minima_comercial</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>maximoSaldoPeriodoCiviles</attribute-name>
+			<column-name>max_saldo_civil</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaMinimaPeriodoCiviles</attribute-name>
+			<column-name>fecha_minima_civil</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>cantidad</attribute-name>
+			<column-name>cantidad</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>jtsOidMaximo</attribute-name>
+			<column-name>jts_oid_maximo</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>jtsOidMinimo</attribute-name>
+			<column-name>jts_oid_minimo</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>codigoBloqueadaUno</attribute-name>
+			<column-name>codigo_bloqueda_uno</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>codigoBloqueadaDos</attribute-name>
+			<column-name>codigo_bloqueda_dos</column-name>
+			<column-type>String</column-type>
+		</attribute>	
+	</query>
+	<query>
+		<class-name>topsystems.automaticprocess.pasajeAVencidoVista.objectsdomain.CuentaActiva</class-name>
+		<query-name>query.CuentaInactivaParaInmovilizar</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			select 
+			s.cuenta,
+			s.sucursal,
+			s.operacion,
+			s.ordinal,
+			s.moneda,
+			p.c6252,
+			p.c39998,
+			p.c6254,
+			s.c1728,
+			sum(s.c1604),
+			max(s.c1626),
+			count(*) cantidad,
+			max(s.jts_oid) as jts_oid_maximo,
+			min(s.jts_oid) as jts_oid_minimo,
+			max(s.C1679) as codigo_bloqueda_uno,
+			min(s.C1679) as codigo_bloqueda_dos,
+			e.fecha_cambio_estado as fecha_inactivacion
+			from 
+			saldos s,
+			productos p,
+			  (
+			  select
+			  saldo_jts_oid,
+			  max(fecha_cambio_estado) as fecha_cambio_estado
+			  from
+			  VTA_ESTADOS_HISTORICO
+			  where
+			  tz_lock = 0 and
+			  estado = 'Y'
+			  group by
+			  saldo_jts_oid
+			  ) e     
+			where
+			s.tz_lock = 0 and
+			p.tz_lock = 0 and
+			p.c6250 = s.producto and
+			e.saldo_jts_oid = s.jts_oid and 
+			s.c1651 &lt;&gt; '1' and
+			s.c1728 = 'Y' and
+			s.C1785 in (3,2) 
+			group by
+			s.cuenta,
+			s.sucursal,
+			s.operacion,
+			s.ordinal,
+			s.moneda,
+			p.c6252,
+			p.c39998,
+			p.c6254,
+			s.c1728,
+			e.fecha_cambio_estado
+		</sentence>
+		<attribute>
+			<attribute-name>cuenta</attribute-name>
+			<column-name>cuenta</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>sucursal</attribute-name>
+			<column-name>sucursal</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>operacion</attribute-name>
+			<column-name>operacion</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>ordinal</attribute-name>
+			<column-name>ordinal</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>moneda</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>tipoDeProducto</attribute-name>
+			<column-name>c6252</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>subTipoDeProducto</attribute-name>
+			<column-name>c39998</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>diasParaCalculoInteres</attribute-name>
+			<column-name>c6254</column-name>
+			<column-type>String</column-type>
+		</attribute>		
+		<attribute>
+			<attribute-name>estadoActual</attribute-name>
+			<column-name>c1728</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>saldoActual</attribute-name>
+			<column-name>c1604</column-name>
+			<column-type>BigDecimal</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaUltimoMovimiento</attribute-name>
+			<column-name>c1626</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>cantidad</attribute-name>
+			<column-name>cantidad</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>jtsOidMaximo</attribute-name>
+			<column-name>jts_oid_maximo</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>jtsOidMinimo</attribute-name>
+			<column-name>jts_oid_minimo</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>codigoBloqueadaUno</attribute-name>
+			<column-name>codigo_bloqueda_uno</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>codigoBloqueadaDos</attribute-name>
+			<column-name>codigo_bloqueda_dos</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaInactivacion</attribute-name>
+			<column-name>fecha_inactivacion</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+	</query>
+	<query>
+	       <class-name>topsystems.automaticprocess.pasajeAVencidoVista.objectsdomain.CuentaActiva</class-name>
+	       <query-name>query.CuentaInactiva</query-name>
+	       <database-name>TOP/CLIENTES</database-name>
+	       <sentence>       
+	       select  cuenta,
+			       sucursal,
+			       operacion,
+			       ordinal,
+			       moneda,
+			       c6252,
+			       c39998,
+			       c6254,
+			       c1728,
+			       c1604,
+			       c1626,
+			       max_saldo_comercial as max_saldo_comercial,
+			       max_saldo_civil as max_saldo_civil,
+			       cantidad,
+			       jts_oid_maximo,
+			       jts_oid_minimo,
+			       codigo_bloqueda_uno,
+			       codigo_bloqueda_dos from 
+		       (select cuenta,
+			    sucursal,
+			    operacion,
+			    ordinal,
+			    moneda,
+			    c6252,
+			    c39998,
+			    c6254,
+			    c1728,
+			    sum(c1604) as c1604,
+			    max(c1626) as c1626,
+			    sum(max_saldo_comercial) as max_saldo_comercial,
+			    sum(max_saldo_civil) as max_saldo_civil,
+			    count(*) cantidad,
+			    max(jts_oid) as jts_oid_maximo,
+			    min(jts_oid) as jts_oid_minimo,
+			    max(C1679) as codigo_bloqueda_uno,
+	                    min(C1679) as codigo_bloqueda_dos from 
+			       (select s.cuenta,
+						 s.sucursal,
+						 s.operacion,
+						 s.ordinal,
+						 s.moneda,
+						 p.c6252,
+						 p.c39998,
+						 p.c6254,
+						 s.c1728,
+						 s.c1679,
+						 s.jts_oid,
+						 s.c1626,
+						 s.c1604,
+						(select  max(sd.saldo_al_corte )
+					         from saldos_diarios sd 
+					         where 
+					       --sd.tz_lock = 0 and
+					       sd.fecha &gt;= ? and s.jts_oid = sd.saldo_jts_oid ) as max_saldo_comercial,
+						(select  min(sd.fecha)
+					       from saldos_diarios sd 
+					      where 
+					       --sd.tz_lock = 0 and
+					       sd.fecha &gt;= ? and s.jts_oid = sd.saldo_jts_oid ) as fecha_minima_comercial,
+ 						(select  max(sd.saldo_al_corte)
+					       from saldos_diarios sd 
+					      where 
+					       --sd.tz_lock = 0 and
+					       sd.fecha &gt;= ? and s.jts_oid = sd.saldo_jts_oid ) as max_saldo_civil,
+ 						(select  min(sd.fecha)
+					       from saldos_diarios sd 
+					      where 
+					       --sd.tz_lock = 0 and
+					       sd.fecha &gt;= ? and s.jts_oid = sd.saldo_jts_oid ) as fecha_minima_civil
+				 from saldos s INNER JOIN 
+						 productos p ON p.c6250 = s.producto    
+				where s.tz_lock = 0 
+				  and p.tz_lock = 0
+				  and s.c1651 &lt;&gt; '1'
+				  and s.c1728 in (?, ?)
+				  and s.C1785 in (3, 2)
+				 AND s.PRODUCTO IN (SELECT C6250 FROM PRODUCTOS WHERE C39998 &lt;&gt; 3)) sel3
+			       group by cuenta,
+				sucursal,
+				operacion,
+				ordinal,
+				moneda,
+				c6252,
+				c39998,
+				c6254,
+				c1728,
+				fecha_minima_comercial,
+				fecha_minima_civil ) res 
+				where (res.max_saldo_comercial is not null) and
+			      (res.max_saldo_civil is not null)
+		</sentence>
+	       <attribute>
+		       <attribute-name>cuenta</attribute-name>
+		       <column-name>cuenta</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>sucursal</attribute-name>
+		       <column-name>sucursal</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>operacion</attribute-name>
+		       <column-name>operacion</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>ordinal</attribute-name>
+		       <column-name>ordinal</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>moneda</attribute-name>
+		       <column-name>moneda</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>tipoDeProducto</attribute-name>
+		       <column-name>c6252</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>subTipoDeProducto</attribute-name>
+		       <column-name>c39998</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>diasParaCalculoInteres</attribute-name>
+		       <column-name>c6254</column-name>
+		       <column-type>String</column-type>
+	       </attribute>                      
+	       <attribute>
+		       <attribute-name>estadoActual</attribute-name>
+		       <column-name>c1728</column-name>
+		       <column-type>String</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>saldoActual</attribute-name>
+		       <column-name>c1604</column-name>
+		       <column-type>BigDecimal</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>fechaUltimoMovimiento</attribute-name>
+		       <column-name>c1626</column-name>
+		       <column-type>Timestamp</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>maximoSaldoPeriodoComerciales</attribute-name>
+		       <column-name>max_saldo_comercial</column-name>
+		       <column-type>BigDecimal</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>maximoSaldoPeriodoCiviles</attribute-name>
+		       <column-name>max_saldo_civil</column-name>
+		       <column-type>BigDecimal</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>cantidad</attribute-name>
+		       <column-name>cantidad</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>jtsOidMaximo</attribute-name>
+		       <column-name>jts_oid_maximo</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>jtsOidMinimo</attribute-name>
+		       <column-name>jts_oid_minimo</column-name>
+		       <column-type>long</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>codigoBloqueadaUno</attribute-name>
+		       <column-name>codigo_bloqueda_uno</column-name>
+		       <column-type>String</column-type>
+	       </attribute>
+	       <attribute>
+		       <attribute-name>codigoBloqueadaDos</attribute-name>
+		       <column-name>codigo_bloqueda_dos</column-name>
+		       <column-type>String</column-type>
+	       </attribute>
+	</query>
+	<class>
+		<class-name>topsystems.automaticprocess.pasajeAVencidoVista.objectsdomain.EstadoHistorico</class-name>
+		<entity-name>core.EstadoHistorico</entity-name>
+		<table-name>VTA_ESTADOS_HISTORICO</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>TZ_LOCK</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>saldoJtsOid</attribute-name>
+			<column-name>SALDO_JTS_OID</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaCambioEstado</attribute-name>
+			<column-name>FECHA_CAMBIO_ESTADO</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>estado</attribute-name>
+			<column-name>ESTADO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>estadoAnterior</attribute-name>
+			<column-name>ESTADO_ANTERIOR</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>tipoProceso</attribute-name>
+			<column-name>TIPO_PROCESO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>motivo</attribute-name>
+			<column-name>MOTIVO</column-name>
+		</attribute>		
+	</class>
+	<class>
+		<class-name>topsystems.automaticprocess.pasajeAVencidoVista.objectsdomain.TopeFuncionalidadMoneda</class-name>
+		<entity-name>core.TopeFuncionalidadMoneda</entity-name>
+		<table-name>TOPES_X_FUNCIONALIDAD_MONEDA</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>TZ_LOCK</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>numeroOperacion</attribute-name>
+			<column-name>NUMERO_OPERACION</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>moneda</attribute-name>
+			<column-name>MONEDA</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>importe</attribute-name>
+			<column-name>IMPORTE</column-name>
+		</attribute>
+	</class>
+	<class>
+		<class-name>topsystems.automaticprocess.pasajeAVencidoVista.objectsdomain.SaldoAliasJtsEstado</class-name>
+		<entity-name>core.alias.SaldoAliasJtsEstado</entity-name>
+		<table-name>SALDOS</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>TZ_LOCK</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>JTS_OID</attribute-name>
+			<column-name>JTS_OID</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>estadoAtraso</attribute-name>
+			<column-name>C1734</column-name>
+		</attribute>
+	</class>
+	<class>
+		<class-name>topsystems.automaticprocess.pasajeAVencidoVista.objectsdomain.SaldoAliasJtsEstado</class-name>
+		<entity-name>core.alias.SaldoAliasJtsBloqueado</entity-name>
+		<table-name>SALDOS</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>TZ_LOCK</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>JTS_OID</attribute-name>
+			<column-name>JTS_OID</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>estadoBloqueado</attribute-name>
+			<column-name>c1679</column-name>
+		</attribute>
+	</class>	
+</map>

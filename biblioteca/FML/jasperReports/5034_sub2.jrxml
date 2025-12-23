@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2021-11-12T17:46:07 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="5034_sub2" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="08a3064e-e9cc-44f8-83df-5e566511902c">
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[select l.CLAVE, l.FECHA_FIN, l.FECHA_INICIO, u.NOMBRE, p.FECHAPROCESO from licencias l, usuarios u, parametros p
+where u.CLAVE = l.CLAVE 
+and fecha_fin = DATEADD(d,-1,(p.FECHAPROCESO))
+and u.TZ_LOCK = 0 
+and l.TZ_LOCK = 0]]>
+	</queryString>
+	<field name="CLAVE" class="java.lang.String"/>
+	<field name="FECHA_FIN" class="java.sql.Timestamp"/>
+	<field name="FECHA_INICIO" class="java.sql.Timestamp"/>
+	<field name="NOMBRE" class="java.lang.String"/>
+	<field name="FECHAPROCESO" class="java.sql.Timestamp"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="17" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="350" height="17" uuid="5506be28-32f6-4825-bebd-9ba1bf6aab84"/>
+				<text><![CDATA[Los siguientes usuarios han sido rehabilitados por regreso de licencia en el día]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="555" height="18" uuid="6b653044-e1e2-4d1b-a636-9a1a9b95e146">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{CLAVE} + "(" + $F{NOMBRE} + ")"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,1209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.AutSolicitudes</class-name>
+        <entity-name>core.vo_AutSolicitudes</entity-name>
+        <table-name>AUT_SOLICITUDES</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoProceso</attribute-name>
+            <column-name>CODIGO_PROCESO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoError</attribute-name>
+            <column-name>CODIGO_ERROR</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>automaticprocess.solicitudes.objectsdomain.QueryBPMProcessInstance</class-name>
+        <query-name>query.QueryBPMProcessInstance</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT PROCESS_INSTANCE AS INSTANCE
+			FROM VW_JMPM_PROCESS_INSTANCE
+			WHERE NROSOLICITUD = ? AND VW_JMPM_PROCESS_INSTANCE.TZ_LOCK = 0
+				AND TIPO IN (SELECT TIPO_SOLICITUD
+					FROM CRE_SOLICITUDCREDITO
+					WHERE NUMEROSOLICITUD = ? AND CRE_SOLICITUDCREDITO.TZ_LOCK = 0)
+        </sentence>
+        <attribute>
+            <attribute-name>instance</attribute-name>
+            <column-name>INSTANCE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.OperacionSolicitud</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select AUT_SOLICITUDES.NROSOLICITUD, AUT_PROCESO.OPERACION  FROM AUT_SOLICITUDES INNER JOIN AUT_PROCESO ON AUT_SOLICITUDES.CODIGO_PROCESO = AUT_PROCESO.ID
+			AND AUT_SOLICITUDES.ESTADO = 'A' AND AUT_SOLICITUDES.FECHACONDICION &lt;= ? 
+			AND (AUT_PROCESO.GRUPO_EJECUCION = ? OR AUT_PROCESO.GRUPO_EJECUCION = -1)
+			AND AUT_SOLICITUDES.TZ_LOCK = 0 AND AUT_PROCESO.TZ_LOCK = 0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.prueba</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select cv_transferencia.nrosolicitud, 8040 operacion
+			from cv_transferencia
+			where nrosolicitud != 0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.CancelarDPFUVAUVI</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select JTS_OID AS nrosolicitud, 5064 operacion
+			from SALDOS
+			WHERE C1734 = 'U' AND C1785 = 4 AND (select FECHAPROCESO FROM PARAMETROS) &gt;= C1627  AND C1604 != 0
+        </sentence>
+        <attribute>
+            <attribute-name>nrosolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.CancelarDPFTV</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select JTS_OID AS nrosolicitud, 5065 operacion
+			from SALDOS
+			WHERE C1734 = 'T' AND C1785 = 4 AND (select FECHAPROCESO FROM PARAMETROS) &gt;= C1627  AND C1604 != 0
+        </sentence>
+        <attribute>
+            <attribute-name>nrosolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.CobroCajaSeguridad</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select CODIGO_CONTRATO AS nrosolicitud, 8665 operacion
+			from VW_COF_COBRO_CAJA_SEG
+        </sentence>
+        <attribute>
+            <attribute-name>nrosolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.cobroGarantiasOtorgadas</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT s.JTS_OID AS NROSOLICITUD, 6080 AS OPERACION
+			FROM SALDOS s
+			INNER JOIN PRODUCTOS p ON s.PRODUCTO = p.C6250 AND p.C6800 = 'GO' AND p.TZ_LOCK = 0
+			WHERE s.C1604 != 0 AND s.TZ_LOCK = 0 AND (select FECHAPROCESO FROM PARAMETROS) &gt;= s.C1628
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.altaMaestroFallecido</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT cuil AS nroSolicitud, 83 AS OPERACION
+			FROM CLI_MAESTRO_FALLECIDOS 
+			WHERE ESTADO = 'I' AND TIPO_MOV='A' AND TZ_LOCK = 0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.bajaMaestroFallecido</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT cuil AS nroSolicitud, 85 AS OPERACION
+			FROM CLI_MAESTRO_FALLECIDOS 
+			WHERE ESTADO = 'I' AND TIPO_MOV='B' AND TZ_LOCK = 0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.cobranzaDebitoAutomatico</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NRO_REGISTRO as NROSOLICITUD, 2656 AS OPERACION FROM VW_DEBITOSAUTOMATICOS WHERE TIPO_ORDEN='SC'
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.avisoVencimientoGarantia</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT s.JTS_OID AS NROSOLICITUD, 6081 AS OPERACION
+			FROM SALDOS s
+			INNER JOIN PRODUCTOS p ON s.PRODUCTO = p.C6250 AND p.C6800 = 'GO' AND p.TZ_LOCK = 0
+			WHERE s.C1604 != 0 AND s.TZ_LOCK = 0 AND s.C1627 &lt;= dateadd(DAY,(SELECT DIAS_AVISO_VENCIMIENTO FROM TOPESPRODUCTO WHERE CODPRODUCTO = s.PRODUCTO AND MONEDA = s.MONEDA AND TZ_LOCK = 0),(select FECHAPROCESO FROM PARAMETROS)) AND
+			(select FECHAPROCESO  FROM PARAMETROS) &lt;= s.C1627
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.RindoDebitosAutomaticos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT ID_LIQUIDACION AS NROSOLICITUD, 2667 AS OPERACION 
+				FROM VW_DEBITO_AUTOMATICO
+				ORDER BY estado asc
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.PagoADomicilio</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NROSOLICITUD, 8203 AS OPERACION FROM CRE_PAGO_DOMICILIO WHERE ESTADO IN ('I','E') AND EN_DOMICILIO = 'I' AND TZ_LOCK = 0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.ProcesoDebitosDirectos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT ID_DEBITO AS NROSOLICITUD, 2680 AS OPERACION
+			FROM SNP_DEBITOS WITH (nolock)
+			WHERE ESTADO = 'PP'
+				AND FECHA_VTO &lt;= (SELECT FECHAPROCESO FROM PARAMETROS WITH (nolock))
+				AND TZ_LOCK = 0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.ImpuestosMonedaExtranjera</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT ID_LIQUIDACION AS NROSOLICITUD, 2072 AS OPERACION 
+				FROM VW_CON_MOVIMIENTOS_IMPUESTOS_ME
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.CobroSellosChacoCC</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+             select SALDOS_JTS_OID AS nrosolicitud, 2096 operacion
+               from VW_SELLOS_CH_SOBREGIRO_CC
+       </sentence>
+        <attribute>
+            <attribute-name>nrosolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.ChequeRechazadoDepositaria</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT ID_LIQUIDACION AS NROSOLICITUD, 3768 AS OPERACION 
+				FROM VW_CHEQUE_RECHAZO_DEPOSITARIA
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.ConsultaCVRemunerada</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			select JTS_OID_SALDOS AS nrosolicitud, 2090 operacion
+			from VW_CONV_COMISION_CV_REMUNERADA
+        </sentence>
+        <attribute>
+            <attribute-name>nrosolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.ContabilizacionDebitosDirectos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT N.ID_ORDEN NROSOLICITUD, 2681 AS OPERACION
+			FROM SNP_MSG_ORDENES AS O WITH (nolock)
+			INNER JOIN VW_SNP_MSG_ORDENES_NUMERADAS AS N WITH (nolock) ON
+				N.CUIT_EO = O.CUIT_EO
+				AND N.ID_ARCHIVO = O.ID_ARCHIVO
+				AND N.NRO_ARCHIVO = O.NRO_ARCHIVO
+				AND N.CORRELATIVO = O.CORRELATIVO
+			WHERE O.TZ_LOCK = 0 AND O.TIPO_ORDEN = 'DEBENV'
+				AND ((O.ESTADO = 'PR' AND O.CONTABILIZADA &lt;&gt; 'S') OR (O.ESTADO = 'RC' AND O.CONTABILIZADA &lt;&gt; 'R'))
+				AND O.FECHA_COMPENSACION &lt;= (SELECT FECHAPROCESO FROM PARAMETROS WITH (nolock))
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.ProcesoTransferencias</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT OP_NUMERO AS NROSOLICITUD, 2685 AS OPERACION 
+			FROM VTA_TRANSFERENCIAS WITH(nolock) WHERE OP_CLASE_TRANS = 'R' AND ESTADO = 'PP' AND TZ_LOCK = 0
+			AND OP_TIPO IN (SELECT ID_TIPO FROM VTA_TRANSFERENCIAS_TIPOS WHERE TIPO_PROCESO IN ('MI', 'SC', 'SU'))
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.PagoTransferencias</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT OP_NUMERO AS NROSOLICITUD, 2686 AS OPERACION 
+			FROM VTA_TRANSFERENCIAS WITH(nolock) WHERE OP_CLASE_TRANS = 'R' AND ESTADO = 'PR' 
+			AND OP_TIPO IN (SELECT ID_TIPO FROM VTA_TRANSFERENCIAS_TIPOS WHERE TIPO_PROCESO IN ('MI', 'SC', 'SU'))
+			AND (CONTABILIZADA &lt;&gt; 'S' OR CONTABILIZADA IS NULL) AND FECHA_PAGO &lt;= (SELECT FECHAPROCESO FROM PARAMETROS) AND TZ_LOCK = 0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.cancelacionPrenda</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT so.NUMEROSOLICITUD AS NROSOLICITUD, 6115 AS OPERACION
+			FROM CRE_SOLICITUDCREDITO so
+			WHERE so.IDMETODOLOGIA IN (SELECT NUMEROSOLICITUD FROM CRE_SOLICITUDCREDITO where tz_lock = 0 AND ESTADOSOLICITUD = '16') AND so.TZ_LOCK = 0 AND
+			dateadd(DAY,(SELECT DIASINMOVILIZADA FROM CRE_PARAMETROS WHERE CODIGO = 165), so.FECHADESEMBOLSO) &lt; (SELECT FECHAPROCESO FROM PARAMETROS) AND
+			so.ESTADOSOLICITUD = '23'
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.bajaSolicitudes</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NUMEROSOLICITUD as NROSOLICITUD, 6116 AS OPERACION
+			FROM CRE_SOLICITUDCREDITO 
+			WHERE FECHA_VENCIMIENTO_SOLICITUD &lt;= (SELECT FECHAPROCESO FROM PARAMETROS) AND 
+			ESTADOSOLICITUD NOT IN (4,21,22,23,32) AND TZ_LOCK = 0 AND 
+			NUMEROSOLICITUD NOT IN (SELECT IDMETODOLOGIA FROM CRE_SOLICITUDCREDITO WHERE TZ_LOCK = 0)
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.correosCanjeInterno</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NRO_SOLICITUD AS nroSolicitud, 3460 AS operacion
+			FROM CHE_SOLICITUD_CANJE_INTERNO 
+			WHERE ENVIO_NOTIFICACION = 'N' AND TZ_LOCK=0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.solicitudesCanjeInterno</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NRO_SOLICITUD AS nroSolicitud, 3683 AS operacion
+			FROM CHE_SOLICITUD_CANJE_INTERNO 
+			WHERE ESTADO = 'I' AND OPERATIVA = 'D' AND TZ_LOCK=0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.tjdCobroComisiones</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT v.ID_REG AS NROSOLICITUD, 2828 AS OPERACION FROM TJD_COBRO_COMISIONES t
+			INNER JOIN vw_tjd_cobro_comisiones v ON v.ID_SOLICITUD=t.ID_SOLICITUD AND v.SALDO_JTS_OID=t.SALDO_JTS_OID
+			INNER JOIN saldos s WITH(nolock) ON s.JTS_OID=t.SALDO_JTS_OID AND s.TZ_LOCK=0 AND S.C1651 &lt;&gt; '1'
+			AND S.C1679 = '0' AND S.C1728 &lt;&gt; 'I'
+			WHERE
+			t.ESTADO='P' AND t.TZ_LOCK=0
+      </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.altaInhabilitacionInae</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT CORRELATIVO AS nroSolicitud, 0081 AS operacion
+			FROM CLI_INHABILITADOS_INAES WHERE
+			TZ_LOCK=0 AND ESTADO_EJECUCION = 'I'
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.cobraSiTieneSaldo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT MICRLINE AS alfaSolicitud, 3453 AS operacion 
+			FROM CLE_CHEQUES_CLEARING_RECIBIDO 
+			WHERE TZ_LOCK = 0 AND FECHA = (SELECT FECHAPROCESO FROM PARAMETROS) AND CODIGO_CAUSAL_DEVOLUCION IN (SELECT CODIGO_DE_CAUSAL FROM CLE_TIPO_CAUSAL WHERE TIPO_RECHAZO = 3) AND ESTADO_DEVOLUCION IN (1)
+        </sentence>
+        <attribute>
+            <attribute-name>alfaSolicitud</attribute-name>
+            <column-name>ALFASOLICITUD</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.rechazoClearingDigitalMultas</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT MICRLINE AS alfaSolicitud, 3456 AS operacion 
+			FROM VW_CLE_CHEQUES_RECHAZADOS
+        </sentence>
+        <attribute>
+            <attribute-name>alfaSolicitud</attribute-name>
+            <column-name>ALFASOLICITUD</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.caidaChequesAlCobro</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NRO_SOLICITUD as NROSOLICITUD, 5988 AS OPERACION
+			FROM CLE_CHEQUES_SALIENTE 
+			WHERE NRO_SOLICITUD &gt; 0 AND ESTADO = 2 AND TZ_LOCK = 0 AND ACREDITADO = 0 AND DESTINO_CHEQUE IN (2) AND
+			FECHA_ACREDITACION &lt;= (SELECT FECHAPROCESO FROM PARAMETROS) AND FECHA_ENVIO_COMPENSACION  IS NOT NULL AND
+			NRO_SOLICITUD NOT IN (SELECT NRO_SOLICITUD FROM CHE_CHEQUES WHERE TZ_LOCK = 0)
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.caidaChequesPropiosAlCobro</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NRO_SOLICITUD as NROSOLICITUD, 5992 AS OPERACION
+			FROM CLE_CHEQUES_SALIENTE 
+			WHERE NRO_SOLICITUD &gt; 0 AND ESTADO = 2 AND TZ_LOCK = 0 AND ACREDITADO = 0 AND DESTINO_CHEQUE IN (2) AND
+			FECHA_ACREDITACION &lt;= (SELECT FECHAPROCESO FROM PARAMETROS) AND FECHA_ENVIO_COMPENSACION  IS NOT NULL AND
+			NRO_SOLICITUD IN (SELECT NRO_SOLICITUD FROM CHE_CHEQUES WHERE TZ_LOCK = 0)
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.rechazoClearingDigital</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT R.MICRLINE AS alfaSolicitud, 3457 AS operacion 
+			FROM CLE_CHEQUES_CLEARING_RECIBIDO AS R WITH (nolock)
+			WHERE R.TZ_LOCK = 0 AND R.FECHA = (SELECT FECHAPROCESO FROM PARAMETROS) AND R.CODIGO_CAUSAL_DEVOLUCION &lt;&gt; 0 AND R.ESTADO_DEVOLUCION = 3 AND (R.CANJE_INTERNO &lt;&gt; 'S' OR R.CANJE_INTERNO IS NULL)
+			AND NOT EXISTS (SELECT 1 FROM CLE_CHEQUES_RECIBIDOS_AUX AS A WITH (nolock) WHERE A.TZ_LOCK = 0 AND A.SERIE = R.NUMERO_SERIE AND A.NRO_CHEQUE = R.NUMERO_CHEQUE AND A.SUCURSAL_CHEQUE = R.SUCURSAL AND A.MONEDA = R.MONEDA
+			AND A.CUENTA = R.CUENTA AND A.PRODUCTO = R.PRODUCTO AND A.OPERACION = R.OPERACION AND A.FECHA_CHEQUE = R.FECHA AND A.SUCURSAL_ASIENTO = R.ASIENTO_SUCURSAL)
+        </sentence>
+        <attribute>
+            <attribute-name>alfaSolicitud</attribute-name>
+            <column-name>ALFASOLICITUD</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.rechazoSolicitudIntegranteJuzgado</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NRO_SOLICITUD as NROSOLICITUD, 3330 AS OPERACION 
+			FROM DJ_SOLICITUD_AD_INTEG_JUZ
+			WHERE ESTADO IN ('I')
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.rechazoSolicitudActivarInactivarCausa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NRO_SOLICITUD as NROSOLICITUD, 3335 AS OPERACION 
+			FROM DJ_SOL_ACT_INAC_CAUSAS
+			WHERE ESTADO IN ('I')
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.AdelantoHaberes</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT C.JTS_OID_CV AS NROSOLICITUD,  7592 AS OPERACION
+			FROM CRE_ADELANTOS_HABERES C WITH(NOLOCK) 
+			WHERE C.FECHA &lt;= (SELECT FECHAPROCESO FROM PARAMETROS WITH(NOLOCK))
+			AND C.ESTADO = 'I' AND C.TZ_LOCK=0
+			GROUP BY C.JTS_OID_CV
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.PagoTJC</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT U.JTS_CUENTA_COBRO AS NROSOLICITUD, 8716 AS OPERACION
+			FROM TJC_SALDOS S WITH(NOLOCK)
+			INNER JOIN TJC_MAESTRO_USUARIO U WITH(NOLOCK) ON S.ADMINISTRADORA = u.ADMINISTRADORA AND S.USUARIO = u.USUARIO
+			INNER JOIN SALDOS SD WITH(NOLOCK) ON SD.JTS_OID = U.JTS_SALDO_TARJETA AND SD.C8673 = S.PERIODO_DEUDA
+			INNER JOIN SALDOS CV WITH(NOLOCK) ON CV.JTS_OID =  U.JTS_CUENTA_COBRO
+			WHERE s.FECHA_VTO &lt;= (SELECT FECHAPROCESO FROM PARAMETROS WITH(NOLOCK)) AND S.IMPORTE_DEBITO &gt; 0 AND U.JTS_CUENTA_COBRO &gt; 0 
+			AND CV.MONEDA = 1
+			AND U.JTS_CUENTA_COBRO NOT IN 
+						(SELECT grl.SALDO_JTS_OID FROM GRL_BLOQUEOS grl WITH(NOLOCK)
+						 INNER JOIN GRL_COD_BLOQUEOS cod WITH(NOLOCK) 
+									ON grl.COD_BLOQUEO=cod.COD_BLOQUEO
+						 WHERE grl.ESTADO=1 AND  
+							   (grl.FECHA_VIGENCIA &lt;= (SELECT fechaproceso FROM PARAMETROS WITH(NOLOCK)) AND
+						       (grl.FECHA_VENCIMIENTO &gt;= (SELECT fechaproceso FROM PARAMETROS WITH(NOLOCK)) OR
+						       grl.MANEJA_VENCIMIENTO = 0)) AND 
+							   ((cod.ACCIONES_DEBITO=3 AND isnull(cod.EXCEPCIONES,0)=0) OR  
+							   (cod.ACCIONES_DEBITO=3 AND isnull(cod.EXCEPCIONES,0)=1 AND 
+							   cod.COD_BLOQUEO NOT IN 
+							   (SELECT ex.COD_BLOQUEO  
+							   FROM GRL_BLOQUEOS_EXCEPCION ex WITH(NOLOCK) WHERE ex.CODIGO_TRANSACCION IN
+									(SELECT CODIGO_TRANSACCION FROM CODIGO_TRANSACCIONES WITH(NOLOCK) 
+									WHERE CODIGO_OPERACION=8716))))			
+						)		
+			GROUP BY U.JTS_CUENTA_COBRO
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.ClienteNovedadDemo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT CONVERT(VARCHAR,A.FECHA,112) + right(replicate('0',5) + CONVERT(VARCHAR,A.SUCURSAL),5) + right(replicate('0',10)+CONVERT(VARCHAR,A.ASIENTO),10) + right(replicate('0',6)+CONVERT(VARCHAR,A.ORDINAL),6) + TIPO_TRAZA + 'BP'AS alfaSolicitud, 8912 AS OPERACION
+			FROM BITACORA_PERSONAS_FISICAS A WITH(NOLOCK)
+			WHERE A.ESTADOREG = 'I' AND A.TZ_LOCK = 0
+			UNION ALL 
+			SELECT CONVERT(VARCHAR,B.FECHA,112) + right(replicate('0',5) + CONVERT(VARCHAR,B.SUCURSAL),5) + right(replicate('0',10)+CONVERT(VARCHAR,B.ASIENTO),10) + right(replicate('0',6)+CONVERT(VARCHAR,B.ORDINAL),6) + TIPO_TRAZA + 'BD' AS alfaSolicitud, 8912 AS OPERACION
+			FROM BITACORA_DOCUMENTOSPFPJ B WITH(NOLOCK)
+			WHERE B.ESTADOREG = 'I' AND TIPOPERSONA = 'F' AND B.TZ_LOCK = 0
+        </sentence>
+        <attribute>
+            <attribute-name>alfaSolicitud</attribute-name>
+            <column-name>ALFASOLICITUD</column-name>
+            <column-type>string</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.tarjetaDebitoLinkMaestro</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NRO_REGISTRO as NROSOLICITUD,2825 AS OPERACION FROM TJD_LINK_MAESTRO WHERE PROCESADO='N'
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.tarjetaDebitoLinkMaestroCuenta</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NRO_REGISTRO as NROSOLICITUD,2826 AS OPERACION FROM TJD_LINK_MAESTRO_CUENTA WHERE PROCESADO='N'
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.Reporte_Ajuste_X_Inlfacion</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT 1 AS NROSOLICITUD, 2099 AS OPERACION   
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.Reporte_Movimiento_Transportadora</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT 1 AS NROSOLICITUD, 3260 AS OPERACION   
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.Reporte_Movimiento_Tesorero</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT 1 AS NROSOLICITUD, 3261 AS OPERACION   
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.altaCuentasJudiciales</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT tdc.NROSOLICITUD AS nrosolicitud, 7933 AS OPERACION
+			FROM TEMP_DJ_CUENTAS tdc
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+	<query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.tlfExtornosConciliacion</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			WITH TLF_CONC_EXTORNAR_MOVS AS (
+			-- CONSULTA MOVIMIENTOS QUE DEBIERON SER REVERSADOS
+			SELECT 
+				d.JTS_OID_TP
+			FROM TLF_CONCILIACION_DETALLE d
+			INNER JOIN TLF_CONCILIACION_CABECERA c ON c.ID_CABECERA = d.ID_CABECERA
+			WHERE 
+				c.ESTADO_CONCILIACION = 'NO_OK'
+				and c.ESTADO_TLF = 'REVERSADA'
+				and c.IMPACTOS_ONLINE &gt; c.REVERSAS_ONLINE 
+                and c.FECHA_PROCESO = (SELECT FECHAPROCESO FROM PARAMETROS)
+			UNION ALL 
+			-- CONSULTA MOVIMIENTOS DUPLICADOS A EXTORNAR
+			SELECT 
+				d.JTS_OID_TP
+			FROM TLF_CONCILIACION_DETALLE d
+			INNER JOIN TLF_CONCILIACION_CABECERA c ON c.ID_CABECERA = d.ID_CABECERA
+			WHERE 
+				c.ESTADO_CONCILIACION = 'NO_OK'
+				AND c.ESTADO_TLF = 'APROBADA'
+				AND c.IMPACTOS_ONLINE &gt; 1
+                and c.FECHA_PROCESO = (SELECT FECHAPROCESO FROM PARAMETROS)
+				AND d.ID_DETALLE NOT IN (
+					SELECT MAX(d2.ID_DETALLE)
+					FROM TLF_CONCILIACION_DETALLE d2
+					INNER JOIN TLF_CONCILIACION_CABECERA c2 ON c2.ID_CABECERA = d2.ID_CABECERA
+					WHERE
+						c.ID_CABECERA = c2.ID_CABECERA)
+            UNION ALL
+            -- EXTORNOS DE MOVIMIENTOS RECHAZADOS POR LINK
+            SELECT d.JTS_OID_TP 
+            FROM TLF_CONCILIACION_DETALLE d
+            INNER JOIN TLF_CONCILIACION_CABECERA c ON c.ID_CABECERA = d.ID_CABECERA
+            WHERE c.ESTADO_TLF='RECHAZADA'
+                and c.ESTADO_CONCILIACION='NO_OK'
+                and c.IMPACTOS_ONLINE &gt; c.REVERSAS_ONLINE
+                and c.FECHA_PROCESO = (SELECT FECHAPROCESO FROM PARAMETROS)
+			) SELECT 
+				JTS_OID_TP AS NROSOLICITUD,
+				7650 AS OPERACION
+			FROM TLF_CONC_EXTORNAR_MOVS
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.altas_masivas</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT Id_Registro AS NROSOLICITUD, 4602 AS OPERACION FROM MA_BANDEJA_ENTRADA WHERE Estado='I'
+			AND (SELECT FECHAPROCESO FROM PARAMETROS) = ? AND NRO_LOTE = ?
+			ORDER BY Accion
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.Cobranza_PendientesPOS</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT JTS_OID_CUENTA AS NROSOLICITUD, 8718 AS OPERACION FROM VTA_PENDIENTES_POS P
+			WHERE P.JTS_OID_CUENTA NOT IN (SELECT GB.SALDO_JTS_OID FROM GRL_BLOQUEOS GB 
+			WHERE GB.ESTADO=1 AND GB.COD_BLOQUEO IN (SELECT CB.COD_BLOQUEO FROM GRL_COD_BLOQUEOS CB WHERE CB.ACCIONES_CREDITO=3))
+			AND P.ESTADO='I' AND P.TZ_LOCK=0
+
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.Cobranza_ReservasPOS</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT SALDO_JTS_OID AS NROSOLICITUD, 8717 AS OPERACION FROM VTA_RESERVAS R WITH(NOLOCK) 
+            INNER JOIN SALDOS S WITH(NOLOCK) ON S.JTS_OID=R.SALDO_JTS_OID
+            WHERE R.IMPORTE_ORIGEN &lt;=(S.C1604 + S.C1683 + S.C1605 + (S.C2627+R.IMPORTE_ORIGEN) + S.C50107)
+            AND TIPO_RESERVA=4 AND ESTADO=1 AND R.TZ_LOCK=0 AND S.TZ_LOCK=0
+            GROUP BY SALDO_JTS_OID 
+
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.ContabilizaRechazoCanjeInterno</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT NROSOLICITUD AS ALFASOLICITUD, 3404 AS OPERACION 
+			FROM VW_RECHAZO_SOL_CANJE_INT
+        </sentence>
+        <attribute>
+            <attribute-name>alfaSolicitud</attribute-name>
+            <column-name>ALFASOLICITUD</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.chequesElectronicosPropios</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT ID_CHEQUE AS nroSolicitud, 3695 AS operacion
+			FROM CLE_DEPOSITOS_ECHEQ
+			WHERE 
+				ESTADO = 'A'
+				AND TIPO_REG IN ('D')
+				AND TZ_LOCK = 0
+				AND CMC7 NOT IN (
+					SELECT CMC7 FROM CLE_CHEQUES_SALIENTE 
+					WHERE 
+						DESTINO_CHEQUE = 3
+						AND ((TZ_LOCK &lt; 100000000000000 OR TZ_LOCK &gt;= 200000000000000)
+							AND (TZ_LOCK &lt; 300000000000000 OR TZ_LOCK &gt;= 400000000000000)  
+						)
+				)
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.chequesElectronicosTerceros</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT ID_CHEQUE AS nroSolicitud, 3699 AS operacion
+			FROM CLE_DEPOSITOS_ECHEQ_TERCEROS
+			WHERE ESTADO = 'A' AND TIPO_REG IN ('D','N') AND TZ_LOCK = 0
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.sucursalesDeudaTarjetaCredito</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT tjc.SUCURSAL AS NROSOLICITUD, 2858 AS OPERACION
+			FROM TJC_SALDOS_SUCURSAL  tjc
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.fechaFolioLibroTesoreria</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT FECHAPROCESO AS alfaSolicitud, 3120 AS OPERACION
+				FROM PARAMETROS 
+        </sentence>
+        <attribute>
+            <attribute-name>alfaSolicitud</attribute-name>
+            <column-name>ALFASOLICITUD</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+        <query-name>query.chequesModificarEstado</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT VW_CHE_CHEQUES_PROCESO.IDENTIFICADOR AS NROSOLICITUD, 3461 AS OPERACION
+				FROM VW_CHE_CHEQUES_PROCESO
+				WHERE VW_CHE_CHEQUES_PROCESO.estado = 'A'
+				  AND VW_CHE_CHEQUES_PROCESO.serie = 'E'
+				  AND DATEADD(DAY, 31, VW_CHE_CHEQUES_PROCESO.FECHA_VENCIMIENTO) &lt; (select fechaproceso from parametros)
+        </sentence>
+        <attribute>
+            <attribute-name>nroSolicitud</attribute-name>
+            <column-name>NROSOLICITUD</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+    <class-name>
+    topsystems.automaticprocess.operaciondesasitidas.valueobjects.QueryOperacionSolicitud</class-name>
+    <query-name>query.djp_acpriv_post</query-name>
+    <database-name>TOP/CLIENTES</database-name>
+    <sentence>
+        SELECT TOP 1
+            L.ID AS "NROSOLICITUD",
+            187 AS "OPERACION"
+        FROM ITF_DJP_ACPRIV_LOTE L WITH (NOLOCK)
+        WHERE
+            (SELECT FECHAPROCESO FROM PARAMETROS) = ? AND
+            L.BANDEJA_LOTE_ID = ? AND
+            EXISTS (
+                SELECT TOP 1 
+                    1
+                FROM MA_BANDEJA_ENTRADA E
+                WHERE 
+                    E.Origen = 'CP' AND
+                    E.Nro_Lote = L.BANDEJA_LOTE_ID
+            )
+        ORDER BY (CASE WHEN L.ESTADO = 'I' THEN 1 ELSE 2 END) ASC, L.ID 
+    </sentence>
+    <attribute>
+    <attribute-name>nroSolicitud</attribute-name>
+    <column-name>NROSOLICITUD</column-name>
+    <column-type>long</column-type>
+    </attribute>
+    <attribute>
+    <attribute-name>operacion</attribute-name>
+    <column-name>OPERACION</column-name>
+    <column-type>long</column-type>
+    </attribute>
+    </query>
+</map>

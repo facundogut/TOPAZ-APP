@@ -1,0 +1,1096 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DESEMBOLSO" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0000000000000004"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 3_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 4_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 5_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Clientes Nuevos">
+		<parameter name="Sucursal" class="java.lang.String"/>
+		<parameter name="Oficial" class="java.lang.String"/>
+		<parameter name="Tipo Credito" class="java.lang.String"/>
+		<parameter name="Inicio" class="java.util.Date"/>
+		<parameter name="Fin" class="java.util.Date"/>
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{CodMoneda}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[--*************************************************************************
+--**DATASET NUEVO!!!!!!!!!!!!!!!!!!!!!!****************************************************************
+--********************************************************
+
+
+
+
+
+SELECT
+
+    Count(S.C1601)	AS NCliente
+
+
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+	  AND S.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND C.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND SUC.TZ_LOCK   	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND R.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+	  AND S.C9314=5
+	  AND S.C1728<>'C'
+	  AND S.C1621 BETWEEN $P{Inicio} AND $P{Fin}
+	  AND R.NOMBRE=$P{Oficial}
+	  AND SUC.DESCRIPCION=$P{Sucursal}
+	  AND S.MONEDA=$P{CodMoneda}
+	  AND C.C5004 IN  ('NUEVO')
+--GROUP
+	  GROUP BY SUC.DESCRIPCION,R.NOMBRE
+--ORDER
+	  ORDER BY SUC.DESCRIPCION,R.NOMBRE]]>
+		</queryString>
+		<field name="NCliente" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="Clientes No Nuevos">
+		<parameter name="Sucursal" class="java.lang.String"/>
+		<parameter name="Oficial" class="java.lang.String"/>
+		<parameter name="Tipo Credito" class="java.lang.String"/>
+		<parameter name="Inicio" class="java.util.Date"/>
+		<parameter name="Fin" class="java.util.Date"/>
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{CodMoneda}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[--*************************************************************************
+--**DATASET NUEVO!!!!!!!!!!!!!!!!!!!!!!****************************************************************
+--********************************************************
+
+
+SELECT
+
+    Count(S.C1601)	AS NCliente
+
+
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+	  AND S.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND C.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND SUC.TZ_LOCK   	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND R.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+	  AND S.C9314=5
+	  AND S.C1728<>'C'
+	  AND S.C1621 BETWEEN $P{Inicio} AND $P{Fin}
+	  AND R.NOMBRE=$P{Oficial}
+	  AND SUC.DESCRIPCION=$P{Sucursal}
+	  AND S.MONEDA=$P{CodMoneda}
+	  AND C.C5004 NOT IN  ('NUEVO')
+--GROUP
+	  GROUP BY SUC.DESCRIPCION,R.NOMBRE
+--ORDER
+	  ORDER BY SUC.DESCRIPCION,R.NOMBRE]]>
+		</queryString>
+		<field name="NCliente" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="Nuevos Por Sucursal">
+		<parameter name="Sucursal" class="java.lang.String"/>
+		<parameter name="Inicio" class="java.util.Date"/>
+		<parameter name="Fin" class="java.util.Date"/>
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{CodMoneda}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+
+    Count(S.C1601) AS SNCliente
+
+
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+	  AND S.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND C.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND SUC.TZ_LOCK   	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND R.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+          AND S.C9314=5
+          AND S.C1728<>'C'
+	  AND S.C1621 BETWEEN $P{Inicio} AND $P{Fin}
+	  AND SUC.DESCRIPCION=$P{Sucursal}
+	  AND S.MONEDA=$P{CodMoneda}
+	  AND C.C5004 IN ('NUEVO')
+
+--GROUP
+	  GROUP BY SUC.DESCRIPCION
+--ORDER
+	  ORDER BY SUC.DESCRIPCION]]>
+		</queryString>
+		<field name="SNCliente" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="No Nuevos por Sucursal">
+		<parameter name="Sucursal" class="java.lang.String"/>
+		<parameter name="Inicio" class="java.util.Date"/>
+		<parameter name="Fin" class="java.util.Date"/>
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{CodMoneda}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+
+    Count(S.C1601) AS SNoNCliente
+
+
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+	  AND S.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND C.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND SUC.TZ_LOCK   	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND R.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+          AND S.C9314=5
+          AND S.C1728<>'C'
+	  AND S.C1621 BETWEEN $P{Inicio} AND $P{Fin}
+	  AND SUC.DESCRIPCION=$P{Sucursal}
+	  AND S.MONEDA=$P{CodMoneda}
+	  AND C.C5004 NOT IN ('NUEVO')
+
+--GROUP
+	  GROUP BY SUC.DESCRIPCION
+--ORDER
+	  ORDER BY SUC.DESCRIPCION]]>
+		</queryString>
+		<field name="SNoNCliente" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="Todos Por Sucursal">
+		<parameter name="Sucursal" class="java.lang.String"/>
+		<parameter name="Inicio" class="java.util.Date"/>
+		<parameter name="Fin" class="java.util.Date"/>
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{CodMoneda}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+
+    Count(S.C1601) AS TotalSucNCliente
+
+
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+	  AND S.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND C.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND SUC.TZ_LOCK   	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND R.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+          AND S.C9314=5
+          AND S.C1728<>'C'
+	  AND S.C1621 BETWEEN $P{Inicio} AND $P{Fin}
+	  AND SUC.DESCRIPCION=$P{Sucursal}
+	  AND S.MONEDA=$P{CodMoneda}
+	  AND C.C5004 NOT IN ('CualquierCosa')
+
+
+--GROUP
+	  GROUP BY SUC.DESCRIPCION
+--ORDER
+	  ORDER BY SUC.DESCRIPCION]]>
+		</queryString>
+		<field name="TotalSucNCliente" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="Clientes Todos">
+		<parameter name="Sucursal" class="java.lang.String"/>
+		<parameter name="Oficial" class="java.lang.String"/>
+		<parameter name="Inicio" class="java.util.Date"/>
+		<parameter name="Fin" class="java.util.Date"/>
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{CodMoneda}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+
+    Count(S.C1601)	AS TotalCliente
+
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+	  AND S.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND C.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND SUC.TZ_LOCK   	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND R.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+	  AND S.C9314=5
+	  AND S.C1728<>'C'
+	  AND S.C1621 BETWEEN $P{Inicio} AND $P{Fin}
+	  AND R.NOMBRE=$P{Oficial}
+	  AND SUC.DESCRIPCION=$P{Sucursal}
+ 	  AND S.MONEDA=$P{CodMoneda}
+	  AND C.C5004 NOT IN  ('TodosLosCreditos')
+
+--GROUP
+	  GROUP BY SUC.DESCRIPCION,R.NOMBRE
+--ORDER
+	  ORDER BY SUC.DESCRIPCION,R.NOMBRE]]>
+		</queryString>
+		<field name="TotalCliente" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="TIPOMONEDA">
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[Select C6400 from CO_MONEDAS
+where C6399=$P{CodMoneda}]]>
+		</queryString>
+		<field name="C6400" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="TODOS NCLIENTES NO NUEVOS">
+		<parameter name="Inicio" class="java.util.Date"/>
+		<parameter name="Fin" class="java.util.Date"/>
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{CodMoneda}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+
+
+    Count(S.C1601)	AS NoNuevosTotal
+
+
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+	  AND S.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND C.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND SUC.TZ_LOCK       NOT BETWEEN 300000000000000      AND  399999999999999
+	  AND R.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+	  AND S.C9314=5
+	  AND S.C1728<>'C'
+	  AND S.C1621 BETWEEN $P{Inicio} AND $P{Fin}
+	  AND S.MONEDA=$P{CodMoneda}
+	  AND C.C5004 NOT IN  ('NUEVO')
+--GROUP
+
+--ORDER]]>
+		</queryString>
+		<field name="NoNuevosTotal" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="TODOS NCLIENTES NUEVOS">
+		<parameter name="Inicio" class="java.util.Date"/>
+		<parameter name="Fin" class="java.util.Date"/>
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{CodMoneda}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+
+
+    Count(S.C1601)	AS NuevosTotal
+
+
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+	  AND S.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND C.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND SUC.TZ_LOCK       NOT BETWEEN 300000000000000      AND  399999999999999
+	  AND R.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+	  AND S.C9314=5
+	  AND S.C1728<>'C'
+	  AND S.C1621 BETWEEN $P{Inicio} AND $P{Fin}
+	  AND S.MONEDA=$P{CodMoneda}
+	  AND C.C5004 IN  ('NUEVO')
+--GROUP
+
+--ORDER]]>
+		</queryString>
+		<field name="NuevosTotal" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="TODOS CLIENTES TODOS">
+		<parameter name="Inicio" class="java.util.Date"/>
+		<parameter name="Fin" class="java.util.Date"/>
+		<parameter name="CodMoneda" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[$P{CodMoneda}]]></defaultValueExpression>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT
+
+
+    Count(S.C1601)	AS TodosTotal
+
+
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+	  AND S.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND C.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+	  AND SUC.TZ_LOCK       NOT BETWEEN 300000000000000      AND  399999999999999
+	  AND R.TZ_LOCK 	NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+	  AND S.C9314=5
+	  AND S.C1728<>'C'
+	  AND S.C1621 BETWEEN $P{Inicio} AND $P{Fin}
+	  AND S.MONEDA=$P{CodMoneda}
+
+--GROUP
+
+--ORDER]]>
+		</queryString>
+		<field name="TodosTotal" class="java.lang.Integer"/>
+	</subDataset>
+	<parameter name="FECHA_DESDE" class="java.util.Date">
+		<parameterDescription><![CDATA[FECHA_DESDE]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="FECHA_HASTA" class="java.util.Date">
+		<parameterDescription><![CDATA[FECHA_HASTA]]></parameterDescription>
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="COD.MONEDA" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[COD_MONEDA]]></parameterDescription>
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	SUC.DESCRIPCION AS SUCURSAL,
+    R.NOMBRE        AS OFICIAL,
+--NUEVO
+    SUM(CASE C.C5004 WHEN  'NUEVO' THEN s.C1601
+      ELSE 0
+    END) AS NUEVO,
+--No Nuevo
+    SUM(CASE C.C5004 WHEN 'NUEVO' THEN 0
+        ELSE S.c1601
+        END) AS NO_NUEVO,
+--TOTAL
+    SUM(s.C1601) AS TOTAL
+
+FROM SALDOS S,SL_SOLICITUDCREDITO C,RH_FUNCIONARIO R,SUCURSALESSC SUC
+--JOIN
+WHERE S.C1704=C.C5000
+AND   SUC.SUCURSAL=S.SUCURSAL
+AND   S.C1670=R.CODFUNCIONARIO
+--TZ_LOCK
+AND S.TZ_LOCK NOT BETWEEN 300000000000000  AND  399999999999999
+AND C.TZ_LOCK NOT BETWEEN 300000000000000  AND  399999999999999
+AND R.TZ_LOCK NOT BETWEEN 300000000000000  AND  399999999999999
+--CONDITIONS
+AND S.C9314=5
+AND S.C1621 BETWEEN $P{FECHA_DESDE} AND $P{FECHA_HASTA}
+AND S.MONEDA=$P{COD.MONEDA}
+AND S.C1728<>'C'
+--GROUP
+GROUP BY SUC.DESCRIPCION,R.NOMBRE
+ORDER BY SUC.DESCRIPCION,R.NOMBRE]]>
+	</queryString>
+	<field name="SUCURSAL" class="java.lang.String"/>
+	<field name="OFICIAL" class="java.lang.String"/>
+	<field name="NUEVO" class="java.math.BigDecimal"/>
+	<field name="NO_NUEVO" class="java.math.BigDecimal"/>
+	<field name="TOTAL" class="java.math.BigDecimal"/>
+	<variable name="NUEVO_1" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
+		<variableExpression><![CDATA[$F{NUEVO}]]></variableExpression>
+	</variable>
+	<variable name="NO_NUEVO_1" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
+		<variableExpression><![CDATA[$F{NO_NUEVO}]]></variableExpression>
+	</variable>
+	<variable name="CNoNuevos" class="java.lang.Double"/>
+	<variable name="CNuevos" class="java.lang.Double"/>
+	<variable name="NCliente_1" class="java.lang.Integer" resetType="Group" resetGroup="SUCURSAL" calculation="Sum">
+		<variableExpression><![CDATA[]]></variableExpression>
+	</variable>
+	<variable name="Importe Total" class="java.lang.Double"/>
+	<variable name="NUEVO_2" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{NUEVO}]]></variableExpression>
+	</variable>
+	<variable name="NO_NUEVO_2" class="java.math.BigDecimal" resetType="Column" calculation="Sum">
+		<variableExpression><![CDATA[$F{NO_NUEVO}]]></variableExpression>
+	</variable>
+	<variable name="NUEVO_3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{NUEVO}]]></variableExpression>
+	</variable>
+	<variable name="NO_NUEVO_3" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{NO_NUEVO}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL}]]></variableExpression>
+	</variable>
+	<variable name="NO_NUEVO_4" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSALES" calculation="Sum">
+		<variableExpression><![CDATA[$F{NO_NUEVO}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_2" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSALES" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL}]]></variableExpression>
+	</variable>
+	<variable name="NO_NUEVO_5" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSALES" calculation="Sum">
+		<variableExpression><![CDATA[$F{NO_NUEVO}]]></variableExpression>
+	</variable>
+	<variable name="TOTAL_3" class="java.math.BigDecimal" resetType="Group" resetGroup="SUCURSALES" calculation="Sum">
+		<variableExpression><![CDATA[$F{TOTAL}]]></variableExpression>
+	</variable>
+	<group name="SUCURSAL">
+		<groupExpression><![CDATA[$F{SUCURSAL}]]></groupExpression>
+	</group>
+	<group name="SUCUR_SAL">
+		<groupExpression><![CDATA[$F{SUCURSAL}]]></groupExpression>
+		<groupHeader>
+			<band height="23">
+				<rectangle>
+					<reportElement x="0" y="1" width="555" height="20" backcolor="#999999"/>
+				</rectangle>
+				<textField evaluationTime="Group" evaluationGroup="SUCURSAL">
+					<reportElement x="156" y="0" width="60" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{NUEVO_1}]]></textFieldExpression>
+				</textField>
+				<componentElement>
+					<reportElement key="table 4" x="230" y="0" width="40" height="20"/>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="Nuevos Por Sucursal">
+							<datasetParameter name="Sucursal">
+								<datasetParameterExpression><![CDATA[$F{SUCURSAL}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Inicio">
+								<datasetParameterExpression><![CDATA[$P{FECHA_DESDE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Fin">
+								<datasetParameterExpression><![CDATA[$P{FECHA_HASTA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="CodMoneda">
+								<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:column width="90">
+							<jr:detailCell height="20">
+								<textField>
+									<reportElement x="0" y="0" width="90" height="20"/>
+									<textElement verticalAlignment="Middle"/>
+									<textFieldExpression class="java.lang.Integer"><![CDATA[$F{SNCliente}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+				<componentElement>
+					<reportElement key="table 4" x="369" y="0" width="40" height="20"/>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="No Nuevos por Sucursal">
+							<datasetParameter name="Sucursal">
+								<datasetParameterExpression><![CDATA[$F{SUCURSAL}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Inicio">
+								<datasetParameterExpression><![CDATA[$P{FECHA_DESDE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Fin">
+								<datasetParameterExpression><![CDATA[$P{FECHA_HASTA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="CodMoneda">
+								<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:column width="90">
+							<jr:detailCell height="20">
+								<textField>
+									<reportElement x="0" y="0" width="90" height="20"/>
+									<textElement verticalAlignment="Middle"/>
+									<textFieldExpression class="java.lang.Integer"><![CDATA[$F{SNoNCliente}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+				<componentElement>
+					<reportElement key="table 4" x="495" y="1" width="53" height="20"/>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="Todos Por Sucursal">
+							<datasetParameter name="Sucursal">
+								<datasetParameterExpression><![CDATA[$F{SUCURSAL}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Inicio">
+								<datasetParameterExpression><![CDATA[$P{FECHA_DESDE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Fin">
+								<datasetParameterExpression><![CDATA[$P{FECHA_HASTA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="CodMoneda">
+								<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:column width="90">
+							<jr:detailCell height="20">
+								<textField>
+									<reportElement x="0" y="0" width="90" height="20"/>
+									<textElement verticalAlignment="Middle"/>
+									<textFieldExpression class="java.lang.Integer"><![CDATA[$F{TotalSucNCliente}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+				<textField>
+					<reportElement x="6" y="0" width="107" height="20"/>
+					<textElement verticalAlignment="Middle"/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SUCURSALES">
+					<reportElement x="284" y="0" width="63" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{NO_NUEVO_5}]]></textFieldExpression>
+				</textField>
+				<textField evaluationTime="Group" evaluationGroup="SUCURSALES">
+					<reportElement x="417" y="1" width="60" height="20"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{TOTAL_3}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+	</group>
+	<group name="SUCURSALES">
+		<groupExpression><![CDATA[$F{SUCURSAL}]]></groupExpression>
+	</group>
+	<group name="OFICIAL">
+		<groupExpression><![CDATA[$F{OFICIAL}]]></groupExpression>
+		<groupHeader>
+			<band height="28">
+				<textField>
+					<reportElement x="6" y="8" width="147" height="20"/>
+					<textElement>
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{OFICIAL}]]></textFieldExpression>
+				</textField>
+				<componentElement>
+					<reportElement key="table 3" x="230" y="8" width="40" height="20"/>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="Clientes Nuevos">
+							<datasetParameter name="Sucursal">
+								<datasetParameterExpression><![CDATA[$F{SUCURSAL}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Oficial">
+								<datasetParameterExpression><![CDATA[$F{OFICIAL}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Inicio">
+								<datasetParameterExpression><![CDATA[$P{FECHA_DESDE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Fin">
+								<datasetParameterExpression><![CDATA[$P{FECHA_HASTA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="CodMoneda">
+								<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:column width="90">
+							<jr:detailCell height="20">
+								<textField>
+									<reportElement x="0" y="0" width="90" height="20"/>
+									<textElement verticalAlignment="Top"/>
+									<textFieldExpression class="java.lang.Integer"><![CDATA[$F{NCliente}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+				<componentElement>
+					<reportElement key="table 3" x="369" y="8" width="40" height="20"/>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="Clientes No Nuevos">
+							<datasetParameter name="Sucursal">
+								<datasetParameterExpression><![CDATA[$F{SUCURSAL}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Oficial">
+								<datasetParameterExpression><![CDATA[$F{OFICIAL}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Inicio">
+								<datasetParameterExpression><![CDATA[$P{FECHA_DESDE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Fin">
+								<datasetParameterExpression><![CDATA[$P{FECHA_HASTA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="CodMoneda">
+								<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:column width="90">
+							<jr:detailCell height="20">
+								<textField>
+									<reportElement x="0" y="0" width="90" height="20"/>
+									<textElement/>
+									<textFieldExpression class="java.lang.Integer"><![CDATA[$F{NCliente}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+				<textField>
+					<reportElement x="156" y="8" width="60" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NUEVO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="287" y="8" width="60" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NO_NUEVO}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="417" y="8" width="60" height="20"/>
+					<textElement textAlignment="Right"/>
+					<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TOTAL}]]></textFieldExpression>
+				</textField>
+				<componentElement>
+					<reportElement key="table 4" x="495" y="8" width="53" height="20"/>
+					<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+						<datasetRun subDataset="Clientes Todos">
+							<datasetParameter name="Sucursal">
+								<datasetParameterExpression><![CDATA[$F{SUCURSAL}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Oficial">
+								<datasetParameterExpression><![CDATA[$F{OFICIAL}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Inicio">
+								<datasetParameterExpression><![CDATA[$P{FECHA_DESDE}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="Fin">
+								<datasetParameterExpression><![CDATA[$P{FECHA_HASTA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="CodMoneda">
+								<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+							</datasetParameter>
+							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+						</datasetRun>
+						<jr:column width="90">
+							<jr:detailCell height="20">
+								<textField>
+									<reportElement x="0" y="0" width="90" height="20"/>
+									<textElement/>
+									<textFieldExpression class="java.lang.Integer"><![CDATA[$F{TotalCliente}]]></textFieldExpression>
+								</textField>
+							</jr:detailCell>
+						</jr:column>
+					</jr:table>
+				</componentElement>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="75" width="285" height="25"/>
+			</rectangle>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="120" y="75" width="68" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{FECHA_DESDE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="217" y="75" width="68" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="13"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$P{FECHA_HASTA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="4" y="75" width="109" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="13"/>
+				</textElement>
+				<text><![CDATA[Desembolsos del ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="197" y="75" width="11" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="13"/>
+				</textElement>
+				<text><![CDATA[a]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="318" y="55" width="55" height="20"/>
+				<textElement/>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table 6" x="394" y="55" width="58" height="20"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="TIPOMONEDA">
+						<datasetParameter name="CodMoneda">
+							<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90">
+						<jr:detailCell height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{C6400}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement x="0" y="0" width="555" height="26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="20"/>
+				</textElement>
+				<text><![CDATA[Reporte Desembolsos]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="43" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="40" backcolor="#999999"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="195" y="0" width="79" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Nuevos        ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="138" y="20" width="79" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Desembolsado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="0" width="100" height="40"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Sucursal / Oficial]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="412" y="2" width="74" height="39"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Total Desembolsado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="495" y="2" width="53" height="39"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="11"/>
+				</textElement>
+				<text><![CDATA[Total NCliente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="223" y="20" width="44" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[NClientes]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="321" y="2" width="79" height="20" isPrintWhenDetailOverflows="true"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Recurrente]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="271" y="20" width="79" height="20"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[Desembolsado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="362" y="20" width="44" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="SansSerif" size="11"/>
+				</textElement>
+				<text><![CDATA[NClientes]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<pageFooter>
+		<band height="3" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="27" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="25" backcolor="#999999"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="6" y="5" width="107" height="20"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Total General]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="156" y="5" width="59" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{NUEVO_3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="287" y="5" width="60" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{NO_NUEVO_3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="417" y="5" width="60" height="20"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$V{TOTAL_1}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table 6" x="230" y="5" width="40" height="20"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="TODOS NCLIENTES NUEVOS">
+						<datasetParameter name="Inicio">
+							<datasetParameterExpression><![CDATA[$P{FECHA_DESDE}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="Fin">
+							<datasetParameterExpression><![CDATA[$P{FECHA_HASTA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="CodMoneda">
+							<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90">
+						<jr:detailCell height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.Integer"><![CDATA[$F{NuevosTotal}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 6" x="369" y="5" width="40" height="20"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="TODOS NCLIENTES NO NUEVOS">
+						<datasetParameter name="Inicio">
+							<datasetParameterExpression><![CDATA[$P{FECHA_DESDE}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="Fin">
+							<datasetParameterExpression><![CDATA[$P{FECHA_HASTA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="CodMoneda">
+							<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90">
+						<jr:detailCell height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.Integer"><![CDATA[$F{NoNuevosTotal}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<componentElement>
+				<reportElement key="table 6" x="495" y="5" width="53" height="20"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="TODOS CLIENTES TODOS">
+						<datasetParameter name="Inicio">
+							<datasetParameterExpression><![CDATA[$P{FECHA_DESDE}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="Fin">
+							<datasetParameterExpression><![CDATA[$P{FECHA_HASTA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="CodMoneda">
+							<datasetParameterExpression><![CDATA[$P{COD.MONEDA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90">
+						<jr:detailCell height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20"/>
+								<textElement/>
+								<textFieldExpression class="java.lang.Integer"><![CDATA[$F{TodosTotal}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</summary>
+</jasperReport>

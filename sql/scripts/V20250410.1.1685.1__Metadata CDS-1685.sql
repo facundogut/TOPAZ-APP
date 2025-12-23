@@ -1,0 +1,8 @@
+﻿EXECUTE('
+----------------------
+--OPERACIÓN OBSOLETA--
+----------------------
+UPDATE dbo.OPERACIONES
+SET TITULO = 9999
+WHERE TITULO = 1000 AND IDENTIFICACION = 233
+')

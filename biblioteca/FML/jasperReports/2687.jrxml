@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-08-20T12:40:03 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4_13" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="12214339-fb43-402e-aad3-13d55ba15115">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH Data Adapter "/>
+	<parameter name="NRO_CONVENIO" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Número de Convenio]]></parameterDescription>
+	</parameter>
+	<parameter name="TOPAZ_SUCURSAL_SISTEMA" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SELECT TOP 1
+	--CONVENIO--
+	(SELECT CASE CONCAT('',a.Cuit) WHEN '0' THEN REPLICATE('_',11) WHEN '' THEN REPLICATE('_',11) ELSE CONCAT('',a.Cuit) END) AS Cuit,
+	(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',5) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',a.Plazo) END) AS Plazo, 
+	(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',10) ELSE dbo.Fn_NumberToWords(a.Plazo) END) AS W_Plazo,
+	a.FecAlta, 
+	a.Id_ConvPago, 
+	(SELECT CASE CONCAT('',a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE LEFT(CONVERT(VARCHAR,a.FecAlta,106),2) END) AS DIA,  
+	(SELECT CASE CONCAT('', a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE (SELECT dbo.Fn_NumberToWords(RIGHT(CONVERT(VARCHAR,FecAlta,106),4))) END) AS AÑO,
+	
+	-- CUENTA DEBITO -- 
+	(SELECT CASE CONCAT('',b.CUENTA) WHEN '' THEN REPLICATE('_',12)  ELSE CONCAT('',b.CUENTA) END)AS CUENTA, 
+	(SELECT CASE CONCAT('',e.C6251) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',e.C6251) END )AS TIPO_CUENTA,
+	(SELECT CASE CONCAT('',b.SUCURSAL) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',b.SUCURSAL) END) AS SUCURSAL, 
+	(SELECT CASE CONCAT('',d.NOMBRESUCURSAL) WHEN ''  THEN REPLICATE('_',25)  ELSE CONCAT('',d.NOMBRESUCURSAL) END) AS LOC_SUC, 
+	
+	
+	-- DIRECCION FISCAL --
+	(SELECT CASE CONCAT('',tf.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',n.NUMERO) END) AS TEL_DF,
+	(SELECT  CASE CONCAT('',n.CALLE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',n.CALLE)  END) AS CALLE_DF, 
+	(SELECT CASE CONCAT('',n.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',n.NUMERO) END) AS NRO_DF, 
+	(SELECT CASE CONCAT('apto ',n.APARTAMENTO) WHEN 'apto ' THEN '' ELSE CONCAT('apto ',n.APARTAMENTO) END)AS APTO_DF, 
+   	(SELECT CASE CONCAT('piso ',n.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ',n.PISO)  END) AS PISO_DF,
+	(SELECT CASE CONCAT('',p.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',p.DESCRIPCION_DIM3) END) AS LOCALIDAD_DF,
+	(SELECT CASE CONCAT('', o.DESCRIPCION) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('', o.DESCRIPCION) END) AS PROVINCIA_DF,
+	
+	--DIRECCION REAL --
+	(SELECT CASE CONCAT('',tr.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',n.NUMERO) END ) AS TEL_DR,
+	(SELECT CASE CONCAT('',r.CALLE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',r.CALLE) END) AS CALLE_DR,
+	(SELECT CASE CONCAT('',r.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',r.NUMERO) END) AS NRO_DR,
+	(SELECT CASE CONCAT('apto ',r.APARTAMENTO) WHEN 'apto ' THEN '' ELSE  CONCAT('apto ',r.APARTAMENTO) END) AS APTO_DR,
+	(SELECT CASE CONCAT('piso ', r.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ', r.PISO) END) AS PISO_DR,
+	(SELECT CASE CONCAT('',t.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',t.DESCRIPCION_DIM3) END) AS LOCALIDAD_DR,
+	(SELECT CASE CONCAT('',s.DESCRIPCION) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',s.DESCRIPCION) END)  AS PROVINCIA_DR,
+	
+	-- SUCURSAL -- 
+	(SELECT CASE CONCAT('',v.NOMBREDEP) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('',v.NOMBREDEP) END) AS DEP_CONTRATO,
+	
+	--CLIENTE  --
+	(SELECT CASE CONCAT('', w.NOMBRECLIENTE) WHEN '' THEN REPLICATE('_',25) ELSE CONCAT('', w.NOMBRECLIENTE) END) AS NOMBRECLIENTE,
+	(SELECT CASE CONCAT('',w.TIPO) WHEN '' THEN REPLICATE('_',15) WHEN 'J' THEN 'la Empresa' WHEN 'I' THEN 'la Institución' WHEN 'F' THEN 'la Persona' END) AS REPRESENTACION
+	
+	
+	FROM CONV_CONVENIOS_PAG a 
+    --CUENTA PAG --
+    LEFT JOIN SALDOS b ON a.CuentaDeb = b.JTS_OID AND b.TZ_LOCK = 0
+    LEFT JOIN CLI_DIRECCIONES c ON b.SUCURSAL = c.ID AND c.TZ_LOCK = 0
+    LEFT JOIN SUCURSALES d ON d.SUCURSAL = b.SUCURSAL AND d.TZ_LOCK = 0
+    LEFT JOIN PRODUCTOS e ON b.PRODUCTO = e.C6250 AND e.TZ_LOCK = 0
+    --DIRECCION FISCAL--
+    LEFT JOIN CLI_ClientePersona x ON a.Cliente = x.CODIGOCLIENTE AND x.TITULARIDAD = 'T' AND x.TZ_LOCK = 0
+	LEFT JOIN CLI_DIRECCIONES n ON x.NUMEROPERSONA = n.ID AND n.TIPODIRECCION IN ('F') AND n.FORMATO IN ('PF', 'PJ') AND n.ORDINAL_DIR = 1 AND n.TZ_LOCK = 0
+	LEFT JOIN CLI_TELEFONOS tf ON tf.ID = x.NUMEROPERSONA AND tf.FORMATO IN ('PF','PJ') AND tf.ORDINAL = 1 AND tf.TIPO = 'LE' AND tf.TZ_LOCK = 0
+	LEFT JOIN CLI_PROVINCIAS o ON o.CODIGOPAIS =n.PAIS AND o.DIM1 = n.PROVINCIA AND o.TZ_LOCK = 0
+	LEFT JOIN CLI_LOCALIDADES p ON p.DIM1 = n.PROVINCIA AND p.DIM2 = n.DEPARTAMENTO AND p.DIM3 = n.LOCALIDAD AND p.TZ_LOCK = 0
+    --DIRECCION REAL--
+    LEFT JOIN CLI_ClientePersona z ON a.Cliente = z.CODIGOCLIENTE AND z.TITULARIDAD = 'T' AND z.TZ_LOCK = 0
+	LEFT JOIN  CLI_DIRECCIONES r ON z.NUMEROPERSONA = r.ID AND a.Dir_Formato = r.FORMATO AND r.TIPODIRECCION  IN ('R', 'L') AND r.TZ_LOCK = 0
+	LEFT JOIN CLI_TELEFONOS tr ON z.NUMEROPERSONA = tr.ID AND tr.FORMATO IN ('PF','PJ') AND tr.ORDINAL = 1 AND tr.TIPO IN ('LE','PE') AND tr.TZ_LOCK = 0
+    LEFT JOIN  CLI_PROVINCIAS s ON s.CODIGOPAIS = r.PAIS AND s.DIM1 = r.PROVINCIA AND s.TZ_LOCK = 0 AND s.TZ_LOCK = 0
+	LEFT JOIN CLI_LOCALIDADES t ON t.DIM1 = r.PROVINCIA AND t.DIM2 = r.DEPARTAMENTO AND t.DIM3 = r.LOCALIDAD AND t.TZ_LOCK = 0
+    --SUCURSAL --
+    LEFT JOIN CLI_DIRECCIONES u ON u.ID = $P{TOPAZ_SUCURSAL_SISTEMA} AND u.TZ_LOCK = 0
+    LEFT JOIN CLI_DEPARTAMENTOS v ON v.CODIGOPAIS = u.PAIS AND v.DEPARTAMENTO = u.DEPARTAMENTO AND v.PROVINCIA = u.PROVINCIA AND v.TZ_LOCK = 0
+    
+    --CLIENTE ---
+	LEFT JOIN CLI_CLIENTES w ON w.CODIGOCLIENTE = a.Cliente AND w.TZ_LOCK = 0
+	WHERE a.Id_ConvPago = $P{NRO_CONVENIO} AND a.TZ_LOCK = 0]]>
+	</queryString>
+	<field name="Cuit" class="java.lang.String"/>
+	<field name="Plazo" class="java.lang.String"/>
+	<field name="W_Plazo" class="java.lang.String"/>
+	<field name="FecAlta" class="java.sql.Timestamp"/>
+	<field name="Id_ConvPago" class="java.math.BigDecimal"/>
+	<field name="DIA" class="java.lang.String"/>
+	<field name="AÑO" class="java.lang.String"/>
+	<field name="CUENTA" class="java.lang.String"/>
+	<field name="TIPO_CUENTA" class="java.lang.String"/>
+	<field name="SUCURSAL" class="java.lang.String"/>
+	<field name="LOC_SUC" class="java.lang.String"/>
+	<field name="TEL_DF" class="java.lang.String"/>
+	<field name="CALLE_DF" class="java.lang.String"/>
+	<field name="NRO_DF" class="java.lang.String"/>
+	<field name="APTO_DF" class="java.lang.String"/>
+	<field name="PISO_DF" class="java.lang.String"/>
+	<field name="LOCALIDAD_DF" class="java.lang.String"/>
+	<field name="PROVINCIA_DF" class="java.lang.String"/>
+	<field name="TEL_DR" class="java.lang.String"/>
+	<field name="CALLE_DR" class="java.lang.String"/>
+	<field name="NRO_DR" class="java.lang.String"/>
+	<field name="APTO_DR" class="java.lang.String"/>
+	<field name="PISO_DR" class="java.lang.String"/>
+	<field name="LOCALIDAD_DR" class="java.lang.String"/>
+	<field name="PROVINCIA_DR" class="java.lang.String"/>
+	<field name="DEP_CONTRATO" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="REPRESENTACION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="82" splitType="Stretch">
+			<image>
+				<reportElement x="50" y="10" width="130" height="60" uuid="22db34a1-3ad1-4429-8ac8-ed475798e588"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="673" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="52" y="120" width="450" height="90" uuid="e70ff0ce-658a-4ce3-8d11-0acd41aa487a"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p>Me dirijo a usted a los efectos de solicitar la habilitación del Convenio/Producto 25 para Acreditación de Depósitos Judiciales por un plazo de <b>"+$F{Plazo}+"</b> Meses para la empresa CUIT "+$F{Cuit}+" relacionándolo a la cuenta "+$F{TIPO_CUENTA}+" Nº "+$F{CUENTA}+" de la Sucursal "+$F{LOC_SUC}+" ("+$F{SUCURSAL}+") dando cumplimiento a lo oportunamente informado por el Banco nota Nº 01/14.</p><br>"+
+
+"<p>Solicito se genere Usuario y Clave de Autoconsultas para el <b>CUIT "+$F{Cuit}+"</b></p><br>"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="62" y="539" width="140" height="18" uuid="e0c3b35f-f4e7-4790-a193-9f29a902c8e3"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Firma y Aclaración del Cliente]]></text>
+			</staticText>
+			<line>
+				<reportElement x="52" y="530" width="160" height="1" uuid="bafdfaf3-235a-4fd3-9a8e-1e349d992a0e"/>
+			</line>
+			<staticText>
+				<reportElement x="312" y="540" width="190" height="18" uuid="9d74fac3-f6e7-4f54-93fb-24eebfb11127"/>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[Control en Sucursal - Firma y Sello]]></text>
+			</staticText>
+			<line>
+				<reportElement x="312" y="530" width="190" height="1" uuid="2f8b3473-4390-4e81-a7ca-45de36dfc72e"/>
+			</line>
+			<textField>
+				<reportElement x="0" y="80" width="555" height="19" uuid="8b34e563-fdf3-4234-bad3-53104a4d9880"/>
+				<textElement textAlignment="Center" markup="html">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<u><b>As. ADHESION ACREDITACION DEPOSITOS JUDICIALES N° "+$P{NRO_CONVENIO}+"</b></u>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="182" y="20" width="320" height="24" uuid="e0136341-b7b8-41c5-8885-2ebd0bb743f3"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Resistencia "+$F{DIA}+" de "+new SimpleDateFormat("MMMM").format($F{FecAlta})+" de "+$F{AÑO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="21" width="100" height="23" uuid="475b274c-75c5-4b10-b698-4dc37f64afed"/>
+				<text><![CDATA[Al NBCH S.A.]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="52" y="230" width="10" height="10" uuid="a3c0096d-c29e-405f-92ba-a2f815cd13f4"/>
+			</rectangle>
+			<textField>
+				<reportElement stretchType="RelativeToBandHeight" x="70" y="230" width="431" height="30" uuid="3e19acaa-eb17-4af9-a2f4-b2eb90536766"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p>Solicito que al Usuario de Autoconsultas se le asigne el Rol de Consulta de Saldo y Acreditaciones Judiciales (para el caso de un único operador).</p><br>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="270" width="430" height="60" uuid="262881bf-bc8f-4066-88b3-0cd1251eb29a"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p>Cuando las Acreditaciones Judiciales las realice un operador distinto del firmante, solicito se genere un Nuevo Usuario y Clave, bajo el mismo <b>CUIT</b>, proponiendo como nombre de Usuario _________________________ Al cual se le asigne solamente el Rol de Acreditaciones Judiciales.</p><br>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="350" width="440" height="150" uuid="3f0c916f-35b1-48fa-95ca-99f7351796df"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p><b>Comunicaciones del Banco al Cliente.</b> Notificaciones: aceptamos como medio de comunicación fehaciente, el envío por el Banco de un correo electrónico a la dirección que a continuación y en forma manuscrita el mismo inserta, obligándose a consultar diariamente la misma. Las comunicaciones así remitidas se considerarán realizadas en la fecha de alta del convenio:<br> _______________________________________________________________________________</p><br>"+
+
+
+
+"<p>Atentamente.</p><br>"]]></textFieldExpression>
+			</textField>
+			<rectangle>
+				<reportElement x="50" y="270" width="10" height="10" uuid="28f9a0e6-3355-4bae-b2e9-83ca9645dd83"/>
+			</rectangle>
+		</band>
+	</detail>
+</jasperReport>

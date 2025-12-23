@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/depjudicial/getCausaxAtr/juzgado/{juzgado}/expediente/{Expediente}/ano/{anoCausa}/tipo/{TipoCausa}/estado/{estado}/caratula/{caratula}/fechaCreacion/{fechaCreacion}/{pagina}/{largopagina}</uri>
+    <serviceDescription>ConsultaIdCausaxatributos</serviceDescription>
+    <title>ConsultaIdCausaxatributos</title>
+    <querys>
+        <query id="1" name="paginado" type="MULTIPLE">
+            <sql>&#13;
+&#13;
+DECLARE 
+    -- Parámetros &#13;
+    @JUZGADO NUMERIC(12,0) = ?, &#13;
+    @EXPEDIENTE VARCHAR(12) = ?, &#13;
+    @ANO NUMERIC(4,0) = ?, &#13;
+    @TIPO_CAUSA VARCHAR(2) = ?, &#13;
+    @ESTADO VARCHAR(1) = ?, &#13;
+    @CARATULA VARCHAR(250) = ?,&#13;
+	@FECHA_CAUSA VARCHAR(12) = ?, &#13;
+    -- Paginado &#13;
+    @pagina AS INT ,&#13;
+    @largopagina AS INT ,&#13;
+    @TotalRegistros INT = 0,&#13;
+    @resto INT = 0,&#13;
+    @primerRegistroPag INT = 0,&#13;
+    @ultimoRegistroPag INT =0;&#13;
+
+  SET @ESTADO = (SELECT CASE WHEN @ESTADO = ' ' THEN CONCAT('%', '', '%') ELSE @ESTADO END);&#13;
+  SET @CARATULA = (SELECT CASE WHEN @CARATULA = ' ' THEN CONCAT('%', '', '%') ELSE CONCAT('%', @CARATULA, '%') END);&#13;
+
+  SET @pagina =?;&#13;
+  SET @largopagina =?;&#13;
+IF(@FECHA_CAUSA='0' OR @FECHA_CAUSA=' ')&#13;
+SET @FECHA_CAUSA = '19000101';&#13;
+&#13;
+  SET @TotalRegistros = ( SELECT COUNT(dc.NRO_CAUSA) FROM DJ_CAUSAS AS dc (nolock) &#13;
+WHERE (dc.JUZGADO=@JUZGADO OR @JUZGADO=0) AND (dc.EXPEDIENTE=@EXPEDIENTE OR @EXPEDIENTE=' ')&#13;
+AND (dc.ESTADO LIKE @ESTADO)&#13;
+AND (dc.ANO=@ANO OR @ANO=0) AND (dc.TIPO_CAUSA=@TIPO_CAUSA OR @TIPO_CAUSA=' ') AND (dc.CARATULA like @CARATULA OR @CARATULA='') AND (dc.FECHA_CAUSA=CAST(@FECHA_CAUSA AS DATE) OR @FECHA_CAUSA='19000101')&#13;
+AND ((dc.TZ_LOCK &lt; 300000000000000 OR dc.TZ_LOCK &gt;= 400000000000000) AND (dc.TZ_LOCK &lt; 100000000000000 OR dc.TZ_LOCK &gt;= 200000000000000))&#13;
+&#13;
+ ) ;&#13;
+&#13;
+  SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina)&#13;
+  SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1&#13;
+  SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina)&#13;
+  &#13;
+  IF (@resto &lt; 0)&#13;
+  	BEGIN&#13;
+  		SET @resto = 0&#13;
+  	END &#13;
+  IF (@ultimoRegistroPag &gt;@TotalRegistros )&#13;
+  	BEGIN&#13;
+  	    SET @ultimoRegistroPag=@TotalRegistros&#13;
+  	END &#13;
+  &#13;
+&#13;
+IF(@pagina&gt;(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)))&#13;
+BEGIN&#13;
+SELECT NULL AS NRO_CAUSA,&#13;
+	@pagina 																	AS paginaActual, &#13;
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,&#13;
+	@largopagina 																AS registroPorPag,&#13;
+	@TotalRegistros 														  	AS totalRegistros,&#13;
+	@primerRegistroPag 													  		AS primerRegistroPag,&#13;
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,&#13;
+	@resto 																	  	AS siguientesRegistros &#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+SELECT 	ROW_NUMBER() OVER(ORDER BY NRO_CAUSA) AS ORDEN, &#13;
+		NRO_CAUSA,&#13;
+		paginaActual,&#13;
+		cantidadPaginas,&#13;
+		registroPorPag,&#13;
+		totalRegistros,&#13;
+		primerRegistroPag,&#13;
+		ultimoRegistroPag,&#13;
+		siguientesRegistros&#13;
+		&#13;
+&#13;
+FROM&#13;
+(SELECT dc.NRO_CAUSA,&#13;
+	@pagina 																	AS paginaActual, &#13;
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,&#13;
+	@largopagina 																AS registroPorPag,&#13;
+	@TotalRegistros 														  	AS totalRegistros,&#13;
+	@primerRegistroPag 													  		AS primerRegistroPag,&#13;
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,&#13;
+	@resto 																	  	AS siguientesRegistros 		&#13;
+	 FROM DJ_CAUSAS AS dc (nolock)
+WHERE (dc.JUZGADO=@JUZGADO OR @JUZGADO=0) AND (dc.EXPEDIENTE=@EXPEDIENTE OR @EXPEDIENTE=' ')&#13;
+AND (dc.ESTADO LIKE @ESTADO)&#13;
+AND (dc.ANO=@ANO OR @ANO=0) AND (dc.TIPO_CAUSA=@TIPO_CAUSA OR @TIPO_CAUSA=' ') AND (dc.CARATULA like @CARATULA OR @CARATULA=' ') AND (dc.FECHA_CAUSA=CAST(@FECHA_CAUSA AS DATE) OR @FECHA_CAUSA='19000101')&#13;
+AND ((dc.TZ_LOCK &lt; 300000000000000 OR dc.TZ_LOCK &gt;= 400000000000000) AND (dc.TZ_LOCK &lt; 100000000000000 OR dc.TZ_LOCK &gt;= 200000000000000))&#13;
+&#13;
+&#13;
+) DATOS &#13;
+ORDER BY ORDEN&#13;
+OFFSET ((@pagina - 1) * @largopagina) ROWS &#13;
+FETCH NEXT @largopagina ROWS ONLY;&#13;
+&#13;
+END&#13;
+</sql>
+            <input>
+                <inParameter description="" type="FLOAT">juzgado</inParameter>
+                <inParameter description="" type="STRING">Expediente</inParameter>
+                <inParameter description="" type="INTEGER">anoCausa</inParameter>
+                <inParameter description="" type="STRING">TipoCausa</inParameter>
+                <inParameter description="" type="STRING">estado</inParameter>
+                <inParameter description="" type="STRING">caratula</inParameter>
+                <inParameter description="" type="STRING">fechaCreacion</inParameter>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="causas">
+                    <outParameter description="" type="LONG">
+                        <queryname>NRO_CAUSA</queryname>
+                        <servicename>idCausa</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

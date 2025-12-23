@@ -1,0 +1,67 @@
+﻿Execute('CREATE OR ALTER VIEW [dbo].[VW_CUENTAS]
+										(
+											CUENTA,
+											NOMBRE,
+											PRODUCTO,
+											DESCRIPCION,
+											MONEDA,
+											DESCRIPCION_MONEDA,
+											SUCURSAL,
+											ORDINAL,
+											OPERACION,
+											CLIENTE,
+											TIPO_DOCUMENTO,
+											DOCUMENTO,
+											TIPOPROD,
+											BLOQUEO,
+											C1728,
+											TIPO_SALDO_FONDO,
+											RUBRO,
+											C1651,
+											SALDO_ACTUAL,
+											C1601,
+											JTS_OID,
+											VISUALIZABLE,
+											NOMBRE_RUBRO
+										) AS 
+SELECT	S.CUENTA, 
+		VS.NOMBRE_CUENTA, 
+		S.PRODUCTO, 
+		P.C6251, 
+		S.MONEDA,
+		M.C6400,
+		S.SUCURSAL, 
+		S.ORDINAL, 
+		S.OPERACION, 
+		S.C1803, 
+		D.TIPODOC, 
+		D.NUMERODOC , 
+		S.C1785, 
+   		CASE WHEN S.C1679=''1'' THEN ''Si'' ELSE ''No'' END AS BLOQUEO, 
+		S.C1728, 
+		S.TIPO_SALDO_FONDO, 
+		S.C1730, 
+		S.C1651, 
+		(S.C1604 + S.C1605 + S.C1683),
+		S.C1601, 
+		S.JTS_OID, 
+		S.C1694, 
+		PL.C6300
+FROM SALDOS AS S with (nolock)
+INNER JOIN VTA_SALDOS AS VS with (nolock) ON 
+	S.JTS_OID = VS.JTS_OID_SALDO
+	AND VS.TZ_LOCK = 0
+INNER JOIN PRODUCTOS AS P with (nolock) ON 
+	S.PRODUCTO = P.C6250 
+	AND S.C1785 = P.C6252
+	AND P.TZ_LOCK = 0 
+INNER JOIN VW_CLI_X_DOC AS D with (nolock) ON 
+	S.C1803 = D.[CODIGOCLIENTE] 
+INNER JOIN PLANCTAS PL with (nolock) ON 
+	S.C1730 = PL.C6301
+	AND PL.TZ_LOCK = 0
+INNER JOIN MONEDAS M with (nolock) ON 
+	S.MONEDA = M.C6399
+	AND M.TZ_LOCK = 0
+WHERE 
+	S.TZ_LOCK = 0')

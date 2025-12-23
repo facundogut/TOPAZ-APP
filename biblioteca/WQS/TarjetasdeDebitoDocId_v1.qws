@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/vinculacion/tdbyDocID/{nroDocId}/{estadoTJ}/{pagina}/{largoPagina}</uri>
+    <serviceDescription>El servicio retorna los id_Tarcommand:editor.action.unicodeHighlight.disableHighlightingOfInvisibleCharactersjeta correspondientes a Tarjetas de Débito que se encuentren vinculadas a la persona indicada por parámetro mediante el documento identificativo.</serviceDescription>
+    <title>Tarjetas de Debito x Doc. Identificativo</title>
+    <querys>
+        <query id="1" name="TarjetaDebito" type="MULTIPLE">
+            <sql>
+DECLARE @nroDocId NUMERIC(12, 0), 
+@estadoTJ VARCHAR(1), 
+@pagina AS INT, 
+@largopagina AS INT, 
+@TotalRegistros INT = 0, 
+@resto INT = 0, 
+@primerRegistroPag INT = 0, 
+@ultimoRegistroPag INT = 0;
+SET 
+  @nroDocId = ?;
+SET 
+  @estadoTJ = ?;
+SET 
+  @pagina = ?;
+SET 
+  @largopagina = ?;
+SET 
+  @TotalRegistros = (
+    SELECT 
+      COUNT(*) 
+    FROM 
+      -- para que no me cuente tarjetas repetidas
+      (
+        SELECT 
+          DISTINCT T.ID_TARJETA AS IdTarjeta 
+        FROM 
+          CLI_DocumentosPFPJ fj 
+          JOIN tjd_tarjetas t ON fj.NUMEROPERSONAFJ = t.NRO_PERSONA 
+        WHERE 
+          fj.NUMERODOCUMENTO = @nroDocId 
+          AND (
+            @estadoTJ = 'A' 
+            AND t.ESTADO = '1' 
+            OR @estadoTJ = 'T'
+          )
+		UNION ALL
+		SELECT 
+		  DISTINCT NRO_TARJETA_BASE as IdTarjeta
+		FROM TJD_SOLICITUD_LINK 
+		WHERE TIPO_SOLICITUD='120005' and ESTADO not in ('P', 'X', 'D') and CUIL=@nroDocId
+		  AND @estadoTJ = 'S'
+      ) AS k
+  );
+SET 
+  @resto = @TotalRegistros - (
+    (
+      (@pagina -1) * @largopagina
+    ) + @largopagina
+  ) 
+SET 
+  @primerRegistroPag = (
+    (@pagina -1) * @largopagina
+  ) + 1 
+SET 
+  @ultimoRegistroPag = (
+    (
+      (@pagina -1) * @largopagina
+    ) + @largopagina
+  ) IF (@resto &lt; 0) BEGIN 
+SET 
+  @resto = 0 END IF (
+    @ultimoRegistroPag &gt; @TotalRegistros
+  ) BEGIN 
+SET 
+  @ultimoRegistroPag = @TotalRegistros END IF(
+    @pagina &gt;(
+      select 
+        dbo.ITFcantPaginas (@TotalRegistros, @largopagina)
+    )
+  ) BEGIN 
+SELECT 
+  NULL AS IdTarjeta, 
+  @pagina AS paginaActual, 
+  (
+    select 
+      dbo.ITFcantPaginas (@TotalRegistros, @largopagina)
+  ) AS cantidadPaginas, 
+  @largopagina AS registroPorPag, 
+  @TotalRegistros AS totalRegistros, 
+  @primerRegistroPag AS primerRegistroPag, 
+  @ultimoRegistroPag AS ultimoRegistroPag, 
+  @resto AS siguientesRegistros END ELSE BEGIN 
+SELECT 
+  ROW_NUMBER() OVER(
+    ORDER BY 
+      IdTarjeta
+  ) AS ORDEN, 
+  IdTarjeta, 
+  paginaActual, 
+  cantidadPaginas, 
+  registroPorPag, 
+  totalRegistros, 
+  primerRegistroPag, 
+  ultimoRegistroPag, 
+  siguientesRegistros 
+FROM 
+  (
+    SELECT 
+      DISTINCT T.ID_TARJETA AS IdTarjeta, 
+      @pagina AS paginaActual, 
+      (
+        select 
+          dbo.ITFcantPaginas (@TotalRegistros, @largopagina)
+      ) AS cantidadPaginas, 
+      @largopagina AS registroPorPag, 
+      @TotalRegistros AS totalRegistros, 
+      @primerRegistroPag AS primerRegistroPag, 
+      @ultimoRegistroPag AS ultimoRegistroPag, 
+      @resto AS siguientesRegistros 
+    FROM 
+      CLI_DocumentosPFPJ fj 
+      JOIN tjd_tarjetas t ON fj.NUMEROPERSONAFJ = t.NRO_PERSONA 
+    WHERE 
+      fj.NUMERODOCUMENTO = @nroDocId 
+      AND (
+        @estadoTJ = 'A' 
+        AND t.ESTADO = '1' 
+        OR @estadoTJ = 'T'
+      )
+	UNION ALL
+	SELECT 
+	  DISTINCT NRO_TARJETA_BASE as IdTarjeta,
+	  @pagina AS paginaActual, 
+      (
+        select 
+          dbo.ITFcantPaginas (@TotalRegistros, @largopagina)
+      ) AS cantidadPaginas, 
+      @largopagina AS registroPorPag, 
+      @TotalRegistros AS totalRegistros, 
+      @primerRegistroPag AS primerRegistroPag, 
+      @ultimoRegistroPag AS ultimoRegistroPag, 
+      @resto AS siguientesRegistros 
+	FROM TJD_SOLICITUD_LINK 
+	WHERE TIPO_SOLICITUD='120005' and ESTADO in ('I', 'E') and CUIL=@nroDocId
+		AND @estadoTJ = 'S'
+  ) DATOS 
+ORDER BY 
+  ORDEN OFFSET (
+    (@pagina -1) * @largopagina
+  ) ROWS FETCH NEXT @largopagina ROWS ONLY;
+END
+ 
+</sql>
+            <input>
+                <inParameter description="" type="LONG">nroDocId</inParameter>
+                <inParameter description="" type="STRING">estadoTJ</inParameter>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largoPagina</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="id_tarjeta">
+                    <outParameter description="" type="STRING">
+                        <queryname>IdTarjeta</queryname>
+                        <servicename>id_Tarjeta</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

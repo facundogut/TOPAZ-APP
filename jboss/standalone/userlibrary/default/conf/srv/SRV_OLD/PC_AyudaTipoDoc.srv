@@ -1,0 +1,27 @@
+service AyudaTipoDocJF; 
+description "Ayuda de TipoDocumento"; 
+
+action:	SQLQuery Entity ( 
+ TIENEFILTRO: string,
+ CAMPO: string,
+ OPERADOR: string,
+ VALOR: string
+): [ 
+   	STIENEFILTRO: string,
+	SCAMPO: string,
+	SOPERADOR: string,
+	SVALOR: string
+	]
+{ 
+	properties {
+  	("statement", "select ? as STIENEFILTRO, ? as SCAMPO, ? as SOPERADOR, ? as SVALOR from dual "), 
+	("0", "TIENEFILTRO"), ("1", "CAMPO"), ("2", "OPERADOR"), ("3", "VALOR") };
+	
+		action:	SQLQuery Entity0 ( 
+		): [ TIPODOC: string, TIPOPERSONA: string, NOMBREPAIS: string ]
+		{
+			properties { 
+			("statement", "SELECT TIPODOCUMENTO AS TIPODOC, TIPOPERSONA, NOMBREPAIS FROM CLI_TIPOSDOCUMENTOS")
+			}
+	    }  	
+}

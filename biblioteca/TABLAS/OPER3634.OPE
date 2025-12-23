@@ -1,0 +1,132 @@
+VERSION:051
+TN  NN 1006TImp. formulario                         C0001 00
+VNNNNN 010002000205780743SSSD000000000000000000000000000000000000001
+/T=Reporte Aviso de Cheques Devueltos
+/C=192192192
+KNSSNS 010007001202270713000101
+/T=Parametros de Entrada
+/F=0013700NNN000000000Arial                                   
+*N  NN ********************************************************
+*N  NN *** EP: 19/10/2011
+*N  NN *** MANTIS: 738
+KNSSNS 010040004000620120000100
+/T=Estado
+/F=0012700NNN000000000Arial                                   
+ NSSNS 1208   Reincidentes   I NNN 01004001470063025402001120000012000400143012700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Reincidentes - Clase <>'A' y Estado=8
+CNNNNN   00000000000000000000100
+/F=A(C1208="N")
+/P=I50
+*N  NN ********************************************************
+ NSSNS 9208   Condicion      INNNNF01011001500133022702001100000011000400133012700
+/?=I50
+/V="CLASEREINCIDENCIA<>'A'  AND CHE_BCO_RECHAZADOS.ESTADO=8 "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********************************************************
+ NSSNS 1209   Falta de FondosI NNN 01004002900063040402001120000012000400143012700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Falta de Fondos - Estado 0 o (Estado=8 y Clase A)
+CNNNNN   00000000000000000000100
+/F=A(C1209="N")
+/P=I51
+*N  NN ********************************************************
+ NSSNS 9208   Condicion      INNNNF01011001500133022702001100000011000400133012700
+/?=I51
+/V="(CHE_BCO_RECHAZADOS.ESTADO=0 OR (CHE_BCO_RECHAZADOS.ESTADO=8 AND CHE_BCO_RECHAZADOS.CLASEREINCIDENCIA='A'))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********************************************************
+ NSSNS 1205   Todos          I NNN 01004004600063051802001120000012000400143012700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Todos - Estado 0 o Estado=8 
+CNNNNN   00000000000000000000100
+/F=A(C1205="N")
+/P=I52
+*N  NN ********************************************************
+ NSSNS 9208   Condicion      INNNNF01011001500133022702001100000011000400133012700
+/?=I52
+/V="CHE_BCO_RECHAZADOS.ESTADO in (0, 8)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********************************************************
+CNNNNN ME00000000000000000000100
+/F=(I50YI51YI52)O(I50YI51)O(I50YI52)O(I51YI52)
+/M=Debe seleccionar una sola opcion
+*N  NN ********************************************************
+KNSSNS 010080004001020191000100
+/T=Fecha de Rechazo
+/F=0012700NNN000000000Arial                                   
+ NSSNS 0475   Desde          I NNNA01011001500133022702001100000011000400133012700
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0476   Hasta          I NNNA01011003400133041702001100000011002750133033000
+/V=C475
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C476.1<C475.1
+/M=Fecha Hasta< Fecha Desde
+ NNNNN 3047   FechaDesde     INNSNA00000701520027030201001100010000700070027013700
+/V=C475
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 3048   FechaHasta     INNSNA00000701520027030201001100010000700070027013700
+/V=C476
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 0091   FechaDesde     INNSNF00000701520027045202001100010000700070027013700
+/V=C3047
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 0092   FechaHasta     INNSNF00000701520027045202001100010000700070027013700
+/V=C3048
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*N  NN ********************************************************
+ NSSNS 0460   Sucursal1      INNNNA01011001500133022702001100000011000400133012700
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0461   Sucursal2      INNNNA01011003400133041702001100000011002750133033000
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********************************************************
+ NSSNS 4161   Cliente1       INNNNK01011001500133022702001100000011000400133012700
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4162   Cliente2       INNNNK01011003400133041702001100000011002750133033000
+/V=999999999999
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********************************************************
+ NNNNN 0073   Nombre FormualrINNSNK00000701520027045202001100010000700070027013700
+/V=FORM1025
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 9528   Linea Comando  INNSNF00000701520030020200101100000000700070030013700
+/V="tzpquery.exe /Q1025  /R2089 |"+C91.1+"|"+C92.1+"| /C2081 |"+C460.1+" | /R2085 |"+C4161.1+"|"+C4162.1+" | /C0073|"+C0073+"|/C9208|"+C9208+"| /A"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  M00000000000000000000100
+ NNNNN 0028   Concepto       INNSNF00024501500265033700101100000024500230265014200
+/V="Reporte Cuentas Reincidentes" 
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *
+DN  NN 0000Ov00
+*#I50#Reincidentes
+*#I52#Todas

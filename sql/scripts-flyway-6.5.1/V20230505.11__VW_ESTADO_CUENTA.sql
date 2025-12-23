@@ -1,0 +1,60 @@
+﻿EXECUTE ('IF OBJECT_ID (''VW_ESTADO_CUENTA'') IS NOT NULL
+	DROP VIEW VW_ESTADO_CUENTA')
+
+EXECUTE('
+CREATE     VIEW [VW_ESTADO_CUENTA] (
+											   V9500, 
+											   ASIENTO, 
+											   V0001, 
+											   V0002, 
+											   V0003, 
+											   V0005, 
+											   V0007, 
+											   V0024, 
+											   V0028, 
+											   V0025, 
+											   V0029, 
+											   V0039, 
+											   SUC_MOVIMIENTO)
+AS 
+SELECT TOP 9223372036854775807 WITH TIES 
+    M.FECHAPROCESO AS V9500, 
+    M.ASIENTO AS ASIENTO, 
+    M.SUCURSAL_CUENTA AS V0001, 
+    M.CLIENTE AS V0002, 
+    M.MONEDA AS V0003, 
+    M.CUENTA AS V0005, 
+    M.PRODUCTO AS V0007, 
+    M.DEBITOCREDITO AS V0024, 
+    M.CONCEPTO AS V0028, 
+    M.FECHAVALOR AS V0025, 
+    M.CAPITALREALIZADO AS V0029, 
+    M.REFERENCIA AS V0039, 
+    M.SUCURSAL AS SUC_MOVIMIENTO
+/***/
+FROM MOVIMIENTOS_CONTABLES  AS M WITH (NOLOCK) 
+INNER JOIN ASIENTOS  AS A WITH (NOLOCK) ON M.FECHAPROCESO = A.FECHAPROCESO
+											AND M.ASIENTO = A.ASIENTO
+											AND M.SUCURSAL = A.SUCURSAL
+											AND A.ESTADO = 77
+INNER JOIN PARAMETROS  AS P WITH (NOLOCK) ON CONVERT(varchar(2), P.FECHAPROCESO, 101) = CONVERT(varchar(2), M.FECHAPROCESO, 101) 
+												AND CONVERT(varchar(4), P.FECHAPROCESO, 102) = CONVERT(varchar(4), M.FECHAPROCESO, 102)
+    /*  WHERE 
+
+    *   *
+    *   **   	Para Consultas:
+    *   	***************
+    *   	M.SUCURSAL_CUENTA = SucursalCuentaAConsultar AND
+    *   	M.CUENTA= CuentaAConsultar AND
+    *   	M.MONEDA = MonedaAConsultar AND
+    *   	M.PRODUCTO = ProduCtoAConsultar AND	
+    *   **
+    */
+/***/
+ORDER BY M.FECHAPROCESO ASC, M.HORASISTEMA ASC ')
+
+
+
+
+
+

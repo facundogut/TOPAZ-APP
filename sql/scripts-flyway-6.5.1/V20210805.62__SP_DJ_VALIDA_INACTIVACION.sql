@@ -1,0 +1,32 @@
+﻿/****** Object:  StoredProcedure [dbo].[SP_DJ_VALIDA_INACTIVACION]    Script Date: 02/06/2021 17:49:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[SP_DJ_VALIDA_INACTIVACION]
+@pCausa NUMERIC(12),
+@pValido NUMERIC(1) OUT
+AS
+BEGIN
+	DECLARE
+	@vCuentasActivas NUMERIC(6),
+	@vValido NUMERIC(1)
+	
+	SELECT @vCuentasActivas = COUNT(*)
+	FROM DJ_CAUSA_CUENTA CC WITH (NOLOCK)
+	JOIN SALDOS S WITH (NOLOCK) ON S.JTS_OID = CC.JTS_OID_CUENTA
+	WHERE CC.NRO_CAUSA = @pCausa 
+			AND CC.TZ_LOCK = 0 
+			AND S.C1604 > 0;
+	
+	IF @vCuentasActivas > 0 
+	BEGIN
+		SET @vValido = 0;
+	END
+	ELSE
+	BEGIN
+		SET @vValido = 1;
+	END
+	
+	SET @pValido = @vValido;
+END

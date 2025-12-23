@@ -1,0 +1,9 @@
+﻿EXECUTE('
+---------------------------------
+--FORMULARIO DE OPE DESATENDIDA--
+---------------------------------
+UPDATE OPERACIONES
+SET FORMULARIOPRINCIPAL = 500
+WHERE TITULO = 3501 AND IDENTIFICACION = 3683
+----
+')

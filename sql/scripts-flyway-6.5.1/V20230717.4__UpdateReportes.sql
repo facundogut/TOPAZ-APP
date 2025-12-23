@@ -1,0 +1,5 @@
+EXECUTE('
+UPDATE dbo.REPORTES
+SET DESCRIPCION = ''Nota de Crédito Condonación/Bonificación''
+WHERE TITULO = 6650 AND IDENTIFICACION = 8092
+')

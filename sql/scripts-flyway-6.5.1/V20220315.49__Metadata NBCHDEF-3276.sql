@@ -1,0 +1,13 @@
+﻿EXECUTE('
+---------------------------------------
+--MODIFICACIÓN AYUDAS CLIENTE-PAQUETE--
+---------------------------------------
+UPDATE AYUDAS
+SET CAMPOS = ''1974R;1975R;1976I;''
+WHERE NUMERODEAYUDA = 941
+----
+UPDATE AYUDAS
+SET CAMPOS = ''1975R;1974R;1976I;''
+WHERE NUMERODEAYUDA = 942
+----
+')

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/participantesCargosPoderes/{idCliente}/</uri>
+    <serviceDescription>Devuelve los participantes relacionados al id cliente</serviceDescription>
+    <title>ConsultaApoderadosCliente</title>
+    <querys>
+        <query id="1" name="cliente" type="SIMPLE">
+            <sql>
+DECLARE @idCliente NUMERIC(12,0) = NULL; &#13;
+DECLARE @nombreCliente VARCHAR(70) = NULL; &#13;
+DECLARE @ERROR VARCHAR(70) = NULL; &#13;
+DECLARE @tipoDoc VARCHAR(5) = NULL; &#13;
+DECLARE @numeroDoc VARCHAR(20) = NULL; &#13;
+DECLARE @idPersona NUMERIC(12,0) = NULL; &#13;
+DECLARE @estadoId NUMERIC(5,0) = NULL; &#13;
+DECLARE @estadoDescripcion VARCHAR(50) = NULL; &#13;
+DECLARE @fechaApertura VARCHAR(10) = NULL; &#13;
+DECLARE @sucursal NUMERIC(5,0) = NULL; &#13;
+DECLARE @sucursalDescripcion VARCHAR(40) = NULL; &#13;
+&#13;
+-- Valida y asigna el parámetro &#13;
+DECLARE @idAux NUMERIC(12,0) = TRY_CAST(? AS NUMERIC(12,0)) &#13;
+&#13;
+IF @idAux IS NULL &#13;
+BEGIN &#13;
+    SET @ERROR = 'PARÁMETRO INVALIDO' &#13;
+END &#13;
+ELSE &#13;
+BEGIN &#13;
+  &#13; 
+  SELECT  &#13;
+      @idCliente = c.CODIGOCLIENTE, &#13;
+      @idPersona = ccp.NUMEROPERSONA, &#13;
+      @tipoDoc = pfpj.TIPODOCUMENTO, &#13;
+      @numeroDoc = pfpj.NUMERODOCUMENTO, &#13;
+      @nombreCliente = c.NOMBRECLIENTE, &#13;
+	  @estadoId  = c.ESTADO, &#13;
+      @sucursal = suc.SUCURSAL, &#13;
+	  @sucursalDescripcion = suc.NOMBRESUCURSAL, &#13;
+	  @fechaApertura = COALESCE(CONVERT(varchar, c.FECHAAPERTURA, 23),'') &#13;
+  FROM CLI_CLIENTES (NOLOCK) c &#13;
+  INNER JOIN CLI_ClientePersona (NOLOCK) ccp ON ccp.CODIGOCLIENTE = c.CODIGOCLIENTE and ccp.TZ_LOCK = 0 &#13;
+  INNER JOIN CLI_DocumentosPFPJ (NOLOCK) pfpj ON pfpj.NUMEROPERSONAFJ = ccp.NUMEROPERSONA and pfpj.TZ_LOCK = 0 &#13;
+  INNER JOIN SUCURSALES (NOLOCK) suc ON suc.SUCURSAL = c.SUCURSALVINCULADA AND suc.TZ_LOCK = 0 &#13;
+  WHERE c.CODIGOCLIENTE = @idAux AND c.TZ_LOCK = 0 &#13;
+&#13; 
+  IF @idCliente IS NULL BEGIN SET @ERROR = 'CLIENTE INEXISTENTE' END &#13;
+END &#13;
+&#13;
+SET @estadoDescripcion = (select descripcion from OPCIONES o where opcioninterna = @estadoId AND IDIOMA = 'E' and NUMERODECAMPO = (select NUMERODECAMPO from DICCIONARIO d where campo = 'ESTADO' AND tabla = (select identificacion from DESCRIPTORES where NOMBREFISICO = 'CLI_CLIENTES')))&#13;
+&#13;
+&#13;
+SELECT 
+    @idCliente AS 'codCliente', &#13;
+    @nombreCliente AS 'nombreCliente', &#13;
+    @idPersona AS 'numeroPersona', &#13;
+    @tipoDoc AS 'tipoDoc', &#13;
+    @numeroDoc AS 'numeroDoc', &#13;
+	@estadoId AS 'estadoID', &#13;
+	@estadoDescripcion AS 'estadoDescripcion', &#13; 
+	@fechaApertura AS 'fechaApertura', &#13; 
+    @sucursal AS 'sucursal', &#13;
+    @sucursalDescripcion AS 'sucursalDescripcion', &#13;
+    @ERROR AS 'error' &#13;
+   </sql>
+   <input>
+    <inParameter description="id del cliente" type="STRING">idCliente</inParameter>
+   </input>
+   <output>
+    <level groupby="" name="Cliente">
+        <outParameter description="error" type="STRING">
+            <queryname>error</queryname>
+            <servicename>error</servicename>
+        </outParameter>
+        <outParameter description="codCliente" type="LONG">
+            <queryname>codCliente</queryname>
+            <servicename>cliente.codigo</servicename>
+        </outParameter>
+        <outParameter description="nombreCliente" type="STRING">
+            <queryname>nombreCliente</queryname>
+            <servicename>cliente.nombre</servicename>
+        </outParameter>
+		<outParameter description="numeroPersona" type="LONG">
+            <queryname>numeroPersona</queryname>
+            <servicename>cliente.idPersona</servicename>
+        </outParameter>
+		<outParameter description="tipoDoc" type="STRING">
+            <queryname>tipoDoc</queryname>
+            <servicename>cliente.documento.tipo</servicename>
+        </outParameter>
+		<outParameter description="numeroDoc" type="STRING">
+            <queryname>numeroDoc</queryname>
+            <servicename>cliente.documento.numero</servicename>
+        </outParameter>
+		<outParameter description="estadoId" type="INTEGER">
+			<queryname>estadoID</queryname>
+			<servicename>cliente.estado.id</servicename>
+		</outParameter>
+		<outParameter description="estadoDescripcion" type="STRING">
+			<queryname>estadoDescripcion</queryname>
+			<servicename>cliente.estado.descripcion</servicename>
+		</outParameter>
+		<outParameter description="fechaApertura" type="STRING">
+			<queryname>fechaApertura</queryname>
+            <servicename>cliente.fechaApertura</servicename>
+        </outParameter>
+        <outParameter description="sucursalId" type="INTEGER">
+            <queryname>sucursal</queryname>
+            <servicename>sucursal.id</servicename>
+        </outParameter>
+        <outParameter description="sucursalNombre" type="STRING">
+            <queryname>sucursalDescripcion</queryname>
+            <servicename>sucursal.descripcion</servicename>
+        </outParameter>
+    </level>
+   </output>
+  </query>
+    <query id="2" name="integrantes" type="MULTIPLE">
+   <sql>
+DECLARE @idAux NUMERIC(12,0) = TRY_CAST(? AS NUMERIC(12,0));  &#13;
+DECLARE @fechaProceso DATE = (SELECT FORMAT(FECHAPROCESO, 'yyyy-MM-dd') FROM PARAMETROS); &#13;
+ &#13;
+SELECT DISTINCT &#13;
+    cipj.NUMEROPERSONAFISICA as 'idPersona', &#13;
+    concat(cpf.APELLIDOPATERNO,cpf.APELLIDOMATERNO,cpf.PRIMERNOMBRE,cpf.SEGUNDONOMBRE) as 'nombrePersona',  &#13;
+    ccpp.CARGO, &#13;
+    ccpp.CODIGO, &#13;
+    pa.APODERAMIENTO as 'codApoderamiento', &#13;
+    COALESCE(pt.DESCRIPCION, '') as 'descApoderamiento', &#13;
+    pa.TIPO_PODER, &#13;
+    tp.DESCRIPCION,  &#13;
+    cpf.ESTADO as codigoEstado, &#13;
+    CASE WHEN cpf.ESTADO = 0 THEN 'Habilitado' ELSE 'Inhabilitado' END as descripcionEstado &#13;
+FROM CLI_ClientePersona (NOLOCK) ccp   &#13;
+INNER JOIN CLI_INTEGRANTESPJ (NOLOCK) cipj on cipj.NUMEROPERSONAJURIDICA = ccp.NUMEROPERSONA and cipj.TZ_LOCK = 0 &#13;
+INNER JOIN CLI_CARGOS_PERSONAS (NOLOCK) ccpp ON ccpp.CODIGO = cipj.CODIGOCARGO AND ccpp.TZ_LOCK = 0 &#13;
+INNER JOIN CLI_PERSONASFISICAS (NOLOCK) cpf on cpf.NUMEROPERSONAFISICA = cipj.NUMEROPERSONAFISICA and cpf.TZ_LOCK = 0&#13;
+INNER JOIN PYF_APODERADOS (NOLOCK) pa ON pa.ID_ENTIDAD = ccp.CODIGOCLIENTE AND pa.ID_PERSONA = cipj.NUMEROPERSONAFISICA and pa.TIPO_ENTIDAD = 1 and pa.TZ_LOCK = 0 AND pa.FECHA_VENCIMIENTO &gt; @fechaProceso
+INNER  JOIN PYF_TIPOPODERES (NOLOCK) tp ON tp.TIPO_PODER = pa.TIPO_PODER AND tp.TZ_LOCK = 0 &#13;
+LEFT JOIN PYF_TIPOAPODERAMIENTO (NOLOCK) pt ON pt.CODAPODERAMIENTO = pa.APODERAMIENTO AND pt.TZ_LOCK = 0   &#13;
+WHERE ccp.CODIGOCLIENTE = @idAux  &#13;
+</sql>
+   <input>
+    <inParameter description="integrantes con apoderamientos segun codigo de cliente" type="STRING">idCliente</inParameter>
+   </input>
+   <output>
+    <level groupby="idPersona" name="integrantes">    
+        <outParameter description="idPersona" type="LONG">
+            <queryname>idPersona</queryname>
+            <servicename>idPersona</servicename>
+        </outParameter>
+        <outParameter description="nombrePersona" type="STRING">
+            <queryname>nombrePersona</queryname>
+            <servicename>nombrePersona</servicename>
+        </outParameter>
+		<outParameter description="codigoCargo" type="STRING">
+            <queryname>CODIGO</queryname>
+            <servicename>cargo.codigo</servicename>
+        </outParameter>
+        <outParameter description="descripcionCargo" type="STRING">
+            <queryname>CARGO</queryname>
+            <servicename>cargo.descripcion</servicename>
+        </outParameter>
+		<outParameter description="codApoderamiento" type="INTEGER">
+            <queryname>codApoderamiento</queryname>
+            <servicename>apoderamiento.codigo</servicename>
+        </outParameter>
+        <outParameter description="descripcionApoderamiento" type="STRING">
+            <queryname>descApoderamiento</queryname>
+            <servicename>apoderamiento.descripcion</servicename>
+        </outParameter>
+        <outParameter description="codigoEstado" type="INTEGER">
+            <queryname>codigoEstado</queryname>
+            <servicename>estado.codigo</servicename>
+        </outParameter>
+        <outParameter description="descripcionEstado" type="STRING">
+            <queryname>descripcionEstado</queryname>
+            <servicename>estado.descripcion</servicename>
+        </outParameter>
+	</level>
+	<level groupby="" name="poder">
+	        <outParameter description="codigoPoder" type="INTEGER">
+            <queryname>TIPO_PODER</queryname>
+            <servicename>codigo</servicename>
+        </outParameter>
+        <outParameter description="descripcionPoder" type="STRING">
+            <queryname>DESCRIPCION</queryname>
+            <servicename>descripcion</servicename>
+        </outParameter>
+	</level>
+   </output>
+  </query>
+      <query id="3" name="participantes" type="MULTIPLE">
+        <sql>
+DECLARE @idAux NUMERIC(12,0) = TRY_CAST(? AS NUMERIC(12,0));  &#13;
+DECLARE @fechaProceso DATE = (SELECT FORMAT(FECHAPROCESO, 'yyyy-MM-dd') FROM PARAMETROS); &#13;
+SELECT  &#13;
+    d.TIPODOCUMENTO as tipoDoc, &#13;
+    d.NUMERODOCUMENTO AS numeroDoc, &#13;
+    concat(pf.APELLIDOPATERNO,pf.APELLIDOMATERNO,pf.PRIMERNOMBRE,pf.SEGUNDONOMBRE) as 'nombrePersona',   &#13;
+    pf.NUMEROPERSONAFISICA AS idPersona, &#13;
+    cp.TITULARIDAD as idTitularidad, &#13;
+    o.DESCRIPCION AS descTitularidad, &#13;
+    pa.TIPO_PODER as tipoPoder, &#13;
+    tp.DESCRIPCION as descripcionPoder, &#13;
+    pf.ESTADO as codigoEstado, &#13;
+    CASE WHEN pf.ESTADO = 0 THEN 'Habilitado' ELSE 'Inhabilitado' END as descripcionEstado &#13;
+FROM CLI_CLIENTES (NOLOCK) c  &#13;
+INNER JOIN CLI_ClientePersona (NOLOCK) cp ON cp.CODIGOCLIENTE = c.CODIGOCLIENTE AND cp.TZ_LOCK = 0 &#13;
+INNER JOIN CLI_PERSONASFISICAS (NOLOCK) pf ON pf.NUMEROPERSONAFISICA = cp.NUMEROPERSONA AND pf.TZ_LOCK = 0 &#13;
+INNER JOIN CLI_DocumentosPFPJ (NOLOCK) d ON d.NUMEROPERSONAFJ = pf.NUMEROPERSONAFISICA AND d.TZ_LOCK = 0 &#13;
+INNER JOIN PYF_APODERADOS (NOLOCK) pa ON pa.ID_ENTIDAD = cp.CODIGOCLIENTE and pa.ID_PERSONA = pf.NUMEROPERSONAFISICA and pa.TIPO_ENTIDAD = 1 and pa.TZ_LOCK = 0 AND pa.FECHA_VENCIMIENTO &gt; @fechaProceso  &#13;
+INNER JOIN PYF_TIPOPODERES (NOLOCK) tp ON pa.TIPO_PODER = tp.TIPO_PODER AND tp.TZ_LOCK = 0 &#13;
+INNER JOIN OPCIONES (NOLOCK) o ON o.OPCIONINTERNA = cp.TITULARIDAD AND NUMERODECAMPO = 1506 AND IDIOMA = 'E' &#13;
+WHERE c.CODIGOCLIENTE = @idAux AND c.TZ_LOCK = 0 &#13;
+        </sql>
+   <input>
+    <inParameter description="Participantes segun codigo de cliente" type="STRING">idCliente</inParameter>
+   </input>
+   <output>
+    <level groupby="idPersona" name="participantes">    
+        <outParameter description="idPersona" type="LONG">
+            <queryname>idPersona</queryname>
+            <servicename>idPersona</servicename>
+        </outParameter>
+        <outParameter description="nombrePersona" type="STRING">
+            <queryname>nombrePersona</queryname>
+            <servicename>nombrePersona</servicename>
+        </outParameter>
+		<outParameter description="tipoDocumento" type="STRING">
+            <queryname>tipoDoc</queryname>
+            <servicename>documento.tipo</servicename>
+        </outParameter>
+        <outParameter description="numeroDocumento" type="STRING">
+            <queryname>numeroDoc</queryname>
+            <servicename>documento.numero</servicename>
+        </outParameter>
+        <outParameter description="idTitularidad" type="STRING">
+            <queryname>idTitularidad</queryname>
+            <servicename>titularidad.id</servicename>
+        </outParameter>
+        <outParameter description="descTitularidad" type="STRING">
+            <queryname>descTitularidad</queryname>
+            <servicename>titularidad.descripcion</servicename>
+        </outParameter>
+        <outParameter description="codigoEstado" type="INTEGER">
+            <queryname>codigoEstado</queryname>
+            <servicename>estado.codigo</servicename>
+        </outParameter>
+        <outParameter description="descripcionEstado" type="STRING">
+            <queryname>descripcionEstado</queryname>
+            <servicename>estado.descripcion</servicename>
+        </outParameter>
+	</level>
+	<level groupby="" name="poder">
+	        <outParameter description="codigoPoder" type="STRING">
+            <queryname>tipoPoder</queryname>
+            <servicename>codigo</servicename>
+        </outParameter>
+        <outParameter description="descripcionPoder" type="STRING">
+            <queryname>descripcionPoder</queryname>
+            <servicename>descripcion</servicename>
+        </outParameter>
+	</level>
+   </output>
+  </query>
+ </querys>
+</serviceQuery>

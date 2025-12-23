@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-04-05T15:09:32 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LPAAMMDD" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="NoDataSection" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6cbe3ef6-9fc7-468b-b617-ae7214a65899">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH.xml"/>
+	<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.HorizontalRowLayout"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<queryString>
+		<![CDATA[SELECT
+	isnull(trim(CAST(CAST(ID_CONVREC AS numeric) AS CHAR)) + ' ' + nomconvrec,'Convenio inexistente') AS Convenio,
+	count(*) AS CantComprobantes,
+	(SELECT count(*) FROM ITF_INTERMEDIA_LOTIPAGOS c WHERE TipoRegistro = 2 AND ConError = 'S') AS RegRechazados,
+	(SELECT CAST(FechaProceso AS DATE) FROM parametros) AS FechaProceso,
+	(SELECT count(*) FROM ITF_INTERMEDIA_LOTIPAGOS WHERE TipoRegistro = 2) AS TotRegistrosProcesados,
+	Nomarchivo,
+	(SELECT count(*) FROM ITF_INTERMEDIA_LOTIPAGOS c WHERE TipoRegistro = 2 AND conerror = 'N') AS TotRegImportados,
+	(SELECT Count(*) FROM ITF_INTERMEDIA_LOTIPAGOS c WHERE c.TipoRegistro = 2 AND ConError = 'S') AS RegConError,
+	CONVERT(VARCHAR(40), FORMAT(isnull(min(totalimporte),0), '#,##0.00')) AS totalimporte,
+	CONVERT(VARCHAR(40), FORMAT(isnull((SELECT SUM(ImporteAbonado) FROM ITF_INTERMEDIA_LOTIPAGOS WHERE TipoRegistro = 2 AND conerror = 'N'),0)/100, '#,##0.00')) AS impImpactado,
+	CONVERT(VARCHAR(40), FORMAT(isnull((SELECT SUM(ImporteAbonado) FROM ITF_INTERMEDIA_LOTIPAGOS WHERE TipoRegistro = 2 AND conerror = 'S'),0)/100, '#,##0.00')) AS impRechazado,
+    CONVERT(VARCHAR(40), FORMAT(isnull((SELECT SUM(ImporteAbonado) FROM ITF_INTERMEDIA_LOTIPAGOS WHERE TipoRegistro = 2),0)/100, '#,##0.00')) AS impTotal
+	FROM ITF_INTERMEDIA_LOTIPAGOS a
+		JOIN CONV_REL_ENTECONV ON cast(a.NroConvenio as varchar) = cod_ente
+		JOIN REC_CAB_RECAUDOS_CANAL b on b.id = id_cabezal --and b.convenio = a.nroconvenio
+	  		WHERE TipoRegistro = 2 AND CONV_REL_ENTECONV.TZ_LOCK = 0--AND ConError <> 'S'
+				GROUP BY ID_CONVREC,nomconvrec,nomarchivo]]>
+	</queryString>
+	<field name="Convenio" class="java.lang.String"/>
+	<field name="CantComprobantes" class="java.lang.Integer"/>
+	<field name="RegRechazados" class="java.lang.Integer"/>
+	<field name="FechaProceso" class="java.lang.String"/>
+	<field name="TotRegistrosProcesados" class="java.lang.Integer"/>
+	<field name="Nomarchivo" class="java.lang.String"/>
+	<field name="TotRegImportados" class="java.lang.Integer"/>
+	<field name="RegConError" class="java.lang.Integer"/>
+	<field name="totalimporte" class="java.lang.String"/>
+	<field name="impImpactado" class="java.lang.String"/>
+	<field name="impRechazado" class="java.lang.String"/>
+	<field name="impTotal" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="53" splitType="Stretch">
+			<staticText>
+				<reportElement x="146" y="11" width="510" height="30" uuid="cbb1797a-1975-470c-8f88-839227d5e27e"/>
+				<textElement textAlignment="Center">
+					<font size="16" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Resultado del proceso de importación de Lotipago ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="120" splitType="Stretch">
+			<staticText>
+				<reportElement x="10" y="0" width="108" height="20" uuid="8321ee26-adde-44d1-98a0-897c27c2d672"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Archivo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="20" width="108" height="20" uuid="21802527-3bb0-470a-b0f2-26c1d0fb2f9b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha de proceso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="100" width="130" height="20" uuid="9ef41476-e969-4d19-9e13-6b17abd4b90d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Registros Rechazados:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="140" y="100" width="150" height="20" uuid="90c10399-8e96-421b-b3b8-e699adf2e3eb"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{RegRechazados}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="140" y="40" width="132" height="20" uuid="1f76353a-3d05-461b-8fec-33458b9e5344"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="20" width="132" height="20" uuid="873e7183-024a-48eb-a25d-1c1f84820276"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FechaProceso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="0" width="282" height="20" uuid="c411a70c-4cdc-4b3f-8375-c8ae4c3b04e7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Nomarchivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="80" width="180" height="20" uuid="9163061e-7857-400a-8074-2fea4c30fccf"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TotRegImportados}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="60" width="150" height="20" uuid="59bf0eb8-4793-48eb-a181-88c6fe1d800d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{TotRegistrosProcesados}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="60" width="118" height="20" uuid="c7543f43-9905-4f32-97bd-6e5537249aa2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Reg. Procesados:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="80" width="108" height="20" uuid="6169a939-97f6-417a-afd2-59764b95a80b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Registros importados:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="40" width="108" height="20" uuid="afc8e6f2-ff5f-4f66-a4ec-301487dcc6d3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora de proceso:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="50" splitType="Stretch">
+			<staticText>
+				<reportElement x="340" y="10" width="150" height="30" uuid="a1173bc9-2249-45d9-9970-cc390ebc177c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Comprobantes Importados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="500" y="10" width="100" height="30" uuid="e02f1b8e-8307-4e3a-a25d-5fedf33039ab"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Importe Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="637" y="10" width="154" height="30" uuid="c8531343-e714-402b-aacc-697c1e9b70e2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Comprobantes Rechazados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="19" y="10" width="100" height="30" uuid="a38dc9fc-bd26-4f92-a21f-4d5dbdf4bbb8"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true" isUnderline="true"/>
+				</textElement>
+				<text><![CDATA[Convenio]]></text>
+			</staticText>
+			<line>
+				<reportElement x="-3" y="40" width="794" height="1" uuid="a32d90fb-8309-46fb-881d-78507bdc2a10"/>
+			</line>
+			<line>
+				<reportElement x="-3" y="10" width="794" height="1" uuid="5c957976-3126-4a40-a1ed-64798569bc0b"/>
+			</line>
+			<line>
+				<reportElement x="320" y="13" width="1" height="25" uuid="0e612c42-5f54-4661-b062-2d1257f5785c"/>
+			</line>
+			<line>
+				<reportElement x="490" y="13" width="1" height="25" uuid="06f1fc97-a89f-48a3-81ad-56d4f49a50aa"/>
+			</line>
+			<line>
+				<reportElement x="630" y="13" width="1" height="25" uuid="ce283be0-fabf-477e-9493-d82804996d40"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="19" splitType="Stretch">
+			<textField>
+				<reportElement x="10" y="0" width="310" height="18" uuid="719bc743-cec2-4e35-9e80-edd59385cc01"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Convenio}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="340" y="0" width="100" height="18" uuid="b98feaa3-21c9-4556-aa27-7fd6cb12da37"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CantComprobantes}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="640" y="0" width="100" height="18" uuid="9ff7cf13-15cf-4e41-9822-4ed05824f778"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{RegConError}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="500" y="0" width="100" height="18" uuid="cbf89720-d527-452c-90cc-5c85534d545a"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{totalimporte}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="80" splitType="Stretch">
+			<textField>
+				<reportElement x="580" y="40" width="100" height="30" uuid="fe8e355e-314c-455b-a2e7-f6731040009f"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="680" y="40" width="100" height="30" uuid="a35b7d39-f8da-4911-a806-fc6550dcc0ac"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-3" y="30" width="142" height="20" uuid="29a7daac-9647-4a73-b28d-c9b91653709f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe total rechazado:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-3" y="50" width="108" height="20" uuid="42eeb5b1-7c71-429e-afb4-494d596d7e8e"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe total:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-3" y="10" width="142" height="20" uuid="41f75637-a36d-4ade-97b4-acd247077f31"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Importe total impactado:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="140" y="10" width="150" height="20" uuid="6953117e-2c2f-4568-be22-6d13d45b5e09"/>
+				<textFieldExpression><![CDATA[$F{impImpactado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="139" y="30" width="150" height="20" uuid="58e07a04-01cf-45ee-8ffe-c27d9a00e3c9"/>
+				<textFieldExpression><![CDATA[$F{impRechazado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="140" y="50" width="148" height="20" uuid="f3e5bcac-d3a7-4a3c-bed9-e383f74a10bd"/>
+				<textFieldExpression><![CDATA[$F{impTotal}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+</jasperReport>

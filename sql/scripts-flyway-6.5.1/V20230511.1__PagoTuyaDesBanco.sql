@@ -1,0 +1,28 @@
+Execute('
+create table dbo.ITF_PAGOS_TARJETA_TUYA 
+(
+	ID bigint identity(1,1) primary key , 
+	TARJETA numeric(2,0) not null , 
+	FECHA_PAGO date not null , 
+	CANAL varchar(10) not null , 
+	NRO_SOCIO numeric(7,0) not null , 
+	ENTIDAD numeric(3,0) not null , 
+	SUCURSAL numeric(3,0) not null , 
+	NRO_TRANSACCION numeric(4,0) not null , 
+	TIPO_MONEDA numeric(4,0) not null , 
+	IMPORTE numeric(15,2) not null , 
+	FYH_TRANSACCION datetime not null , 
+	FECHA_PROCESO_ARCH date not null , 
+	FECHA_PROCESO_TOPAZ date not null , 
+	FECHA_ARCH date not null , 
+	FYH_PROCESO_RELOJ datetime not null default GETDATE() , 
+	constraint ITF_PAGOS_TARJETA_TUYA__CLAVE_LOGICA unique( TARJETA , NRO_SOCIO , ENTIDAD , SUCURSAL , FECHA_PAGO , CANAL , NRO_TRANSACCION )
+);')
+
+Execute('
+INSERT INTO dbo.ITF_MASTER_PARAMETROS (CODIGO, CODIGO_INTERFACE, FUNCIONALIDAD, ALFA_1, ALFA_2, ALFA_3, NUMERICO_1, NUMERICO_2, FECHA, IMPORTE_1, IMPORTE_2, TZ_LOCK)
+	VALUES (227, 23132, ''CANAL PAGO TUYA'', ''PAGOFACIL'', '''', '''', 90062858, 0, null, 0, 0, 0);
+INSERT INTO dbo.ITF_MASTER_PARAMETROS (CODIGO, CODIGO_INTERFACE, FUNCIONALIDAD, ALFA_1, ALFA_2, ALFA_3, NUMERICO_1, NUMERICO_2, FECHA, IMPORTE_1, IMPORTE_2, TZ_LOCK)
+	VALUES (228, 23132, ''CANAL PAGO TUYA'', ''RAPIPAGO'', '''', '''', 4537, 0, null, 0, 0, 0);
+INSERT INTO dbo.ITF_MASTER_PARAMETROS (CODIGO, CODIGO_INTERFACE, FUNCIONALIDAD, ALFA_1, ALFA_2, ALFA_3, NUMERICO_1, NUMERICO_2, FECHA, IMPORTE_1, IMPORTE_2, TZ_LOCK)
+	VALUES (229, 23132, ''Map Moneda Pago TUYA'', '''', ''PES'', '''', 1, 0, null, 0, 0, 0);')

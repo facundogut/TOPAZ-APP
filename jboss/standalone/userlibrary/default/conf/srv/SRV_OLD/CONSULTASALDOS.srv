@@ -1,0 +1,58 @@
+service CONSULTASALDOS; 
+description "Parámetros de entrada al servicio Consulta de Saldos"; 
+
+
+	action: SQLQuery HAYREGISTROS(
+				
+			Sucursal: numeric,
+			Producto: numeric,     
+			Cuenta:   numeric,      
+			Moneda:   numeric,
+			Operacion: numeric,
+			Ordinal: numeric
+
+			
+			
+			):[
+			
+			SCODERROR: numeric
+	]{ 
+  			
+  	
+	properties {
+			("statement", "select count(*) as SCODERROR from saldos where sucursal=? and moneda=? and cuenta=? and producto=? and operacion=? and ordinal=?"),
+			("0", "Sucursal"), 
+			("1", "Moneda"), 
+			("2", "Cuenta"), 
+			("3", "Producto"),
+			("4", "Operacion"),
+			("5", "Ordinal")
+	
+	           };
+
+	           
+  	       action:SQLQuery DATOSALDOSC() : [
+				SALDOACTUAL:	float as SaldoActual,
+				SALDODISPONIBLE: float as SaldoDisponible
+				
+				       		] 
+			   {
+			
+				condition{"SCODERROR == 1"};
+		properties 	{
+					("statement", "select C1604 as SaldoActual, (C1604-C2627) as SaldoDisponible from saldos where sucursal=? and moneda=? and cuenta=? and producto=? and operacion=? and ordinal=?"),
+					("0", "Sucursal"), 
+					("1", "Moneda"), 
+					("2", "Cuenta"), 
+					("3", "Producto"),
+					("4", "Operacion"),
+					("5", "Ordinal")
+				
+			   	 }
+		            }
+		 						  
+	
+          } 
+
+
+

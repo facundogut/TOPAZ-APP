@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-09-11T10:29:01 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DebitoDirecto" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="0588ab5c-4cbf-47f5-a218-7a41fa854655">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<parameter name="NRO_CONVENIO" class="java.lang.String">
+		<parameterDescription><![CDATA[Número de Convenio]]></parameterDescription>
+	</parameter>
+	<parameter name="TOPAZ_SUCURSAL_SISTEMA" class="java.lang.Integer" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT TOP 1
+		--CONVENIO--
+		(SELECT CASE CONCAT('',a.Cuit) WHEN '0' THEN REPLICATE('_ ',11) WHEN '' THEN REPLICATE('_ ',11) ELSE CONCAT('',a.Cuit) END) AS Cuit,
+		(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_ ',5) WHEN ''  THEN REPLICATE('_ ',5) ELSE CONCAT('',a.Plazo) END) AS Plazo, 
+		(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_ ',10) ELSE dbo.Fn_NumberToWords(a.Plazo) END) AS W_Plazo,
+		a.FecAlta, 
+		a.Id_ConvRec, 
+		(SELECT CASE CONCAT('',a.FecAlta) WHEN '' THEN REPLICATE('_ ',5) ELSE LEFT(CONVERT(VARCHAR,a.FecAlta,106),2) END) AS DIA,  
+		(SELECT CASE CONCAT('', a.FecAlta) WHEN '' THEN REPLICATE('_ ',5) ELSE (SELECT dbo.Fn_NumberToWords(RIGHT(CONVERT(VARCHAR,FecAlta,106),4))) END) AS AÑO,
+		
+		-- CUENTA REC -- 
+		(SELECT CASE CONCAT('',b.CUENTA) WHEN '' THEN REPLICATE('_ ',12)  ELSE CONCAT('',b.CUENTA) END)AS CUENTA_REC, 
+		(SELECT CASE CONCAT('',e.C6251) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('',e.C6251) END )AS TIPO_CUENTA_REC,
+		(SELECT CASE CONCAT('',b.SUCURSAL) WHEN ''  THEN REPLICATE('_ ',5) ELSE CONCAT('',b.SUCURSAL) END) AS SUCURSAL_REC, 
+		(SELECT CASE CONCAT('',d.NOMBRESUCURSAL) WHEN ''  THEN REPLICATE('_ ',40)  ELSE CONCAT('',d.NOMBRESUCURSAL) END) AS LOC_SUC_REC, 
+		
+		-- CUENTA COM -- 
+		(SELECT CASE CONCAT('',f.CUENTA) WHEN '' THEN REPLICATE('_ ',12) ELSE CONCAT('',f.CUENTA) END) AS CUENTAS_COM, 
+		(SELECT CASE CONCAT('',i.C6251) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('',i.C6251) END)AS TIPO_CUENTA_COM, 
+		(SELECT CASE CONCAT('',f.SUCURSAL) WHEN '' THEN REPLICATE('_ ',5) ELSE CONCAT('',f.SUCURSAL) END)  AS SUCURSAL_COM,
+		(SELECT CASE CONCAT('',h.NOMBRESUCURSAL) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('',h.NOMBRESUCURSAL) END) AS LOC_SUC_COM,
+		
+		--CUNETA CAR -- 
+		(SELECT CASE CONCAT('',j.CUENTA) WHEN '' THEN REPLICATE('_ ',12) ELSE CONCAT('',j.CUENTA) END) AS CUENTA_CAR, 
+		(SELECT CASE CONCAT('',m.C6251) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('',m.C6251) END) AS TIPO_CUENTA_CAR, 
+		(SELECT CASE CONCAT('',j.SUCURSAL) WHEN '' THEN REPLICATE('_ ',5) ELSE CONCAT('',j.SUCURSAL) END) AS SUCURSAL_CAR, 
+		(SELECT CASE CONCAT('',l.NOMBRESUCURSAL) WHEN '' THEN REPLICATE('_ ',5) ELSE CONCAT('',l.NOMBRESUCURSAL) END)  AS LOC_SUC_CAR,
+		
+		-- DIRECCION FISCAL --
+		(SELECT CASE CONCAT('',tf.NUMERO) WHEN '' THEN REPLICATE('_ ',15) ELSE CONCAT('',tf.NUMERO) END) AS TEL_DF,
+		(SELECT  CASE CONCAT('',n.CALLE) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('',n.CALLE)  END) AS CALLE_DF, 
+		(SELECT CASE CONCAT('',n.NUMERO) WHEN '' THEN REPLICATE('_ ',8) ELSE CONCAT('',n.NUMERO) END) AS NRO_DF, 
+		(SELECT CASE CONCAT('apto ',n.APARTAMENTO) WHEN 'apto ' THEN '' ELSE CONCAT('apto ',n.APARTAMENTO) END)AS APTO_DF, 
+	   	(SELECT CASE CONCAT('piso ',n.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ',n.PISO)  END) AS PISO_DF,
+		(SELECT CASE CONCAT('',p.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('',p.DESCRIPCION_DIM3) END) AS LOCALIDAD_DF,
+		(SELECT CASE CONCAT('', o.DESCRIPCION) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('', o.DESCRIPCION) END) AS PROVINCIA_DF,
+		
+		--DIRECCION REAL --
+		(SELECT CASE CONCAT('',tr.NUMERO) WHEN '' THEN REPLICATE('_ ',15) ELSE CONCAT('',tr.NUMERO) END ) AS TEL_DR,
+		(SELECT CASE CONCAT('',r.CALLE) WHEN '' THEN REPLICATE( '_ ' ,35) ELSE CONCAT('',r.CALLE) END) AS CALLE_DR,
+		(SELECT CASE CONCAT('',r.NUMERO) WHEN '' THEN REPLICATE('_ ',8) ELSE CONCAT('',r.NUMERO) END) AS NRO_DR,
+		(SELECT CASE CONCAT('apto ',r.APARTAMENTO) WHEN 'apto ' THEN '' ELSE  CONCAT('apto ',r.APARTAMENTO) END) AS APTO_DR,
+		(SELECT CASE CONCAT('piso ', r.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ', r.PISO) END) AS PISO_DR,
+		(SELECT CASE CONCAT('',t.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('',t.DESCRIPCION_DIM3) END) AS LOCALIDAD_DR,
+		(SELECT CASE CONCAT('',s.DESCRIPCION) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('',s.DESCRIPCION) END)  AS PROVINCIA_DR,
+		
+		-- SUCURSAL -- 
+		(SELECT CASE CONCAT('',v.NOMBREDEP) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('',v.NOMBREDEP) END) AS DEP_CONTRATO,
+		
+		--CLIENTE  --
+		(SELECT CASE CONCAT('', w.NOMBRECLIENTE) WHEN '' THEN REPLICATE('_ ',35) ELSE CONCAT('', w.NOMBRECLIENTE) END) AS NOMBRECLIENTE,
+		(SELECT CASE CONCAT('',w.TIPO) WHEN '' THEN REPLICATE('_ ',15) WHEN 'J' THEN 'la Empresa' WHEN 'I' THEN 'la Institución' WHEN 'F' THEN 'la Persona' END) AS REPRESENTACION
+		
+		
+		FROM CONV_CONVENIOS_REC a 
+		
+	    --CUENTA REC --
+	    LEFT JOIN SALDOS b ON a.CuentaRec = b.JTS_OID AND b.TZ_LOCK = 0
+	    LEFT JOIN CLI_DIRECCIONES c ON b.SUCURSAL = c.ID AND c.FORMATO = 'S' AND c.TIPODIRECCION = 'R' AND c.TZ_LOCK = 0
+	    LEFT JOIN SUCURSALES d ON d.SUCURSAL = b.SUCURSAL AND d.TZ_LOCK = 0
+	    LEFT JOIN PRODUCTOS e ON b.PRODUCTO = e.C6250 AND e.TZ_LOCK = 0
+	    LEFT JOIN CLI_ClientePersona x ON x.CODIGOCLIENTE=a.Cliente AND x.TITULARIDAD = 'T' AND x.TZ_LOCK = 0
+	    --CUENTA COM --
+	    LEFT JOIN SALDOS f ON a.CuentaCom = f.JTS_OID AND f.TZ_LOCK = 0
+	    LEFT JOIN CLI_DIRECCIONES g ON f.SUCURSAL = g.ID AND c.FORMATO = 'S' AND c.TIPODIRECCION = 'R' AND g.TZ_LOCK = 0
+	    LEFT JOIN SUCURSALES h ON h.SUCURSAL = f.SUCURSAL AND h.TZ_LOCK = 0
+	    LEFT JOIN PRODUCTOS i ON f.PRODUCTO = i.C6250 AND i.TZ_LOCK = 0
+	    
+	    --CUENTA CARG -- 
+	    LEFT JOIN SALDOS j ON a.CuentaCargos = j.JTS_OID AND j.TZ_LOCK = 0
+	    LEFT JOIN CLI_DIRECCIONES k ON j.SUCURSAL = k.ID AND c.FORMATO = 'S' AND c.TIPODIRECCION = 'R' AND k.TZ_LOCK = 0
+	    LEFT JOIN SUCURSALES l ON l.SUCURSAL = j.SUCURSAL AND l.TZ_LOCK = 0
+	    LEFT JOIN PRODUCTOS m ON m.C6250 = j.PRODUCTO AND m.TZ_LOCK = 0
+	    
+	    --DIRECCION FISCAL--
+	    LEFT JOIN CLI_DIRECCIONES n ON a.Dir_Id = n.ID AND a.Dir_Formato =n.FORMATO AND a.Dir_Tipo = n.TIPODIRECCION AND a.Dir_ordinal = n.ORDINAL_DIR AND n.TZ_LOCK = 0
+	    LEFT JOIN CLI_TELEFONOS tf ON tf.ID = a.Cliente AND tf.FORMATO IN ('PF','PJ') AND tf.ORDINAL = 1 AND tf.TIPO = 'LE' AND tf.TZ_LOCK = 0 AND tf.TZ_LOCK = 0
+	    LEFT JOIN CLI_PROVINCIAS o ON o.CODIGOPAIS =n.PAIS AND o.DIM1 = n.PROVINCIA AND o.TZ_LOCK = 0
+	    LEFT JOIN CLI_LOCALIDADES p ON p.DIM1 = n.PROVINCIA AND p.DIM2 = n.DEPARTAMENTO AND p.DIM3 = n.LOCALIDAD AND p.TZ_LOCK = 0
+	    
+	    --DIRECCION REAL--
+	    LEFT JOIN  CLI_DIRECCIONES r ON a.Dir_Id = r.ID AND a.Dir_Formato = r.FORMATO AND r.TIPODIRECCION = 'R' AND r.TZ_LOCK = 0 
+	    LEFT JOIN CLI_TELEFONOS tr ON a.Cliente = tr.ID AND tr.FORMATO IN ('PF','PJ') AND tr.ORDINAL = 1 AND tr.TIPO = 'LE' AND tr.TZ_LOCK = 0
+	    LEFT JOIN  CLI_PROVINCIAS s ON s.CODIGOPAIS = r.PAIS AND s.DIM1 = r.PROVINCIA AND s.TZ_LOCK = 0 AND s.TZ_LOCK = 0 AND s.TZ_LOCK = 0
+	    LEFT JOIN CLI_LOCALIDADES t ON t.DIM1 = r.PROVINCIA AND t.DIM2 = r.DEPARTAMENTO AND t.DIM3 = r.LOCALIDAD AND tf.TZ_LOCK = 0 AND t.TZ_LOCK = 0
+	    
+	    --SUCURSAL --
+	    LEFT JOIN CLI_DIRECCIONES u ON u.ID =  X.NUMEROPERSONA AND u.FORMATO = 'S' AND u.TIPODIRECCION = 'R' AND u.TZ_LOCK = 0
+	    LEFT JOIN CLI_DEPARTAMENTOS v ON v.CODIGOPAIS = u.PAIS AND v.DEPARTAMENTO = u.DEPARTAMENTO AND v.PROVINCIA = u.PROVINCIA AND v.TZ_LOCK = 0
+	    
+	    --CLIENTE ---
+	    LEFT JOIN CLI_CLIENTES w ON w.CODIGOCLIENTE = a.Cliente  AND w.TZ_LOCK = 0
+	    WHERE a.Id_ConvRec =  $P{NRO_CONVENIO}  AND a.TZ_LOCK = 0]]>
+	</queryString>
+	<field name="Cuit" class="java.lang.String"/>
+	<field name="Plazo" class="java.lang.String"/>
+	<field name="W_Plazo" class="java.lang.String"/>
+	<field name="FecAlta" class="java.sql.Timestamp"/>
+	<field name="Id_ConvRec" class="java.math.BigDecimal"/>
+	<field name="DIA" class="java.lang.String"/>
+	<field name="AÑO" class="java.lang.String"/>
+	<field name="CUENTA_REC" class="java.lang.String"/>
+	<field name="TIPO_CUENTA_REC" class="java.lang.String"/>
+	<field name="SUCURSAL_REC" class="java.lang.String"/>
+	<field name="LOC_SUC_REC" class="java.lang.String"/>
+	<field name="CUENTAS_COM" class="java.lang.String"/>
+	<field name="TIPO_CUENTA_COM" class="java.lang.String"/>
+	<field name="SUCURSAL_COM" class="java.lang.String"/>
+	<field name="LOC_SUC_COM" class="java.lang.String"/>
+	<field name="CUENTA_CAR" class="java.lang.String"/>
+	<field name="TIPO_CUENTA_CAR" class="java.lang.String"/>
+	<field name="SUCURSAL_CAR" class="java.lang.String"/>
+	<field name="LOC_SUC_CAR" class="java.lang.String"/>
+	<field name="TEL_DF" class="java.lang.String"/>
+	<field name="CALLE_DF" class="java.lang.String"/>
+	<field name="NRO_DF" class="java.lang.String"/>
+	<field name="APTO_DF" class="java.lang.String"/>
+	<field name="PISO_DF" class="java.lang.String"/>
+	<field name="LOCALIDAD_DF" class="java.lang.String"/>
+	<field name="PROVINCIA_DF" class="java.lang.String"/>
+	<field name="TEL_DR" class="java.lang.String"/>
+	<field name="CALLE_DR" class="java.lang.String"/>
+	<field name="NRO_DR" class="java.lang.String"/>
+	<field name="APTO_DR" class="java.lang.String"/>
+	<field name="PISO_DR" class="java.lang.String"/>
+	<field name="LOCALIDAD_DR" class="java.lang.String"/>
+	<field name="PROVINCIA_DR" class="java.lang.String"/>
+	<field name="DEP_CONTRATO" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="REPRESENTACION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="84" splitType="Stretch">
+			<image>
+				<reportElement x="60" y="10" width="130" height="60" uuid="da14306e-01ca-4b78-a85d-64c415e63481"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="55" splitType="Stretch">
+			<textField isStretchWithOverflow="true" isBlankWhenNull="false">
+				<reportElement x="60" y="30" width="440" height="20" isPrintWhenDetailOverflows="true" uuid="19f85bcc-1c1c-4ac5-9ff4-83433d52eb16"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["En la Ciudad de Resistencia, el "+$F{DIA}+" de "+new SimpleDateFormat("MMMM").format($F{FecAlta})+" del año "+$F{AÑO}+" entre Nuevo Banco del Chaco S.A., con domicilio en calle Güemes Nº 102 de la ciudad de Resistencia, en adelante “ENTIDAD ORIGINANTE”, representado en este acto por los abajo firmantes, los cuales comparecen en el carácter de apoderados, con facultades suficientes para este acto, otorgadas mediante Poder General Amplio de Administración y Disposición instrumentado en Escritura Nº 75 de fecha 15/07/2016 pasada ante el Escribano Ariel Alfredo Farías, por una parte y por la otra "+$F{NOMBRECLIENTE}+", <b>CUIT Nº "+$F{Cuit}+"</b>, con domicilio en "+$F{CALLE_DR}+"N° "+$F{NRO_DR}+$F{APTO_DR}+" "+$F{PISO_DR}+", de la localidad de "+$F{LOCALIDAD_DR}+", con domicilio fiscal en "+$F{CALLE_DF}+" N° "+$F{NRO_DF}+", "+$F{APTO_DF}+" "+$F{PISO_DF}+", teléfono "+$F{TEL_DF}+" representada en este acto por los abajo firmantes, los que comparecen en nombre y representación de "+$F{REPRESENTACION}+", en adelante “ENTE ORDENANTE”, convienen en celebrar el presente Convenio de <b>DEBITO DIRECTO</b>, que se regirá por las siguientes cláusulas y condiciones:<br>"+
+
+"<p><b>1. OBJETO. CARACTERÍSTICAS DEL SERVICIO.</b></p>"+
+"<p>El ENTE ORDENANTE <u>solicita</u>, y la ENTIDAD ORIGINANTE <u>acepta</u>, su adhesión al Servicio de Débito Directo en el marco del Sistema Nacional de Pagos.</p>"+
+"<p>El servicio se prestará en los términos y condiciones que a continuación se detallan, así como también conforme la normativa vigente del Banco Central de la República Argentina para el Sistema Nacional de Pagos para el producto Débito Directo.</p><br>"+
+
+"<p><b>A los efectos del presente convenio, se entenderá por:</b></p>"+
+"<p><u>CLIENTE RECEPTOR:</u> cliente del ENTE ORDENANTE.</p>"+
+"<p><u>CUENTA:</u> cuenta a la vista del CLIENTE RECEPTOR.</p>"+
+"<p><u>ENTIDAD RECEPTORA:</u>Entidad financiera que recibe los débitos directos destinados a sus clientes, y donde se encuentran abiertas las cuentas a debitar.</p><p> CUENTA RECAUDADORA: <b>CUENTA "+$F{TIPO_CUENTA_REC}+" N° "+$F{CUENTA_REC}+"</b> de sucursal "+$F{LOC_SUC_REC}+" ("+$F{SUCURSAL_REC}+"), de titularidad del ENTE ORDENANTE, habilitada en la ENTIDAD ORIGINANTE, donde se acreditarán los montos recaudados –importes autorizados por los CLIENTES RECEPTORES adheridos al Servicio de Débito Directo- y de la cual, la ENTIDAD ORIGINANTE debitará las comisiones mencionadas en cláusula <b>12.</b></p><br>"+
+
+"<p>La ENTIDAD ORIGINANTE cursará las órdenes de débito directo que el ENTE ORDENANTE realice sobre las CUENTAS que los CLIENTES RECEPTORES tengan en cualquier ENTIDAD RECEPTORA, con recaudación a favor del ENTE ORDENANTE de las sumas autorizadas por dichos CLIENTES RECEPTORES. La rendición de los montos recaudados será acreditada por la ENTIDAD ORIGINANTE en la CUENTA RECAUDADORA.</p>"+
+"<p>La ENTIDAD ORIGINANTE cursará asimismo los débitos que se generen por adhesión de CLIENTES RECEPTORES directamente en las respectivas ENTIDADES RECEPTORAS.</p><br>"+
+
+"<p>La ENTIDAD ORIGINANTE deberá integrar conjuntamente con el alta del presente convenio, con datos del ENTE ORDENANTE, el “Formulario ABM de Empresas” por medio del cual se documentarán e informarán a la Cámara Electrónica de Compensación (CEC) las Altas, Bajas y Modificaciones de Empresas. Dicho formulario deberá ser validado (suscripto) por el ENTE ORDENANTE en cada oportunidad (alta, baja o modificación).</p><br>"+
+
+"<p><b>2. AUTORIZACIÓN DE DÉBITO. LEGAJO.</b></p>"+
+"<p>A los fines de esta operatoria, el ENTE ORDENANTE se compromete a la obtención, guarda y tenencia de la autorización original de débito directo en cuenta suscrita por cada CLIENTE RECEPTOR y validada por el ENTE ORDENANTE, la cual es parte del legajo del CLIENTE RECEPTOR.</p>"+
+"<ul>Dicho legajo deberá contener como mínimo los siguientes requisitos:"+
+    "<li>Fotocopia del Documento (D.N.I.) del CLIENTE RECEPTOR, visada con original por personal autorizado del ENTE ORDENANTE.</li>"+
+    "<li>Constatación de domicilio real del CLIENTE RECEPTOR mediante fotocopia de boleta de servicio (luz agua, cable, etc.) a nombre del CLIENTE RECEPTOR (o en su defecto, certificado de domicilio expendido por la policía) visada con original por personal autorizado del ENTE ORDENANTE.</li>"+
+    "<li>Autorización en original de débito directo suscrita por el CLIENTE RECEPTOR y validada por la ENTE ORDENANTE la cual deberá contener obligatoriamente los siguientes datos del CLIENTE RECEPTOR:"+
+        "<p>a) Nombre del titular de la CUENTA a debitar;</p>"+
+        "<p>b) Documento de identidad del titular de la CUENTA;</p>"+
+        "<p>c) Clave Bancaria Uniforme completa (CBU);</p>"+
+        "<p>d) Número de CUENTA a debitar;</p>"+
+        "<p>e) Código de identificación del CLIENTE RECEPTOR definido por el ENTIDAD ORDENANTE;</p>"+
+        "<p>f) La identificación y características del pago (identificación y propósito del pago).</p>"+
+    "</li>"+
+"</ul><br>"+
+
+"<p>Se adjunta en <u><b>Anexo I</b></u> que integra este convenio, <b>“Modelo de Formulario Autorización Débito Directo”</b> a los fines de ser utilizado como modelo por el ENTE ORDENANTE, debiendo instrumentarse por duplicado y suministrarse copia al CLIENTE RECEPTOR.</p><br>"+
+"<p>La documental mencionada en la presente cláusula, deberá contar con intervención de personal autorizado por el ENTE ORDENANTE que manifieste haber tenido a la vista los respectivos originales y que la firma se ha impuesto en su presencia.</p><br>"+
+"<p>La ENTIDAD ORIGINANTE podrá requerir al ENTE ORDENANTE que le remita el legajo físico o digitalizado del CLIENTE RECEPTOR. El ENTE ORDENANTE deberá realizar el envío del legajo digitalizado del CLIENTE RECEPTOR dentro de las veinticuatro (24) horas hábiles bancarias siguientes a la recepción del pedido por parte de la ENTIDAD ORIGINANTE, a la dirección de correo electrónico <u>oficinaservicios@nbch.com.ar</u> y deberá remitir a la ENTIDAD ORIGINANTE el legajo físico del CLIENTE RECEPTOR dentro de las cuarenta y ocho (48) horas hábiles bancarias siguientes a la recepción del mismo pedido.</p><br>"+
+"<p>La ENTIDAD ORIGINANTE podrá realizar en la sede del ENTE ORDENANTE, en cualquier momento y sin sin necesidad de aviso previo, verificación de la existencia y regularidad de los legajos y autorizaciones de débito directo.</p><br>"+
+
+"<b><p>3. OBLIGACIONES DE LAS PARTES.</p>"+
+"<p>3.1. Del ENTE ORDENANTE:</p></b>"+
+"<p>a) Obtener del CLIENTE RECEPTOR la Autorización del Débito Directo mencionada en la cláusula <b>2.</b>, y asegurar que toda esta información se encuentre a disposición de la ENTIDAD ORIGINANTE y/o de las ENTIDADES RECEPTORAS y/o de los CLIENTES RECEPTORES en caso de ser solicitado por estos últimos. Es de exclusiva responsabilidad del ENTE ORDENANTE, la integridad y la exactitud de la información suministrada.</p>"+
+"<p>b) Asegurar el conocimiento por parte del CLIENTE RECEPTOR del importe a debitar, con una antelación mínima de cinco (5) días hábiles respecto a la fecha fijada para el débito.</p>"+
+"<p>c) Enviar a la ENTIDAD ORIGINANTE la orden de débito, lo que representará la adhesión automática del CLIENTE RECEPTOR al servicio referido en el presente convenio.</p>"+
+"<p>d) Informar a sus CLIENTES RECEPTORES que pueden solicitar la suspensión de un débito –en adelante “STOP DEBIT”- hasta el día hábil anterior –inclusive- a la fecha de su vencimiento."+
+"Si el STOP DEBIT fuese solicitado ante el ENTE ORDENANTE con posterioridad a que se haya realizado el envío de la orden de débito directo a la ENTIDAD ORIGINANTE, éste requerirá el STOP DEBIT a la ENTIDAD ORIGINANTE"+
+"dentro de las veinticuatro horas (24) de recibida tal solicitud. El CLIENTE RECEPTOR también puede solicitar el STOP DEBIT ante la ENTIDAD RECEPTORA.</p>"+
+"<p>e) Informar a sus CLIENTES RECEPTORES que pueden solicitar la reversión de débitos directos por el total de cada operación, dentro de los treinta (30) días corridos contados desde la fecha de dicho débito, en cuyo caso la devolución será efectuada dentro de las setenta y dos (72) horas hábiles siguientes a la fecha en que lo solicite, pudiendo el ENTE ORDENANTE oponerse a la reversión cuando se trate de un importe mayor a $750,00 y acredite haber subsanado la diferencia de facturación en forma directa. Dicha solicitud podrá ser cursada ante el ENTE ORDENANTE, en cuyo caso éste deberá informar a la ENTIDAD ORIGINANTE para que proceda a la reversión, o bien, ante la ENTIDAD RECEPTORA.</p>"+
+"<p>f) Actualizar datos del “Formulario ABM de Empresas” mencionado en cláusula <b>1.</b> del presente convenio, ante el requerimiento realizado por la ENTIDAD ORIGINANTE vía correo electrónico aceptado como medio de comunicación fehaciente según clausula <b>13.</b> Vencido el plazo de los treinta (30) días de enviada la notificación y no contando la ENTIDAD ORIGINANTE con cumplimiento de lo solicitado, podrá inhabilitar temporalmente el convenio hasta que se dé cumplimiento al mencionado requerimiento.</p>"+
+"<p><b>3.2. De la ENTIDAD ORIGINANTE:</b></p>"+
+"<p>a) Cursar a través del Sistema Nacional de Pagos los débitos ordenados por el ENTE ORDENANTE.</p>"+
+"<p>b) Acreditar las sumas debitadas a favor del ENTE ORDENANTE dentro de las cuarenta y ocho (48) horas a contar desde la compensación de saldos de Cámara en la CUENTA RECAUDADORA previa deducción de las comisiones, cargas fiscales que correspondan y, en caso de existir, las reversas solicitadas por los CLIENTES RECEPTORES, según lo previsto en cláusula <b>3.1.</b> inciso <b>e)</b>.</p>"+
+"<p>c) Poner a disposición del ENTE ORDENANTE, dentro de las cuarenta y ocho (48) horas de Compensación de los saldos de Cámara, un listado con los débitos rechazados por las ENTIDADES RECEPTORAS.</p>"+
+"<p>d) Solicitar al ENTE ORDENANTE la actualización de datos del “Formulario ABM de Empresas” mencionado en cláusula <b>1.</b> del presente convenio, ante la existencia de “alertas” informadas a la ENTIDAD ORIGINANTE por la Cámara Electrónica de Compensación (CEC). Esta solicitud será cursada vía correo electrónico aceptado como medio de comunicación fehaciente según cláusula <b>13.</b> Vencido el plazo de los treinta (30) días de enviada la notificación y no contando la ENTIDAD ORIGINANTE con cumplimiento de lo solicitado, podrá inhabilitar temporalmente el convenio hasta que se dé cumplimiento al mencionado requerimiento.</p><br>"+
+
+"<p><b>4. DESCUENTOS NO AUTORIZADOS.</b></p>"+
+"<p>En caso de que la ENTIDAD ORIGINANTE detectara órdenes de débito sin expresa autorización del CLIENTE RECEPTOR otorgada en los términos de este convenio, y sin perjuicio del débito correspondiente de la CUENTA RECAUDADORA, la ENTIDAD ORIGINANTE aplicará al ENTE ORDENANTE una multa equivalente de cinco a diez (5 a 10) veces el importe reintegrado, la que se debitará de la CUENTA RECAUDADORA y/o se retendrá de cualquier suma existente a su favor en la ENTIDAD ORIGINANTE.</p>"+
+"<p>Se prevé especialmente que la existencia de más de un caso de débito sin suficiente autorización constituirá causal suficiente para que la ENTIDAD ORIGINANTE resuelva el presente convenio. La resolución se producirá desde la fecha de recepción de la comunicación fehaciente en tal sentido al ENTE ORDENANTE.</p>"+
+"<p>La presente cláusula será de aplicación en caso de débitos requeridos por un importe superior al autorizado por el CLIENTE RECEPTOR. A los fines del segundo párrafo de esta cláusula la multa se aplicará sobre el importe requerido en exceso.</p><br>"+
+
+"<p><b>5. OPERATORIA</b></p>"+
+"<p><b>5.1.</b> La ENTIDAD ORDENATE sólo practicará los débitos cuando existan en las CUENTAS, fondos suficientes para el pago total requerido, y en ningún caso practicará débitos por montos parciales.</p>"+
+"<p><b>5.2.</b> Las sumas debitadas y recaudadas a favor del ENTE ORDENANTE serán acreditadas por la ENTIDAD ORIGINANTE, en forma DIARIA/SEMANAL/MENSUAL, en la CUENTA RECAUDADORA, o CUENTA RECAUDADORA que el ENTE"+
+"ORDENANTE indique en el futuro a la ENTIDAD ORIGINANTE por medio fehaciente, previa deducción de las comisiones y cargas fiscales que correspondan y reversas solicitadas por el CLIENTE RECEPTOR, según lo previsto en cláusula <b>3.1.</b> inciso <b>e).</b></p>"+
+"<p><b>5.3.</b> La ENTIDAD ORIGINANTE podrá realizar la acreditación dentro de las cuarenta y ocho (48) horas de contar desde el cierre del período pactado.</p>"+
+"<p><b>5.4.</b> Para la ejecución del este convenio, el ENTE ORDENANTE deberá importar el archivo con Listado de Débitos a practicar <b>mensualmente</b>, a través del módulo \"AUTOGESTIÓN\" (o sistema de gestión que en lo sucesivo la ENTIDAD ORIGINANTE implemente) que se encuentra en el sitio web institucional <u>http://www.nbch.com.ar</u>, con cuarenta y ocho (48) horas de anticipación a la fecha de inicio de los procesos de débitos en cuenta, indicada por el ENTE ORDENANTE en dicho archivo. El mismo deberá ser elaborado conforme formato que será suministrado por la ENTIDAD ORIGINANTE. Será exclusiva responsabilidad del ENTE ORDENANTE la integridad y la exactitud de la información suministrada.</p>"+
+"<p><b>5.5. Importación y Descarga de archivo.</b> El ENTE ORDENANTE deberá ingresar al módulo “AUTOGESTIÓN”, donde realizará la <u>importación del archivo</u> a través del acceso \"Carga de Recaudaciones\" y la <u>descarga de archivo de rendición</u> a través del acceso \"Descarga de Reportes de Recaudación\". Para el ingreso, el ENTE ORDENANTE contará con Usuario y Contraseña de Autoconsultas, otorgado por la ENTIDAD ORIGINANTE.</p><br>"+
+
+
+"<p><b>6.</b> A los efectos de esta operatoria, el ENTE ORDENANTE autoriza a la ENTIDAD ORIGINANTE la asignación del rol <b>\"CONVENIOS RECAUDACIONES\"</b> en el módulo AUTOGESTIÓN para el usuario ____________________ de Autoconsultas con el que ya cuenta el ENTE ORDENANTE y al cual se hace referencia en el punto <b>5.5.</b> del presente convenio.</p><br>"+
+
+"<p><b>7. FALTA DE EXCLUSIVIDAD.</b></p>"+
+"<p>Este servicio es prestado por la ENTIDAD ORIGINANTE a otros ENTES ORDENANTES, no existiendo derecho alguno del ENTE ORDENANTE a exclusividad o prioridad de ningún tipo.</p><br>"+
+
+
+"<p><b>8. INCUMPLIMIENTO.</b></p>"+
+"<p>La falta de cumplimiento de cualquiera de las obligaciones de las partes, previstas en el presente convenio, dentro de los diez (10) días de intimado fehacientemente, con las modalidades convenidas, habilitará a la parte cumplidora a requerir la resolución del convenio.</p><br>"+
+
+"<p><b>9.</b> RESPONSABILIDAD DE LAS PARTES. CLÁUSULA DE INDEMNIDAD.</p>"+
+"<p>La ENTIDAD ORIGINANTE no se responsabiliza por las relaciones y/o acuerdos comerciales existentes entre el ENTE ORDENANTE y los CLIENTES RECEPTORES. La ENTIDAD ORIGINANTE no asume otra responsabilidad que la derivada del presente Convenio, quedando establecido que se limitará única y exclusivamente a cursar las órdenes de débitos en cuenta presentadas por el ENTE ORDENANTE y acreditar lo recaudado en la CUENTA RECAUDADORA, sin estar obligado al cumplimiento de cualquier otra función no determinada expresamente en el presente.</p>"+
+"<p>El ENTE ORDENANTE será exclusivo responsable de los daños que pudieren originarse a los CLIENTES RECEPTORES como consecuencia de requerimientos incorrectos de débitos o sin la debida autorización. El ENTE ORDENANTE mantendrá indemne a la ENTIDAD ORIGINANTE en caso de cualquier reclamo y/o demanda que en virtud y/o en ocasión de un débito pudiera presentarse en su contra.</p><br>"+
+
+"<p><b>10.</b> La ENTIDAD ORIGINANTE no tendrá responsabilidad alguna para el caso de que por fuerza mayor y/o por causas ajenas no pudiere cumplimentar alguna de las obligaciones establecidas y/o se demorase en la ejecución de las mismas. Entiéndase por hecho de fuerza mayor, cualquier hecho que ocurra excediendo la capacidad de control de la ENTIDAD ORIGINANTE, incluyendo sin restricciones: falta de disponibilidad de sistemas de comunicación, sabotaje, incendio, inundación, explosión, caso fortuito, conmoción, huelgas o cualquier tipo de disturbios, insurrección, guerras o actos de gobierno, o cualquier hecho o circunstancia que afecte el normal funcionamiento del Sistema Nacional de Pagos y/o de las"+
+"cámaras compensadoras que intervengan en cada operatoria. Asimismo, en estos supuestos, y si los mismos duraran más de tres meses, cualquiera de las partes podrá rescindir el acuerdo previa comunicación fehaciente a la contraparte y sin que dicho acto genere derecho a resarcimiento alguno.</p><br>"+
+
+"<p><b>11.</b> Ni el ENTE ORDENANTE ni la ENTIDAD ORIGINANTE podrán en ningún momento durante la vigencia del presente Convenio, e inclusive una vez extinguido el mismo, sin el consentimiento otorgado por escrito por la otra parte, divulgar, revelar o hacer público cualquier tipo de información, cualquiera sea la naturaleza de la misma, ya sea: 1) en conexión con los negocios u otros temas de la ENTIDAD ORIGINANTE o del ENTE ORDENANTE de los cuales cualquiera de las partes tomara conocimiento en virtud del presente Convenio, 2) relacionada con planes, estrategias o promociones relativos a los servicios, 3) información no relacionada con los negocios pero que pueda ser considerada confidencial ya sea por la ENTIDAD ORIGINANTE o por el ENTE ORDENANTE. Dicha información será tratada como estrictamente confidencial, excepto aquella que deba ser revelada por la ENTIDAD ORIGINANTE o por el ENTE ORDENANTE como consecuencia de una ley, regulación u orden judicial.</p><br>"+
+
+"<p><b>12. COMISIÓN.</b></p>"+
+"<p>La ENTIDAD ORIGINANTE percibirá del ENTE ORDENANTE una comisión del tres por ciento (3%) más IVA, sobre el monto de cada débito requerido y efectivizado por la ENTIDAD ORIGINANTE. Asimismo, se establece una comisión fija mensual de Pesos trescientos ($300,00) más IVA. Estas comisiones serán cobradas por la ENTIDAD ORIGINANTE en forma automática, mediante débito de la CUENTA RECAUDADORA y/o cuenta que en el futuro se afecte para esta operatoria y/o de cualquier otra cuenta y/o saldo acreedor que registre en la ENTIDAD ORIGINANTE, para lo cual el ENTE ORDENANTE presta suficiente autorización.</p>"+
+"<p>La ENTIDAD ORIGINANTE podrá ajustar las comisiones establecidas previa comunicación al ENTE ORDENANTE con treinta (30) días de anticipación a la aplicación de los nuevos valores. En caso de disconformidad con los mismos, el ENTE ORDENANTE podrá rescindir el presente convenio a partir de la fecha de entrada en vigencia de los nuevos valores, sin que ello genere derecho a indemnización alguna para las partes.</p><br>"+
+
+"<p><b>13. COMUNICACIONES DE LA ENTIDAD ORIGINANTE AL ENTE ORDENANTE. NOTIFICACIONES.</b></p>"+
+"<p>El ENTE ORDENANTE <u>acepta</u>como medio de comunicación fehaciente a los fines del presente convenio, el envío por la ENTIDAD ORIGINANTE de un correo electrónico a la dirección que a continuación y en forma manuscrita el mismo ENTE ORDENANTE inserta, obligándose a consultar diariamente la misma. Las comunicaciones así remitidas se considerarán realizadas en la fecha de su emisión.</p>"+
+
+"<p><b>Dirección/es de correo electrónico del ENTE ORDENANTE:</p></b>"+
+"_______________________________________________________________________________<br>"+
+
+"<p><b>14. AUTORIZACIÓN DE DÉBITOS Y RETENCIONES.</b></p>"+
+"<p>El ENTE ORDENANTE autoriza en forma expresa y suficiente a la ENTIDAD ORIGINANTE a que retenga de las sumas recaudadas, como así también de cualquier saldo acreedor que pudiera existir a su favor por cualquier concepto en la ENTIDAD ORIGINANTE y/o que se debite de la CUENTA RECAUDADORA o de cualquier otra cuenta abierta en la ENTIDAD ORIGINANTE, aún en descubierto, los importes que se reintegren a los CLIENTES RECEPTORES, las comisiones pactadas, las multas y los impuestos a su cargo.</p><br>"+
+
+"<p><b>15. VIGENCIA.</p></b>"+
+"<p>El presente convenio se ejecutará a partir de su fecha, con vencimiento a los "+$F{Plazo}+"("+$F{W_Plazo}+") meses. Los convenios no operativos por un plazo de 3 (tres) meses corridos, podrán ser dados de baja por la ENTIDAD ORIGINANTE sin aviso previo al ENTE ORDENANTE. Sin perjuicio de ello, podrá ser rescindido por cualquiera de las partes, sin invocación de causa, en cualquier momento, previa denuncia del mismo formulada en forma fehaciente (Carta Documento) al otro contratante con 30"+
+"(treinta) días corridos de anticipación al de su efectivización, sin que tal actitud genere responsabilidad alguna para el denunciante.</p>"+
+"<p>Al extinguirse el convenio, el ENTE ORDENANTE se obliga a devolver a la ENTIDAD ORIGINANTE cualquier material administrativo remanente recibido de esta última que obre en su poder.</p><br>"+
+
+"<p><b>16.</b> Si se suscitaran casos no específicamente contemplados en este convenio, las partes acuerdan que negociarán de buena fe la incorporación de las Cláusulas necesarias destinadas a subsanarlos, cuyas modificaciones serán incorporadas al Convenio a través de Anexos.</p><br>"+
+
+"<p><b>17.</b> El presente convenio y sus anexos constituye el acuerdo integral y único respecto de la materia en él reglada, por lo que prevalecerá sobre cualquier comunicación habida entre las partes con anterioridad al mismo, y/u otros convenios o acuerdos anteriores sobre el mismo objeto. La nulidad, inoponibilidad o inejecutabilidad de cualquiera de las cláusulas del presente contrato no afectará la validez, oponibilidad o ejecutabilidad de las restantes o del contrato. Las partes acuerdan modificar cualquier cláusula que se tornare nula, inoponible o inejecutable por cualquier motivo, procurando su ajuste al espíritu del contrato e intención de las partes al celebrarlo.</p><br>"+
+
+"<p><b>18.</b> Para posibilitar el estricto cumplimiento a la Resolución 11/2011 de la Unidad de Información Financiera, respecto a las personas que se identifican en el formulario de “Declaración Jurada sobre condición de Persona Expuesta Políticamente” como Personas Expuestas Políticamente, al suscribir el presente convenio, los firmantes del ENTE ORDENANTE deberán identificarse en tal condición y acompañar el formulario “Declaración Jurada sobre condición de Persona Expuesta Políticamente” debidamente suscripto ante NBCH, pudiendo adicionar todo otro dato que consideren necesario para la identificación de la condición de Persona Expuesta Políticamente. Asimismo, las partes se comprometen realizar el mejor esfuerzo para el establecimiento de mecanismos de colaboración a fin de mantener actualizada esta información durante el curso de la relación comercial o contractual, proveyendo la información que se tenga disponible al Nuevo Banco del Chaco S.A., a los efectos de verificar si los mismos reúnen la condición señalada. Asimismo, el ENTE ORDENANTE se compromete a prestar colaboración y a suministrar la información que la ENTIDAD ORIGINANTE le requiera, respecto de los CLIENTES RECEPTORES, cuando ello resulte necesario para cumplir con exigencias impuestas por el Banco Central de la República Argentina, la Unidad de Información Financiera y/u otros organismos públicos de control y supervisión. Los formularios de “Declaración Jurada sobre condición de Persona Expuesta Políticamente” y “Declaración Jurada de Sujetos Obligados a informar a la UIF” deberán constar en el legajo de la CUENTA RECAUDADORA del ENTE ORDENANTE.</p><br>"+
+
+"<p><b>19.</b> A todos los efectos legales, judiciales o extrajudiciales, las partes fijan domicilios especiales en los arriba indicados. Para cualquier controversia que pudiera surgir vinculada al presente convenio, las partes someterán la cuestión a la intervención del Centro de Mediación del Poder Judicial del Chaco. Manifiestan asimismo que en caso de fracasar dicha instancia dirimirán la cuestión por ante los tribunales civiles ordinarios de la Ciudad de Resistencia, con renuncia a cualquier otro fuero o jurisdicción, en especial al fuero federal.</p><br>"+
+
+"<p><b>20.</b> El impuesto de sellos estará a cargo de ambas partes. Cualquier otro gasto o impuesto que pudiere corresponder estará a cargo, en su totalidad, del ENTE ORDENANTE.</p><br>"+
+"<p>En prueba de conformidad y previa integra lectura de la presente por los comparecientes se suscriben y se firman dos (2) ejemplares de un mismo tenor en el lugar y fecha indicados al comienzo.</p>"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="60" y="10" width="440" height="16" uuid="b134beb9-6f85-4687-9225-2c6a466b1203"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<u>CONVENIO DE PRESTACIÓN DE SERVICIOS DE DEBITO DIRECTO Nº "+$P{NRO_CONVENIO}+"</u>"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="691">
+			<break>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="0" width="519" height="1" uuid="53271214-077a-41bc-981b-f0dea4cd857b"/>
+			</break>
+			<rectangle>
+				<reportElement positionType="FixRelativeToBottom" mode="Transparent" x="0" y="50" width="550" height="635" uuid="c533692f-529e-4db3-82ad-c571f53c2b23"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="308" y="60" width="230" height="17" uuid="7559f73d-3c2f-4d77-a628-47a2b87c1e5d"/>
+				<text><![CDATA[______________, ___ de __________ de 202___]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="8" y="67" width="253" height="50" uuid="8457a86d-5f32-42dd-984d-88c04db3e1a5"/>
+				<text><![CDATA[Sres:
+________________________ (ENTE ORDENANTE)
+CUIT N° ___ - _____________ -___]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="FixRelativeToBottom" x="8" y="130" width="535" height="280" uuid="6a4cb1e4-f9b5-48ce-9b00-471e64179815"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA["Ref.: <b>AUTORIZACIÓN DÉBITO DIRECTO</b><br>"+
+"Por la presente, el que suscribe _____________________ DNI N° _______________, CUIT/CUIL N° _______________________ del banco _____________________, CBU N° _________________ / ALIAS CBU ______________________, con código de identificación como CLIENTE RECEPTOR N° ________________________ (definido por el <b>ENTE ORDENANTE</b>) autoriza al <b>ENTE ORDENANTE</b> a solicitar a la <b>ENTIDAD ORIGINANTE</b> su adhesión al servicio de Débito Directo en el marco del Sistema Nacional de Pagos, debitando de la cuenta anteriormente declarada, la suma de pesos mensuales / bimestrales / trimestral / semestral / anual <b>(2)</b> correspondientes a_____________________________________________________________________________________ ___________________________ (definir objeto de la cobranza por parte del <b>ENTE ORDENANTE)</b>.<br><br>"+
+"Tomo conocimiento de que es <b>obligación</b> del <b>ENTE ORDENANTE</b> informarme la suma a ser descontada con una antelación mínima de cinco (5) días hábiles respecto de la fecha fijada para el débito que autorizo en este acto.<br><br>"+
+"Me notifico de que cuento con las siguientes facultades:<br>"+
+"a) Solicitar la <b>suspensión</b> de un débito (STOP DEBIT) hasta el día hábil anterior -inclusive- a la fecha de vencimiento. <br>"+
+"b) Solicitar a NUEVO BANCO DEL CHACO S.A. la <b>reversión</b> de débitos por el total de cada operación, dentro de los treinta (30) días corridos contados desde la fecha del débito. En tal caso la devolución será efectuada dentro de la setenta y dos (72) horas hábiles siguientes a la fecha en que lo solicite, pudiendo el <b>ENTE ORDENANTE</b> oponerse a la rebisión cuando se trata de un importe mayor a $ 750,00 y acredite haber subsanado la diferencia de facturación en forma directa."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="200" y="410" width="53" height="22" uuid="0170198a-1346-4855-91c8-bfdacc53bd16"/>
+				<text><![CDATA[atte.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="261" y="420" width="281" height="70" uuid="6c7e47b5-1a00-49dc-a6af-5dd287272349"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA["Firma:__________________________________________<br>"+
+"Nombre y Apellido:________________________________<br>"+
+"Tipo y N° de D.N.I:________________________________<br>"+
+"Domicilio:________________________________________<br>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="500" width="534" height="30" uuid="d0f5ed12-a9a5-4392-bd26-9c2a3464a45b"/>
+				<textFieldExpression><![CDATA["Dejo constancia de que la firma que antecede ha sido puesta en mi presencia, previa verificación de identidad del firmante."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="320" y="540" width="218" height="20" uuid="a9858527-8532-422d-adbf-448476dc3212"/>
+				<text><![CDATA[_____________, ___ de __________ de 202___]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="270" y="570" width="269" height="70" uuid="1878390d-63d2-4da7-bb8c-e4226c69bf94"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA["Firma:__________________________________________<br>"+
+"Nombre y Apellido:________________________________<br>"+
+"Tipo y N° de D.N.I:________________________________<br>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="10" y="650" width="215" height="20" uuid="14160043-4c90-4f16-9ce5-f0f290177675"/>
+				<textElement markup="html"/>
+				<textFieldExpression><![CDATA["<b>(1) (2)</b> Tachar lo que no corresponde."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="10" width="550" height="30" uuid="ee3c2c7f-da9e-4bd5-936e-d6b20983a688"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<u><b>Anexo I - Convenio Débito Directo N° "+$P{NRO_CONVENIO}+"</b><br>"+
+"“Modelo de Formulario Autorización Débito Directo”</u>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="26" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="0" width="100" height="19" uuid="dbf458de-414e-4085-87df-4f309cbc38fa"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="0" width="100" height="19" uuid="d89b3cb3-3c1e-487e-b7c1-a1938325c1f5"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

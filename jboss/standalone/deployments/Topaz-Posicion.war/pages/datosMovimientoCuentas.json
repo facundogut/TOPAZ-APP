@@ -1,0 +1,113 @@
+{
+	"page":{
+		"attributes":[
+			{
+				"label" : "ID SALDO",
+				"key" : "IDSALDO"
+			}
+		],
+		
+		"frames":[
+			{
+				"id":"DatosCuentaVista",
+				"title":"Datos Cuenta Vista",
+				"icon":"documents.png",
+				"type":"Form",
+				"input":{
+					"type":"service",
+					"service":"DatosCuentaVista",
+					"parameters":["IDSALDO"]
+				},				
+				"formProperties":{
+                    "data":[
+                    	[
+	                        {  
+	                            "label":"Sucursal",
+	                            "key":"SUCURSAL"
+	                        },
+	                        {  
+	                            "label":"Producto",
+	                            "key":"PRODUCTO"
+	                        },
+	                        {  
+	                            "label":"Fecha Apertura",
+	                            "key":"FECHAAPERTURA"
+	                        },
+	                        {  
+	                            "label":"Saldo",
+	                            "key":"SALDO"
+	                        }
+                        ]                     
+                    ]
+                }
+			},
+			{
+				"id":"movimientos",
+				"title":"Movimientos",
+				"icon":"documents.png",
+				"type":"Grid",
+				"input":{
+					"type":"service",
+					"service":"Movimientos",
+					"parameters":["IDSALDO"]
+				},		
+				"links":[
+					{
+						"name":"Datos Movimiento",
+						"to":"datosMovimientos",
+						"parameters":["ASIENTO","FECHAPROCESO","SUCURSAL"]
+					}
+				],								
+				"gridProperties":{
+					"pageLength": "20",				
+					"columns":[
+						{
+							"header":"F.Proceso",
+							"value":"FECHAPROCESO"
+						},
+						{
+							"header":"Sucursal",
+							"value":"SUCURSAL"
+						},
+						{
+							"header":"Asiento",
+							"value":"ASIENTO"
+						},
+						{
+							"header":"F.Valor",
+							"value":"FECHAVALOR"
+						},
+						{
+							"header":"Debito / Credito",
+							"value":"DEBITOCREDITO"
+						},
+						{
+							"header":"Moneda",
+							"value":"MONEDA"
+						},
+						{
+							"header":"Capital",
+							"value":"CAPITAL"
+						},
+						{
+							"header":"Usuario",
+							"value":"USUARIO"
+						},
+						{
+							"header":"Hora",
+							"value":"HORA"
+						},
+						{
+							"header":"Nro Operacion",
+							"value":"NROOPERACION"
+						},
+						{
+							"header":"Descripcion",
+							"value":"NOMBREOPERACION"
+						}
+					]
+				}
+			}
+		]
+	}
+}

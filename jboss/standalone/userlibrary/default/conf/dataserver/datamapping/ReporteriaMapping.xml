@@ -1,0 +1,1031 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.reports.query.MayorXRubroQuery</class-name>
+        <query-name>query.vo_MayorXRubro</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					  SELECT SALDO_ANTERIOR,
+					SALDOS_JTS_OID,
+					SIGNO,
+					FECHA_VALOR,
+					MONTO,
+					AJUSTE,
+					FECHAPROCESO,
+					ASIENTO,SUCURSAL,
+					TRREAL,
+					ORDINAL,
+					TRVIRTUAL,
+					TRTIPO,
+					RUBRO,
+					NOMBRECLIENTE,
+					CODIGOCLIENTE,
+					CODIGOMONEDA,
+					CUENTA,
+					OPERACION,
+					DEBITO,
+					CREDITO,
+					CONCEPTO,
+					SALDOALCORTE,
+					FECHACONTABLE,
+					PRODUCTO,OPERSALDO,TIPO FROM (
+					   SELECT SUM(CASE WHEN G.SALDO_AL_CORTE IS NULL THEN 0 ELSE G.SALDO_AL_CORTE END) AS SALDO_ANTERIOR,
+					   0 AS SALDOS_JTS_OID,
+					   ' ' AS SIGNO,
+					   NULL AS FECHA_VALOR,
+					   0 AS MONTO,
+					   ' ' AS AJUSTE,
+					   NULL AS FECHAPROCESO,
+					   0 AS ASIENTO,
+					   G.SUCURSAL,
+					   0 AS TRREAL,
+					   0 AS ORDINAL,
+					   0 AS TRVIRTUAL,
+					   0 AS TRTIPO,
+					   G.RUBRO AS RUBRO,
+					   ' ' AS NOMBRECLIENTE,
+					   0 AS CODIGOCLIENTE,
+					   G.MONEDA AS CODIGOMONEDA,
+					   0 AS CUENTA,
+					   0 OPERACION,
+					   0 AS DEBITO,
+					   0 AS CREDITO,
+					   ' ' AS CONCEPTO,
+					   0 AS SALDOALCORTE,
+					   NULL AS FECHACONTABLE,
+					   0 AS PRODUCTO,
+					  0 AS OPERSALDO, 
+					  1 AS TIPO
+					  
+					  FROM CON_SALDOS_DIARIOS G WHERE G.FECHA = ?
+					  GROUP BY RUBRO, MONEDA, SUCURSAL
+					 UNION ALL
+			
+					SELECT 0 AS SALDO_ANTERIOR,
+					   S.JTS_OID AS SALDOS_JTS_OID,
+					   M.DEBITOCREDITO AS SIGNO,
+					   M.FECHAVALOR AS FECHA_VALOR,
+					   M.CAPITALREALIZADO * -1 AS MONTO,
+					   M.MARCAAJUSTE AS AJUSTE,
+					   M.FECHAPROCESO,
+					   M.ASIENTO,
+					   M.SUCURSAL,
+					   M.TRREAL,
+					   M.ORDINAL,
+					   M.TRVIRTUAL,
+					   M.TRTIPO,
+					   M.RUBROCONTABLE AS RUBRO,
+					   C.NOMBRECLIENTE AS NOMBRECLIENTE,
+					   C.CODIGOCLIENTE AS CODIGOCLIENTE,
+					   M.MONEDA AS CODIGOMONEDA,
+					   M.CUENTA,
+					   M.OPERACION,
+					   (CASE
+					 WHEN M.DEBITOCREDITO = 'D' THEN
+					  M.CAPITALREALIZADO
+					 ELSE
+					  0
+					   END) AS DEBITO,
+					   (CASE
+					 WHEN M.DEBITOCREDITO = 'C' THEN
+					  M.CAPITALREALIZADO
+					 ELSE
+					  0
+					   END) AS CREDITO,
+					   M.CONCEPTO,
+						 0 AS SALDOALCORTE,
+					   M.FECHACONTABLE,
+					   M.PRODUCTO,
+					   S.OPERACION AS OPERSALDO,
+					   2 AS TIPO
+					   
+					  FROM SALDOS S INNER JOIN GRL_SALDOS_DIARIOS G
+					   ON S.JTS_OID = G.SALDOS_JTS_OID
+					   INNER JOIN MOVIMIENTOS_CONTABLES M ON M.SUCURSAL_CUENTA = G.SUCURSAL
+						 AND M.MONEDA = S.MONEDA
+						 AND M.CUENTA = S.CUENTA
+						 AND M.OPERACION_CUENTA = S.OPERACION
+						 AND M.PRODUCTO = S.PRODUCTO
+						 AND M.ORDINAL_CUENTA = S.ORDINAL
+							 AND M.FECHAPROCESO= ?
+							 INNER JOIN ASIENTOS A ON M.SUCURSAL = A.SUCURSAL
+						AND M.ASIENTO = A.ASIENTO
+						AND A.ESTADO = 77
+						AND M.FECHAPROCESO = A.FECHAPROCESO
+					LEFT JOIN CLI_CLIENTES C ON C.CODIGOCLIENTE = S.C1803
+					
+							 UNION ALL               
+			
+					   SELECT 0 AS SALDO_ANTERIOR,
+					   0 AS SALDOS_JTS_OID,
+					   ' ' AS SIGNO,
+					   NULL AS FECHA_VALOR,
+					   0 AS MONTO,
+					   ' ' AS AJUSTE,
+					   NULL AS FECHAPROCESO,
+					   0 AS ASIENTO,
+					   G.SUCURSAL,
+					   0 AS TRREAL,
+					   0 AS ORDINAL,
+					   0 AS TRVIRTUAL,
+					   0 AS TRTIPO,
+					   G.RUBRO AS RUBRO,
+					   ' ' AS NOMBRECLIENTE,
+					   0 AS CODIGOCLIENTE,
+					   G.MONEDA AS CODIGOMONEDA,
+					   0 AS CUENTA,
+					   0 OPERACION,
+					   0 AS DEBITO,
+					   0 AS CREDITO,
+					   ' ' AS CONCEPTO,
+					   SUM(G.SALDO_AL_CORTE) AS SALDOALCORTE,
+						 NULL AS FECHACONTABLE,
+						 0 AS PRODUCTO,
+						 0 AS OPERSALDO,
+						 3 AS TIPO
+					  FROM CON_SALDOS_DIARIOS G WHERE G.FECHA = ?
+					  GROUP BY RUBRO, MONEDA, SUCURSAL    
+					) T ORDER BY RUBRO, CODIGOMONEDA,SUCURSAL,TIPO, CODIGOCLIENTE, CUENTA, PRODUCTO, OPERACION, ORDINAL, FECHACONTABLE   
+				</sentence>
+        <attribute>
+            <attribute-name>SALDO_ANTERIOR</attribute-name>
+            <column-name>SALDO_ANTERIOR</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDOS_JTS_OID</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SIGNO</attribute-name>
+            <column-name>SIGNO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHA_VALOR</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>MONTO</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>AJUSTE</attribute-name>
+            <column-name>AJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHAPROCESO</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ASIENTO</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SUCURSAL</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>TRREAL</attribute-name>
+            <column-name>TRREAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ORDINAL</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>TRVIRTUAL</attribute-name>
+            <column-name>TRVIRTUAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>TRTIPO</attribute-name>
+            <column-name>TRTIPO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>RUBRO</attribute-name>
+            <column-name>RUBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>NOMBRECLIENTE</attribute-name>
+            <column-name>NOMBRECLIENTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CODIGOCLIENTE</attribute-name>
+            <column-name>CODIGOCLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CODIGOMONEDA</attribute-name>
+            <column-name>CODIGOMONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CUENTA</attribute-name>
+            <column-name>CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>OPERACION</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>DEBITO</attribute-name>
+            <column-name>DEBITO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CREDITO</attribute-name>
+            <column-name>CREDITO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CONCEPTO</attribute-name>
+            <column-name>CONCEPTO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDOALCORTE</attribute-name>
+            <column-name>SALDOALCORTE</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHACONTABLE</attribute-name>
+            <column-name>FECHACONTABLE</column-name>
+            <column-type>date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>PRODUCTO</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <column-type>date</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.reports.query.ControlSaldoAlCorteQuery</class-name>
+        <query-name>query.vo_ControlSaldoAlCorteQuery</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT SUCURSAL,
+					       MONEDA,
+					       CUENTA,
+					       OPERACION,
+					       ORDINAL,
+					       PRODUCTO,
+					       RUBROCONTABLE,
+					       SALDO_ANTERIOR,
+					       SALDO_ACTUAL,
+					       DEBITOS,
+					       CREDITOS
+					  FROM (SELECT SUCURSAL,
+					               MONEDA,
+					               CUENTA,
+					               OPERACION,
+					               ORDINAL,
+					               PRODUCTO,
+					               RUBROCONTABLE,
+					               SUM(SALDO_ANTERIOR) AS SALDO_ANTERIOR,
+					               SUM(SALDO_ACTUAL) AS SALDO_ACTUAL,
+					               SUM(DEBITOS) AS DEBITOS,
+					               SUM(CREDITOS) AS CREDITOS
+					          FROM (SELECT SD.SUCURSAL,
+					                       S.MONEDA,
+					                       S.CUENTA,
+					                       S.OPERACION,
+					                       S.PRODUCTO,
+					                       S.ORDINAL,
+					                       SD.RUBROCONTABLE AS RUBROCONTABLE,
+					                       SALDO_AJUSTADO AS SALDO_ANTERIOR,
+					                       0 AS SALDO_ACTUAL,
+					                       0 As DEBITOS,
+					                       0 as CREDITOS
+					                  FROM SALDOS S, GRL_SALDOS_DIARIOS SD
+					                 WHERE S.JTS_OID = SD.SALDOS_JTS_OID
+					                   AND SD.FECHA = ?
+					                UNION ALL
+					                SELECT M.SUCURSAL,
+					                       M.MONEDA,
+					                       M.CUENTA,
+					                       M.OPERACION_CUENTA AS OPERACION,
+					                       M.PRODUCTO,
+					                       M.ORDINAL_CUENTA AS ORDINAL,
+					                       M.RUBROCONTABLE,
+					                       0 AS SALDO_ANTERIOR,
+					                       0 AS SALDO_ACTUAL,
+					                       (CASE
+					                         WHEN M.DEBITOCREDITO = 'D' THEN
+					                          M.CAPITALREALIZADO
+					                         ELSE
+					                          0
+					                       END) AS DEBITO,
+					                       (CASE
+					                         WHEN M.DEBITOCREDITO = 'C' THEN
+					                          M.CAPITALREALIZADO
+					                         ELSE
+					                          0
+					                       END) AS CREDITO
+					                  FROM MOVIMIENTOS_CONTABLES M, ASIENTOS A
+					                 WHERE M.FECHAPROCESO = A.FECHAPROCESO
+					                   AND M.SUCURSAL = A.SUCURSAL
+					                   AND M.ASIENTO = A.ASIENTO
+					                   AND A.ESTADO = 77
+					                   AND M.FECHAPROCESO = ?
+					                
+					                UNION ALL
+					                SELECT SD.SUCURSAL,
+					                       S.MONEDA,
+					                       S.CUENTA,
+					                       S.OPERACION,
+					                       S.PRODUCTO,
+					                       S.ORDINAL,
+					                       SD.RUBROCONTABLE AS RUBROCONTABLE,
+					                       0 AS SALDO_ANTERIOR,
+					                       SALDO_AJUSTADO AS SALDO_ACTUAL,
+					                       0 As DEBITOS,
+					                       0 as CREDITOS
+					                  FROM SALDOS S, GRL_SALDOS_DIARIOS SD
+					                 WHERE S.JTS_OID = SD.SALDOS_JTS_OID
+					                   AND SD.FECHA = ?) TT
+					         GROUP BY RUBROCONTABLE,
+					                  MONEDA,
+					                  SUCURSAL,
+					                  CUENTA,
+					                  OPERACION,
+					                  PRODUCTO,
+					                  ORDINAL,
+					                  PRODUCTO) T
+					 WHERE SALDO_ANTERIOR + CREDITOS - DEBITOS != SALDO_ACTUAL
+					 ORDER BY RUBROCONTABLE, MONEDA, SUCURSAL
+				</sentence>
+        <attribute>
+            <attribute-name>SUCURSAL</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CODIGOMONEDA</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CUENTA</attribute-name>
+            <column-name>CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>OPERACION</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ORDINAL</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>PRODUCTO</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>RUBRO</attribute-name>
+            <column-name>RUBROCONTABLE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_ANTERIOR</attribute-name>
+            <column-name>SALDO_ANTERIOR</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_ACTUAL</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>DEBITOS</attribute-name>
+            <column-name>DEBITOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CREDITOS</attribute-name>
+            <column-name>CREDITOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.reports.query.InventarioDeSaldosQuery</class-name>
+        <query-name>query.vo_InventarioDeSaldosQuery</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT G.RUBROCONTABLE AS RUBRO,
+					             S.MONEDA AS CODIGOMONEDA,
+					             G.SUCURSAL,
+					             S.OPERACION,
+					             S.ORDINAL,
+					             G.SALDO_AL_CORTE AS SALDO_ACTUAL,
+					             S.c1621 AS FECHA_ALTA,                    -- Campo con concepto 62
+					             S.c1628 AS FECHA_PROX_VENCIMIENTO,        -- Campo con concepto 67
+					             S.c1632 AS TASA_INTERES,                  -- Campo con concepto 69
+					             S.C1627 AS FECHA_VENCIMIENTO,             -- Campo con concepto 66
+					             S.C1803 AS CLIENTE,                       -- Campo con concepto 607
+					             S.CUENTA,
+					             C.NOMBRECLIENTE,
+					                    S.C1785 AS TIPOPRODUCTO,                  -- Campo con concepto 615
+					                    G.FECHA AS FECHA_PROCESO,
+					                    S.PRODUCTO
+					        FROM SALDOS S INNER JOIN GRL_SALDOS_DIARIOS G ON G.SALDOS_JTS_OID = S.JTS_OID
+					        AND G.FECHA = ? AND ((S.C1651 != '1' AND S.C1785 IN (4,5,6,7)) OR (S.C1604 != 0 AND S.C1785 IN (0,1,2,3)))                                 -- Campo C1651 con concepto 604     1604 campo con concepto 47              
+					        LEFT JOIN CLI_CLIENTES C ON S.C1803 = C.CODIGOCLIENTE
+					       ORDER BY S.C1730, S.MONEDA, G.SUCURSAL, S.C1785  
+				</sentence>
+        <attribute>
+            <attribute-name>RUBRO</attribute-name>
+            <column-name>RUBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CODIGOMONEDA</attribute-name>
+            <column-name>CODIGOMONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SUCURSAL</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>OPERACION</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ORDINAL</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_ACTUAL</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHA_ALTA</attribute-name>
+            <column-name>FECHA_ALTA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHA_PROX_VENCIMIENTO</attribute-name>
+            <column-name>FECHA_PROX_VENCIMIENTO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>TASA_INTERES</attribute-name>
+            <column-name>TASA_INTERES</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHA_VENCIMIENTO</attribute-name>
+            <column-name>FECHA_VENCIMIENTO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CLIENTE</attribute-name>
+            <column-name>CLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CUENTA</attribute-name>
+            <column-name>CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>NOMBRECLIENTE</attribute-name>
+            <column-name>NOMBRECLIENTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>TIPOPRODUCTO</attribute-name>
+            <column-name>TIPOPRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHA_PROCESO</attribute-name>
+            <column-name>FECHA_PROCESO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>PRODUCTO</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.reports.query.ControlPorMonedaQuery</class-name>
+        <query-name>query.vo_ControlPorMonedaQuery</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT SUM(SALDO_AL_CORTE) AS SALDO_AL_CORTE,
+				 SUM(SALDO_AJUSTADO) AS SALDO_AJUSTADO,
+				 CODIGOMONEDA,
+				 CONTROL,
+				 ? AS FECHA_EJECUCION
+			FROM (SELECT SUM(G.SALDO_AL_CORTE) AS SALDO_AL_CORTE,
+				   SUM(G.SALDO_AJUSTADO) AS SALDO_AJUSTADO,
+				   G.MONEDA AS CODIGOMONEDA,
+				   CASE
+			   WHEN P.C6304 IN (6, 7) THEN
+				3
+			   ELSE
+				CASE
+			   WHEN P.C6304 IN (4, 5) THEN
+				2
+			   ELSE
+				3
+					 END END AS CONTROL
+			  FROM PLANCTAS P
+			 INNER JOIN CON_SALDOS_DIARIOS G ON G.RUBRO = P.C6326
+					AND G.FECHA = ?
+			 GROUP BY P.C6304, G.MONEDA)
+			GROUP BY CONTROL, CODIGOMONEDA
+			ORDER BY CONTROL, CODIGOMONEDA
+		</sentence>
+        <attribute>
+            <attribute-name>SALDO_AL_CORTE</attribute-name>
+            <column-name>SALDO_AL_CORTE</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_AJUSTADO</attribute-name>
+            <column-name>SALDO_AJUSTADO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CODIGOMONEDA</attribute-name>
+            <column-name>CODIGOMONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CONTROL</attribute-name>
+            <column-name>CONTROL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHA_EJECUCION</attribute-name>
+            <column-name>FECHA_EJECUCION</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.reports.query.ControlPorAsientoQuery</class-name>
+        <query-name>query.vo_ControlPorAsientoQuery</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT  H.RUBROCONTABLE AS RUBRO, H.CUENTA, H.OPERACION, H.ASIENTO,H.DEBITO,H.CREDITO, H.FECHAPROCESO,H.FECHAVALOR,H.MARCAAJUSTE,H.MONEDA AS CODIGOMONEDA,H.CONTROL,H.SUCURSAL, ? as FECHA_EJECUCION,H.GRUPO_BALANCE,H.SIGNO FROM 
+			(SELECT M.RUBROCONTABLE, M.CUENTA, M.OPERACION, M.ASIENTO,
+			       (CASE
+				 WHEN M.DEBITOCREDITO = 'D' THEN
+				  M.CAPITALREALIZADO
+				 ELSE
+				  0
+			       END) AS DEBITO,
+			       (CASE
+				 WHEN M.DEBITOCREDITO = 'C' THEN
+				  M.CAPITALREALIZADO
+				 ELSE
+				  0
+			       END) AS CREDITO,
+			       M.FECHAPROCESO,
+			       M.FECHAVALOR,
+			       M.MARCAAJUSTE,
+			       M.MONEDA,
+			       (CASE
+				 WHEN P.C6304 IN (6, 7) THEN
+				  3
+				 WHEN P.C6304 IN (4, 5) THEN
+				  2
+				 ELSE
+				  1
+			       END) AS CONTROL,
+			       M.SUCURSAL,
+			       P.C6304 AS GRUPO_BALANCE,
+			       M.DEBITOCREDITO AS SIGNO
+			  FROM MOVIMIENTOS_CONTABLES M
+			 INNER JOIN ASIENTOS A ON A.ASIENTO = M.ASIENTO
+					      AND A.FECHAPROCESO = M.FECHAPROCESO
+					      AND A.SUCURSAL = M.SUCURSAL
+					      AND M.FECHAPROCESO = ?
+					      AND A.ESTADO = 77
+			 INNER JOIN PLANCTAS P ON 
+			 M.RUBROCONTABLE = P.C6326) H
+			 INNER JOIN
+			  (SELECT DISTINCT ASIENTO,SUCURSAL,FECHAPROCESO, MONEDA FROM (SELECT ASIENTO,
+						   SUCURSAL,
+						   FECHAPROCESO,
+						   FECHAVALOR,
+						   MONEDA,
+						   CONTROL_BALANCE,
+						   sum(DEBITO) AS DEBITO,
+						   sum(CREDITO) AS CREDITO
+					      FROM (SELECT M.MARCAAJUSTE,a.ASIENTO,
+							   a.SUCURSAL,
+							   a.FECHAPROCESO,
+							   M.FECHAVALOR,
+							   m.moneda,
+							   (CASE
+							     WHEN P.C6304 IN (6, 7) THEN
+							      3
+							     WHEN P.C6304 IN (4, 5) THEN
+							      2
+							     ELSE
+							      1
+							   END) AS CONTROL_BALANCE,
+							   (CASE
+							     when m.DEBITOCREDITO = 'D' THEN
+							      m.CAPITALREALIZADO
+							     ELSE
+							      0
+							   END) AS DEBITO,
+							   (CASE
+							     when m.DEBITOCREDITO = 'C' THEN
+							      m.CAPITALREALIZADO
+							     ELSE
+							      0
+							   END) AS CREDITO
+						      FROM MOVIMIENTOS_CONTABLES m,
+							   ASIENTOS              a,
+							   PLANCTAS              p
+						     WHERE a.ASIENTO = m.ASIENTO
+						       AND a.SUCURSAL = m.SUCURSAL
+						       AND a.FECHAPROCESO =
+							   m.FECHAPROCESO
+						       AND a.ESTADO = 77
+						       AND m.RUBROCONTABLE = p.C6326
+						       AND m.fechaproceso =?)
+					     GROUP BY ASIENTO,
+						      SUCURSAL,
+						      FECHAPROCESO,
+						      FECHAVALOR,
+						      MONEDA,
+						      CONTROL_BALANCE,MARCAAJUSTE)
+				     WHERE DEBITO &lt;&gt; CREDITO) T ON
+				      H.ASIENTO = T.ASIENTO
+			       AND H.SUCURSAL = T.SUCURSAL
+			       AND H.FECHAPROCESO = T.FECHAPROCESO
+			       AND H.FECHAPROCESO = ?			       
+				   AND H.MONEDA = T.MONEDA
+			 ORDER BY H.ASIENTO,H.CONTROL,H.MONEDA, H.FECHAVALOR, H.MARCAAJUSTE
+		</sentence>
+        <attribute>
+            <attribute-name>RUBRO</attribute-name>
+            <column-name>RUBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CUENTA</attribute-name>
+            <column-name>CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>OPERACION</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ASIENTO</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>DEBITO</attribute-name>
+            <column-name>DEBITO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CREDITO</attribute-name>
+            <column-name>CREDITO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHAPROCESO</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHAVALOR</attribute-name>
+            <column-name>FECHAVALOR</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>MARCAAJUSTE</attribute-name>
+            <column-name>MARCAAJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CODIGOMONEDA</attribute-name>
+            <column-name>CODIGOMONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CONTROL</attribute-name>
+            <column-name>CONTROL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SUCURSAL</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>FECHA_EJECUCION</attribute-name>
+            <column-name>FECHA_EJECUCION</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>GRUPO_BALANCE</attribute-name>
+            <column-name>GRUPO_BALANCE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SIGNO</attribute-name>
+            <column-name>SIGNO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.reports.query.BalanceteContableQuery</class-name>
+        <query-name>query.Balancete</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT SUCURSAL,
+					   MONEDA,
+					   RUBRO,
+					   SUM(SALDOANTERIOR) AS SALDOANTERIOR,
+					   SUM(SALDOACTUAL) AS SALDOACTUAL,
+					   SUM(DEBITO) AS DEBITO,
+					   SUM(CREDITO) AS CREDITO
+				  FROM (SELECT 
+						   SD.SUCURSAL,
+						   SD.MONEDA,
+						   SD.RUBRO,
+						   SD.SALDO_AJUSTADO AS SALDOANTERIOR,
+						   0 AS SALDOACTUAL,
+						   0 As DEBITO,
+						   0 as CREDITO
+					  FROM CON_SALDOS_DIARIOS SD
+					 WHERE 
+						   SD.FECHA = ?
+						   AND SD.TZ_LOCK = 0
+					UNION ALL
+					SELECT 
+						   SD.SUCURSAL,
+						   SD.MONEDA,
+						   SD.RUBRO,
+						   0 AS SALDOANTERIOR,
+						   SALDO_AJUSTADO AS SALDOACTUAL,
+						   0 As DEBITO,
+						   0 as CREDITO
+					  FROM CON_SALDOS_DIARIOS SD
+					 WHERE 
+						   SD.FECHA = ?
+						   AND SD.TZ_LOCK = 0
+					UNION ALL
+					SELECT M.SUCURSAL_CUENTA,
+						   M.MONEDA,
+						   M.RUBROCONTABLE AS RUBRO,
+						   0 AS SALDOANTERIOR,
+						   0 AS SALDOACTUAL,
+						   (CASE
+						 WHEN (M.DEBITOCREDITO = 'D') THEN
+						  ROUND(M.CAPITALREALIZADO, 2)
+						 ELSE
+						  0
+						   END) as DEBITO,
+						   (CASE
+						 WHEN (M.DEBITOCREDITO = 'C') THEN
+						  ROUND(M.CAPITALREALIZADO, 2)
+						 ELSE
+						  0
+						   END) as CREDITO
+					  FROM MOVIMIENTOS_CONTABLES M,
+						   ASIENTOS              A
+					 WHERE 
+						   M.FECHAPROCESO = A.FECHAPROCESO
+					   AND M.SUCURSAL = A.SUCURSAL
+					   AND M.ASIENTO = A.ASIENTO
+					   AND A.ESTADO = 77
+					   AND ((M.FECHAPROCESO = ? and M.MARCAAJUSTE = ' ') OR
+						   (M.FECHAVALOR = ? and
+						   M.MARCAAJUSTE = 'A'))	 
+					)
+					GROUP BY SUCURSAL, MONEDA, RUBRO
+					ORDER BY SUCURSAL, MONEDA, RUBRO
+		</sentence>
+        <attribute>
+            <attribute-name>SUCURSAL</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CODIGOMONEDA</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>RUBRO</attribute-name>
+            <column-name>RUBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDOANTERIOR</attribute-name>
+            <column-name>SALDOANTERIOR</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDOACTUAL</attribute-name>
+            <column-name>SALDOACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>DEBITO</attribute-name>
+            <column-name>DEBITO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CREDITO</attribute-name>
+            <column-name>CREDITO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.reports.query.ControlSaldoAlCorteMNQuery</class-name>
+        <query-name>query.vo_ControlSaldoAlCorteMNQuery</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT SUCURSAL, MONEDA,CUENTA, OPERACION, ORDINAL, PRODUCTO, RUBROCONTABLE,SALDO_ANTERIOR,SALDO_ACTUAL,DEBITOS,CREDITOS,SALDO_ANTERIOR_MN,SALDO_ACTUAL_MN,DEBITOS_MN,CREDITOS_MN FROM (
+						SELECT SUCURSAL, MONEDA,CUENTA, OPERACION, ORDINAL, PRODUCTO, RUBROCONTABLE,
+						   SUM (SALDO_ANTERIOR) AS SALDO_ANTERIOR, 
+						   SUM (SALDO_ACTUAL) AS SALDO_ACTUAL, 
+						   SUM (DEBITOS) AS DEBITOS, 
+						   SUM (CREDITOS) AS CREDITOS,
+						   SUM (SALDO_ANTERIOR_MN) AS SALDO_ANTERIOR_MN, 
+						   SUM (SALDO_ACTUAL_MN) AS SALDO_ACTUAL_MN, 
+						   SUM (DEBITOS_MN) AS DEBITOS_MN, 
+						   SUM (CREDITOS_MN) AS CREDITOS_MN
+							FROM 
+						   ( 
+						   SELECT  S.SUCURSAL, S.MONEDA, S.CUENTA, 
+						           S.OPERACION, S.PRODUCTO, S.ORDINAL, SD.RUBROCONTABLE AS RUBROCONTABLE,
+						           SALDO_AJUSTADO AS SALDO_ANTERIOR,  
+							       0 AS SALDO_ACTUAL, 
+							       0 As DEBITOS, 
+							       0 as CREDITOS,
+						           SALDO_AJUSTADO_MN AS SALDO_ANTERIOR_MN,  
+							       0 AS SALDO_ACTUAL_MN, 
+							       0 As DEBITOS_MN, 
+							       0 as CREDITOS_MN
+						   FROM  SALDOS S, GRL_SALDOS_DIARIOS SD 
+						   WHERE   S.JTS_OID = SD.SALDOS_JTS_OID AND 
+							       SD.FECHA = ?
+						   UNION ALL 
+						   SELECT  M.SUCURSAL, M.MONEDA, M.CUENTA, M.OPERACION_CUENTA AS OPERACION, M.PRODUCTO,M.ORDINAL_CUENTA AS ORDINAL, M.RUBROCONTABLE,
+										0 AS SALDO_ANTERIOR,  
+										0 AS SALDO_ACTUAL,
+										(CASE
+							 WHEN M.DEBITOCREDITO = 'D' THEN
+							  M.CAPITALREALIZADO
+							 ELSE
+							  0
+						       END) AS DEBITO,
+						       (CASE
+							 WHEN M.DEBITOCREDITO = 'C' THEN
+							  M.CAPITALREALIZADO
+							 ELSE
+							  0
+						       END) AS CREDITO,
+						   0 AS SALDO_ANTERIOR_MN,  
+										0 AS SALDO_ACTUAL_MN,
+										(CASE
+							 WHEN M.DEBITOCREDITO = 'D' THEN
+							  M.EQUIVALENTEMN
+							 ELSE
+							  0
+						       END) AS DEBITO_MN,
+						       (CASE
+							 WHEN M.DEBITOCREDITO = 'C' THEN
+							  M.EQUIVALENTEMN
+							 ELSE
+							  0
+						       END) AS CREDITO_MN 	   
+						   FROM MOVIMIENTOS_CONTABLES M, ASIENTOS A 
+						   WHERE 		M.FECHAPROCESO = A.FECHAPROCESO AND 
+										M.SUCURSAL = A.SUCURSAL AND 
+										M.ASIENTO = A.ASIENTO AND 
+										A.ESTADO = 77 AND
+					          M.FECHAPROCESO = ?
+						
+						   UNION ALL
+						   SELECT S.SUCURSAL, S.MONEDA, S.CUENTA, S.OPERACION, S.PRODUCTO, S.ORDINAL, SD.RUBROCONTABLE  AS RUBROCONTABLE,
+						           0   AS SALDO_ANTERIOR,  
+							       SALDO_AJUSTADO AS SALDO_ACTUAL, 
+							       0 As DEBITOS, 0 as CREDITOS,
+								    0   AS SALDO_ANTERIOR_MN,  
+							       SALDO_AJUSTADO_MN AS SALDO_ACTUAL_MN, 
+							       0 As DEBITOS_MN, 0 as CREDITOS_MN
+						   FROM SALDOS S, GRL_SALDOS_DIARIOS SD  
+						   WHERE   S.JTS_OID = SD.SALDOS_JTS_OID AND 
+							       SD.FECHA = ?
+					           ) TT 
+						GROUP BY RUBROCONTABLE, MONEDA, SUCURSAL, CUENTA, OPERACION, PRODUCTO, ORDINAL, PRODUCTO) T
+					        WHERE  (SALDO_ANTERIOR + CREDITOS - DEBITOS != SALDO_ACTUAL) OR  (SALDO_ANTERIOR_MN + CREDITOS_MN - DEBITOS_MN != SALDO_ACTUAL_MN) ORDER BY RUBROCONTABLE,MONEDA, SUCURSAL 
+			
+					</sentence>
+        <attribute>
+            <attribute-name>SUCURSAL</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CODIGOMONEDA</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CUENTA</attribute-name>
+            <column-name>CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>OPERACION</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ORDINAL</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>PRODUCTO</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>RUBRO</attribute-name>
+            <column-name>RUBROCONTABLE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_ANTERIOR</attribute-name>
+            <column-name>SALDO_ANTERIOR</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_ACTUAL</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>DEBITOS</attribute-name>
+            <column-name>DEBITOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CREDITOS</attribute-name>
+            <column-name>CREDITOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_ANTERIOR_MN</attribute-name>
+            <column-name>SALDO_ANTERIOR_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SALDO_ACTUAL_MN</attribute-name>
+            <column-name>SALDO_ACTUAL_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>DEBITOS_MN</attribute-name>
+            <column-name>DEBITOS_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CREDITOS_MN</attribute-name>
+            <column-name>CREDITOS_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+</map>

@@ -1,0 +1,169 @@
+VERSION:051
+TN  NN 1006TConsulta Generica                       C0001 00
+*N  NN **********inicializo campos para improte total y cant total de cheq.
+ NNNNN 0704   Importe        INNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0288   Numerador PRe CINNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /* Operacion 3582                                                                                              
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /*     SI SELECCIONA UN SOLO REGISTRO:
+*N  NN /*          N - Elimina Cheque del Envío.                       Cambia de Estado 1 a 3.
+*N  NN /*     SI SELECCIONA TODOS
+*N  NN /*          S - Enviar TODOS a Central de Clearing.     Cambia de Estado 1 a 5.
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /* PARA REVERTIR LO HECHO EN LA OPER3582 USAR OPER3583
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /* Operacion 3583                                                                                          
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /*          S - Confirma el Envío del Cheque a Central Clear. Cambia de Estado 3 a 1.
+*N  NN /*          N - Cancela Envío del Cheque a Central Clear. Deja el Estado sin modificarlo.
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+VNNNNN 020005000501340655SSSD000000000000000000000000000000000000001
+/T=REMESAS ADT/VAC
+/C=192192192
+ NNNNN 2700   Sucursal       I NSN 02002301590046020902001000000002300330046014300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2373   Segmento       INNSNA00000701520030020202101100000000700070030013700
+/V=C2700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0938   Descripción    IDNNNA02002602490049061800101150010000000000000000000
+/V=C0938
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+VNSSNS 030003000305170805SSSD000000000000000000000000000000000000010
+/T="Camara Compensadora "+C2072
+/C=192192192
+KNSSNS 030017016200400640010100
+/T=Devolver Cheques al Central Clearing
+/F=0015700NNN000000000Arial                                   
+KNSSNS 030110002604060773000001
+/T=Cheques  
+/F=0012700NNN000000000Arial                                   
+ NNNNN 9500   Fecha :        IDNSNA03006501000088018202101050000006500330088009400
+/V=C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V="FECHA_ALTA >= TO_DATE('"+C9500+"','DD/MM/YYYY')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+ " AND SUCURSAL_CORRESPONSAL="+C2700+" and "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" SUCURSAL_DE_INGRESO="+C9502+ " AND DESTINO_CHEQUE IN(2,3) "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" AND FECHA_DIA_CENTRAL_CLEARING = TO_DATE('"+C9500+"','DD/MM/YYYY')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3295   Ayuda cheq sal IESSN 03013000410387075900101060000000700070027012600
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C3295=0
+/M=Registro No válido
+KNNNNN 030076051600920643000100
+/T=S - Devolver TODOS
+/F=0011700NNN000000000Arial                                   
+KNNNNN 030096051601120643000100
+/T=N - Devolver UNO
+/F=0011700NNN000000000Arial                                   
+ NSSNN 0327   Opcion Si/No   I NSNK03008106370095072100001130000009001650110022300
+/V=N
+/F=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C0327="N")
+/P=I21
+CNNNNN   00000000000000000000100
+/F=A(C0327="S")
+/P=I22
+ NNNNN 4174   Fecha NULL     INNNNK02002602490049061800101100010000700070027012600
+/V=18000101
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TConsulta Sec. Generica                  S1181 00
+/?=I22
+/F=((C7025=2)or(C7025=3))and(C2699=C2700.1)and(C7013>C9500 or C7013=C9500)and(C7023=C2700.1)and(C7021=20)and(C2647=C9500)
+*N  NN **************************************************
+*N  NN *** I22=> Cambia TODOS los Cheques.-
+*N  NN **************************************************
+ NNNNN 2647   F.Dia a Cent.ClINNSN 00000701500027021000001100000000700070027012600
+/F=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I50
+/M=no hay registro
+TN  NN 1009TModificación Cheques Saliente           M1181 00
+/?=I22Y!I50
+ NNNNN 7003   Nro de cheque  INNSNA00000701500027021000001100000000700070027012600
+/V=C7003.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7002   Numero de serieINNSNA00000701500027021000001100000000700070027012600
+/V=C7002.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7004   Banco          INNSNA00000701500027021000001100000000700070027012600
+/V=C7004.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN **************************************************
+*N  NN *** Cambia Estado a 5.- Enviado a CENTRAL CLEARING.
+*N  NN **************************************************
+ NNNNN 7021   Estado         INNSNK00024501500265033700101100000024500230265014200
+/V=5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ***
+ NNNNN 2647   F.Dia a Cent.ClINNSNA00000701500027027000001100000000700070027012600
+/V=C4174.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TIteracion                               C0001 00
+/?=I22Y!I50
+CNNNNN  I00000000000000000000100
+/R=2
+TN  NN 1009TModificación Cheques Saliente           M1181 00
+/?=I21
+ NNNNN 7003   Nro de cheque  INNSNA00000701500027021000001100000000700070027012600
+/V=C3295.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7002   Numero de serieINNSNA00000701500027021000001100000000700070027012600
+/V=C7002.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7004   Banco          INNSNA00000701500027021000001100000000700070027012600
+/V=C7004.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN **************************************************
+*N  NN *** Cambia Estado a 5.- Enviado a CENTRAL CLEARING.
+*N  NN **************************************************
+ NNNNN 7021   Estado         INNSNK00024501500265033700101100000024500230265014200
+/V=5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ***
+ NNNNN 2647   F.Dia a Cent.ClINNSNA00000701500027027000001100000000700070027012600
+/V=C4174.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   

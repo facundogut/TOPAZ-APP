@@ -1,0 +1,295 @@
+execute('
+CREATE OR ALTER PROCEDURE dbo.[SP_ITF_AFIP_IGARG2681]
+--Fabio Menendez: 13/06/2023
+	@reproceso VARCHAR(1)
+AS
+BEGIN 
+
+ CREATE TABLE #ClientesTmp (
+    CODIGOCLIENTE NUMERIC(12),
+    NUMEROPERSONA NUMERIC(12)
+);   
+DECLARE @fecha_hasta DATETIME = (SELECT FECHAPROCESO FROM PARAMETROS (nolock));
+--Logica de Reproceso
+IF @reproceso=''S''
+BEGIN
+
+UPDATE c 
+SET c.fecha_hasta = @fecha_hasta
+FROM CI_CARGOS_TARIFAS c 
+WHERE  c.ID_CARGO IN (SELECT ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 (nolock));
+
+DELETE FROM ITF_LOG_CARGOS_IMPUESTOS WHERE COD_IMPUESTO IN (SELECT TIPOCARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 (nolock));
+
+END
+
+--variables clave
+DECLARE @cuit VARCHAR(11),@razonSocial VARCHAR(80), @fechaDesde DATETIME, @fechaHasta DATETIME, @porcentaje NUMERIC(7,4), @resGeneral VARCHAR(19), @tipoCertificado VARCHAR(11);
+
+--var de cursor
+DECLARE @C_idCargo NUMERIC(10), @C_descripcion VARCHAR (80), @C_tipoCargo NUMERIC(3), @C_tasa NUMERIC (4,4), @C_moneda NUMERIC(1)  ;		
+
+--variables aux
+DECLARE @codCli NUMERIC (10), @nroPersona NUMERIC(10), @condIVA VARCHAR(2);
+DECLARE @inserts NUMERIC(6), @actualizados NUMERIC(6), @hayTemporales INT, @hayUpdate INT, @faltanCargos INT;
+DECLARE @idCount INT = 1;
+--recorro padron de entrada
+SELECT @cuit = CUIT, @fechaDesde = VIGENCIA_DESDE, @fechaHasta = VIGENCIA_HASTA
+FROM ITF_AFIP_IGARG2681 (nolock) WHERE ID=@idCount;
+
+WHILE @cuit IS NOT NULL 
+BEGIN	     		
+  		--recorro clientes solo si la persona es titular
+	INSERT INTO #ClientesTmp (CODIGOCLIENTE,NUMEROPERSONA)
+	SELECT DISTINCT
+	    cp.CODIGOCLIENTE,
+	    cp.NUMEROPERSONA
+	FROM CLI_DocumentosPFPJ pfj (nolock)
+	JOIN CLI_ClientePersona cp (nolock) ON pfj.NUMEROPERSONAFJ = cp.NUMEROPERSONA
+	WHERE cp.TZ_LOCK = 0 AND cp.TITULARIDAD = ''T'' AND pfj.NUMERODOCUMENTO = @cuit;
+	
+	
+	WHILE EXISTS (SELECT 1 FROM #ClientesTmp)
+	BEGIN
+		
+	    -- Obtener el siguiente registro de #ClientesTmp
+	    SELECT TOP 1 @codCli = CODIGOCLIENTE, @nroPersona = NUMEROPERSONA FROM #ClientesTmp;
+		
+			DECLARE @IGA VARCHAR(4) = (SELECT IGA FROM CLI_CLIENTES (nolock) WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli);
+			IF EXISTS (SELECT 1 FROM CI_CARGOS_TARIFAS c (nolock) WHERE c.ID_CLIENTE=@codCli AND c.tz_lock=0)
+			BEGIN
+			--grabo en bitacora el tipo de cargo dado de baja 
+			INSERT INTO dbo.CON_BITACORA_IMPUESTOS (JTS_NOVEDAD, TIPO_NOVEDAD, FECHA_PROCESO, HORA, ID_CLIENTE, ID_PERSONA,TIPO_ID, CUIT, TIPO_CARGO_IMPOSITIVO, VALOR_EXCLUSION, FECHA_INICIO, FECHA_FIN)
+			SELECT ISNULL((SELECT MAX(JTS_NOVEDAD) FROM CON_BITACORA_IMPUESTOS (nolock)),0)+ (ROW_NUMBER() OVER (ORDER BY c.TIPOCARGO)), ''B'',@fecha_hasta, (select convert(varchar,getdate(),108)), @codCli, @nroPersona, ''C'', @cuit, c.TIPOCARGO, 0, @fechaDesde, @fechaHasta
+			FROM VW_CARGOS_IMPUESTOS_IGARG830 c (nolock) INNER JOIN dbo.CI_CARGOS_TARIFAS t (nolock) ON t.ID_CLIENTE=@codCli AND c.ID_CARGO=t.ID_CARGO
+			WHERE t.tz_lock=0 AND t.ID_CLIENTE=@codCli AND
+			c.ID_CARGO IN (
+			SELECT i.ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 i (nolock) WHERE i.segmento=@IGA 
+			) AND c.segmento=@IGA
+			GROUP BY c.TIPOCARGO, c.TASA
+
+			UPDATE dbo.NUMERATORVALUES
+			SET VALOR = (SELECT max(jts_novedad) FROM CON_BITACORA_IMPUESTOS)+1
+			WHERE DIA = 0 AND MES = 0 AND ANIO = 0 AND SUCURSAL = 0 AND NUMERO = 66319
+
+			END
+			
+			
+			IF @reproceso=''N''
+			BEGIN
+			--doy de baja los cargos vigentes
+			UPDATE dbo.CI_CARGOS_TARIFAS
+			SET FECHA_HASTA = @fecha_hasta
+			WHERE ID_CLIENTE=@codCli AND tz_lock=0 AND  
+			 ID_CARGO  IN (
+			SELECT ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 (nolock) WHERE segmento=@IGA 
+			)
+			END
+			
+			--inserto en el log 1 reg 
+			INSERT INTO dbo.ITF_LOG_CARGOS_IMPUESTOS (COD_IMPUESTO,PERIODO_DESDE,  PERIODO_HASTA, COD_CLIENTE, ID_PERSONA, FECHA_PROCESO, FECHA_EJECUCION, CONDICION, ALICUOTA)
+			SELECT TOP 1 c.TIPOCARGO, CONVERT(VARCHAR(8), @fechaDesde, 112), CONVERT(VARCHAR(8), @fechaHasta, 112),@codCli, @nroPersona, CONVERT(VARCHAR(8), @fecha_hasta, 112), FORMAT(@fecha_hasta, ''yyyyMMdd''),'''',0
+			FROM VW_CARGOS_IMPUESTOS_IGARG830 c (nolock)
+			WHERE c.segmento=@IGA
+			GROUP BY c.TIPOCARGO, c.TASA
+			
+			
+			
+			--inserto en bitacora el alta
+			INSERT INTO dbo.CON_BITACORA_IMPUESTOS (JTS_NOVEDAD, TIPO_NOVEDAD, FECHA_PROCESO, HORA, ID_CLIENTE, ID_PERSONA,TIPO_ID, CUIT, TIPO_CARGO_IMPOSITIVO, VALOR_EXCLUSION, FECHA_INICIO, FECHA_FIN)
+			SELECT ISNULL((SELECT MAX(JTS_NOVEDAD) FROM CON_BITACORA_IMPUESTOS (nolock)),0)+ (ROW_NUMBER() OVER (ORDER BY c.TIPOCARGO)),''A'', @fecha_hasta, (select convert(varchar,getdate(),108)), @codCli, @nroPersona, ''C'', @cuit, c.TIPOCARGO, 0, @fechaDesde, @fechaHasta
+			FROM VW_CARGOS_IMPUESTOS_IGARG830 c (nolock)
+			WHERE 
+			c.ID_CARGO IN  (
+			SELECT ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 i (nolock) WHERE i.segmento=@IGA
+			) AND c.segmento=@IGA
+			GROUP BY c.TIPOCARGO, c.TASA 
+			
+			
+			UPDATE dbo.NUMERATORVALUES
+			SET VALOR = (SELECT max(jts_novedad) FROM CON_BITACORA_IMPUESTOS)+1
+			WHERE DIA = 0 AND MES = 0 AND ANIO = 0 AND SUCURSAL = 0 AND NUMERO = 66319
+			
+			--update temporales existentes			
+			UPDATE c 
+			SET c.fecha_hasta = @fechaHasta, c.TASA = 0
+			FROM CI_CARGOS_TARIFAS c
+			WHERE c.id_cliente = @codCli AND c.TZ_LOCK = 0 AND c.ID_CARGO IN (
+			SELECT ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 i (nolock) WHERE i.segmento=@IGA 
+			)
+			
+			--inserto los certificados que no tiene				 
+			INSERT INTO dbo.CI_CARGOS_TARIFAS (ID_CARGO, MONEDA, ID_CLIENTE, SEGMENTO, FECHA_DESDE, FECHA_HASTA, TASA) 
+			SELECT ID_CARGO, MONEDA, @codCli, segmento, @fechaDesde, @fechaHasta, 0
+			FROM VW_CARGOS_IMPUESTOS_IGARG830 (nolock) WHERE ID_CARGO NOT IN (SELECT ID_CARGO FROM  CI_CARGOS_TARIFAS (nolock) WHERE id_cliente = @codCli  AND TZ_LOCK = 0  AND ID_CARGO IN (
+			SELECT ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 i (nolock) WHERE i.segmento=@IGA
+			)) AND segmento=@IGA
+					 		   
+	   
+	   	-- Eliminar el registro procesado
+    	DELETE FROM #ClientesTmp WHERE CODIGOCLIENTE = @codCli AND NUMEROPERSONA = @nroPersona;
+		END --Fin del WHILE    	
+			   
+SET @idCount = @idCount+1;
+SET @cuit = NULL;
+SELECT @cuit = CUIT, @fechaDesde = VIGENCIA_DESDE, @fechaHasta = VIGENCIA_HASTA
+            FROM ITF_AFIP_IGARG2681 (nolock)
+            WHERE ID = @idCount;
+
+END
+
+DROP TABLE #ClientesTmp;
+END
+');
+
+execute('
+CREATE OR ALTER   PROCEDURE dbo.[SP_ITF_AFIP_IGARG830]
+--Fabio Menendez: 13/06/2023
+	@reproceso VARCHAR(1),
+	@periodo VARCHAR(10)
+AS
+BEGIN 
+
+IF TRY_CONVERT(DATE, LEFT(replace(@periodo,''-'',''''),8), 103) IS NULL OR UPPER(LTRIM(RTRIM(@reproceso))) NOT IN (''S'', ''N'')
+BEGIN
+    THROW 50000, ''Periodo y/o reproceso invalido.'', 1;
+END	
+
+ CREATE TABLE #ClientesTmp2 (
+    CODIGOCLIENTE NUMERIC(12),
+    NUMEROPERSONA NUMERIC(12)
+);   
+--Logica de Reproceso
+SET @periodo = LEFT(replace(@periodo,''-'',''''),8);
+IF @reproceso=''S''
+BEGIN
+
+UPDATE c 
+SET c.fecha_hasta = (SELECT FECHAPROCESO FROM PARAMETROS)
+FROM CI_CARGOS_TARIFAS c 
+WHERE  c.ID_CARGO IN (SELECT ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 (nolock))
+AND c.ID_CLIENTE IN (SELECT COD_CLIENTE FROM ITF_LOG_CARGOS_IMPUESTOS (nolock) WHERE FECHA_EJECUCION=@periodo);
+
+DELETE FROM ITF_LOG_CARGOS_IMPUESTOS WHERE FECHA_EJECUCION=@periodo ;
+
+END
+
+--variables clave
+DECLARE @cuit VARCHAR(11),@razonSocial VARCHAR(80), @fechaDesde DATETIME, @fechaHasta DATETIME, @porcentaje NUMERIC(7,4), @resGeneral VARCHAR(19), @tipoCertificado VARCHAR(11);
+
+--var de cursor
+DECLARE @C_idCargo NUMERIC(10), @C_descripcion VARCHAR (80), @C_tipoCargo NUMERIC(3), @C_tasa NUMERIC (4,4), @C_moneda NUMERIC(1)  ;		
+
+--variables aux
+DECLARE @codCli NUMERIC (10), @nroPersona NUMERIC(10), @condIVA VARCHAR(2);
+DECLARE @inserts NUMERIC(6), @actualizados NUMERIC(6), @hayTemporales INT, @hayUpdate INT, @faltanCargos INT;
+DECLARE @idCount INT = 1;
+
+--recorro padron de entrada
+SELECT @cuit = CUIT, @razonSocial = RAZON_SOCIAL, @fechaDesde = FECHA_DESDE, @fechaHasta = FECHA_HASTA, @porcentaje = PORCENTAJE
+FROM ITF_AFIP_IGARG830 (nolock) WHERE ID=@idCount;
+
+WHILE @cuit IS NOT NULL 
+BEGIN	     	
+  		--recorro clientes solo si la persona es titular
+	INSERT INTO #ClientesTmp2 (CODIGOCLIENTE,NUMEROPERSONA)
+	SELECT DISTINCT
+	    cp.CODIGOCLIENTE,
+	    cp.NUMEROPERSONA
+	FROM CLI_DocumentosPFPJ pfj (nolock)
+	JOIN CLI_ClientePersona cp (nolock) ON pfj.NUMEROPERSONAFJ = cp.NUMEROPERSONA
+	WHERE cp.TZ_LOCK = 0 AND cp.TITULARIDAD = ''T'' AND pfj.NUMERODOCUMENTO = @cuit;
+	
+	   WHILE EXISTS (SELECT 1 FROM #ClientesTmp2)
+		BEGIN 
+		
+		-- Obtener el siguiente registro de #ClientesTmp
+	    SELECT TOP 1 @codCli = CODIGOCLIENTE, @nroPersona = NUMEROPERSONA FROM #ClientesTmp2;
+	     	
+			IF 0<(SELECT COUNT(1) FROM CI_CARGOS_TARIFAS c WHERE  c.ID_CLIENTE=@codCli AND c.tz_lock=0 AND c.TASA <> (SELECT (i.TASA-(i.TASA*@porcentaje/100)) FROM VW_CARGOS_IMPUESTOS_IGARG830 i WHERE i.ID_CARGO=c.ID_CARGO AND i.Moneda=c.Moneda AND i.segmento=c.segmento))
+			BEGIN
+			--grabo en bitacora el tipo de cargo dado de baja 
+			INSERT INTO dbo.CON_BITACORA_IMPUESTOS (JTS_NOVEDAD, TIPO_NOVEDAD, FECHA_PROCESO, HORA, ID_CLIENTE, ID_PERSONA,TIPO_ID, CUIT, TIPO_CARGO_IMPOSITIVO, VALOR_EXCLUSION, FECHA_INICIO, FECHA_FIN)
+			SELECT ISNULL((SELECT MAX(JTS_NOVEDAD) FROM CON_BITACORA_IMPUESTOS),0)+ (ROW_NUMBER() OVER (ORDER BY c.TIPOCARGO)), ''B'',(SELECT FECHAPROCESO FROM PARAMETROS (NOLOCK)), (select convert(varchar,getdate(),108)), @codCli, @nroPersona, ''C'', @cuit, c.TIPOCARGO, c.TASA*(1-@porcentaje/100), @fechaDesde, (SELECT FECHAPROCESO FROM PARAMETROS)
+			FROM VW_CARGOS_IMPUESTOS_IGARG830 c INNER JOIN dbo.CI_CARGOS_TARIFAS t ON t.ID_CLIENTE=@codCli AND c.ID_CARGO=t.ID_CARGO
+			WHERE t.tz_lock=0 AND t.ID_CLIENTE=@codCli AND
+			c.ID_CARGO IN (
+			SELECT i.ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 i WHERE i.segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli) 
+			) AND c.segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli)
+			GROUP BY c.TIPOCARGO, c.TASA
+			
+			UPDATE dbo.NUMERATORVALUES
+			SET VALOR = (SELECT max(jts_novedad) FROM CON_BITACORA_IMPUESTOS)+1
+			WHERE DIA = 0 AND MES = 0 AND ANIO = 0 AND SUCURSAL = 0 AND NUMERO = 66319
+			
+			END
+			
+			--doy de baja los cargos vigentes
+			UPDATE dbo.CI_CARGOS_TARIFAS
+			SET FECHA_HASTA = (SELECT FECHAPROCESO FROM PARAMETROS)
+			WHERE ID_CLIENTE=@codCli AND tz_lock=0 AND  
+			 ID_CARGO  IN (
+			SELECT ID_CARGO VW_CARGOS_IMPUESTOS_IGARG830 WHERE segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli) 
+			)
+			
+			
+			--inserto en el log 1 reg 
+			INSERT INTO dbo.ITF_LOG_CARGOS_IMPUESTOS (COD_IMPUESTO,PERIODO_DESDE,  PERIODO_HASTA, COD_CLIENTE, ID_PERSONA, FECHA_PROCESO, FECHA_EJECUCION, CONDICION, ALICUOTA)
+			SELECT TOP 1 c.TIPOCARGO, CONVERT(VARCHAR(8), @fechaDesde, 112), CONVERT(VARCHAR(8), @fechaHasta, 112),@codCli, @nroPersona, CONVERT(VARCHAR(8), (SELECT FECHAPROCESO FROM PARAMETROS (NOLOCK)), 112), @periodo,'''',c.TASA*(1-@porcentaje/100)
+			FROM VW_CARGOS_IMPUESTOS_IGARG830 c 
+			WHERE c.segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli)
+			GROUP BY c.TIPOCARGO, c.TASA
+			
+			
+			
+			--inserto en bitacora el alta
+			INSERT INTO dbo.CON_BITACORA_IMPUESTOS (JTS_NOVEDAD, TIPO_NOVEDAD, FECHA_PROCESO, HORA, ID_CLIENTE, ID_PERSONA,TIPO_ID, CUIT, TIPO_CARGO_IMPOSITIVO, VALOR_EXCLUSION, FECHA_INICIO, FECHA_FIN)
+			SELECT ISNULL((SELECT MAX(JTS_NOVEDAD) FROM CON_BITACORA_IMPUESTOS),0)+ (ROW_NUMBER() OVER (ORDER BY c.TIPOCARGO)),''A'', (SELECT FECHAPROCESO FROM PARAMETROS (NOLOCK)), (select convert(varchar,getdate(),108)), @codCli, @nroPersona, ''C'', @cuit, c.TIPOCARGO, (@porcentaje-(c.TASA*@porcentaje)), @fechaDesde, @fechaHasta
+			FROM VW_CARGOS_IMPUESTOS_IGARG830 c
+			WHERE 
+			c.ID_CARGO IN  (
+			SELECT ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 i WHERE i.segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli) 
+			) AND c.segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli)
+			GROUP BY c.TIPOCARGO, c.TASA 
+			
+			UPDATE dbo.NUMERATORVALUES
+			SET VALOR = (SELECT max(jts_novedad) FROM CON_BITACORA_IMPUESTOS)+1
+			WHERE DIA = 0 AND MES = 0 AND ANIO = 0 AND SUCURSAL = 0 AND NUMERO = 66319
+			
+			--update temporales existentes			
+			UPDATE c 
+			SET c.fecha_hasta = @fechaHasta, c.TASA = (((SELECT TASA FROM VW_CARGOS_IMPUESTOS_IGARG830 WHERE ID_CARGO=c.ID_CARGO AND MONEDA=c.Moneda AND segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli) )*(1-@porcentaje/100)))
+			FROM CI_CARGOS_TARIFAS c
+			WHERE c.id_cliente = @codCli AND c.TZ_LOCK = 0 AND c.ID_CARGO IN (
+			SELECT ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 i WHERE i.segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli) 
+			)
+			
+			--inserto los certificados que no tiene				 
+			INSERT INTO dbo.CI_CARGOS_TARIFAS (ID_CARGO, MONEDA, ID_CLIENTE, SEGMENTO, FECHA_DESDE, FECHA_HASTA, TASA) 
+			SELECT ID_CARGO, MONEDA, @codCli, segmento, @fechaDesde, @fechaHasta, (TASA*(1-@porcentaje/100))
+			FROM VW_CARGOS_IMPUESTOS_IGARG830 WHERE ID_CARGO NOT IN (SELECT ID_CARGO FROM  CI_CARGOS_TARIFAS WHERE id_cliente = @codCli  AND TZ_LOCK = 0  AND ID_CARGO IN (
+			SELECT ID_CARGO FROM VW_CARGOS_IMPUESTOS_IGARG830 i WHERE i.segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli) 
+			)) AND segmento=(SELECT IGA FROM CLI_CLIENTES WHERE TZ_LOCK=0 AND CODIGOCLIENTE=@codCli)
+					 		   
+		
+		-- Eliminar el registro procesado
+    	DELETE FROM #ClientesTmp2 WHERE CODIGOCLIENTE = @codCli AND NUMEROPERSONA = @nroPersona;
+		END --Fin del WHILE    	
+	      
+  		
+   				   
+		SET @idCount = @idCount+1;
+		SET @cuit = NULL;
+		SELECT @cuit = CUIT, @razonSocial = RAZON_SOCIAL, @fechaDesde = FECHA_DESDE, @fechaHasta = FECHA_HASTA, @porcentaje = PORCENTAJE
+		FROM ITF_AFIP_IGARG830 (nolock) WHERE ID=@idCount;
+
+	
+END
+DROP TABLE #ClientesTmp2;
+
+END
+');
+
+
+
+

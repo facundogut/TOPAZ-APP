@@ -1,0 +1,8 @@
+EXECUTE('
+UPDATE DICCIONARIO
+SET DESCRIPCION = ''Tipo Dominio''
+	, PROMPT = ''Tipo Dominio''
+	, OPCIONES = 1
+	, CAMPO = ''TipoDominio''
+WHERE NUMERODECAMPO = 44790
+')

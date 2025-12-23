@@ -1,0 +1,85 @@
+DELETE FROM dbo.PARAMETROSGENERALES WHERE CODIGO IN (2,772);
+INSERT INTO dbo.PARAMETROSGENERALES
+	(
+	CODIGO
+	, DESCRIPCION
+	, ALFA
+	, NUMERICO
+	, FECHA
+	, IMPORTE
+	, TASA
+	, TZ_LOCK
+	, FIRMA
+	)
+VALUES
+	(
+	2
+	, 'Codigo Banco NBCH'
+	, ''
+	, 311
+	, NULL
+	, 0
+	, 0
+	, 0
+	, NULL
+	)
+GO
+
+INSERT INTO dbo.PARAMETROSGENERALES
+	(
+	CODIGO
+	, DESCRIPCION
+	, ALFA
+	, NUMERICO
+	, FECHA
+	, IMPORTE
+	, TASA
+	, TZ_LOCK
+	, FIRMA
+	)
+VALUES
+	(
+	772
+	, 'Tope acreditaciones SITEROP'
+	, 'PESOS'
+	, 0
+	, '20200101'
+	, 1000
+	, 0
+	, 0
+	, NULL
+	)
+GO
+
+DELETE FROM ITF_MASTER_PARAMETROS WHERE CODIGO = 517
+INSERT INTO dbo.ITF_MASTER_PARAMETROS
+	(
+	CODIGO
+	, CODIGO_INTERFACE
+	, FUNCIONALIDAD
+	, ALFA_1
+	, ALFA_2
+	, ALFA_3
+	, NUMERICO_1
+	, NUMERICO_2
+	, FECHA
+	, IMPORTE_1
+	, IMPORTE_2
+	, TZ_LOCK
+	)
+VALUES
+	(
+	517
+	, 0
+	, 'Incremental 2.1.20'
+	, 'Secuencia Nombre de Archivo'
+	, ''
+	, ''
+	, 15
+	, 0
+	, '20370429'
+	, 0
+	, 0
+	, 0
+	)
+GO

@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvistasaldoopromedio.objectsdomain.QueryPromedioCalculoInteresSaldoOPromedio</class-name>
+        <query-name>query.QueryPromedioCalculoInteresSaldoOPromedio</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT SUM(SALDO_CON_FECHA_VALOR_PAGO) AS SUMA,
+					   AVG(SALDO_CON_FECHA_VALOR_PAGO) AS PROMEDIO,
+					   COUNT(*) AS registros
+				  FROM (SELECT SD.SALDOS_JTS_OID AS SALDO_JTS_OID,
+							   FECHA,
+							   SALDO_CON_FECHA_VALOR_PAGO
+						  FROM GRL_SALDOS_DIARIOS SD
+						 WHERE SD.FECHA BETWEEN ? AND
+							   ?
+						   AND SD.SALDOS_JTS_OID = ?)
+				 GROUP BY SALDO_JTS_OID	
+        </sentence>
+        <attribute>
+            <attribute-name>suma</attribute-name>
+            <column-name>SUMA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>promedio</attribute-name>
+            <column-name>PROMEDIO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>registros</attribute-name>
+            <column-name>registros</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvistasaldoopromedio.objectsdomain.InteresesVistaSaldoOPromedioInput</class-name>
+        <query-name>query.InteresesVistaSaldoOPromedioInput</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			  SELECT
+				S.C1772 AS TIPOCTA,
+				' ' AS GRUPOPYCI,
+				VD.IMP_MIN_PAGO,
+				VD.MODALIDADPAGO,
+				VD.VALORMODALIDADPAGO,
+				VD.MODALIDADENFERIADOPAGO,
+				VD.MODALIDADTIPOPERIODOPAGO,
+				VD.ALGORITMOPAGO,
+				VD.CODIGORANGOPAGO,
+				VD.DIFERENCIALNORESIDENTEPAGO,
+				S.C1785 AS TIPO,
+				C.CODIGORESIDENCIA AS CODRESIDENCIA,
+				S.C1604 SDOACTUAL,
+				S.SUCURSAL,
+				S.PRODUCTO,
+				S.CUENTA,
+				S.C1730 RUBROCONTABLE,
+				S.MONEDA,
+				S.OPERACION,
+				S.ORDINAL,
+				S.JTS_OID,
+				VD.MESES_PAGO AS MESES_PAGO,
+				PL.C6318 AS TIPO_DEVENGADO,
+				'N' AS RETENCIONIMPUESTO,
+				'N' AS COBRAIVA
+			FROM SALDOS AS S WITH(nolock)
+			INNER JOIN PLANCTAS AS PL WITH(nolock) ON
+				PL.C6326 = S.C1730
+				AND PL.C6318 IN ('M', 'D')
+				AND ((PL.TZ_LOCK &lt; 100000000000000 OR PL.TZ_LOCK &gt;= 200000000000000)
+					AND (PL.TZ_LOCK &lt; 300000000000000 OR PL.TZ_LOCK &gt;= 400000000000000)  
+				)
+			INNER JOIN VTA_DEFINICION_VISTA AS VD WITH(nolock) ON
+				VD.PRODUCTO = S.PRODUCTO
+				AND VD.GRUPO = S.C1772
+				AND VD.MONEDA = S.MONEDA
+				AND ((VD.TZ_LOCK &lt; 100000000000000 OR VD.TZ_LOCK &gt;= 200000000000000)
+					AND (VD.TZ_LOCK &lt; 300000000000000 OR VD.TZ_LOCK &gt;= 400000000000000)  
+				)
+			INNER JOIN VTA_GRUPOS AS GR WITH(nolock) ON
+				GR.COD_GRUPO = VD.GRUPO
+				AND ((GR.APERTURA_CLI = 'S' AND S.JTS_OID = VD.SALDO_JTS_OID)
+					OR (GR.APERTURA_CLI &lt;&gt; 'S'))
+				AND ((GR.TZ_LOCK &lt; 100000000000000 OR GR.TZ_LOCK &gt;= 200000000000000)
+					AND (GR.TZ_LOCK &lt; 300000000000000 OR GR.TZ_LOCK &gt;= 400000000000000)  
+				)
+			INNER JOIN CLI_CLIENTES AS C WITH(nolock) ON
+				C.CODIGOCLIENTE = S.C1803
+				AND ((C.TZ_LOCK &lt; 100000000000000 OR C.TZ_LOCK &gt;= 200000000000000)
+					AND (C.TZ_LOCK &lt; 300000000000000 OR C.TZ_LOCK &gt;= 400000000000000)  
+				)
+			WHERE
+				S.TZ_LOCK = 0
+				AND S.C1728 &lt;&gt; 'I' 
+				AND S.C1651 &lt;&gt; '1'
+				AND S.C1785 IN (3)
+				AND (S.JTS_OID = ? OR (-1 = ?))
+  		</sentence>
+        <attribute>
+            <attribute-name>tipoCuenta</attribute-name>
+            <column-name>TIPOCTA </column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>grupoPYCI</attribute-name>
+            <column-name>GRUPOPYCI</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>minimoMonedaPago</attribute-name>
+            <column-name>IMP_MIN_PAGO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidadPago</attribute-name>
+            <column-name>MODALIDADPAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>valorModalidadPago</attribute-name>
+            <column-name>VALORMODALIDADPAGO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidadEnFeriadoPago</attribute-name>
+            <column-name>MODALIDADENFERIADOPAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidadTipoPeriodoPago</attribute-name>
+            <column-name>MODALIDADTIPOPERIODOPAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>algoritmoPago</attribute-name>
+            <column-name>ALGORITMOPAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoRangoPago</attribute-name>
+            <column-name>CODIGORANGOPAGO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diferenciaNoResidentePago</attribute-name>
+            <column-name>DIFERENCIALNORESIDENTEPAGO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoRubro</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>clienteResidente</attribute-name>
+            <column-name>CODRESIDENCIA</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoActual</attribute-name>
+            <column-name>SDOACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_PRODUCTO_SALDOS</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Cuenta</attribute-name>
+            <column-name>CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_RUBRO_CONTABLE</attribute-name>
+            <column-name>RUBROCONTABLE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldos_jts_oid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>mesesPago</attribute-name>
+            <column-name>MESES_PAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoDevengado</attribute-name>
+            <column-name>TIPO_DEVENGADO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.accounting.objectsdomain.SaldoDiarioExtend</class-name>
+        <query-name>query.NumeralesAlgoritmosPago</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT SD.FECHA,
+						SD.SALDO_CON_FECHA_VALOR_PAGO
+						FROM GRL_SALDOS_DIARIOS SD
+						WHERE SD.FECHA BETWEEN ? AND ?
+		                AND SD.SALDOS_JTS_OID = ?
+                        ORDER BY SD.FECHA ASC	
+		        </sentence>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldo_fecha_valor_pago</attribute-name>
+            <column-name>SALDO_CON_FECHA_VALOR_PAGO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.accounting.objectsdomain.SaldoDiarioExtend</class-name>
+        <query-name>query.NumeralesAlgoritmosPagoCliente</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT SD.FECHA,
+				       SD.SALDO_CON_FECHA_VALOR_PAGO,
+				       SD.SALDOS_JTS_OID
+				FROM GRL_SALDOS_DIARIOS SD
+				JOIN SALDOS S ON SD.SALDOS_JTS_OID = S.JTS_OID
+				WHERE SD.FECHA BETWEEN ? AND ?
+				      AND S.C1803 = ?
+				      AND S.C1785 = ?
+				      AND S.MONEDA = ?
+				      AND S.TZ_LOCK = 0
+				      AND S.C1651 = ' '
+				ORDER BY SD.SALDOS_JTS_OID, SD.FECHA ASC
+				</sentence>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldo_fecha_valor_pago</attribute-name>
+            <column-name>SALDO_CON_FECHA_VALOR_PAGO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+</map>

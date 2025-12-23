@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-08-20T11:30:02 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RecaudacionPorVentanilla" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="aa58ecd4-56fb-41fd-adf6-9153347567de">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH Data Adapter "/>
+	<parameter name="NRO_CONVENIO" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Número de Convenio]]></parameterDescription>
+	</parameter>
+	<parameter name="TOPAZ_SUCURSAL_SISTEMA" class="java.lang.Integer" isForPrompting="false">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT TOP 1
+		--CONVENIO--
+		(SELECT CASE CONCAT('',a.Cuit) WHEN '0' THEN REPLICATE('_',11) WHEN '' THEN REPLICATE('_',11) ELSE CONCAT('',a.Cuit) END) AS Cuit,
+		(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',5) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',a.Plazo) END) AS Plazo, 
+		(SELECT CASE CONCAT('',a.Plazo) WHEN '0' THEN REPLICATE('_',10) ELSE dbo.Fn_NumberToWords(a.Plazo) END) AS W_Plazo,
+		a.FecAlta, 
+		a.Id_ConvRec, 
+		(SELECT CASE CONCAT('',a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE LEFT(CONVERT(VARCHAR,a.FecAlta,106),2) END) AS DIA,  
+		(SELECT CASE CONCAT('', a.FecAlta) WHEN '' THEN REPLICATE('_',5) ELSE (SELECT dbo.Fn_NumberToWords(RIGHT(CONVERT(VARCHAR,FecAlta,106),4))) END) AS AÑO,
+		
+		-- CUENTA REC -- 
+		(SELECT CASE CONCAT('',b.CUENTA) WHEN '' THEN REPLICATE('_',12)  ELSE CONCAT('',b.CUENTA) END)AS CUENTA_REC, 
+		(SELECT CASE CONCAT('',e.C6251) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',e.C6251) END )AS TIPO_CUENTA_REC,
+		(SELECT CASE CONCAT('',b.SUCURSAL) WHEN ''  THEN REPLICATE('_',5) ELSE CONCAT('',b.SUCURSAL) END) AS SUCURSAL_REC, 
+		(SELECT CASE CONCAT('',d.NOMBRESUCURSAL) WHEN ''  THEN REPLICATE('_',40)  ELSE CONCAT('',d.NOMBRESUCURSAL) END) AS LOC_SUC_REC, 
+		
+		-- CUENTA COM -- 
+		(SELECT CASE CONCAT('',f.CUENTA) WHEN '' THEN REPLICATE('_',12) ELSE CONCAT('',f.CUENTA) END) AS CUENTA_COM, 
+		(SELECT CASE CONCAT('',i.C6251) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',i.C6251) END)AS TIPO_CUENTA_COM, 
+		(SELECT CASE CONCAT('',f.SUCURSAL) WHEN '' THEN REPLICATE('_',5) ELSE CONCAT('',f.SUCURSAL) END)  AS SUCURSAL_COM,
+		(SELECT CASE CONCAT('',h.NOMBRESUCURSAL) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',h.NOMBRESUCURSAL) END) AS LOC_SUC_COM,
+		
+		--CUNETA CAR -- 
+		(SELECT CASE CONCAT('',j.CUENTA) WHEN '' THEN REPLICATE('_',12) ELSE CONCAT('',j.CUENTA) END) AS CUENTA_CAR, 
+		(SELECT CASE CONCAT('',m.C6251) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',m.C6251) END) AS TIPO_CUENTA_CAR, 
+		(SELECT CASE CONCAT('',j.SUCURSAL) WHEN '' THEN REPLICATE('_',5) ELSE CONCAT('',j.SUCURSAL) END) AS SUCURSAL_CAR, 
+		(SELECT CASE CONCAT('',l.NOMBRESUCURSAL) WHEN '' THEN REPLICATE('_',5) ELSE CONCAT('',l.NOMBRESUCURSAL) END)  AS LOC_SUC_CAR,
+		
+		-- DIRECCION FISCAL --
+		(SELECT CASE CONCAT('',tf.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',tf.NUMERO) END) AS TEL_DF,
+		(SELECT  CASE CONCAT('',n.CALLE) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',n.CALLE)  END) AS CALLE_DF, 
+		(SELECT CASE CONCAT('',n.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',n.NUMERO) END) AS NRO_DF, 
+		(SELECT CASE CONCAT('apto ',n.APARTAMENTO) WHEN 'apto ' THEN '' ELSE CONCAT('apto ',n.APARTAMENTO) END)AS APTO_DF, 
+	   	(SELECT CASE CONCAT('piso ',n.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ',n.PISO)  END) AS PISO_DF,
+		(SELECT CASE CONCAT('',p.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',p.DESCRIPCION_DIM3) END) AS LOCALIDAD_DF,
+		(SELECT CASE CONCAT('', o.DESCRIPCION) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('', o.DESCRIPCION) END) AS PROVINCIA_DF,
+		
+		--DIRECCION REAL --
+		(SELECT CASE CONCAT('',tr.NUMERO) WHEN '' THEN REPLICATE('_',15) ELSE CONCAT('',tr.NUMERO) END ) AS TEL_DR,
+		(SELECT CASE CONCAT('',r.CALLE) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',r.CALLE) END) AS CALLE_DR,
+		(SELECT CASE CONCAT('',r.NUMERO) WHEN '' THEN REPLICATE('_',8) ELSE CONCAT('',r.NUMERO) END) AS NRO_DR,
+		(SELECT CASE CONCAT('apto ',r.APARTAMENTO) WHEN 'apto ' THEN '' ELSE  CONCAT('apto ',r.APARTAMENTO) END) AS APTO_DR,
+		(SELECT CASE CONCAT('piso ', r.PISO) WHEN 'piso ' THEN '' ELSE CONCAT('piso ', r.PISO) END) AS PISO_DR,
+		(SELECT CASE CONCAT('',t.DESCRIPCION_DIM3) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',t.DESCRIPCION_DIM3) END) AS LOCALIDAD_DR,
+		(SELECT CASE CONCAT('',s.DESCRIPCION) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',s.DESCRIPCION) END)  AS PROVINCIA_DR,
+		
+		-- SUCURSAL -- 
+		(SELECT CASE CONCAT('',v.NOMBREDEP) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('',v.NOMBREDEP) END) AS DEP_CONTRATO,
+		
+		--CLIENTE  --
+		(SELECT CASE CONCAT('', w.NOMBRECLIENTE) WHEN '' THEN REPLICATE('_',35) ELSE CONCAT('', w.NOMBRECLIENTE) END) AS NOMBRECLIENTE,
+		(SELECT CASE CONCAT('',w.TIPO) WHEN '' THEN REPLICATE('_',15) WHEN 'J' THEN 'la Empresa' WHEN 'I' THEN 'la Institución' WHEN 'F' THEN 'la Persona' END) AS REPRESENTACION
+		
+		
+		FROM CONV_CONVENIOS_REC a 
+		
+	    --CUENTA REC --
+	    LEFT JOIN SALDOS b ON a.CuentaRec = b.JTS_OID AND b.TZ_LOCK = 0
+	    LEFT JOIN CLI_DIRECCIONES c ON b.SUCURSAL = c.ID AND c.FORMATO = 'S' AND c.TIPODIRECCION = 'R' AND c.TZ_LOCK = 0
+	    LEFT JOIN SUCURSALES d ON d.SUCURSAL = b.SUCURSAL AND d.TZ_LOCK = 0
+	    LEFT JOIN PRODUCTOS e ON b.PRODUCTO = e.C6250 AND e.TZ_LOCK = 0
+	    
+	    --CUENTA COM --
+	    LEFT JOIN SALDOS f ON a.CuentaCom = f.JTS_OID AND f.TZ_LOCK = 0
+	    LEFT JOIN CLI_DIRECCIONES g ON f.SUCURSAL = g.ID AND c.FORMATO = 'S' AND c.TIPODIRECCION = 'R' AND g.TZ_LOCK = 0
+	    LEFT JOIN SUCURSALES h ON h.SUCURSAL = f.SUCURSAL AND h.TZ_LOCK = 0
+	    LEFT JOIN PRODUCTOS i ON f.PRODUCTO = i.C6250 AND i.TZ_LOCK = 0
+	    
+	    --CUENTA CARG -- 
+	    LEFT JOIN SALDOS j ON a.CuentaCargos = j.JTS_OID AND j.TZ_LOCK = 0
+	    LEFT JOIN CLI_DIRECCIONES k ON j.SUCURSAL = k.ID AND c.FORMATO = 'S' AND c.TIPODIRECCION = 'R' AND k.TZ_LOCK = 0
+	    LEFT JOIN SUCURSALES l ON l.SUCURSAL = j.SUCURSAL AND l.TZ_LOCK = 0
+	    LEFT JOIN PRODUCTOS m ON m.C6250 = j.PRODUCTO AND m.TZ_LOCK = 0
+	    
+	   --DIRECCION FISCAL--
+	    LEFT JOIN CLI_ClientePersona x ON a.Cliente = x.CODIGOCLIENTE AND x.TITULARIDAD = 'T' AND x.TZ_LOCK = 0
+		LEFT JOIN CLI_DIRECCIONES n ON x.NUMEROPERSONA = n.ID AND n.TIPODIRECCION IN ('F') AND n.FORMATO IN ('PF', 'PJ') AND n.ORDINAL_DIR = 1 AND n.TZ_LOCK = 0
+		LEFT JOIN CLI_TELEFONOS tf ON tf.ID = x.NUMEROPERSONA AND tf.FORMATO IN ('PF','PJ') AND tf.ORDINAL = 1 AND tf.TIPO = 'LE' AND tf.TZ_LOCK = 0
+		LEFT JOIN CLI_PROVINCIAS o ON o.CODIGOPAIS =n.PAIS AND o.DIM1 = n.PROVINCIA AND o.TZ_LOCK = 0
+		LEFT JOIN CLI_LOCALIDADES p ON p.DIM1 = n.PROVINCIA AND p.DIM2 = n.DEPARTAMENTO AND p.DIM3 = n.LOCALIDAD AND p.TZ_LOCK = 0
+	    
+	    --DIRECCION REAL--
+	    LEFT JOIN CLI_ClientePersona z ON a.Cliente = z.CODIGOCLIENTE AND z.TITULARIDAD = 'T' AND z.TZ_LOCK = 0
+		LEFT JOIN  CLI_DIRECCIONES r ON z.NUMEROPERSONA = r.ID AND a.Dir_Formato = r.FORMATO AND r.TIPODIRECCION  IN ('R', 'L') AND r.TZ_LOCK = 0
+		LEFT JOIN CLI_TELEFONOS tr ON z.NUMEROPERSONA = tr.ID AND tr.FORMATO IN ('PF','PJ') AND tr.ORDINAL = 1 AND tr.TIPO IN ('LE','PE') AND tr.TZ_LOCK = 0
+	    LEFT JOIN  CLI_PROVINCIAS s ON s.CODIGOPAIS = r.PAIS AND s.DIM1 = r.PROVINCIA AND s.TZ_LOCK = 0 AND s.TZ_LOCK = 0
+		LEFT JOIN CLI_LOCALIDADES t ON t.DIM1 = r.PROVINCIA AND t.DIM2 = r.DEPARTAMENTO AND t.DIM3 = r.LOCALIDAD AND t.TZ_LOCK = 0
+	    
+	    --SUCURSAL --
+	    LEFT JOIN CLI_DIRECCIONES u ON u.ID =  $P{TOPAZ_SUCURSAL_SISTEMA} AND u.FORMATO = 'S' AND u.TIPODIRECCION = 'R' AND u.TZ_LOCK = 0
+	    LEFT JOIN CLI_DEPARTAMENTOS v ON v.CODIGOPAIS = u.PAIS AND v.DEPARTAMENTO = u.DEPARTAMENTO AND v.PROVINCIA = u.PROVINCIA AND v.TZ_LOCK = 0
+	    
+	    --CLIENTE ---
+	    LEFT JOIN CLI_CLIENTES w ON w.CODIGOCLIENTE = a.Cliente  AND w.TZ_LOCK = 0
+	    WHERE a.Id_ConvRec =  $P{NRO_CONVENIO}  AND a.TZ_LOCK = 0]]>
+	</queryString>
+	<field name="Cuit" class="java.lang.String"/>
+	<field name="Plazo" class="java.lang.String"/>
+	<field name="W_Plazo" class="java.lang.String"/>
+	<field name="FecAlta" class="java.sql.Timestamp"/>
+	<field name="Id_ConvRec" class="java.math.BigDecimal"/>
+	<field name="DIA" class="java.lang.String"/>
+	<field name="AÑO" class="java.lang.String"/>
+	<field name="CUENTA_REC" class="java.lang.String"/>
+	<field name="TIPO_CUENTA_REC" class="java.lang.String"/>
+	<field name="SUCURSAL_REC" class="java.lang.String"/>
+	<field name="LOC_SUC_REC" class="java.lang.String"/>
+	<field name="CUENTA_COM" class="java.lang.String"/>
+	<field name="TIPO_CUENTA_COM" class="java.lang.String"/>
+	<field name="SUCURSAL_COM" class="java.lang.String"/>
+	<field name="LOC_SUC_COM" class="java.lang.String"/>
+	<field name="CUENTA_CAR" class="java.lang.String"/>
+	<field name="TIPO_CUENTA_CAR" class="java.lang.String"/>
+	<field name="SUCURSAL_CAR" class="java.lang.String"/>
+	<field name="LOC_SUC_CAR" class="java.lang.String"/>
+	<field name="TEL_DF" class="java.lang.String"/>
+	<field name="CALLE_DF" class="java.lang.String"/>
+	<field name="NRO_DF" class="java.lang.String"/>
+	<field name="APTO_DF" class="java.lang.String"/>
+	<field name="PISO_DF" class="java.lang.String"/>
+	<field name="LOCALIDAD_DF" class="java.lang.String"/>
+	<field name="PROVINCIA_DF" class="java.lang.String"/>
+	<field name="TEL_DR" class="java.lang.String"/>
+	<field name="CALLE_DR" class="java.lang.String"/>
+	<field name="NRO_DR" class="java.lang.String"/>
+	<field name="APTO_DR" class="java.lang.String"/>
+	<field name="PISO_DR" class="java.lang.String"/>
+	<field name="LOCALIDAD_DR" class="java.lang.String"/>
+	<field name="PROVINCIA_DR" class="java.lang.String"/>
+	<field name="DEP_CONTRATO" class="java.lang.String"/>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="REPRESENTACION" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="82" splitType="Stretch">
+			<image>
+				<reportElement x="47" y="10" width="133" height="60" uuid="d14f6273-9237-48b8-b00f-5d5eb8e78ff5"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="68" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToBandHeight" x="47" y="40" width="460" height="20" uuid="14cb3ade-a6a5-42e2-ab90-61b760a3b2ff"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p>En la Ciudad de Resistencia, el "+$F{DIA}+" de "+new SimpleDateFormat("MMMM").format($F{FecAlta})+" del año "+$F{AÑO}+" entre <b>Nuevo Banco del Chaco S.A.</b>, con domicilio en calle Güemes Nº 102 de la ciudad de Resistencia, en adelante el \"BANCO\", representado en este acto por los abajo firmantes, los cuales comparecen en el carácter de apoderados, con facultades suficientes para este acto, otorgadas mediante Poder General Amplio de Administración y Disposición instrumentado en Escritura Nº 75 de fecha 15/07/2016 pasada ante el Escribano Ariel Alfredo Farías, por una parte y por la otra "+$F{NOMBRECLIENTE}+", CUIT Nº "+$F{Cuit}+", con domicilio en "+$F{CALLE_DR}+" Nº "+$F{NRO_DR}+", de la localidad de "+$F{LOCALIDAD_DR}+", provincia de "+$F{PROVINCIA_DR}+", teléfono "+$F{TEL_DR}+", con domicilio fiscal en "+$F{CALLE_DF}+" Nº"+$F{NRO_DF}+", de la localidad de "+$F{LOCALIDAD_DF}+", provincia de "+$F{PROVINCIA_DF}+", representada en este acto por los abajo firmantes, los que comparecen en nombre y representación de "+$F{REPRESENTACION}+", en adelante la \"ENTIDAD\", convienen en celebrar el presente Contrato de <b>SERVICIOS DE RECAUDACION POR VENTANILLA CON COMPROBANTE</b>, que se regirá por las siguientes cláusulas y  condiciones:</p><br>"+
+
+"<p><b>1- OBJETO:</b> La ENTIDAD solicita al BANCO, y éste acepta realizar en las Sucursales y/u dependencias habilitadas al efecto en el BANCO, el Servicio de Recaudación de pagos en concepto de ___________________________________________________ que se realizan ante la ENTIDAD. El BANCO podrá prestar este servicio a través de terceros sub-contratantes, previa comunicación a la ENTIDAD.</p><br>"+
+
+"<p><b>2- OPERATORIA:</b> Las partes detallan la operatoria en el ANEXO I que forma parte del presente Convenio.</p><br>"+
+
+"<p><b>3- COMISIONES:</b> En contraprestación por el Servicio, la ENTIDAD abonará al BANCO una comisión de TRES por ciento (3 %), más IVA con un mínimo de $3,00 más IVA sobre los montos recaudados y una comisión fija mensual de $300,00 más IVA.</p><br>"+
+
+"<p>La ENTIDAD autoriza suficientemente al BANCO a producir el débito necesario sobre la "+$F{TIPO_CUENTA_COM}+" ESPECIAL Nº "+$F{CUENTA_COM}+" de la Sucursal "+$F{LOC_SUC_COM}+" ("+$F{SUCURSAL_COM}+"), hasta cubrir el cargo generado por la operatoria. Dicho débito será aplicado por el Departamento Control de Operaciones. </p><br>"+
+
+"<p>El BANCO podrá ajustar las comisiones establecidas, para lo cual comunicará a la ENTIDAD la variación con treinta (30) días de anticipación a la aplicación de los nuevos valores. En caso de disconformidad con los mismos, la ENTIDAD podrá rescindir el presente convenio a partir de la fecha de entrada en vigencia de los nuevos valores, sin que ello genere derecho a indemnización alguna para las partes.</p><br>"+
+
+"<p><b>4-</b> La ENTIDAD autoriza al BANCO, en forma irrevocable, durante la vigencia del presente convenio, a debitar de la cuenta detallada y/o cualquier otra cuenta de la que sea titular aún con otras personas a la orden indistinta y/o saldo acreedor que registre la entidad, los importes necesarios para el cumplimiento del servicio pactado, las comisiones, gastos e impuestos.</p><br>"+
+
+"<p><b>5- Comunicaciones del BANCO a la ENTIDAD.</b></p>"+
+"<p><b>Notificaciones:</b> La ENTIDAD acepta como medio de comunicación fehaciente a los fines del presente convenio, el envío por el BANCO de un correo electrónico a la dirección que a continuación y en forma manuscrita la ENTIDAD inserta, obligándose a consultar diariamente la misma. Las comunicaciones así remitidas se considerarán realizadas en la fecha de su emisión.</p><br>"+
+
+
+"<b><p>Dirección/es de correo electrónico de la ENTIDAD:</p>"+
+"__________________________________________________________________________________<br></b>"+
+
+"<p><b>6-</b> El BANCO no tendrá responsabilidad alguna para el caso de que por fuerza mayor y/o por causas ajenas no pudiere cumplimentar alguna de las obligaciones establecidas y/o se demorase en la ejecución de las mismas. Entiéndase por hecho de fuerza mayor, cualquier hecho que ocurra excediendo la capacidad de control del BANCO, incluyendo sin restricciones: falta de disponibilidad de sistema de comunicación, sabotaje, incendio, inundación, explosión, caso fortuito, conmoción, huelgas o cualquier tipo de disturbios, insurrección, guerras o actos de gobierno. Asimismo, en estos supuestos, y si los mismos duraran más de tres meses, cualquiera de las partes podrá rescindir el acuerdo previa comunicación fehaciente a la contraparte y sin que dicho acto genere derecho a resarcimiento alguno. </p><br>"+
+
+"<p><b>7-</b> Ni la ENTIDAD ni el BANCO podrán en ningún momento durante la vigencia del presente Convenio, e inclusive una vez extinguido el mismo, sin el consentimiento otorgado por escrito por la otra parte, divulgar, revelar o hacer público cualquier tipo de información, cualquiera sea la naturaleza de la misma, ya sea: 1) en conexión con los negocios u otros temas del BANCO o de la ENTIDAD de los cuales cualquiera de las partes tomara conocimiento en virtud del presente Acuerdo, 2) relacionada con planes, estrategias o promociones relativos a los servicios, 3) información no relacionada con los negocios pero que pueda ser considerada confidencial ya sea por el BANCO o por la ENTIDAD. Dicha información será tratada como estrictamente confidencial, excepto aquella que deba ser revelada por el BANCO o por la ENTIDAD como consecuencia de una ley, regulación u orden judicial.</p><br>"+
+
+"<p><b>8- PLAZO DE DURACIÓN: </b>El presente acuerdo se ejecutará a partir de su fecha con vencimiento a los "+$F{W_Plazo}+" ("+$F{Plazo}+") meses. Los convenios no operativos por un plazo de 6 meses corridos podrán ser dados de baja por el BANCO sin aviso previo a la ENTIDAD. Sin perjuicio de ello, podrá ser rescindido por cualquiera de las partes, sin invocación de causa, en cualquier momento, previa denuncia del mismo formulada en forma fehaciente al otro contratante con 30 (treinta) días corridos de anticipación al de su efectivización, sin que tal actitud genere responsabilidad alguna para el denunciante.</p><br>"+
+
+"<p><b>9-</b> La falta de cumplimiento de cualquiera de las obligaciones previstas en el presente contrato dentro de los diez (10) días de intimado fehacientemente, con las modalidades convenidas, habilitará a la parte cumplidora a requerir la resolución del contrato.</p><br>"+
+
+"<p><b>10-</b> Si se suscitaran casos no específicamente contemplados en este convenio, las partes acuerdan que negociarán de buena fe la incorporación de las Cláusulas necesarias destinadas a subsanarlos, cuyas modificaciones serán incorporadas al Convenio a través de Anexos.</p><br>"+
+
+"<p><b>11-</b> El presente convenio y sus anexos constituye el acuerdo integral y único respecto de la materia en él reglada, por lo que prevalecerá sobre cualquier comunicación habida entre las partes con anterioridad al mismo, y/u otros convenios o acuerdos anteriores sobre el mismo objeto. La nulidad, inoponibilidad o inejecutabilidad de cualquiera de las cláusulas del presente contrato no afectará la validez, oponibilidad o ejecutabilidad de las restantes o del contrato. Las partes acuerdan modificar cualquier cláusula que se tornare nula, inoponible o inejecutable por cualquier motivo, procurando su ajuste al espíritu del contrato e intención de las partes al celebrarlo.</p><br>"+
+
+
+"<p><b>12-</b> El BANCO se limitará única y exclusivamente a realizar las recaudaciones que solicite la ENTIDAD en el marco del presente acuerdo, sin que esté obligado al cumplimiento de cualquier otra función no determinada expresamente en el mismo. La ENTIDAD es exclusiva responsable de la entrega oportuna y de la corrección e integridad de los datos al BANCO para la ejecución del servicio. </p><br>"+
+
+"<p><b>13-</b> El impuesto de sellos estará a cargo de ambas partes. Cualquier otro gasto o impuesto que pudiere corresponder estará a cargo en su totalidad de la ENTIDAD.</p><br>"+
+
+"<p><b>14-</b> A todos los efectos legales, judiciales o extrajudiciales, las partes fijan domicilios especiales en los arriba indicados. Para cualquier controversia que pudiera surgir vinculada al presente contrato, las partes someterán la cuestión a la intervención del Centro de Mediación del Poder Judicial del Chaco. Manifiestan asimismo que en caso de fracasar dicha instancia dirimirán la cuestión por ante los tribunales civiles ordinarios de la Ciudad de Resistencia, con renuncia a cualquier otro fuero o jurisdicción, en especial al fuero federal.</p><br>"+
+
+"<p>En prueba de conformidad y previa integra lectura de la presente por los comparecientes se suscriben y se firman dos (2) ejemplares de un mismo tenor en el lugar y fecha indicados al comienzo.</p><br>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="10" width="555" height="20" uuid="374888b0-54eb-4017-b53b-e6e608036ab4"/>
+				<textElement textAlignment="Center" markup="html">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["<u>CONVENIO DE RECAUDACION POR VENTANILLA CON COMPROBANTE Nº "+$P{NRO_CONVENIO}+"</u>"]]></textFieldExpression>
+			</textField>
+		</band>
+		<band height="69">
+			<break>
+				<reportElement x="0" y="0" width="99" height="1" uuid="b423a402-0775-412e-a6d1-e47147ad8657"/>
+			</break>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="50" y="40" width="460" height="20" uuid="c0f06fc0-5671-4811-a7cb-e78d60024ede"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p><b>A.1:</b> Se utilizarán en el Servicio de Recaudaciones por ventanilla con comprobante en las cajas habilitadas en las sucursales del BANCO, formularios especiales compuestos de dos (2) cuerpos, cuya impresión y distribución quedarán a cargo exclusivo de la ENTIDAD. Deberán tener impreso códigos de barras con diseño conformado por el BANCO.  <ul>Los cuerpos tendrán el siguiente destino: </p>"+
+    "<li>Cuerpo N° 1 para el BANCO (archivo en línea de caja).</li>"+
+    "<li>Cuerpo N° 2 para EL DEPOSITANTE (junto al TIKET DE CAJA).</li></ul>"+
+"<p>En el caso de modificar los comprobantes la ENTIDAD remitirá la información necesaria al BANCO con una anticipación mínima de diez (10), la cual quedará sujeta a los plazos de tiempo que lleve su implementación por parte del BANCO para su entrada en vigencia.</p><br>"+
+
+"<p><b>A. 2:</b> El BANCO no será responsable de verificar la exactitud de los datos de los comprobantes y lo contenido en el código de barras de los mismos; siendo solo responsable de la percepción correcta de los importes totales a cobrar, resultantes de la lectura del código de barras.</p><br>"+
+
+"<p><b>A.3:</b> La cobranza se realizará en las sucursales que el BANCO posea al momento de la firma del presente acuerdo. En caso de adicionarse nuevas sucursales o dependencias de pago, el BANCO notificará tal circunstancia a la ENTIDAD, indicando en su caso los costos adicionales que pudieran corresponder.</p><br>"+
+
+"<p><b>A.4:</b> El BANCO no podrá aceptar pagos parciales que correspondan a un mismo talón de pago, o realizados parcialmente en efectivo y en valores.</p><br>"+
+ 
+"<p><b>A.5:</b> El BANCO aceptará para el pago de los comprobantes únicamente dinero en efectivo.</p><br>"+
+
+"<p><b>A.6:</b> Dentro de las 48 horas de recibido el pago, el BANCO pondrá a disposición de la ENTIDAD una rendición consolidada de lo recaudado, y acreditará los importes resultantes de dicha rendición en la "+$F{TIPO_CUENTA_REC}+" Nº "+$F{CUENTA_REC}+" de la Sucursal "+$F{LOC_SUC_REC}+" ("+$F{SUCURSAL_REC}+") de la ENTIDAD. Cualquier modificación en la cuenta deberá ser comunicada al BANCO en forma fehaciente con 48 horas de anticipación. Si dentro del plazo de 30 días corridos de recibida la rendición, la ENTIDAD no formulara observaciones, la misma será considerada aceptada.</p><br>"+
+
+"<p><b>A.7:</b> Rendición. El BANCO pondrá a disposición de la ENTIDAD el archivo de rendición electrónica sin comprobantes una vez acreditados los fondos recaudados.</p><br>"+
+
+"<p><b>A.8:</b> Descarga de archivo. La ENTIDAD deberá ingresar al módulo “AUTOGESTIÓN” (o sistema de gestión que en lo sucesivo el BANCO implemente) que se encuentra en el sitio web institucional www.nbch.com.ar donde realizará la descarga de archivo de rendición a través del acceso “Descarga de Reportes de Recaudación”. Para el ingreso a dicho módulo, la ENTIDAD contará con Usuario y Contraseña de Autoconsultas, otorgadas por el BANCO.</p><br>"+
+
+"<p><b>A.9:</b> A los efectos de esta operatoria, la ENTIDAD autoriza al BANCO la asignación del rol <b>\"CONVENIOS RECAUDACIONES\"</b> en el módulo AUTOGESTIÓN para el usuario _____________________ de Autoconsultas con el que ya cuenta la ENTIDAD.</p><br>"+
+
+"<p><b>A.10:</b> Bajo ningún concepto el BANCO podrá cobrar comprobantes con modificaciones, enmiendas o raspaduras en el importe y/o fecha de vencimiento y/o código de barras, ni fotocopias de los mismos. Tampoco podrá el BANCO aceptar comprobantes que no se encuentren completos y/o en condiciones de ser procesadas, debiendo rechazar las que se presenten deterioradas, perforadas, rotas o que contengan observaciones, alteraciones o deducciones de cualquier naturaleza; debiendo en estos casos indicar al cliente que debe dirigirse a las oficinas de la ENTIDAD.</p><br>"+
+
+"<p><b>A.11:</b> En caso de existir varios vencimientos, el BANCO cobrará los importes establecidos para cada uno de ellos en los comprobantes. Si un vencimiento fijado operare un día inhábil bancario, el pago podrá ser recibido el día hábil inmediato posterior. </p><br>"+
+
+"<p><b>A.12:</b> El BANCO no podrá hacer devoluciones de los importes ya percibidos, ni abonará notas de crédito emitidas por la ENTIDAD a favor de sus DEPOSITANTES. Tampoco atenderá reclamos, quejas y/o aclaraciones de éstos.</p><br>"+
+
+"<p><b>A.13:</b> El BANCO conservará la documentación correspondiente a la recaudación por un período de diez (10) años. </p><br>"+
+
+"<p><b>A.14:</b> Como comprobante del pago, el cajero entregará al DEPOSITANTE de la ENTIDAD el cuerpo Nº 2 (más el TIKET DE CAJA), con su sello de caja respectivo al dorso. Cuando por cualquier circunstancia se deba proceder a la anulación del pago, el cajero deberá dejar perfectamente aclarada esta situación con la intervención respectiva en todos los cuerpos. </p><br>"+
+
+"<p><b>A.15:</b> Los reclamos derivados de la operatoria se gestionarán del siguiente modo:</p>"+
+    "<p>i) Reclamos de la ENTIDAD al BANCO.</p>"+
+"<p>- El BANCO deberá resolver dentro de los diez (10) días hábiles posteriores a su notificación los reclamos efectuados por la ENTIDAD correspondientes a importes no transferidos, total o parcialmente por el BANCO, y que su cliente acredite haber abonado, con comprobantes verificados por la ENTIDAD. </p>"+
+"<p>- El BANCO deberá diligenciar y resolver dentro de los cinco (5) días hábiles posteriores a su notificación los reclamos que realice la ENTIDAD sobre discrepancias entre los montos de recaudación diaria informados por el BANCO y los efectivamente acreditados en la cuenta de la ENTIDAD.</p>"+
+   "<p> ii) Reclamos del BANCO a la ENTIDAD.  </p>"+
+"<p>- El BANCO tramitará ante la ENTIDAD cualquier diferencia que se hubiere producido en la transferencia de fondos. Cuando por errores administrativos imputables al BANCO, éste transfiriera a la ENTIDAD montos que no se correspondan con la recaudación efectuada y que además no hubieran significado constancias a terceros, la ENTIDAD autoriza el débito de estos montos de sus cuentas dentro de los cinco (5) días hábiles de notificada la diferencia.</p><br>"+
+
+"<p><b>A.16:</b> Toda comunicación relativa a reclamos y/o a la ejecución de la operatoria descripta en este Anexo deberá ser dirigida directamente al Departamento Control de Operaciones de Administración Central del BANCO, Resistencia, Chaco.</p>"]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="50" y="10" width="460" height="20" uuid="b13bfb96-5ae5-4af8-93d8-7fb72b234154"/>
+				<textElement textAlignment="Center" markup="html"/>
+				<textFieldExpression><![CDATA["<b>ANEXO I - OPERATORIA</b>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="29" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="10" width="100" height="16" uuid="bf87b761-82b0-4699-921e-7b620b87887f"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="10" width="100" height="17" uuid="63f35269-f311-41dd-b105-db35e75579c1"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

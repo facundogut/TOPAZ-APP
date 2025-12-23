@@ -1,0 +1,78 @@
+/****** Object:  StoredProcedure [dbo].[SP_LINK_TRK_CLIENTE_PERSONA]    Script Date: 02/06/2021 15:42:41 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[SP_LINK_TRK_CLIENTE_PERSONA] 
+													@NRO_TARJETA VARCHAR(19), 
+													@TIPO_DOC VARCHAR(4), 
+													@NRO_DOC VARCHAR(20), 
+													@TIPO_PROC VARCHAR(1), 
+													@NRO_CLIENTE NUMERIC(12) OUTPUT, 
+													@NRO_PERSONA NUMERIC(12) OUTPUT
+AS
+BEGIN
+	SET @NRO_DOC = CAST(@NRO_DOC AS NUMERIC);
+	SET @NRO_DOC = CAST(@NRO_DOC AS VARCHAR);
+	
+	IF @TIPO_PROC = 'R'
+	  BEGIN 
+        SET @NRO_CLIENTE = (SELECT TOP 1 a.* FROM (SELECT COD_CLIENTE 
+													FROM TJD_SOLICITUD_LINK WITH (NOLOCK)
+													WHERE AUTORIZADA = 1 
+														AND TZ_LOCK = 0 
+														AND TIPO_SOLICITUD = '120005' 
+														AND NRO_TARJETA_BASE = CAST(@NRO_TARJETA AS NUMERIC) 
+													UNION ALL SELECT 0 AS CODIGOCLIENTE) 
+												AS a);
+        SET @NRO_PERSONA = (SELECT TOP 1 a.* 
+							FROM (SELECT NRO_PERSONA 
+									FROM TJD_SOLICITUD_LINK WITH (NOLOCK)
+									WHERE AUTORIZADA = 1 
+										AND TZ_LOCK = 0 
+										AND TIPO_SOLICITUD = '120005' 
+										AND NRO_TARJETA_BASE = CAST(@NRO_TARJETA AS NUMERIC) 
+									UNION ALL SELECT 0 AS NRO_PERSONA
+									) 
+							AS a);
+      END 
+    ELSE
+      BEGIN
+        SET @NRO_CLIENTE = (SELECT TOP 1 a.* 
+							FROM (SELECT c.CODIGOCLIENTE 
+									FROM CLI_ClientePersona AS c WITH (NOLOCK)
+									INNER JOIN CLI_DocumentosPFPJ AS d WITH (NOLOCK)
+									ON d.NUMEROPERSONAFJ = c.NUMEROPERSONA 
+										AND d.TIPO_DOC_FISICO = @TIPO_DOC 
+										AND d.NUM_DOC_FISICO = @NRO_DOC 
+										AND (SELECT COUNT(CODIGOCLIENTE) 
+												FROM CLI_ClientePersona 
+												WHERE CODIGOCLIENTE = c.CODIGOCLIENTE 
+													AND c.TITULARIDAD='T') = 1 
+													AND d.TZ_LOCK = 0 
+													AND c.TZ_LOCK = 0 
+											UNION ALL SELECT 0 AS CODIGOCLIENTE
+											) 
+									AS a);
+        SET @NRO_PERSONA = (SELECT TOP 1 a.* 
+							FROM (SELECT c.NUMEROPERSONA 
+									FROM CLI_ClientePersona AS c WITH (NOLOCK)
+									INNER JOIN CLI_DocumentosPFPJ AS d WITH (NOLOCK)
+									ON d.NUMEROPERSONAFJ = c.NUMEROPERSONA
+										AND d.TIPO_DOC_FISICO = @TIPO_DOC 
+										AND d.NUM_DOC_FISICO = @NRO_DOC 
+										AND (SELECT COUNT(CODIGOCLIENTE) 
+												FROM CLI_ClientePersona 
+												WHERE CODIGOCLIENTE = c.CODIGOCLIENTE 
+													AND c.TITULARIDAD='T') = 1 
+													AND d.TZ_LOCK = 0 
+													AND c.TZ_LOCK = 0 
+											UNION ALL SELECT 0 AS NUMEROPERSONA
+											) 
+									AS a);
+      END   
+    
+    --PRINT(CAST(@NRO_CLIENTE AS VARCHAR));
+    --PRINT(CAST(@NRO_PERSONA AS VARCHAR));
+    
+END

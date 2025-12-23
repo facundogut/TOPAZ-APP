@@ -1,0 +1,7 @@
+EXECUTE('
+DELETE FROM dbo.ME_CRIT_INDIC
+WHERE COD_ITEM = 20 AND TIPO = 3
+
+INSERT INTO dbo.ME_CRIT_INDIC (TZ_LOCK, COD_ITEM, TIPO, NOMBRE)
+VALUES (0, 20, 3, ''Garantía vinculada en Asistencia'')
+')

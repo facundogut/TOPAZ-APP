@@ -1,0 +1,456 @@
+VERSION:055_5
+TN  NN 1006TConsulta Genérica                       C00111 00
+ N  NN 33949   Ordinal                                           INNSNK000007015200300302021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-04-28 12:27:28JORGE
+*N  NN -- Modificación de Segmento y Sub Segmento de Cliente -----------------------------------------------
+*N  NN -- Fecha de creación:  28/10/2010   versión 001 ---------------------------------------------------------
+*N  NN -------------------------------------------------------------------------------------------------------------------
+*N  NN -- Inc 744 - En testing - Javier Alvarez - 06/12/2010 - Se quitaron controles de la transaccion 6  -
+*N  NN -------------------------------------------------------------------------------------------------------------------
+VNSSNS 030001000104000800SSSD000000000000000000000000000000000000000
+/T=Consulta de Clientes
+/C=192192192
+*$2021-09-07 12:44:55ANITAORTIZ
+KNNNNN 030002001103310783000101
+/T=Seleccione cliente a modificar
+/F=0012700NNN000000000Arial                                   
+*N  NN ***INICIO NBCHDEF-2700 - Modificaciones de Segmento de Cliente
+*$2021-09-07 10:50:25ANITAORTIZ
+ NNNNN 08010   Filtro ayuda                                      INNSNF000171019701940484000011000000171005201940182000
+/?=1=0
+/V="[Estado Cliente]='HABILITADO'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-09-07 10:51:01ANITAORTIZ
+ NNNNN 02640   Ayuda Clientes                                    IENSN 030027002603080771001011600000069003100890129000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00902   Codigo Cliente                                    INNSNA030027002603080771001011600000069003100890129000
+/V=C2640
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01048   Tipo Apertura                                     INNSN 000171019701940484000011000000171005201940182000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01000   Nombre Cliente                                    INNSN 000171019701940484000011000000171005201940182000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01040   Tipo  Cliente                                     INNSN 030312016303350450000011000000312001803350148000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02216   Nivel Apertura                                    INNSN 030312016303350450000011000000312001803350148000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01038   Estado                                            INNSN 030312016303350450000011000000312001803350148000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-09-07 11:21:54ANITAORTIZ
+CNNNNN ME00000000000000000000100
+/?=1=0
+/F=C1040='I'
+/M=Tipo de Cliente inválido
+*$2022-07-28 12:59:24ANITAORTIZ
+ NNNNN 09103   Alfa de 100                                       INNSNK000007015200300452001011000000007000700300137000
+/?=C1038=1
+/V=El Cliente seleccionado, se encuentra inhabilitado. Por favor, verifique.
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-09-07 12:44:02ANITAORTIZ
+CNNNNN ME00000000000000000000110
+/?=C1038=1
+/M=C9103
+*$2021-09-07 11:28:22ANITAORTIZ
+*N  NN -- Si Tipo E ó F ==>  I86   ---------------------------------------
+CNNNNN   00000000000000000000100
+/F=C1040='F'OC1040='E'
+/P=I86
+*N  NN -- Si Tipo  J ==>  I87 ---------------------------------------
+CNNNNN   00000000000000000000100
+/F=(C1040='J')O(C1040='I')
+/P=I87
+*$2022-07-28 12:59:46ANITAORTIZ
+*N  NN -- Si es Tipo  I ó C ==>  I32     ---------------------------------------
+CNNNNN   00000000000000000000100
+/F=C1040='I'OC1040='C'
+/P=I32
+ NNNNN 09503   Codigo de Oper.                                   INNSN 030312016303350450000011000000312001803350148000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 05013   Nivel Riesgo                                      INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00109   Numerico de 4                                     INNSNK000007015200300202021011000000007000700300137000
+/V=11
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-09-07 11:30:39ANITAORTIZ
+ NNNNN 00914                                                     INNNNF000007015200300452001011000000007000700300137000
+/V="CODIGOCLIENTE='"+C902.0+"' AND ((TZ_LOCK >= 100000000000000 AND TZ_LOCK < 200000000000000) OR (TZ_LOCK >= 400000000000000))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-09-07 11:34:30ANITAORTIZ
+CNNNNN ME00000000000000000000100
+/F=F(CANTIDAD,C109,C914)>0
+/M=Cliente con registro pendiente de Autorización, revise!
+*$2021-09-07 11:35:12ANITAORTIZ
+CNNNNN   00000000000000000000100
+/F=C607=0
+/P=I33
+/M=NO EXISTE CLIENTE-PERSONA
+*$2021-09-07 11:30:34ANITAORTIZ
+CNNNNN   00000000000000000000100
+/?=C5013='A'
+/P=I101
+TN  NN 1006TConsulta Genérica                       C00111 00
+VNSSNS 090001000104000800SSSD000020000000000000000000000000000000010
+/T="Cliente: " + C2.1 +" - " + C1000.1
+/C=192192192
+KNNNNN 090002001101640783000101
+/F=0012700NNN000000000Arial                                   
+ NSNNN 00902   Codigo Cliente                                    IDNSNA090034015200570247001011500000034003900570137000
+/V=C0902.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-06 13:49:10AALLOIS
+ NSNNN 01000   Nombre Cliente                                    ICNSNF090034025500570656001011500000047031500700413000
+/V=F(TOUPPER,C1000.1)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-06 13:49:14AALLOIS
+ NNNNN 01001   Complem.Nombre                                    ICNSNF090062025500850656001011500000047031500700413000
+/V=F(TOUPPER,C1001.1)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 02216   Nivel Apertura                                    IINSN 090090015201130337001011500000091003901140137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-06 14:00:03AALLOIS
+ NSNNN 01040   Tipo  Cliente                                     IINSN 090090044501130655001011500000091036001140440000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-06 13:54:47AALLOIS
+ NNNNN 06075   Nivel Cliente                                     INNSNA090105015101280277001011000000105003801280136000
+/V=C2216.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01003   Sucursal Vincul                                   IDNSN 090118015201410213021011500000120003901430143000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-06 13:55:02AALLOIS
+ NSNNN 06020   Nombre                                            ICNSN 090118022501410655001011500000000000000000000000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-06 13:55:06AALLOIS
+ NSNNN 01063   Tipo persona                                      INNSNA090118022501410655001011000000007000700270126000
+/?=C1040='F'
+/V=C1040.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-07-28 14:34:53ANITAORTIZ
+ NSNNN 01063   Tipo persona                                      INNSNK090118022501410655001011000000007000700270126000
+/?=(C1040='J')
+/V=I
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-07-28 14:39:11ANITAORTIZ
+ NSNNN 01063   Tipo persona                                      INNSNK090118022501410655001011000000007000700270126000
+/?=(C1040='I')
+/V=J
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-07-28 14:39:23ANITAORTIZ
+TN  NN 1008TConsulta Relación Cliente-Persona       S00161 00
+/F=(C1506="T")
+*&Consulta secuencial para titulares
+ NNNNN 01504   Cód. Cliente                                      INNNNA000014015105130371001211003000014002100340133000
+/V=C902.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ******************************
+*N  NN *** Si hay registros se enciende I26
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/A=I26
+*N  NN ******************************
+ NNNNN 01505   Nro Persona                                       INNNN 000014015105130371001211003000014002100340133000
+/?=I26
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta PF                             C00141 00
+/?=I26
+ NNNNN 01401   Numero Persona                                    INNSNA000007015200300302021211003000007000700300137000
+/V=C1505.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01421   Primer Nombre                                     INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-03-19 10:48:21LUISE
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/A=I27
+ NNNNN 02203   Nivel apertura                                    INNSN 000007015200300202021211003000007000700300137000
+/?=I27
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta PJ                             C00191 00
+/?=!I27
+*$2020-05-06 13:18:10AALLOIS
+ NNNNN 01451   No.Pers.Jurídic                                   INNSNA000007015200300302021211003000007000700300137000
+/V=C1505.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01452   Razon Social                                      INNSN 000007015200300302021211003000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/A=I28
+ NNNNN 02045   Nivel Apertura                                    INNSN 000007015200300202021211003000007000700300137000
+/?=I28
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta de Clientes                    C00001 00
+ NNNNN 00902   Codigo Cliente                                    INNSNA320026017000490296021011000000026005100490155000
+/V=C0902.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01048   Tipo Apertura                                     INNSNA000107046002020640001011000000107033301270431000
+/V=C1048.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ------------ Act. Económica ---------------------------
+VNNNNN 340204-00101970800NNND000000000000000000000000000000000000010
+/T="Actividad Económica  " +"Cliente  "+C2.1+" - "+C1000.1
+/C=192192192
+KNNNNN 340015001001190784000101
+/F=0012700NNN000000000Arial                                   
+CNNNNN  w00000000000000000000100
+/R=F
+ NNNNN 00902   Codigo Cliente                                    INNSNA320057017000800296021011000000057005100800155000
+/V=C0902.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01048   Tipo Apertura                                     INNSNA000107046002020640001011000000107033301270431000
+/V=C1048.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08010   Filtro ayuda                                      INNSNF000059016300820289020011000000059004400820148000
+/?=C1040.2='F'
+/V="COD_SEGMENTO!=0 AND TIPO_PERSONA='"+ C1040.2+"'"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-07-28 14:39:49ANITAORTIZ
+ NNNNN 08010   Filtro ayuda                                      INNSNF000059016300820289020011000000059004400820148000
+/?=(C1040.2='J')O(C1040.2='I')
+/V="COD_SEGMENTO!=0 AND (TIPO_PERSONA='"+ C1040.2+"' OR TIPO_PERSONA='"+ C1063.2+"')"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-07-28 14:41:22ANITAORTIZ
+ NSNNN 01052   Segmento                                          I NSN 340039015100620277020011000000038004200610137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-09-07 11:59:11ANITAORTIZ
+ NSNNN 01897   Segmento                                          INNSNF340039015100620277020011000000038004200610137000
+/?=1=0
+/V=C1052.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-09-07 11:56:42ANITAORTIZ
+ NNNNN 01897   Código Segmento                                   INNSNA000059016300820289020011000000059004400820148000
+/V=C1052.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-09-07 11:58:57ANITAORTIZ
+ NSNNN 01898   Descripción                                       ICNSN 340039031100620653001011500000059004400820148000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-08-31 16:15:55ANITAORTIZ
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=Ingrese un Segmento válido!
+*$2021-09-01 10:12:11ANITAORTIZ
+CNNNNN ME00000000000000000000100
+/?=C1040='F'
+/F=(C1897=C1052)Y(C8176#C1040.0)
+/M=Ingrese un Segmento válido para el tipo de cliente!
+*$2022-07-28 14:24:34ANITAORTIZ
+CNNNNN ME00000000000000000000100
+/?=(C1040='J')O(C1040='I')
+/F=(C1897=C1052)Y(C8176='F')
+/M=Ingrese un Segmento válido para el tipo de cliente!
+*$2022-07-28 14:26:57ANITAORTIZ
+*N  NN --- Se controla tipos de cambios en los segmentos / sub segmentos ----------------------------------------------------------------------------------  
+*N  NN -------------     Si   Cliente es JURIDICO                    ==>   
+*N  NN -------------                                     No se permite cambiar a Segmentos de FISICOS (31,41,71)
+CNNNNN ME00000000000000000000100
+/?=I87
+/F=(C1052=31)O(C1052=41)O(C1052=71)
+/M=No se permite a un JURIDICO segmentos de FISICOS...
+*N  NN -------------                                     No se permite cambiar de Segmentos CORPORATIVOS a PYMES y Viceversa (11,12 -> 21,22)
+CNNNNN ME00000000000000000000100
+/?=I87Y1=2
+/F=((C1052.1=11)O(C1052.1=12))Y((C1052.6=21)O(C1052.6=22))
+/M=No se permite el cambio de CORP a PYME, ni viceversa...
+CNNNNN ME00000000000000000000100
+/?=I87Y1=2
+/F=((C1052.1=21)O(C1052.1=22))Y((C1052.6=11)O(C1052.6=12))
+/M=No se permite el cambio de CORP a PYME, ni viceversa...
+*N  NN -------------     Si   Cliente es FISICO o EMPLEADO   ==>   
+*N  NN -------------                                     No se permite cambiar a Segmentos JURIDICOS (11,12,21,22)
+CNNNNN ME00000000000000000000100
+/?=I86
+/F=(C1052=11)O(C1052=12)O(C1052=21)O(C1052=22)
+/M=No se permite a un FISICO segmentos de JURIDICOS...
+*N  NN -------------                                     No se permite cambiar de Segmentos CONSUMO BCA.PRIVADA a EMPLEADO NBC (31,41 -> 71)
+CNNNNN ME00000000000000000000100
+/?=I86Y1=2
+/F=((C1052.1=31)O(C1052.1=41))Y(C1052.6=71)
+/M=No se permite el cambio de BCA PRIV o CONSUMO a EMPLEADO...
+*N  NN ------------------------------------------------------------------------------------------------------------------------------------------------------
+*N  NN Javier Alvarez : 06/12/2010
+*N  NN Se desabilitaron controles de las lineas 15, 16 y 21 a pedido de Elena
+*N  NN ------------------------------------------------------------------------------------------------------------------------------------------------------
+ NNNNN 08010   Filtro ayuda                                      INNSNF000059016300820289020011000000059004400820148000
+/V="COD_SEGMENTO="+C1052.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01004   Sub Segmento                                      I NSN 340067015100900277020011000000066004200890136000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-06 12:30:30AALLOIS
+ NNNNN 01899   Código Sub Seg.                                   INNSNA000059016300820289020011000000059004400820148000
+/V=C1004.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03323   Código Segmento                                   INNSNA000059016300820289020011000000059004400820148000
+/V=C1052.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01900   Descripción                                       ICNSN 340067031100900652001010500000059004400820148000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-06 12:31:26AALLOIS
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=Sub segmento incorrecto, verifique!
+*$2021-09-08 09:46:27ANITAORTIZ
+TN  NN 1009TModificacion de Cliente                 M00111 00
+*N  NN --- Se realiza la modificación del Segmento y Sub Segmento ingresados ----------
+ NNNNN 00902   Codigo Cliente                                    INNSNA320026017000490296021011000000026005100490155000
+/V=C0902.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01048   Tipo Apertura                                     INNSN 000107046002020640001011000000107033301270431000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01052   Segmento                                          INNSNA340019016300420289020011000000019004400420148000
+/V=C1052.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01004   Sub Segmento                                      INSSNA340047016300700289020010000000047004400700148000
+/V=C1004.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1001TAlta Generica                           A33321 00
+*$2020-04-28 12:26:52JORGE
+ NNNNN 33948   Alfa de 1                                         INNSNK000007015200300202001011000000007000700300137000
+/V=M
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-04-28 12:26:22JORGE
+DN  NN 1020SS
+*$2020-04-28 12:26:22JORGE
+TN  NN 1001TAlta Datos Auditoría                    A00411 00
+ NNNNN 01880   Nro tabla Mod.                                    INNSNK000213017202360298001010000000213004002360157000
+/V=11
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN --- Datos para Auditoría correspondientes a Actividad Económica ----
+ NNNNN 01881   Nro grupo Datos                                   INNSNK000213017202360298001010000000213004002360157000
+/V=4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ----------------------------------------------------------------------------------
+ NNNNN 01882   F. Modificacion                                   INNSNA000213017202360298001010000000213004002360157000
+/V=C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 09506   Hora del Sistem                                   INNSN 000007015200300302001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01883   Hora Mod.                                         INNSNA000213017202360298001010000000213004002360157000
+/V=C9506
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01884   Iniciales Usu.                                    INNSNA000213017202360298001010000000213004002360157000
+/V=C9505
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01879   Nro. Per./Cli.                                    INNSNA000213017202360298001010000000213004002360157000
+/V=C0002.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01885   Operacion                                         INNSNA000213017202360298001010000000213004002360157000
+/V=C9503
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01886   Sucursal                                          INNSNA000213017202360298001010000000213004002360157000
+/V=C9502
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01887   Asiento                                           INNSNA000213017202360298001010000000213004002360157000
+/V=C9501
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConcepto                                C00001 00
+ NSSNN 00028   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/V="Modificación Segmento Cliente"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-08-13 11:30:50PABLOP
+*#I33#Indicar por existencia Barrio/Zona
+*#I251#Alta
+*#I87#Cliente JURIDICO
+*#I32#Cliente INST.FINANCIERA o C
+*#I500#STATUS 0
+*#I600#Direccion Ambigua
+*#I290#Caracteres validos en telefono
+*#I296#Es Persona
+*#I130#Tel Nacional
+*#I609#No hubo Conexion WS CPA
+*#I253#Modificación
+*#I252#Consulta
+*#I86#Cliente FISICO o EMPLEADO NBC

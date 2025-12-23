@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>tenenciaxperiodo/{idPersona}/{periodo}</uri>
+    <serviceDescription>1.31.4 ConsultaTenenciaXPeriodo</serviceDescription>
+    <title>ConsultaTenenciaXPeriodo</title>
+    <querys>
+        <query id="1" name="Tarjetas" type="MULTIPLE">
+            <sql>DECLARE @idPersona AS VARCHAR(max) = ?;&#13;
+DECLARE @anio AS VARCHAR(max) = ?;&#13;
+&#13;
+IF ISNUMERIC(@idPersona) = 1 AND ISNUMERIC(@anio) = 1 and len(@anio)=4 and len(@idPersona)&lt;13&#13;
+BEGIN&#13;
+    IF CAST(@idPersona AS INT) &gt; 0 AND CAST(@anio AS INT) &gt; 0&#13;
+    BEGIN&#13;
+    &#13;
+    --TARJETA&#13;
+		SELECT t.CLIENTE AS NumeroCliente,&#13;
+			   c.NOMBRECLIENTE AS NombreTarjeta,&#13;
+			   s.SALDO_MN AS DeudaPesos,&#13;
+			   s.SALDO_ME AS DeudaDolares&#13;
+		FROM TJC_MAESTRO_USUARIO t, CLI_CLIENTES c, TJC_SALDOS s, CLI_ClientePersona cli&#13;
+		WHERE YEAR(t.FECHA_ALTA_USU)&lt;=@anio&#13;
+		AND cli.NUMEROPERSONA=@idPersona&#13;
+		AND t.CLIENTE=cli.CODIGOCLIENTE&#13;
+		AND t.CLIENTE=c.CODIGOCLIENTE&#13;
+		AND t.USUARIO=s.USUARIO&#13;
+		AND t.FECHA_BAJA_USU IS NULL&#13;
+		AND t.TZ_LOCK=0&#13;
+		AND c.TZ_LOCK=0&#13;
+&#13;
+		&#13;
+		&#13;
+    END&#13;
+    ELSE&#13;
+    BEGIN&#13;
+        -- Al menos uno de los campos no es mayor a cero&#13;
+        THROW 50000, 'LOS PARAMETROS DEBEN SER NUMERICOS MAYORES A 0.', 1;&#13;
+    END&#13;
+    &#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+    -- Al menos uno de los campos no es numérico&#13;
+    THROW 50000, 'LOS PARAMETROS DEBEN SER NUMERICOS MAYORES A 0.', 1;&#13;
+END&#13;
+&#13;
+&#13;
+&#13;
+</sql>
+            <input>
+                <inParameter description="IdPersona" type="STRING">idPersona</inParameter>
+                <inParameter description="periodo" type="STRING">periodo</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Tarjetas">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NumeroCliente</queryname>
+                        <servicename>NumeroCliente</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NombreTarjeta</queryname>
+                        <servicename>NombreTarjeta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>DeudaPesos</queryname>
+                        <servicename>DeudaPesos</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>DeudaDolares</queryname>
+                        <servicename>DeudaDolares</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="Cuentas" type="MULTIPLE">
+            <sql>DECLARE @idPersona AS VARCHAR(max) = ?;&#13;
+DECLARE @anio AS VARCHAR(max) = ?;&#13;
+&#13;
+IF ISNUMERIC(@idPersona) = 1 AND ISNUMERIC(@anio) = 1 and len(@anio)=4 and len(@idPersona)&lt;13&#13;
+BEGIN&#13;
+    IF CAST(@idPersona AS INT) &gt; 0 AND CAST(@anio AS INT) &gt; 0&#13;
+    BEGIN&#13;
+    &#13;
+	--CUENTA&#13;
+		SELECT &#13;
+			O.DESCRIPCION AS TipoCuenta,&#13;
+			S.CUENTA AS Numero,&#13;
+			s.sucursal AS Sucursal,&#13;
+			v.CTA_CBU AS Cbu,&#13;
+			s.c1604 AS SaldoEnPesos,&#13;
+			s.MONEDA AS Id,&#13;
+			m.C6400 AS Nombre,&#13;
+			m.c6401 AS Simbolo,&#13;
+			S.C1604 + S.C1605 + S.C1683 + S.C2627 + S.C50107 AS SaldoOperativo&#13;
+			&#13;
+		FROM SALDOS S,OPCIONES O,VTA_SALDOS v, MONEDAS m,CLI_ClientePersona cli&#13;
+		WHERE S.C1785 IN (2,3)&#13;
+		AND cli.NUMEROPERSONA=@idPersona&#13;
+		AND cli.CODIGOCLIENTE=s.c1803&#13;
+		AND m.C6399=s.MONEDA&#13;
+		AND O.NUMERODECAMPO=1785&#13;
+		AND O.OPCIONINTERNA=S.C1785	  &#13;
+		AND S.TZ_LOCK=0	&#13;
+		AND S.JTS_OID=v.JTS_OID_SALDO&#13;
+		&#13;
+		&#13;
+    END&#13;
+    ELSE&#13;
+    BEGIN&#13;
+        -- Al menos uno de los campos no es mayor a cero&#13;
+        THROW 50000, 'LOS PARAMETROS DEBEN SER NUMERICOS MAYORES A 0.', 1;&#13;
+    END&#13;
+    &#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+    -- Al menos uno de los campos no es numérico&#13;
+    THROW 50000, 'LOS PARAMETROS DEBEN SER NUMERICOS MAYORES A 0.', 1;&#13;
+END&#13;
+&#13;
+&#13;
+&#13;
+</sql>
+            <input>
+                <inParameter description="IdPersona" type="STRING">idPersona</inParameter>
+                <inParameter description="periodo" type="STRING">periodo</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Cuentas">
+                    <outParameter description="" type="STRING">
+                        <queryname>TipoCuenta</queryname>
+                        <servicename>TipoCuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Numero</queryname>
+                        <servicename>Numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Sucursal</queryname>
+                        <servicename>Sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Cbu</queryname>
+                        <servicename>Cbu</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>SaldoEnPesos</queryname>
+                        <servicename>SaldoEnPesos</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Id</queryname>
+                        <servicename>Moneda.Id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Nombre</queryname>
+                        <servicename>Moneda.Nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Simbolo</queryname>
+                        <servicename>Moneda.Simbolo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>SaldoOperativo</queryname>
+                        <servicename>SaldoOperativo</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="3" name="Prestamos" type="MULTIPLE">
+            <sql>DECLARE @idPersona AS VARCHAR(max) = ?;&#13;
+DECLARE @anio AS VARCHAR(max) = ?;&#13;
+&#13;
+IF ISNUMERIC(@idPersona) = 1 AND ISNUMERIC(@anio) = 1 and len(@anio)=4 and len(@idPersona)&lt;13&#13;
+BEGIN&#13;
+    IF CAST(@idPersona AS INT) &gt; 0 AND CAST(@anio AS INT) &gt; 0&#13;
+    BEGIN&#13;
+    &#13;
+--PRESTAMOS&#13;
+&#13;
+	SELECT &#13;
+			s.c1604 AS DeudaActual,&#13;
+			s.c1600 AS DeudaOriginal,&#13;
+			s.c3958 AS DeudaPesos,	&#13;
+			s.sucursal AS Sucursal,&#13;
+			s.OPERACION AS NroOperacion, &#13;
+			0 AS Desglose,&#13;
+			0 AS NroCheque,&#13;
+			0 AS Boleta,&#13;
+			s.MONEDA AS Id,&#13;
+			m.C6400 AS Nombre,&#13;
+			m.c6401 AS Simbolo,&#13;
+			p.c6251 AS TipoOperacion --sacar de tabla productos&#13;
+&#13;
+			&#13;
+		FROM SALDOS S, MONEDAS m,PRODUCTOS p, CLI_ClientePersona cli&#13;
+		WHERE S.C1785 =5&#13;
+		AND cli.NUMEROPERSONA=@idPersona&#13;
+		AND cli.CODIGOCLIENTE=s.c1803&#13;
+		AND S.PRODUCTO=p.c6250&#13;
+		AND m.C6399=s.MONEDA&#13;
+		AND S.TZ_LOCK=0	&#13;
+		AND p.TZ_LOCK=0&#13;
+		&#13;
+		&#13;
+    END&#13;
+    ELSE&#13;
+    BEGIN&#13;
+        -- Al menos uno de los campos no es mayor a cero&#13;
+        THROW 50000, 'LOS PARAMETROS DEBEN SER NUMERICOS MAYORES A 0.', 1;&#13;
+    END&#13;
+    &#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+    -- Al menos uno de los campos no es numérico&#13;
+    THROW 50000, 'LOS PARAMETROS DEBEN SER NUMERICOS MAYORES A 0.', 1;&#13;
+END&#13;
+&#13;
+&#13;
+&#13;
+            </sql>
+            <input>
+                <inParameter description="IdPersona" type="STRING">idPersona</inParameter>
+                <inParameter description="periodo" type="STRING">periodo</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Prestamos">
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>DeudaActual</queryname>
+                        <servicename>DeudaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>DeudaOriginal</queryname>
+                        <servicename>DeudaOriginal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>DeudaPesos</queryname>
+                        <servicename>DeudaPesos</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Sucursal</queryname>
+                        <servicename>Sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NroOperacion</queryname>
+                        <servicename>NroOperacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Desglose</queryname>
+                        <servicename>Desglose</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NroCheque</queryname>
+                        <servicename>NroCheque</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Boleta</queryname>
+                        <servicename>Boleta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Id</queryname>
+                        <servicename>Moneda.Id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Nombre</queryname>
+                        <servicename>Moneda.Nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Simbolo</queryname>
+                        <servicename>Moneda.Simbolo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TipoOperacion</queryname>
+                        <servicename>TipoOperacion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="4" name="PlazoFijo" type="MULTIPLE">
+            <sql>DECLARE @idPersona AS VARCHAR(max) = ?;&#13;
+DECLARE @anio AS VARCHAR(max) = ?;&#13;
+&#13;
+IF ISNUMERIC(@idPersona) = 1 AND ISNUMERIC(@anio) = 1 and len(@anio)=4 and len(@idPersona)&lt;13&#13;
+BEGIN&#13;
+    IF CAST(@idPersona AS INT) &gt; 0 AND CAST(@anio AS INT) &gt; 0&#13;
+    BEGIN&#13;
+    &#13;
+	--PLAZO FIJO &#13;
+	&#13;
+		SELECT &#13;
+			s.c1609*m.C6440 AS InteresesEnPesos, &#13;
+			s.tipo_dpf AS TipoPlazoFijo, --no funca este&#13;
+			s.c1604 AS Capital, &#13;
+			s.C1620 AS FechaAlta,	&#13;
+			s.sucursal AS Sucursal,&#13;
+			s.C1627 AS FechaVencimiento,&#13;
+			pz.CERTIFICADO_DPF AS NumeroCertificado, &#13;
+			s.MONEDA AS Id,&#13;
+			m.C6400 AS Nombre,&#13;
+			m.c6401 AS Simbolo,&#13;
+			s.c1609 AS Intereses,  &#13;
+			s.c1604*m.c6440 AS CapitalEnPesos --preguntar&#13;
+			&#13;
+		FROM SALDOS S, MONEDAS m,PZO_SALDOS pz, CLI_ClientePersona cli&#13;
+		WHERE S.C1785 =4&#13;
+		AND cli.NUMEROPERSONA=@idPersona&#13;
+		AND cli.CODIGOCLIENTE=s.c1803&#13;
+		AND pz.JTS_OID_SALDO=s.JTS_OID&#13;
+		AND m.C6399=s.MONEDA&#13;
+		AND S.TZ_LOCK=0	&#13;
+&#13;
+		&#13;
+		&#13;
+    END&#13;
+    ELSE&#13;
+    BEGIN&#13;
+        -- Al menos uno de los campos no es mayor a cero&#13;
+        THROW 50000, 'LOS PARAMETROS DEBEN SER NUMERICOS MAYORES A 0.', 1;&#13;
+    END&#13;
+    &#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+    -- Al menos uno de los campos no es numérico&#13;
+    THROW 50000, 'LOS PARAMETROS DEBEN SER NUMERICOS MAYORES A 0.', 1;&#13;
+END&#13;
+&#13;
+&#13;
+&#13;
+            </sql>
+            <input>
+                <inParameter description="IdPersona" type="STRING">idPersona</inParameter>
+                <inParameter description="periodo" type="STRING">periodo</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="PlazoFijo">
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>InteresesEnPesos</queryname>
+                        <servicename>InteresesEnPesos</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TipoPlazoFijo</queryname>
+                        <servicename>TipoPlazoFijo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>Capital</queryname>
+                        <servicename>Capital</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FechaAlta</queryname>
+                        <servicename>FechaAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>Sucursal</queryname>
+                        <servicename>Sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FechaVencimiento</queryname>
+                        <servicename>FechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NumeroCertificado</queryname>
+                        <servicename>NumeroCertificado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Id</queryname>
+                        <servicename>Moneda.Id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Nombre</queryname>
+                        <servicename>Moneda.Nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Simbolo</queryname>
+                        <servicename>Moneda.Simbolo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>Intereses</queryname>
+                        <servicename>Intereses</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>CapitalEnPesos</queryname>
+                        <servicename>CapitalEnPesos</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

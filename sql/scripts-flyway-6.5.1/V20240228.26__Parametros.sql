@@ -1,0 +1,52 @@
+﻿EXECUTE('
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''Margen Básico Graduación RPC Cliente''
+WHERE CODIGO = 601
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''Margen Compl Graduación RCP Cliente''
+WHERE CODIGO = 602
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''Margen Compl Graduación RCP Banco''
+WHERE CODIGO = 603
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''SGR y FGP Margen Compl Graduación RCP Cliente''
+WHERE CODIGO = 604
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''SGR y FGP Margen Compl Graduación RCP Banco''
+WHERE CODIGO = 605
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''Tramo sin garantía Grandes exp.''
+WHERE CODIGO = 606
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''Tramo con y sin garantía Grandes exp.''
+WHERE CODIGO = 607
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''RPC NBCH''
+WHERE CODIGO = 609
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''Meses previos vinculación''
+WHERE CODIGO = 610
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''Salario Mínimo Vital y Móvil - Grandes Exp''
+WHERE CODIGO = 611
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''Cantidad de Salario Mínimo Vital y Móvil - Grandes Exp''
+WHERE CODIGO = 612
+
+UPDATE dbo.CRE_PARAMETROS
+SET DESCRIPCION = ''VINCULADOS - Incremento en años Fecha fin de la relación''
+WHERE CODIGO = 613
+
+DELETE FROM dbo.CRE_PARAMETROS
+WHERE CODIGO = 614
+')

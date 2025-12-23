@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="0800" language="groovy" pageWidth="1400" pageHeight="842" columnWidth="1400" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="FECHAPROCESO" class="java.util.Date">
+		<parameterDescription><![CDATA[FECHA]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+	FECHA,
+	--'X',
+	--0,
+    TO_NUMBER(I.CODIGO_BCE) AS "CUENTA_CONTABLE",
+	I.DESCRIPCION AS "NOMBRECUENTA",
+	round(sum(SALDOFINMESMN),2) SALDOFINMESMN,
+	round(sum(SALDOFINMESME),2) SALDOFINMESME,
+	round(sum(SALDOFINMESMEN),2) SALDOFINMESMEN,
+	--0,
+    --' ',
+    SUBSTR(I.CODIGO_INTERNO,1,13) CODIGO_INTERNO
+FROM
+	(SELECT
+		  CODIGO,
+		  FECHA,
+		  SUCURSAL,
+          NIVEL,
+		  ROUND(SUM(SALDOFINMESMN),2) SALDOFINMESMN,
+		  ROUND(SUM(SALDOFINMESME),2) SALDOFINMESME,
+		  ROUND(SUM(SALDOFINMESMEN),2) SALDOFINMESMEN
+		FROM (
+			 SELECT
+                NIVEL,
+			    R.CODIGO_INTERNO AS "CODIGO",
+			    R.FECHA FECHA,
+				R.SUCURSAL SUCURSAL,
+                CASE WHEN (SUBSTR(R.CODIGO_INTERNO,1,1) = '7' OR SUBSTR(R.CODIGO_INTERNO,1,1) = '6') THEN
+                    (R.SALDOFINMESMO * HC.TIPO_CAMBIO_BCU) - SALDOEQMN
+                ELSE
+                  CASE WHEN R.MONEDA = 0 OR R.MONEDA = 9800 THEN
+                     (R.SALDOFINMESMO * ROUND(HC.TIPO_CAMBIO_BCU,4))
+                  ELSE
+                    0
+                  END
+				END AS SALDOFINMESMN,
+				CASE WHEN R.MONEDA <>  0  AND R.MONEDA <> 9800 THEN
+					 CASE WHEN R.MONEDA <> 1111 AND R.MONEDA <> 1112 AND R.MONEDA <> 2700 THEN
+					 	 (R.SALDOFINMESMO / ARBITRAJE_CIERRE_BCU)
+					 ELSE
+					 	 (R.SALDOFINMESMO * ARBITRAJE_CIERRE_BCU)
+					 end
+				ELSE
+                    CASE WHEN R.MONEDA = 0 AND (SUBSTR(R.CODIGO_INTERNO,1,1) = '7' OR SUBSTR(R.CODIGO_INTERNO,1,1) = '6') THEN
+                      SALDOEQME
+                    ELSE
+                      0
+                    END
+				END AS SALDOFINMESME,
+
+                CASE WHEN (SUBSTR(R.CODIGO_INTERNO,1,1) = '7' OR SUBSTR(R.CODIGO_INTERNO,1,1) = '6') THEN
+                  SALDOEQMN
+                ELSE
+                  CASE WHEN R.MONEDA <>  0 AND R.MONEDA <>  9800 THEN
+                      CASE WHEN R.MONEDA <> 1111 AND R.MONEDA <> 1112 and R.MONEDA <> 2700 THEN
+                         (R.SALDOFINMESMO / ARBITRAJE_CIERRE_BCU) * (SELECT NVL(TIPO_CAMBIO_BCU,0) FROM HISTORICOTIPOSCAMBIO WHERE CODIGO_TIPO_CAMBIO = 1 AND MONEDA = 2222 AND FECHA_COTIZACION = $P{FECHAPROCESO})
+                       ELSE
+                         (R.SALDOFINMESMO * ARBITRAJE_CIERRE_BCU) * (SELECT NVL(TIPO_CAMBIO_BCU,0) FROM HISTORICOTIPOSCAMBIO WHERE CODIGO_TIPO_CAMBIO = 1 AND MONEDA = 2222 AND FECHA_COTIZACION = $P{FECHAPROCESO})
+                       END
+
+                  ELSE
+                      0
+                  END
+                END AS SALDOFINMESMEN
+			FROM CO_BALANCE_RESULTADOS R, HISTORICOTIPOSCAMBIO HC, CO_BALANCE_ESTRUCTURA E
+				WHERE HC.MONEDA = R.MONEDA
+				AND FECHA_COTIZACION = FECHA AND NIVEL IN (5,6,7,8,2,3,4)
+				AND R.CODIGO_INTERNO = E.CODIGO_INTERNO AND IMPRESION ='S' AND R.TIPO_BALANCE = 'D'
+				AND FECHA = $P{FECHAPROCESO} AND E.TZ_LOCK = 0)
+		GROUP BY FECHA,CODIGO,SUCURSAL,NIVEL
+		ORDER BY CODIGO), CO_BALANCE_IMPRESION I
+WHERE CODIGO = I.CODIGO_INTERNO AND I.TZ_LOCK = 0
+GROUP BY FECHA, DESCRIPCION, I.CODIGO_BCE, NIVEL, CODIGO_INTERNO
+ORDER BY CUENTA_CONTABLE]]>
+	</queryString>
+	<field name="FECHA" class="java.sql.Timestamp"/>
+	<field name="CUENTA_CONTABLE" class="java.math.BigDecimal"/>
+	<field name="NOMBRECUENTA" class="java.lang.String"/>
+	<field name="SALDOFINMESMN" class="java.math.BigDecimal"/>
+	<field name="SALDOFINMESME" class="java.math.BigDecimal"/>
+	<field name="SALDOFINMESMEN" class="java.math.BigDecimal"/>
+	<field name="CODIGO_INTERNO" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="22">
+			<staticText>
+				<reportElement x="0" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[FECHA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="100" y="2" width="114" height="20"/>
+				<textElement/>
+				<text><![CDATA[CUENTA CONTABLE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="214" y="2" width="270" height="20"/>
+				<textElement/>
+				<text><![CDATA[DESCRIPCION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="484" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[IMPORTE MN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="584" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[IMPORTE ME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="684" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[IMPORTE MN+ME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="784" y="2" width="100" height="20"/>
+				<textElement/>
+				<text><![CDATA[CODIGO INTERNO]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="0" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{FECHA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="0" width="114" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{CUENTA_CONTABLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="214" y="0" width="270" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRECUENTA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="484" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{SALDOFINMESMN}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="584" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{SALDOFINMESME}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="684" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{SALDOFINMESMEN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="784" y="0" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CODIGO_INTERNO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

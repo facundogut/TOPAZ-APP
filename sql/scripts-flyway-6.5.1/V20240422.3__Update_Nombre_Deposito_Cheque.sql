@@ -1,0 +1,8 @@
+EXECUTE('
+
+UPDATE OPERACIONES
+SET NOMBRE = ''Depósito Cheque Banco''
+	, DESCRIPCION = ''Depósito Cheque Banco''
+WHERE TITULO = 3501 AND IDENTIFICACION = 3511
+
+')

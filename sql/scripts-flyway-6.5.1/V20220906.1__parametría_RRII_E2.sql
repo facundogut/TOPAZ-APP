@@ -1,0 +1,112 @@
+﻿EXECUTE ('
+
+INSERT INTO dbo.RRI_PARAMETROS_DEF (CODIGO, NOMBRE, ID1, ID1DESC, ID2, ID2DESC, ID3, ID3DESC, ID4, ID4DESC, ID5, ID5DESC, NUM1, NUM1DESC, NUM2, NUM2DESC, CHAR1, CHR1DESC, CHAR2, CHR2DESC, TZ_LOCK)
+VALUES (80, ''Eq. Marca TC TITULAR'', ''S'', ''Marca TC Topaz'', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''S'', ''Marca de TC BCRA'', ''S'', '''', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_DEF (CODIGO, NOMBRE, ID1, ID1DESC, ID2, ID2DESC, ID3, ID3DESC, ID4, ID4DESC, ID5, ID5DESC, NUM1, NUM1DESC, NUM2, NUM2DESC, CHAR1, CHR1DESC, CHAR2, CHR2DESC, TZ_LOCK)
+VALUES (81, ''Condicion TC Topaz'', ''N'', '''', ''N'', '''', ''N'', '''', ''S'', ''Adic o Tit Topaz'', ''N'', '''', ''N'', '''', ''N'', '''', ''S'', ''Adic o Tit BCRA'', ''N'', '''', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_DEF (CODIGO, NOMBRE, ID1, ID1DESC, ID2, ID2DESC, ID3, ID3DESC, ID4, ID4DESC, ID5, ID5DESC, NUM1, NUM1DESC, NUM2, NUM2DESC, CHAR1, CHR1DESC, CHAR2, CHR2DESC, TZ_LOCK)
+VALUES (100, ''CodigoPartidaTincom'', ''S'', ''ID_CARGO'', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''S'', ''CODIGO_PARTIDA'', ''N'', '''', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_DEF (CODIGO, NOMBRE, ID1, ID1DESC, ID2, ID2DESC, ID3, ID3DESC, ID4, ID4DESC, ID5, ID5DESC, NUM1, NUM1DESC, NUM2, NUM2DESC, CHAR1, CHR1DESC, CHAR2, CHR2DESC, TZ_LOCK)
+VALUES (101, ''Codigo de producto'', ''S'', ''Tipo de Producto'', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''S'', ''Codigo Partida'', ''S'', ''Descripcion'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_DEF (CODIGO, NOMBRE, ID1, ID1DESC, ID2, ID2DESC, ID3, ID3DESC, ID4, ID4DESC, ID5, ID5DESC, NUM1, NUM1DESC, NUM2, NUM2DESC, CHAR1, CHR1DESC, CHAR2, CHR2DESC, TZ_LOCK)
+VALUES (102, ''Codigo de Marca TJC'', ''S'', ''ADMINISTRADORA TOPAZ'', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''S'', ''Codigo Partida'', ''S'', ''MarcaTJC'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_DEF (CODIGO, NOMBRE, ID1, ID1DESC, ID2, ID2DESC, ID3, ID3DESC, ID4, ID4DESC, ID5, ID5DESC, NUM1, NUM1DESC, NUM2, NUM2DESC, CHAR1, CHR1DESC, CHAR2, CHR2DESC, TZ_LOCK)
+VALUES (103, ''CA Excluidas'', ''S'', ''Productos C6252'', ''S'', ''Productos C6250'', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''S'', ''Descr Producto'', ''N'', '''', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_DEF (CODIGO, NOMBRE, ID1, ID1DESC, ID2, ID2DESC, ID3, ID3DESC, ID4, ID4DESC, ID5, ID5DESC, NUM1, NUM1DESC, NUM2, NUM2DESC, CHAR1, CHR1DESC, CHAR2, CHR2DESC, TZ_LOCK)
+VALUES (104, ''CC Excluidas'', ''S'', ''Productos C6252'', ''S'', ''Productos C6250'', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''N'', '''', ''S'', ''Descr Producto'', ''N'', '''', 0)
+
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (80, 1, 0, 0, '''', '''', 0, 0, ''0036'', ''MASTERCARD'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (80, 2, 0, 0, '''', '''', 0, 0, ''0011'', ''CABAL'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (80, 3, 0, 0, '''', '''', 0, 0, ''0054'', ''VISA'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (80, 8, 0, 0, '''', '''', 0, 0, ''0200'', ''TUYA'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (81, 0, 0, 0, ''A'', '''', 0, 0, ''12000'', '''', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (81, 0, 0, 0, ''T'', '''', 0, 0, ''11000'', '''', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (100, 27, 0, 0, '' '', '' '', 0, 0, ''010100'', '' '', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (100, 30, 0, 0, '' '', '' '', 0, 0, ''010200'', '' '', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (100, 32, 0, 0, '' '', '' '', 0, 0, ''010103'', '' '', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (100, 36, 0, 0, '' '', '' '', 0, 0, ''010102'', '' '', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (100, 1221, 0, 0, '' '', '' '', 0, 0, ''010101'', '' '', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (101, 2, 0, 0, '' '', '' '', 0, 0, ''020000'', ''CUENTAS_CORRIENTES'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (101, 3, 0, 0, '' '', '' '', 0, 0, ''010000'', ''CAJA_DE_AHORRO'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (102, 1, 0, 0, '' '', '' '', 0, 0, ''034000'', ''VISA'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (102, 2, 0, 0, '' '', '' '', 0, 0, ''034000'', ''CABAL '', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (102, 3, 0, 0, '' '', '' '', 0, 0, ''034000'', ''MASTERCARD'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (102, 8, 0, 0, '' '', '' '', 0, 0, ''035000'', ''TUYA'', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (103, 3, 3, 0, '' '', '' '', 0, 0, ''Cuenta sueldo'', '''', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (103, 3, 4, 0, '' '', '' '', 0, 0, ''Seg_Social_Nac_Anses'', '''', 0)
+
+
+INSERT INTO dbo.RRI_PARAMETROS_INF (CODIGO, ID1, ID2, ID3, ID4, ID5, NUM1, NUM2, CHAR1, CHAR2, TZ_LOCK)
+VALUES (103, 3, 23, 0, '' '', '' '', 0, 0, ''Cta_Sueldo_Adm.Pub'', '''', 0)
+')
+
+

@@ -1,0 +1,26 @@
+service ListaCreditos; 
+description "Servicio Lista Creditos"; 
+
+action:	SQLQuery Entity ( 
+ IDCLIENTE: string,
+ IDMONEDA: string
+): [ 
+   	PRODUCTO: string,
+	NROCUENTA: string,
+	MONEDA: string,
+	SALDOACTUAL: string,
+	ASESOR: string,
+	FECHADESEMBOLSO: string,
+	FECHAVENCIMIENTO: string,
+	ULTIMOMOV: string,
+	IDSALDO: string
+	]
+{ 
+  	properties { 
+  	("statement", "SELECT s.PRODUCTO ||' ' || prd.C6251 AS Producto, s.CUENTA AS NroCuenta,    m.C6400 AS Moneda,   TO_CHAR((-1*s.C1604),'9999G999G999G999G999D99') AS SaldoActual,    f1.NOMBREOFIC AS Asesor,    TO_CHAR(s.c1621,'DD/MM/YYYY') AS FechaDesembolso,    TO_CHAR(s.C1627,'DD/MM/YYYY') AS FechaVencimiento,    TO_CHAR(s.C1624,'DD/MM/YYYY') AS ULTIMOMOV, s.jts_oid as IDSALDO   FROM   SALDOS s JOIN MONEDAS m ON m.C6399 = s.MONEDA JOIN PRODUCTOS prd ON prd.C6250 = s.PRODUCTO LEFT JOIN CLI_OFICUENTA f1 ON s.C1670 = f1.CODOFICIAL AND f1.TZ_LOCK = 0 WHERE  s.C1785 = 5 AND s.C1803 = ? AND s.Moneda= ? AND s.TZ_LOCK = 0  ORDER BY s.C1621 DESC "),
+	("0", "IDCLIENTE"),
+	("1", "IDMONEDA")
+	}
+}
+
+

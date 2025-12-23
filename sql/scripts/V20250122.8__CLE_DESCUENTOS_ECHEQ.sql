@@ -1,0 +1,35 @@
+execute('
+ALTER TABLE CLE_DESCUENTOS_ECHEQ
+DROP CONSTRAINT PK_CLE_DESCUENTOS_ECHEQ_01;
+');
+execute('
+BEGIN 
+	DECLARE @ContrainName NVARCHAR(255);
+	DECLARE @SQL NVARCHAR(MAX);
+	DECLARE @TableName NVARCHAR(255) = ''CLE_DESCUENTOS_ECHEQ'';
+	DECLARE @ColumnName NVARCHAR(255) = ''ID_CHEQUE'';
+	
+	SELECT @ContrainName =  d.name
+	FROM sys.default_constraints d
+	JOIN sys.columns c ON d.parent_object_id = c.object_id AND d.parent_column_id = c.column_id
+	JOIN sys.tables t ON d.parent_object_id = t.object_id
+	WHERE t.name = @TableName AND c.name = @ColumnName
+
+	IF @ContrainName IS NOT NULL
+	BEGIN
+		SET @SQL = N''ALTER TABLE '' + QUOTENAME(@TableName) + '' DROP CONSTRAINT '' + QUOTENAME(@ContrainName)+ '' ;''
+		EXEC SP_EXECUTESQL @SQL;
+	END 
+END
+')
+execute('
+ALTER TABLE CLE_DESCUENTOS_ECHEQ
+ALTER COLUMN ID_CHEQUE VARCHAR(15) NOT NULL 
+
+
+ALTER TABLE CLE_DESCUENTOS_ECHEQ
+ADD DEFAULT ''0'' FOR ID_CHEQUE
+ 
+ALTER TABLE CLE_DESCUENTOS_ECHEQ
+ADD CONSTRAINT PK_CLE_DESCUENTOS_ECHEQ_01 PRIMARY KEY (COD_NEGOCIACION, ID_CHEQUE);
+')

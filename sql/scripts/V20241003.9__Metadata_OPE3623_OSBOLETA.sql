@@ -1,0 +1,11 @@
+EXECUTE('
+----------------------
+--SE PASA OPERACION A OBSOLETAS--
+----------------------
+
+UPDATE dbo.OPERACIONES
+SET TITULO = 9998
+WHERE IDENTIFICACION = 3623
+
+
+')

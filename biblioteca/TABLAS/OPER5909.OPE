@@ -1,0 +1,553 @@
+VERSION:055_5
+TN  NN 1006TConsulta Generica                       C00000 00
+*$2020-07-20 13:59:12SCOLLAZO
+ NNNNN 03910   Titulo Pantalla                                   INNSNK000007015200300452001011000000007000700300137000
+/V=Baja de Límite de Crédito Cliente
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-05-18 12:08:45SCOLLAZO
+ NNNNN 08010   Filtro ayuda                                      INNSNK000007015200300452001011000000007000700300137000
+/V=CODIGOCLIENTE IN (SELECT Cliente FROM VW_LIMITE_CREDITO WHERE Tipo = 'C' AND Estado IN('S','A'))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-05-18 11:31:10SCOLLAZO
+ NNNNN 05022   no valida tamaño                                  INNSNK000007015200300452001011000000007000700300137000
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-08-03 14:18:09SCOLLAZO
+DN  NN 5902SS
+*$2020-07-21 10:49:36SCOLLAZO
+ NNNNN 07257   Cliente                                           INNSNA990007015000270330020011000000007000700270126000
+/V=C902.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-07-21 10:22:53SCOLLAZO
+ NNNNN 07261   Estado                                            INNSN 990007015000270330020011000000007000700270126000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-07-21 10:22:53SCOLLAZO
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=No existe límite para el cliente
+*$2020-07-21 10:22:53SCOLLAZO
+CNNNNN ME00000000000000000000100
+/F=A(C7261#"A")YA(C7261#"S")
+/M=El Limite ya está dado de Baja
+*$2021-05-18 12:09:00SCOLLAZO
+CNNNNN ME00000000000000000000100
+/F=C7260<C9500
+/M=El límite no se encuentra vigente.
+*$2022-07-12 16:23:17TOP
+*N  NN ---- Llamado a SP Cre Limite
+*$2023-06-27 16:21:03LUCIAU
+CNNNNN  m00000000000000000000100
+/R=TOP/CLIENTES, SP_LIMITES, C7257.0 I
+*&C70341.12='B'
+*$2023-06-27 16:21:07LUCIAU
+TN  NN 1006Tllamada servicio                        C00001 00
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN ====================================
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN llamada al servicio de limites en modo consulta (disponibilidad)
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN y despliegue de la tabla en memoria
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN ====================================
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN CONSULTA
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN Ejecutar Servicio
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN  Status siendo 0 ok, 1 warning 2 error, 3 sin limite, 4 error al obtener el tipo de cliente.
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00018   Res Servicio                                      INNSNK000343072103660771001010000000343057603660706000
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN -
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN Status capacidad de pago siendo 0 ok, 1 warning 2 error, 3 sin limite, 4 error al obtener el tipo de cliente
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00511   Capacidad                                         INNNNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN -
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00786   Disponib.Client                                   INNNNK000007015200300302021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00019                                                     INNSNK000007015200300202001011000000007000700300137000
+/V=CONSULTA
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN ***Importante, no utilizamos mas servicio de disponibilidad, se crea Sp que consume vista ****
+*$2023-04-10 10:27:06LAUTAROS
+*N  NN ***VW_LIMITE_CLIENTE***
+*$2023-04-10 10:27:06LAUTAROS
+CNNNNN  S00000000000000000000100
+/?=1=0
+/R=jts:service=AnalisisRiesgoService,analisisriesgo,C19 I, C902.1 I, C18 O, C511 O, C786 O
+*$2023-04-10 10:27:14LAUTAROS
+*N  NN Campos de retorno:
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN 1) Status limite cliente: 
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN    0 ok, 1 warning (dentro de la tolerancia), 2 No tiene limite, 3 no tiene definicion de limites, 4 error al obtener el tipo de cliente. 
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN 2) Status capacidad de pago
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN    0 ok, 1 warning (dentro de la tolerancia), 2 No tiene limite, 3 no tiene definicion de limites, 4 error al obtener el tipo de cliente. 
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN 3) Monto del disponible a nivel de cliente.
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00018   O1-Res Servicio                                   INNSN 000343072103660771001010000000343057603660706000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00511   O2-Capacidad                                      INNNN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00786   O3-Disponible                                     INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00047   contador                                          INNNNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+VNNNNN 030004000505230794SSSV000000000000000000000000000000000000010
+/T="Analisis de Riesgo "+C745.1+". Tipo Limite: "+O7291.1
+/C=192192192
+*$2020-10-02 16:54:21SCOLLAZO
+KNNNNN 030009009200290136000100
+/T=Riesgo
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+KNNNNN 030009016100290238000100
+/T=Desc. Riesgo
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+KNNNNN 030009025800290301000100
+/T=Familia
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+KNNNNN 030009031000290366000100
+/T=Producto
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+KNNNNN 030009037500290429000100
+/T=Moneda
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+KNNNNN 030009044300290519000100
+/T=Monto Limite
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+KNNNNN 030009055400290636000100
+/T=Disp Limite
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+KNNNNN 030009002300290056000100
+/T=Nivel
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+KNNNNN 030009064300290700000100
+/T=Estado
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+KNNNNN 030009070700290764000100
+/T=Vigencia
+/F=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 09517   Fila Variab Pan                                   INNNNK000007015200300202021011000000007000700300137000
+/V=30
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+TN  NN 1008TConsulta Sec. tabla en memoria          S06361 00
+/?=1=0
+*$2023-04-10 14:36:19ENZOA
+ N  NN 10210   cliente                                           INNNNA000007015200300302021011000000007000700300137000
+/V=C902.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 10217   Disp Limite                                       INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+CNNNNN   00000000000000000000100
+/F=C9509=1
+/P=I99
+/M=existe registro
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 10211   IdLimite                                          INNNN 030031000500540070121011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 10212   Riesgo                                            ICNNN 030033009200560142111011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 10213   Familia                                           ICNNN 030033025800560308121011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 10214   Producto                                          ICNNN 030033031400560364111011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 10215   Moneda                                            INNNN 030031024100540291111011000000007000700300137000
+/?=I99
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 06399   Moneda                                            INSSNA000161017001810207001011000000161001901810154000
+/?=I99
+/V=C7892.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 06401   Simbolo Moneda                                    ICNSN 030033037100560421111011000000161001901810154000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 10216   Monto Limite                                      ICNNN 030033042900560525121011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN ----Control: Si limite disponible es negativo, C10217=0
+*$2023-03-24 11:18:11LAUTAROS
+CNNNNN   00000000000000000000100
+/?=I99
+/F=C10217<0
+/P=I200
+*$2023-03-24 10:46:35LAUTAROS
+ NNNNN 10217   Disp Limite                                       ICNNNK030033053300560641121011500000007000700300137000
+/?=I99YI200
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-24 10:48:14LAUTAROS
+ NNNNN 10217   Disp Limite                                       ICNNN 030033053300560641121011500000007000700300137000
+/?=I99Y!I200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-03-24 10:48:25LAUTAROS
+ NNNNN 10218   Monto Cap.                                        INNNN 030031052300540626121011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 10219   Disp Cap.                                         INNNN 030031063400540731121011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 10220   Tipo                                              INNNN 030030087300530923121011000000007000700300137000
+/?=I99
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 07398   Código Riesgo                                     INNNNA030033009200560142121011000000007000700300137000
+/?=I99YC10220#1
+/V=C10212.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 07399   Descripción                                       ICNNN 030033015000560252111010000000007000700300137000
+/?=I99YC10220#1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC10220=1
+/V=1 - Cliente
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC10220=2
+/V=2 - Riesgo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC10220=3
+/V=3 - Familia
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC10220=4
+/V=4 - Producto
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC10220=5
+/V=5 - Moneda
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00121   Texto                                             ICNNN 030033001500560085101011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 90334   Estado                                            ICNNN 030033064900560681111011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00480   Vigencia                                          ICNNNA030030070000530773011011000000007000700300137000
+/?=I99
+/V=C7260.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 09517   Fila Variab Pan                                   INNNNF000007015200300202021011000000007000700300137000
+/V=C9517+20
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+*N  NN ----
+*$2020-09-29 15:41:14SCOLLAZO
+TN  NN 1008TConsulta Limite Cliente                 S06371 00
+/O=C63379 ASC
+/F=C63370=C902.1
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63377   Disp Limite                                       INNNN 030031000500540070121011000000007000700300137000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+CNNNNN   00000000000000000000100
+/F=C9509=1
+/P=I99
+/M=existe registro
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63371   IdLimite                                          INNNN 030031000500540070121011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63372   Riesgo                                            ICNNN 030033009200560142111011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63373   Familia                                           ICNNN 030033025800560308121011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63374   Producto                                          ICNNN 030033031400560364111011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63375   Moneda                                            INNNN 030031024100540291111011000000007000700300137000
+/?=I99
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 06399   Moneda                                            INSSNA000161017001810207001011000000161001901810154000
+/?=I99
+/V=C7892.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 06401   Simbolo Moneda                                    ICNSN 030033037100560421111011000000161001901810154000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63376   Monto Limite                                      ICNNN 030033042900560525121011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+*N  NN ----Control: Si limite disponible es negativo, C10217=0
+*$2023-04-10 14:36:00ENZOA
+CNNNNN   00000000000000000000100
+/?=I99
+/F=C63377<0
+/P=I200
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63377   Disp Limite                                       ICNNNK030033053300560641121011500000007000700300137000
+/?=I99YI200
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63377   Disp Limite                                       ICNNN 030033053300560641121011500000007000700300137000
+/?=I99Y!I200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63378   Tipo                                              INNNN 030030087300530923121011000000007000700300137000
+/?=I99
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 07398   Código Riesgo                                     INNNNA030033009200560142121011000000007000700300137000
+/?=I99YC63378#1
+/V=C63372.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 07399   Descripción                                       ICNNN 030033015000560252111010000000007000700300137000
+/?=I99YC63378#1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC63378=1
+/V=1 - Cliente
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC63378=2
+/V=2 - Riesgo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC63378=3
+/V=3 - Familia
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC63378=4
+/V=4 - Producto
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 00121   Texto                                             INNNNK030030093000531059021011000000007000700300137000
+/?=I99YC63378=5
+/V=5 - Moneda
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 00121   Texto                                             ICNNN 030033001500560085101011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 63380   Estado                                            ICNNN 030033064900560681111011000000007000700300137000
+/?=I99
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 00480   Vigencia                                          ICNNNA030030070000530773011011000000007000700300137000
+/?=I99
+/V=C7260.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+ NNNNN 09517   Fila Variab Pan                                   INNNNF000007015200300202021011000000007000700300137000
+/V=C9517+20
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2023-04-10 14:36:00ENZOA
+*N  NN ----
+*$2023-04-10 14:36:00ENZOA
+TN  NN 1006Titero                                   C00000 00
+/?=I99
+*$2020-09-29 15:41:14SCOLLAZO
+ NNNNN 00047   contador                                          INNNNF000007015200300202021011000000007000700300137000
+/V=C47+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-09-29 15:41:14SCOLLAZO
+CNNNNN  I00000000000000000000100
+/M=itero
+/R=4
+*$2023-04-10 14:36:07ENZOA
+TN  NN 1006TJustificacion                           C00000 00
+*$2020-09-29 15:42:56SCOLLAZO
+VNNNNN 020279000101730792SNND000000000000000000000000000000000000010
+/T="Baja "+C745.1+". Tipo Limite: "+O7291.1
+/C=192192192
+*$2021-05-18 12:23:13SCOLLAZO
+KNSNNN 020017001800370155000000
+/T=Justifica Baja
+/F=0013700NNN000000000Arial                                   
+*$2021-05-18 12:24:22SCOLLAZO
+ NSNNN 06157   Comentario                                        I NSNF020017016500880753001010000000554007705790159100
+/V=" "
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-12-01 18:03:16SCOLLAZO
+TN  NN 1009TModificacion Generica                   M05441 00
+ NSSNN 07257   Cliente                                           INNSNA000007015000270330020011000000007000700270126000
+/V=C7257.1
+ NSNNN 06157   Comentario                                        INSSNA000155006502860706001011000000555004105800123000
+/V=C6157.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-05-18 12:24:38SCOLLAZO
+ NSSNN 07261   Estado                                            INNSNK000007015000270330020011000000007000700270126000
+/V=I
+*$2021-05-18 12:23:45SCOLLAZO
+TN  NN 1006TConsulta Generica                       C00000 00
+*$2020-09-29 15:43:43SCOLLAZO
+ NSNNN 00028   Concepto                                          INNSNF000007015200300452001011000000007000700300137000
+/V="Baja Limite "+C34510.1+" :" +C34511.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-05-18 12:23:36SCOLLAZO
+*#I200#Limite negativo
+*#I99#existe registro

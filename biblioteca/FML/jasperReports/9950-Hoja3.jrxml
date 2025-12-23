@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Hoja1" language="groovy" pageWidth="576" pageHeight="792" columnWidth="576" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.2078825000000015"/>
+	<property name="ireport.x" value="47"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1"/>
+	<subDataset name="Direccion">
+		<parameter name="ID_SOLICITUD" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT  dim1.C1481+', '+dim2.C1207+', '+dim3.C1216+', '+dim4.NOMDIM4+', '+d.REFERENCIA as DIR
+	FROM SL_SOLICITUDCREDITO s, TC_DIRECCIONES d,
+	TC_DIR_DIM1 dim1,TC_DIR_DIM2 dim2,TC_DIR_DIM3 dim3,TC_DIR_DIM4 dim4
+	WHERE d.ID=s.C5187 AND d.FORMATO='P' AND d.TIPODIRECCION='R' AND
+	dim1.C1480=d.DIM1 AND
+	dim2.C1205=d.DIM1 AND dim2.C1206=d.DIM2 AND
+	dim3.C1212=d.DIM1 AND dim3.C1214=d.DIM2 AND dim3.C1215=d.DIM3 AND
+	dim4.CODDIM1=d.DIM1 AND dim4.CODDIM2=d.DIM2 AND dim4.CODDIM3=d.DIM3 AND dim4.CODDIM4=d.DIM4
+	AND s.C5000=$P{ID_SOLICITUD}*100 AND
+	(s.tz_lock < 300000000000000 OR s.tz_lock >= 400000000000000) AND (s.tz_lock < 100000000000000 OR s.tz_lock >= 200000000000000) AND
+	(d.tz_lock < 300000000000000 OR d.tz_lock >= 400000000000000) AND (d.tz_lock < 100000000000000 OR d.tz_lock >= 200000000000000)]]>
+		</queryString>
+		<field name="DIR" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="SUCURSAL" class="java.lang.Integer"/>
+	<parameter name="ID_SOLICITUD" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[Select 1 as "UNO"]]>
+	</queryString>
+	<field name="UNO" class="java.lang.Integer"/>
+	<detail>
+		<band height="712" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="2" y="579" width="557" height="11"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Direccion">
+						<datasetParameter name="ID_SOLICITUD">
+							<datasetParameterExpression><![CDATA[$P{ID_SOLICITUD}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="359">
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="359" height="20"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{DIR}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<staticText>
+				<reportElement x="0" y="0" width="574" height="712"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[Por lo anterior, EL DEUDOR se obliga a pagar cualquier incremento en la cuota que por deslizamiento o devaluación que sufra la moneda córdoba con respecto al dólar de los Estados Unidos de América, según tipo de cambio oficial establecido por el Banco Central de Nicaragua a la fecha del cumplimiento de cada pago pactado. El tipo de cambio oficial aplicado puede ser consultado, por EL DEUDOR, en la página web de dicha institución o en cualquiera de las sucursales de EL ACREEDOR.
+
+Séptima: OBLIGACIÓN DE INFORMACIÓN. AUTORIZACIÓN DE CONSULTA CENTRAL DE RIESGO: EL DEUDOR declara que es cierta la información suministrada a EL ACREEDOR en forma previa y/o durante la celebración de este contrato y se obliga a proveer a EL ACREEDOR toda información relevante que le sea requerida por éste. De igual forma, EL DEUDOR se obligar a presentar a EL ACREEDOR, sin necesidad de ningún requerimiento de parte éste, toda información que EL ACREEDOR deba conocer sobre cualquier circunstancia que afecte o pudiera llegar a afectar negativamente la posibilidad -de EL ACREEDOR- de recuperar los fondos desembolsados bajo el presente crédito y/o de ejecutar las garantías constituidas a su favor.
+
+EL DEUDOR autoriza a EL ACREEDOR, en forma expresa y anticipada, sin necesidad de autorización ulterior, para dar a conocer a, o recibir de las Centrales de Riesgos autorizadas, presentes o futuras, información relacionada con el historial de pagos y comportamiento crediticio de EL DEUDOR y EL FIADOR. La revocación futura que EL DEUDOR eventualmente hiciere de la presente autorización, podrá facultar a EL ACREEDOR, a juicio de éste, para proceder al vencimiento anticipado del presente contrato y a cobrar cualquier saldo deudor, de capital o intereses, a cargo de EL DEUDOR, que reflejare el departamento de contabilidad de EL ACREEDOR.
+
+Octava: VENCIMIENTO ANTICIPADO: EL DEUDOR entiende y acepta que EL ACREEDOR podrá dar por vencido el plazo del Mutuo aquí otorgado y exigir el inmediato y total pago de la suma adeudada, sin necesidad de requerimiento alguno, judicial o extrajudicial, pudiendo reclamar el pago total de lo adeudado, los daños y perjuicios, los gastos, trámites y honorarios causados para hacerle cumplir con sus obligaciones, en caso que EL DEUDOR cayere en una o varias de las siguientes situaciones: a) En caso de mora o incumplimiento de cualquier obligación bajo el presente contrato; b) Por cualquier declaración hecha por EL DEUDOR a EL ACREEDOR que resultare ser falsa, engañosa o maliciosa; c) Por destinar los fondos desembolsados por EL ACREEDOR para fines distintos de los establecidos en este contrato o para la comisión de cualquier actividad ilícita, incluyendo lavado de dinero y/o financiamiento al terrorismo; d) Por quiebra, insolvencia o concurso de acreedores de EL DEUDOR; e) Por el mero hecho de que un tercero entablare ejecución judicial en contra de EL DEUDOR y dicha ejecución, a juicio de EL ACREEDOR, afectare su capacidad para honrar el presente contrato; f) Por no comunicar inmediatamente por escrito a EL ACREEDOR de cualquier circunstancia o hecho que, de acuerdo al buen juicio de EL ACREEDOR, pudiera tener un efecto adverso en la capacidad de pago de parte de EL DEUDOR, o en su habilidad de cumplir fielmente con todas las obligaciones contenidas en el presente contrato; g) Si hubieren claros indicios de operaciones inusuales o sospechosas realizadas por EL DEUDOR (inclusive con fondos propios) que induzcan a presumir la comisión del delito de lavado de dinero y de otras actividades ilícitas, incluida la del terrorismo; h) Si EL DEUDOR ocultare su domicilio o no pudiere ser localizado en el domicilio señalado, y/o cambiare la dirección de su domicilio y no fuere notificada la misma a EL ACREEDOR o, cuando habiendo informado sobre la nueva dirección, fuere imposible ubicarla; i) Si EL DEUDOR fuere privado de su libertad en ocasión de la investigación de delitos o faltas que afecten su capacidad de pago; j) Por deterioro de la solvencia económica de EL DEUDOR, motivado por adeudos contraídos que afecten su capacidad de pago;  k) Por la negativa de EL DEUDOR a tomar y/o renovar la póliza requerida por EL ACREEDOR y/o endosarla en garantía a favor de éste, en su carácter de primer beneficiario de la misma.
+
+Es expresamente convenido que EL DEUDOR estará asistido del mismo derecho para terminar unilateralmente el presente contrato, en caso que EL ACREEDOR incumpliere cualquiera de sus obligaciones establecidas en el mismo. En tal supuesto, EL DEUDOR deberá cancelar en forma inmediata el saldo deudor que hubiere a su cargo y que apareciere reflejado en la contabilidad de EL ACREEDOR, con los intereses devengados a la fecha y sin incurrir en ningún tipo de penalización por terminación anticipada del contrato.
+
+Novena: ENTREGA DE RECIBOS DE PAGO Y DE DOCUMENTO DE CANCELACIÓN DEL CRÉDITO: En caso que, por error de EL ACREEDOR, éste emitiere y entregare a EL DEUDOR un recibo de pago correspondiente a una cuota posterior a la que debería corresponder conforme los pagos recibidos, dicha circunstancia no extinguirá los pagos intermedios a que está obligado EL DEUDOR, procediendo únicamente la sustitución del recibo de pago erróneo.
+
+De igual forma, en caso que por error de EL DEUDOR pagare indebidamente un monto previamente cancelado, éste tendrá derecho al reembolso del monto ya pagado o, a su discreción, a que se aplique dicho monto al saldo de la deuda.
+
+Una vez que EL DEUDOR hubiere cancelado la totalidad del saldo deudor a su cargo, EL ACREEDOR se obliga a entregarle, dentro de un plazo de hasta cinco días hábiles, el recibo de cancelación correspondiente.
+
+Décima: DOMICILIO: EL DEUDOR para cualquier efecto jurídico, incluyendo cualquier acción prejudicial o judicial que deba promover EL ACREEDOR en su contra como consecuencia del incumplimiento del presente contrato, señala el siguiente domicilio:______________________________________________________________________________________________________________.- EL DEUDOR declara ser éste su lugar habitual de residencia y el que usa en todos sus contratos y negocios.  EL DEUDOR acepta como válida cualquier notificación, judicial o extrajudicial, que le haga EL ACREEDOR en la última dirección de su domicilio señalada, así como cualquier notificación personal que se le efectúe en caso que no fuere localizado en la última dirección indicada.
+EL DEUDOR entiende y acepta que el juez del domicilio arriba señalado será competente para conocer de las acciones que EL ACREEDOR promueva en su contra. En caso que la demanda excediere la cuantía del juez antes referido, deberá conocer el juez superior jerárquico de aquél, en atención a la cuantía y territorialidad de la demanda. Todo lo anterior, conforme lo establecido en el artículo 67 de la Ley de Fomento y Regulación de las Microfinanzas.
+EL DEUDOR se obliga a notificar por escrito a EL ACREEDOR cualquier cambio de domicilio, en un plazo no mayor de 3 días hábiles después de ocurrido éste. ]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

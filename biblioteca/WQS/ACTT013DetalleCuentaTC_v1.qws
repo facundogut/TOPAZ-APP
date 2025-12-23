@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>productos/tarjetaCredito/getEstadoCuenta/{idTarjetera}/{nroUsuario}</uri>
+    <serviceDescription>Servicio que devuelve el estado actual de cuenta TC</serviceDescription>
+    <title>DetalleCuenta</title>
+    <querys>
+        <query id="1" name="totalSaldos" type="MULTIPLE">
+            <sql>DECLARE &#13;
+  		&#13;
+	@idTarjetera NUMERIC(2,0),&#13;
+	@nroUsuario NUMERIC(20)&#13;
+&#13;
+  SET @idTarjetera = ?;&#13;
+  SET @nroUsuario = ?;&#13;
+&#13;
+----TOTAL SALDOS&#13;
+SELECT t.USUARIO,t.ADMINISTRADORA,&#13;
+  (SELECT CAST(m.C6399 AS INT) FROM MONEDAS M WHERE SA.MONEDA = M.C6399) AS CodigoMoneda,&#13;
+  (SELECT CAST(m.C6440 AS NUMERIC(15,9)) FROM MONEDAS M WHERE SA.MONEDA = M.C6399) AS TipoCambio,&#13;
+  S.SALDO_MN AS Importe&#13;
+FROM TJC_SALDOS S INNER JOIN TJC_MAESTRO_USUARIO t ON S.ADMINISTRADORA = T.ADMINISTRADORA AND S.USUARIO = T.USUARIO&#13;
+INNER JOIN SALDOS SA ON T.jts_saldo_tarjeta = SA.JTS_OID&#13;
+WHERE T.ADMINISTRADORA=@idTarjetera AND T.USUARIO=@nroUsuario 
+</sql>
+            <input>
+                <inParameter description="" type="INTEGER">idTarjetera</inParameter>
+                <inParameter description="" type="LONG">nroUsuario</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="TotalSaldos">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CodigoMoneda</queryname>
+                        <servicename>CodigoMoneda</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>TipoCambio</queryname>
+                        <servicename>TipoCambio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>Importe</queryname>
+                        <servicename>Importe</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="TotalPagos" type="MULTIPLE">
+            <sql>---TOTAL PAGOS
+DECLARE
+	@idTarjetera NUMERIC(2,0),
+	@nroUsuario NUMERIC(20)
+
+SET @idTarjetera=?
+SET @nroUsuario=?
+
+SELECT
+ (SELECT CAST(m.C6399 AS INT) FROM MONEDAS M,SALDOS SA WHERE HP.jts_saldo_tarjeta = SA.JTS_OID  AND SA.MONEDA = M.C6399) AS CodigoMoneda,
+  (SELECT CAST(m.C6440 AS NUMERIC(15,9)) FROM MONEDAS M ,SALDOS SA WHERE HP.jts_saldo_tarjeta = SA.JTS_OID  AND SA.MONEDA = M.C6399) AS TipoCambio,
+  HP.PAGO_MN AS Importe
+FROM TJC_HISTORICO_PAGOS HP
+WHERE  ADMINISTRADORA=@idTarjetera AND HP.USUARIO=@nroUsuario AND TZ_LOCK=0
+	AND (MONTH(HP.FECHA))=(SELECT MONTH(fechaproceso) FROM PARAMETROS)
+	AND (YEAR(HP.FECHA)) =(SELECT YEAR(fechaproceso) FROM PARAMETROS)</sql>
+            <input>
+                <inParameter description="" type="INTEGER">idTarjetera</inParameter>
+                <inParameter description="" type="LONG">nroUsuario</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="TotalPagos">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CodigoMoneda</queryname>
+                        <servicename>CodigoMonedaaa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>TipoCambio</queryname>
+                        <servicename>TipoCambio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>Importe</queryname>
+                        <servicename>Importe</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="3" name="PagosMinimos" type="MULTIPLE">
+            <sql>---PAGO MINIMO&#13;
+DECLARE&#13;
+	@idTarjetera NUMERIC(2,0),&#13;
+	@nroUsuario NUMERIC(20)&#13;
+&#13;
+SET @idTarjetera=?&#13;
+SET @nroUsuario=?&#13;
+&#13;
+SELECT&#13;
+ (SELECT CAST(m.C6399 AS INT) FROM MONEDAS M,SALDOS SA WHERE HP.jts_saldo_tarjeta = SA.JTS_OID  AND SA.MONEDA = M.C6399) AS CodigoMoneda,&#13;
+  (SELECT CAST(m.C6440 AS NUMERIC(15,9)) FROM MONEDAS M ,SALDOS SA WHERE HP.jts_saldo_tarjeta = SA.JTS_OID  AND SA.MONEDA = M.C6399) AS TipoCambio,&#13;
+  /*ISNULL((&#13;
+    SELECT SUM(HP.SALDO_MN)&#13;
+    FROM TJC_HISTORICO_PAGOS HP &#13;
+    WHERE HP.ADMINISTRADORA = S.ADMINISTRADORA AND HP.USUARIO = S.USUARIO&#13;
+  ), 0) AS Importe*/&#13;
+  HP.PAGO_MIN AS Importe&#13;
+--FROM TJC_SALDOS S INNER JOIN TJC_MAESTRO_USUARIO t ON S.ADMINISTRADORA = T.ADMINISTRADORA AND S.USUARIO = T.USUARIO&#13;
+FROM TJC_HISTORICO_PAGOS HP&#13;
+WHERE ADMINISTRADORA=@idTarjetera AND HP.USUARIO=@nroUsuario AND TZ_LOCK=0&#13;
+	AND (MONTH(HP.FECHA))=(SELECT MONTH(fechaproceso) FROM PARAMETROS) &#13;
+	AND (YEAR(HP.FECHA)) =(SELECT YEAR(fechaproceso) FROM PARAMETROS)&#13;
+</sql>
+            <input>
+                <inParameter description="" type="INTEGER">idTarjetera</inParameter>
+                <inParameter description="" type="LONG">nroUsuario</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="PagosMinimos">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CodigoMoneda</queryname>
+                        <servicename>CodigoMonedaaa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>TipoCambio</queryname>
+                        <servicename>TipoCambio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>Importe</queryname>
+                        <servicename>Importe</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="3" name="contenedor" type="SIMPLE">
+            <sql>select '' as dato from parametros where 1=2</sql>
+            <input/>
+            <output>
+                <level groupby="" name="nivell1"/>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

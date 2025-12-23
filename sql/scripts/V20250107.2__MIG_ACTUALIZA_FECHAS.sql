@@ -1,0 +1,101 @@
+EXECUTE('
+CREATE OR ALTER                                   PROCEDURE [dbo].[MIG_ACTUALIZA_FECHAS]
+
+/*********************************************************************************
+Modulo  : PARAMETROS
+Tabla   : PARAMETROS
+Version : 14/10/2024 
+Tarea   : MIGNBCAR-2711
+***********************************************************************************/
+
+@P_ID_PROCESO INT,
+@P_DT_PROCESO DATE,
+
+@P_RET_PROCESO INT OUTPUT,
+@P_MSG_PROCESO VARCHAR(500) OUTPUT
+
+AS
+BEGIN
+
+
+----------Definicion Variables Intermedias----
+
+DECLARE @p_MODULO VARCHAR(30)
+DECLARE @v_FECHASYS datetime
+DECLARE @p_NomScr VARCHAR(30)
+DECLARE @v_CICLO smallint
+DECLARE @v_PROCESO smallint
+
+
+--------------------------------------------
+SET @v_FECHASYS=SYSDATETIME()
+SET @v_CICLO = 1
+SET @v_PROCESO = 1
+SET @p_MODULO = ''PARAMETROS''
+SET @p_NomScr = ''ACTFECHA''
+--
+
+DECLARE @FECHAPROCESO DATE,
+        @FECHAPROCESOANTERIOR DATE,
+        @FECHAPROXIMOPROCESO DATE;
+
+-- Guardo los valores actuales + 1 dia
+	SELECT @FECHAPROCESO = dbo.Mig_Fecha_Habil(FECHAPROCESO + 1),
+		   @FECHAPROCESOANTERIOR = dbo.Mig_Fecha_Habil(FECHAPROCESOANTERIOR + 1),
+		   @FECHAPROXIMOPROCESO = dbo.Mig_Fecha_Habil(FECHAPROXIMOPROCESO + 1)
+	FROM PARAMETROS;
+
+-- Actualizo la tabla con el dia sumado
+	UPDATE dbo.PARAMETROS
+	SET FECHAPROCESO = @FECHAPROCESO, 
+		FECHAPROCESOANTERIOR = @FECHAPROCESOANTERIOR, 
+		FECHAPROXIMOPROCESO = @FECHAPROXIMOPROCESO;
+--
+	UPDATE dbo.SUCURSALESSC
+	SET FECHAPROCESOANTERIOR = @FECHAPROCESOANTERIOR --ayer
+	, FECHAPROCESOACTUAL = @FECHAPROCESO --hoy
+	, FECHAPROCESOPROXIMO = @FECHAPROXIMOPROCESO --mañana
+	, FECHAULTIMOPROCESO = @FECHAPROCESOANTERIOR --ayer
+	WHERE TZ_LOCK = 0
+--
+/* Se comenta por mail de Genta de fecha 18/12--MB
+-- Guardo los valores actuales + 1 dia para le Sucursal 102
+	SELECT @FECHAPROCESO = dbo.Mig_Fecha_Habil(FECHAPROCESO + 1),
+		   @FECHAPROCESOANTERIOR = dbo.Mig_Fecha_Habil(FECHAPROCESOANTERIOR + 1),
+		   @FECHAPROXIMOPROCESO = dbo.Mig_Fecha_Habil(FECHAPROXIMOPROCESO + 1)
+	FROM PARAMETROS;
+
+-- Actualizo Sucursal 102
+	UPDATE dbo.SUCURSALESSC
+	SET FECHAPROCESOANTERIOR = @FECHAPROCESOANTERIOR --ayer
+	, FECHAPROCESOACTUAL = @FECHAPROCESO --hoy
+	, FECHAPROCESOPROXIMO = @FECHAPROXIMOPROCESO --mañana
+	, FECHAULTIMOPROCESO = @FECHAPROCESOANTERIOR --ayer
+	WHERE SUCURSAL=102
+--
+*/
+
+--
+	 SET @P_RET_PROCESO = 1
+	 SET @P_MSG_PROCESO = ''Fechas actualizadas con exito. ''
+--
+
+   BEGIN TRANSACTION
+		INSERT INTO MIG_RESULTADOS
+					(CICLO, PROCESO, MODULO, FECHAINICIO, FECHAFIN, ESTADO, ERRORES, MENSAJE, ARCHIVO)
+				VALUES
+				   (@v_CICLO,
+					@v_PROCESO,
+					@p_MODULO,
+					@v_FECHASYS,
+					SYSDATETIME(),
+					''A'',
+					''N'', 
+				        ''OK'',
+					@p_NomScr)
+		COMMIT;
+
+
+END
+
+')

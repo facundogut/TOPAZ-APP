@@ -1,0 +1,1160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2022-09-08T16:08:37 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RegistroFirmaPFPJ" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9595ffc2-cca0-4398-b0d7-d4cbcc99c133">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="CODCLI" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Número de Cliente]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT *, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) AS ORDEN
+FROM (
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT TOP 1 
+	  C.NOMBRECLIENTE, 
+	  (SELECT NOMBRESUCURSAL FROM SUCURSALES (NOLOCK) WHERE SUCURSAL= C.SUCURSALVINCULADA) AS SUCURSAL, 
+	  C.CODIGOCLIENTE, 
+	  C.FECHAAPERTURA, 
+	--  ISNULL((SELECT TELEFONO FROM CLI_DIRECCIONES (NOLOCK) WHERE ID = C.CODIGOCLIENTE AND FORMATO NOT IN ('PF','PJ') AND TIPODIRECCION IN('PR','L')), 0)  AS TELCLIENTE,
+	-- ISNULL((SELECT CALLE FROM CLI_DIRECCIONES (NOLOCK) WHERE ID = C.CODIGOCLIENTE AND FORMATO NOT IN ('PF','PJ')AND TIPODIRECCION IN('PR','L')), '') AS CALLECLIENTE,
+	-- ISNULL((SELECT NUMERO FROM CLI_DIRECCIONES (NOLOCK) WHERE ID = C.CODIGOCLIENTE AND FORMATO NOT IN ('PF','PJ')AND TIPODIRECCION IN('PR','L')), 0)  AS NUMPUERTACLIENTE,  	  
+	  (SELECT TOP 1 NUMERO FROM VW_CLI_TELEFONOS (NOLOCK) WHERE CODIGOCLIENTE = C.CODIGOCLIENTE AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE')) AS TELCLIENTE,
+	  (SELECT TOP 1 CALLE FROM VW_CLI_DIRECCIONES (NOLOCK) WHERE CODIGOCLIENTE = C.CODIGOCLIENTE AND FORMATO IN ('PF','PJ') AND TIPODIRECCION IN('PR','L')) AS CALLECLIENTE,
+	  (SELECT TOP 1 NUMERO FROM VW_CLI_DIRECCIONES (NOLOCK) WHERE CODIGOCLIENTE = C.CODIGOCLIENTE AND FORMATO IN ('PF','PJ') AND TIPODIRECCION IN('PR','L')) AS NUMPUERTACLIENTE,
+	  P.NUMEROPERSONAFISICA, 
+	  P.PRIMERNOMBRE, 
+	  P.SEGUNDONOMBRE, 
+	  P.APELLIDOPATERNO,
+	  ISNULL((SELECT DESCRIPCION FROM CLI_PROFESIONES (NOLOCK) WHERE PROFESION = P.COD_PROFESION), '') AS PROFESION,
+	  ISNULL(P.APELLIDOMATERNO, '') AS APELLIDOMATERNO,
+	  (CASE WHEN P.ESTADOCIVIL = 'C' THEN 'CASADO' 
+	  	   WHEN P.ESTADOCIVIL = 'U' THEN 'CONCUBINO' 
+	  	   WHEN P.ESTADOCIVIL = 'S' THEN 'SOLTERO' 
+	  	   WHEN P.ESTADOCIVIL = 'V' THEN 'VIUDO' 
+	  	   WHEN P.ESTADOCIVIL = 'D' THEN 'DIVORCIADO' 
+	  	   ELSE '' 
+	  	   END ) AS ESTADOCIVIL,
+	  --P.ESTADOCIVIL,
+	  P.NACIONALIDAD,
+	  D.TIPO_DOC_FISICO, 
+	  D.NUM_DOC_FISICO, 
+	  D.TIPODOCUMENTO, 
+	  D.NUMERODOCUMENTO,
+      ISNULL(P.FECHANACIMIENTO, '') AS FECHANACIMIENTO,   
+      (SELECT NOMBREPAIS FROM CLI_PAISES (NOLOCK) WHERE CODIGOPAIS = P.PAISNACIMIENTO ) AS PAISNACIMIENTO,
+      ISNULL(DR.CALLE, 0) AS CALLE,
+      ISNULL(DR.NUMERO, 0) AS NUMERO,
+      ISNULL(DR.APARTAMENTO, 0) AS APARTAMENTO,
+      ISNULL(DR.PISO, 0) AS PISO,
+      ISNULL((SELECT DESCRIPCION_DIM3 FROM CLI_LOCALIDADES (NOLOCK) WHERE CODIGOPAIS = 32 AND DIM1=DR.PROVINCIA AND DIM2 = DR.DEPARTAMENTO AND DIM3= DR.LOCALIDAD), '') AS LOCALIDAD,  
+      ISNULL((SELECT NOMBREPAIS FROM CLI_PAISES (NOLOCK) WHERE CODIGOPAIS = DR.PAIS), '') AS PAIS, 
+      ISNULL((SELECT DESCRIPCION FROM CLI_PROVINCIAS (NOLOCK) WHERE CODIGOPAIS=32 AND DIM1=DR.PROVINCIA), '') AS PROVINCIA, 
+      ISNULL(DR.CPA_NUEVO, '') AS CPA_NUEVO, 
+      (SELECT TELEFONO FROM (SELECT TOP 1 NUMERO AS TELEFONO, (ROW_NUMBER() OVER(ORDER BY ORDINAL)) ROW FROM CLI_TELEFONOS (NOLOCK) WHERE ID= P.NUMEROPERSONAFISICA AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE') AND TIPO_CEL_TEL='F' AND TZ_LOCK = 0 ) AS TMP WHERE TMP.ROW = 1) AS TELEFONO ,
+      (SELECT CELULAR FROM (SELECT TOP 1 NUMERO AS CELULAR, (ROW_NUMBER() OVER(ORDER BY ORDINAL)) ROW FROM CLI_TELEFONOS (NOLOCK) WHERE ID= P.NUMEROPERSONAFISICA AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE') AND TIPO_CEL_TEL='C' AND TZ_LOCK = 0 ) AS TMP WHERE TMP.ROW = 1) AS CELULAR ,
+      (SELECT EMAIL1 FROM (SELECT TOP 1 EMAIL AS EMAIL1, (ROW_NUMBER() OVER(ORDER BY ORDINAL)) ROW FROM CLI_EMAILS (NOLOCK) WHERE ID= P.NUMEROPERSONAFISICA AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE') AND TZ_LOCK = 0 ) AS TMP WHERE TMP.ROW = 1) AS EMAIL1,
+	  (SELECT EMAIL2 FROM (SELECT TOP 2 EMAIL AS EMAIL2, (ROW_NUMBER() OVER(ORDER BY ORDINAL)) ROW FROM CLI_EMAILS (NOLOCK) WHERE ID= P.NUMEROPERSONAFISICA AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE') AND TZ_LOCK = 0 ) AS TMP WHERE TMP.ROW = 2) AS EMAIL2,
+      ISNULL(VWC.PRIMERNOMBRE_CONYUGE, '') AS PRIMERNOMBRE_CONYUGE,
+      ISNULL(VWC.SEGUNDONOMBRE_CONYUGE,'') AS SEGUNDONOMBRE_CONYUGE,
+	  ISNULL(VWC.APELLIDOPATERNO_CONYUGE, '') AS APELLIDOPATERNO_CONYUGE
+----------------------------------------------------------------------------------------------------------------------------------------------------------------      
+FROM CLI_PERSONASFISICAS (NOLOCK) AS P
+LEFT JOIN VW_CONYUGE_PERSONA (NOLOCK) VWC ON P.NUMEROPERSONAFISICA = VWC.PERSONA
+LEFT JOIN CLI_DIRECCIONES (NOLOCK) DR ON P.NUMEROPERSONAFISICA = DR.ID AND DR.TZ_LOCK = 0
+LEFT JOIN CLI_DOCUMENTOSPFPJ (NOLOCK) D ON P.NUMEROPERSONAFISICA = D.NUMEROPERSONAFJ AND D.TZ_LOCK = 0,
+CLI_CLIENTES AS C
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+WHERE P.NUMEROPERSONAFISICA IN
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+(SELECT I.NUMEROPERSONAFISICA FROM VW_CLIENTES_PERSONAS (NOLOCK) VW
+ JOIN CLI_PERSONASJURIDICAS J ON VW.NUMEROPERSONA= J.NUMEROPERSONAJURIDICA
+ JOIN CLI_INTEGRANTESPJ I ON J.NUMEROPERSONAJURIDICA= I.NUMEROPERSONAJURIDICA AND I.TIPO_PERSONA='F' AND I.TIPOVINCULACION = 'C'
+WHERE VW.TIPOPERSONA='J'
+AND VW.CODIGOCLIENTE=$P{CODCLI} AND VW.TITULARIDAD = 'T'
+UNION ALL
+SELECT II.NUMEROPERSONAFISICA FROM VW_CLIENTES_PERSONAS (NOLOCK) VW 
+ JOIN CLI_PERSONASJURIDICAS J ON VW.NUMEROPERSONA= J.NUMEROPERSONAJURIDICA
+ JOIN CLI_INTEGRANTESPJ I ON J.NUMEROPERSONAJURIDICA= I.NUMEROPERSONAJURIDICA AND I.TIPO_PERSONA='J'AND I.TIPOVINCULACION = 'C'
+ JOIN CLI_INTEGRANTESPJ II ON I.NUMEROPERSONAFISICA= II.NUMEROPERSONAJURIDICA AND  II.TIPO_PERSONA='F'AND II.TIPOVINCULACION = 'C'
+WHERE VW.TIPOPERSONA='J' 
+AND VW.CODIGOCLIENTE=$P{CODCLI} AND VW.TITULARIDAD = 'T' 
+UNION ALL
+SELECT F.NUMEROPERSONAFISICA FROM VW_CLIENTES_PERSONAS (NOLOCK) VW 
+ JOIN CLI_PERSONASFISICAS F ON VW.NUMEROPERSONA= F.NUMEROPERSONAFISICA
+WHERE VW.TIPOPERSONA='F' 
+AND VW.CODIGOCLIENTE=$P{CODCLI} AND VW.TITULARIDAD = 'T' 
+) 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+AND C.CODIGOCLIENTE = $P{CODCLI}
+-------------------------------------------------------------------------------------------------
+UNION ALL
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+SELECT TOP 2 
+	  C.NOMBRECLIENTE, 
+	  (SELECT NOMBRESUCURSAL FROM SUCURSALES (NOLOCK) WHERE SUCURSAL= C.SUCURSALVINCULADA) AS SUCURSAL, 
+	  C.CODIGOCLIENTE, 
+	  C.FECHAAPERTURA, 
+	 -- ISNULL((SELECT TELEFONO FROM CLI_DIRECCIONES (NOLOCK) WHERE ID = C.CODIGOCLIENTE AND FORMATO NOT IN ('PF','PJ') AND TIPODIRECCION IN('PR','L')), 0)  AS TELCLIENTE,
+	 -- ISNULL((SELECT CALLE FROM CLI_DIRECCIONES (NOLOCK) WHERE ID = C.CODIGOCLIENTE AND FORMATO NOT IN ('PF','PJ')AND TIPODIRECCION IN('PR','L')), '') AS CALLECLIENTE,
+	 -- ISNULL((SELECT NUMERO FROM CLI_DIRECCIONES (NOLOCK) WHERE ID = C.CODIGOCLIENTE AND FORMATO NOT IN ('PF','PJ')AND TIPODIRECCION IN('PR','L')), 0)  AS NUMPUERTACLIENTE,
+	  (SELECT TOP 1 NUMERO FROM VW_CLI_TELEFONOS (NOLOCK) WHERE CODIGOCLIENTE = C.CODIGOCLIENTE AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE')) AS TELCLIENTE,
+	  (SELECT TOP 1 CALLE FROM VW_CLI_DIRECCIONES (NOLOCK) WHERE CODIGOCLIENTE = C.CODIGOCLIENTE AND FORMATO IN ('PF','PJ') AND TIPODIRECCION IN('PR','L')) AS CALLECLIENTE,
+	  (SELECT TOP 1 NUMERO FROM VW_CLI_DIRECCIONES (NOLOCK) WHERE CODIGOCLIENTE = C.CODIGOCLIENTE AND FORMATO IN ('PF','PJ') AND TIPODIRECCION IN('PR','L')) AS NUMPUERTACLIENTE,
+	  P.NUMEROPERSONAFISICA, 
+	  P.PRIMERNOMBRE, 
+	  P.SEGUNDONOMBRE, 
+	  P.APELLIDOPATERNO,
+	  ISNULL((SELECT DESCRIPCION FROM CLI_PROFESIONES (NOLOCK) WHERE PROFESION = P.COD_PROFESION), '') AS PROFESION,
+	  ISNULL(P.APELLIDOMATERNO, '') AS APELLIDOMATERNO,
+	  (CASE WHEN P.ESTADOCIVIL = 'C' THEN 'CASADO' 
+	  	   WHEN P.ESTADOCIVIL = 'U' THEN 'CONCUBINO' 
+	  	   WHEN P.ESTADOCIVIL = 'S' THEN 'SOLTERO' 
+	  	   WHEN P.ESTADOCIVIL = 'V' THEN 'VIUDO' 
+	  	   WHEN P.ESTADOCIVIL = 'D' THEN 'DIVORCIADO' 
+	  	   ELSE '' 
+	  	   END ) AS ESTADOCIVIL,
+	  --P.ESTADOCIVIL,
+	  P.NACIONALIDAD,
+	  D.TIPO_DOC_FISICO, 
+	  D.NUM_DOC_FISICO, 
+	  D.TIPODOCUMENTO, 
+	  D.NUMERODOCUMENTO,
+      ISNULL(P.FECHANACIMIENTO, '') AS FECHANACIMIENTO,   
+      (SELECT NOMBREPAIS FROM CLI_PAISES (NOLOCK) WHERE CODIGOPAIS = P.PAISNACIMIENTO ) AS PAISNACIMIENTO,
+      ISNULL(DR.CALLE, 0) AS CALLE,
+      ISNULL(DR.NUMERO, 0) AS NUMERO,
+      ISNULL(DR.APARTAMENTO, 0) AS APARTAMENTO,
+      ISNULL(DR.PISO, 0) AS PISO,
+      ISNULL((SELECT DESCRIPCION_DIM3 FROM CLI_LOCALIDADES (NOLOCK) WHERE CODIGOPAIS = 32 AND DIM1=DR.PROVINCIA AND DIM2 = DR.DEPARTAMENTO AND DIM3= DR.LOCALIDAD), '') AS LOCALIDAD,  
+      ISNULL((SELECT NOMBREPAIS FROM CLI_PAISES (NOLOCK) WHERE CODIGOPAIS = DR.PAIS), '') AS PAIS, 
+      ISNULL((SELECT DESCRIPCION FROM CLI_PROVINCIAS (NOLOCK) WHERE CODIGOPAIS=32 AND DIM1=DR.PROVINCIA), '') AS PROVINCIA, 
+      ISNULL(DR.CPA_NUEVO, '') AS CPA_NUEVO, 
+      (SELECT TOP 1 TELEFONO FROM (SELECT NUMERO AS TELEFONO, (ROW_NUMBER() OVER(ORDER BY ORDINAL)) ROW FROM CLI_TELEFONOS (NOLOCK) WHERE ID= P.NUMEROPERSONAFISICA AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE') AND TIPO_CEL_TEL='T' AND TZ_LOCK = 0 ) AS TMP WHERE TMP.ROW = 1) AS TELEFONO,
+      (SELECT TOP 1 CELULAR FROM (SELECT NUMERO AS CELULAR, (ROW_NUMBER() OVER(ORDER BY ORDINAL)) ROW FROM CLI_TELEFONOS (NOLOCK) WHERE ID= P.NUMEROPERSONAFISICA AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE') AND TIPO_CEL_TEL='C' AND TZ_LOCK = 0 ) AS TMP WHERE TMP.ROW = 1) AS CELULAR,
+      (SELECT TOP 1 EMAIL1 FROM (SELECT EMAIL AS EMAIL1, (ROW_NUMBER() OVER(ORDER BY ORDINAL)) ROW FROM CLI_EMAILS (NOLOCK) WHERE ID= P.NUMEROPERSONAFISICA AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE') AND TZ_LOCK = 0 ) AS TMP WHERE TMP.ROW = 1) AS EMAIL1,
+	  (SELECT TOP 2 EMAIL2 FROM (SELECT EMAIL AS EMAIL2, (ROW_NUMBER() OVER(ORDER BY ORDINAL)) ROW FROM CLI_EMAILS (NOLOCK) WHERE ID= P.NUMEROPERSONAFISICA AND FORMATO IN ('PF','PJ') AND TIPO IN('PE','LE') AND TZ_LOCK = 0 ) AS TMP WHERE TMP.ROW = 2) AS EMAIL2,
+      ISNULL(VWC.PRIMERNOMBRE_CONYUGE, '') AS PRIMERNOMBRE_CONYUGE,
+      ISNULL(VWC.SEGUNDONOMBRE_CONYUGE,'') AS SEGUNDONOMBRE_CONYUGE,
+	  ISNULL(VWC.APELLIDOPATERNO_CONYUGE, '') AS APELLIDOPATERNO_CONYUGE
+----------------------------------------------------------------------------------------------------------------------------------------------------------------      
+FROM CLI_PERSONASFISICAS (NOLOCK) AS P
+LEFT JOIN VW_CONYUGE_PERSONA (NOLOCK) VWC ON P.NUMEROPERSONAFISICA = VWC.PERSONA
+LEFT JOIN CLI_DIRECCIONES (NOLOCK) DR ON P.NUMEROPERSONAFISICA = DR.ID AND DR.FORMATO IN ('PF','PJ') AND TIPODIRECCION IN ('PR','L')AND DR.TZ_LOCK = 0
+LEFT JOIN CLI_DOCUMENTOSPFPJ (NOLOCK) D ON P.NUMEROPERSONAFISICA = D.NUMEROPERSONAFJ AND D.TZ_LOCK = 0,
+CLI_CLIENTES AS C
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+WHERE P.NUMEROPERSONAFISICA IN
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+(SELECT I.NUMEROPERSONAFISICA FROM VW_CLIENTES_PERSONAS (NOLOCK) VW
+ JOIN CLI_PERSONASJURIDICAS J ON VW.NUMEROPERSONA= J.NUMEROPERSONAJURIDICA
+ JOIN CLI_INTEGRANTESPJ I ON J.NUMEROPERSONAJURIDICA= I.NUMEROPERSONAJURIDICA AND I.TIPO_PERSONA='F' AND I.TIPOVINCULACION = 'C'
+WHERE VW.TIPOPERSONA='J'
+AND VW.CODIGOCLIENTE=$P{CODCLI} AND VW.TITULARIDAD = 'C'
+UNION ALL
+SELECT II.NUMEROPERSONAFISICA FROM VW_CLIENTES_PERSONAS (NOLOCK) VW 
+ JOIN CLI_PERSONASJURIDICAS J ON VW.NUMEROPERSONA= J.NUMEROPERSONAJURIDICA
+ JOIN CLI_INTEGRANTESPJ I ON J.NUMEROPERSONAJURIDICA= I.NUMEROPERSONAJURIDICA AND I.TIPO_PERSONA='J'AND I.TIPOVINCULACION = 'C'
+ JOIN CLI_INTEGRANTESPJ II ON I.NUMEROPERSONAFISICA= II.NUMEROPERSONAJURIDICA AND  II.TIPO_PERSONA='F'AND II.TIPOVINCULACION = 'C'
+WHERE VW.TIPOPERSONA='J' 
+AND VW.CODIGOCLIENTE=$P{CODCLI} AND VW.TITULARIDAD = 'C' 
+UNION ALL
+SELECT F.NUMEROPERSONAFISICA FROM VW_CLIENTES_PERSONAS (NOLOCK) VW 
+ JOIN CLI_PERSONASFISICAS F ON VW.NUMEROPERSONA= F.NUMEROPERSONAFISICA
+WHERE VW.TIPOPERSONA='F' 
+AND VW.CODIGOCLIENTE=$P{CODCLI} AND VW.TITULARIDAD = 'C' 
+) 
+----------------------------------------------------------------------------------------------------------------------------------------------------------------
+AND C.CODIGOCLIENTE = $P{CODCLI}) ORDEN;
+-----------------------------------------------------------------------------]]>
+	</queryString>
+	<field name="NOMBRECLIENTE" class="java.lang.String"/>
+	<field name="SUCURSAL" class="java.lang.String"/>
+	<field name="CODIGOCLIENTE" class="java.math.BigDecimal"/>
+	<field name="FECHAAPERTURA" class="java.sql.Timestamp"/>
+	<field name="TELCLIENTE" class="java.lang.String"/>
+	<field name="CALLECLIENTE" class="java.lang.String"/>
+	<field name="NUMPUERTACLIENTE" class="java.math.BigDecimal"/>
+	<field name="NUMEROPERSONAFISICA" class="java.math.BigDecimal"/>
+	<field name="PRIMERNOMBRE" class="java.lang.String"/>
+	<field name="SEGUNDONOMBRE" class="java.lang.String"/>
+	<field name="APELLIDOPATERNO" class="java.lang.String"/>
+	<field name="PROFESION" class="java.lang.String"/>
+	<field name="APELLIDOMATERNO" class="java.lang.String"/>
+	<field name="ESTADOCIVIL" class="java.lang.String"/>
+	<field name="NACIONALIDAD" class="java.lang.String"/>
+	<field name="TIPO_DOC_FISICO" class="java.lang.String"/>
+	<field name="NUM_DOC_FISICO" class="java.lang.String"/>
+	<field name="TIPODOCUMENTO" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="FECHANACIMIENTO" class="java.sql.Timestamp"/>
+	<field name="PAISNACIMIENTO" class="java.lang.String"/>
+	<field name="CALLE" class="java.lang.String"/>
+	<field name="NUMERO" class="java.math.BigDecimal"/>
+	<field name="APARTAMENTO" class="java.lang.String"/>
+	<field name="PISO" class="java.math.BigDecimal"/>
+	<field name="LOCALIDAD" class="java.lang.String"/>
+	<field name="PAIS" class="java.lang.String"/>
+	<field name="PROVINCIA" class="java.lang.String"/>
+	<field name="CPA_NUEVO" class="java.lang.String"/>
+	<field name="TELEFONO" class="java.lang.String"/>
+	<field name="CELULAR" class="java.lang.String"/>
+	<field name="EMAIL1" class="java.lang.String"/>
+	<field name="EMAIL2" class="java.lang.String"/>
+	<field name="PRIMERNOMBRE_CONYUGE" class="java.lang.String"/>
+	<field name="SEGUNDONOMBRE_CONYUGE" class="java.lang.String"/>
+	<field name="APELLIDOPATERNO_CONYUGE" class="java.lang.String"/>
+	<field name="ORDEN" class="java.lang.Long"/>
+	<variable name="Doc1" class="java.lang.String">
+		<variableExpression><![CDATA[(($V{Doc1}.equals("-")) && $F{ORDEN}==1)?$F{TIPO_DOC_FISICO}:$V{Doc1}]]></variableExpression>
+		<initialValueExpression><![CDATA["-"]]></initialValueExpression>
+	</variable>
+	<variable name="Num Titular" class="java.lang.String">
+		<variableExpression><![CDATA[($F{ORDEN}==1)?"Primer ":($F{ORDEN}==2)?"Segundo ":"Tercer "]]></variableExpression>
+	</variable>
+	<variable name="Doc2" class="java.lang.String">
+		<variableExpression><![CDATA[(($V{Doc2}.equals("-")) && $F{ORDEN}==2)?$F{TIPO_DOC_FISICO}:$V{Doc2}]]></variableExpression>
+		<initialValueExpression><![CDATA["-"]]></initialValueExpression>
+	</variable>
+	<variable name="Doc3" class="java.lang.String">
+		<variableExpression><![CDATA[(($V{Doc3}.equals("-")) && $F{ORDEN}==3)?$F{TIPO_DOC_FISICO}:$V{Doc3}]]></variableExpression>
+		<initialValueExpression><![CDATA["-"]]></initialValueExpression>
+	</variable>
+	<variable name="Acl" class="java.lang.String">
+		<variableExpression><![CDATA[(($V{Acl}.equals("-")) && $F{ORDEN}==1)?"Aclaración":$V{Acl}]]></variableExpression>
+		<initialValueExpression><![CDATA["-"]]></initialValueExpression>
+	</variable>
+	<variable name="Acl1" class="java.lang.String">
+		<variableExpression><![CDATA[(($V{Acl1}.equals("-")) && $F{ORDEN}==2)?"Aclaración":$V{Acl1}]]></variableExpression>
+		<initialValueExpression><![CDATA["-"]]></initialValueExpression>
+	</variable>
+	<variable name="Acl2" class="java.lang.String">
+		<variableExpression><![CDATA[(($V{Acl2}.equals("-")) && $F{ORDEN}==3)?"Aclaración":$V{Acl2}]]></variableExpression>
+		<initialValueExpression><![CDATA["-"]]></initialValueExpression>
+	</variable>
+	<variable name="Firma1" class="java.lang.String">
+		<variableExpression><![CDATA[(($V{Firma1}.equals("-")) && $F{ORDEN}==1)?"Firma Primer Titular":$V{Firma1}]]></variableExpression>
+		<initialValueExpression><![CDATA["-"]]></initialValueExpression>
+	</variable>
+	<variable name="Firma2" class="java.lang.String">
+		<variableExpression><![CDATA[(($V{Firma2}.equals("-")) && $F{ORDEN}==2)?"Firma Segundo Titular":$V{Firma2}]]></variableExpression>
+		<initialValueExpression><![CDATA["-"]]></initialValueExpression>
+	</variable>
+	<variable name="Firma3" class="java.lang.String">
+		<variableExpression><![CDATA[(($V{Firma3}.equals("-")) && $F{ORDEN}==3)?"Firma Tercer Titular":$V{Firma3}]]></variableExpression>
+		<initialValueExpression><![CDATA["-"]]></initialValueExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="123">
+			<staticText>
+				<reportElement mode="Opaque" x="40" y="70" width="480" height="12" forecolor="#000000" backcolor="#99C2F7" uuid="38ed93e3-a931-4802-aeec-1e9e6289a392">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Times New Roman" size="10" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[DATOS DEL CLIENTE]]></text>
+			</staticText>
+			<line>
+				<reportElement x="80" y="101" width="289" height="1" uuid="83f0713f-e9d6-4cbb-848f-c081634c71a2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="369" y="84" width="52" height="17" uuid="004f9d21-7cf6-477e-adac-02706c4758f6"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[N° Cliente:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="421" y="101" width="99" height="1" uuid="44fbe440-2e84-4b9d-8ba8-fd38b7643e29">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="110" y="111" width="240" height="1" uuid="1772aae3-4f2e-4574-bdb6-cc1d74b9df02">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="350" y="100" width="110" height="12" uuid="63bfd44a-bc7c-4cba-a133-e6bb3c0b1e7b"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Fecha  de  Habilitación:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="460" y="111" width="60" height="1" uuid="70a6bc38-3353-4138-bf2b-f8ea544e1904">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="110" width="70" height="12" uuid="3efd8822-6b0d-4a3a-bd7f-aabf396d7355"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Domicilio:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="90" y="121" width="260" height="1" uuid="765d7246-c72f-4e36-9fd4-ae54c95be609">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="350" y="110" width="40" height="12" uuid="4bc7ec1d-e462-4b0a-99f9-e625be270b87"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Teléfono:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="390" y="121" width="130" height="1" uuid="33afdbf8-00ab-4005-b8b0-13008db64718">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="398" y="80" width="52" height="12" uuid="a90a13a7-481d-41f1-99d2-da91c9f5241f"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Fecha:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="450" y="91" width="70" height="1" uuid="7eff8242-11f3-498d-95f9-51264f650672">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="110" y="101" width="240" height="11" uuid="5dbbd03a-c5e8-4611-a38c-c7ad7642cbb1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBRECLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="111" width="260" height="11" uuid="b3bf24b2-876f-4570-a91e-61f69ae9fd4f"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CALLECLIENTE}+" "+$F{NUMPUERTACLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="90" y="91" width="279" height="11" uuid="1ea2241a-81c0-418a-ba1a-15eb3a318f3a"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="398" y="111" width="122" height="11" uuid="c701aeb1-9378-4290-aea4-f5030e446499"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TELCLIENTE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/dd/yyyy">
+				<reportElement x="470" y="101" width="50" height="11" uuid="4a1be3e9-b131-4f6b-aa7c-7e581dbce473"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHAAPERTURA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="460" y="80" width="60" height="11" uuid="c428b673-1be8-4b01-9a19-564ccd5f0129"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="91" width="90" height="11" uuid="8a333af6-e4cf-4bad-a0c7-80e9a544c6fb"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CODIGOCLIENTE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="100" width="70" height="12" uuid="40568255-6b06-498f-9653-04d4e985055e"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Denominación:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="90" width="70" height="12" uuid="c5941999-e115-4c76-91d7-20933b2021b1"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<image hAlign="Left" vAlign="Middle" onErrorType="Icon">
+				<reportElement x="-20" y="-20" width="340" height="80" uuid="252caa3f-2f8f-4622-829d-f36c1f0d303b">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="320" y="0" width="200" height="30" uuid="a8f2e6a7-6a9e-4d87-814b-f55e64459537"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[REGISTRO DE FIRMA
+CLIENTE]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="112" splitType="Stretch">
+			<staticText>
+				<reportElement x="310" y="40" width="40" height="13" uuid="55994c62-80d8-4e2f-b197-1ebfdc68bfbb"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Cónyuge:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="15" width="91" height="12" uuid="9ef2382c-425f-47d7-bd5c-c42f8d6666f7"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Apellido y Nombres:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="39" width="60" height="14" uuid="36856da2-28a5-45ee-832d-74827fd05a98"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Nacionalidad: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="40" y="3" width="480" height="12" forecolor="#000000" backcolor="#C6D5F7" uuid="069a0d57-3fa9-4ac1-b903-3888961268d3">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement verticalAlignment="Middle" markup="html">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<line>
+				<reportElement x="120" y="27" width="220" height="1" uuid="b934a0d4-048f-4589-82c5-39f47928ec7c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="381" y="27" width="34" height="1" uuid="842b393e-a454-46f8-954b-2cebb22b3c6f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="70" y="39" width="140" height="1" uuid="b306b0c7-b69e-4b0a-ad47-082922b61353">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="100" y="65" width="240" height="1" uuid="48f9ca25-1039-43fe-bb5c-985782f5272d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="40" y="27" width="30" height="12" uuid="f91cb8f5-a615-41df-91ca-92ca50c8e5b2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPODOCUMENTO}+"."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="434" y="15" width="86" height="12" uuid="cfd23d60-5ad0-407a-badf-25528cf1db54"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_DOC_FISICO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="27" width="140" height="12" uuid="1052a114-a591-4e28-9c01-e68936dd9a6c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="381" y="15" width="34" height="12" uuid="13acd46d-4769-4695-ba4d-b3048d1e2d4b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_DOC_FISICO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="210" y="27" width="70" height="13" uuid="fbdaca86-39f0-40e1-a70e-95fa3d819fe0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Fecha de Nac.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="415" y="15" width="19" height="13" uuid="f254752f-6d09-47c0-9443-a66924f03e4b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[N°:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="434" y="27" width="86" height="1" uuid="5289d218-419c-40d8-8639-45d77c970e69">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="340" y="15" width="41" height="13" uuid="836a4dd9-1bf0-4e41-99ee-3e144817c9f7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Doc. Tipo:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="131" y="15" width="208" height="12" uuid="d97c36f8-2530-4e98-9e01-2e20af022211"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APELLIDOPATERNO}+" "+$F{PRIMERNOMBRE}+" "+$F{SEGUNDONOMBRE}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="264" y="39" width="76" height="1" uuid="bab24ba3-e6e6-4160-b902-4444df3d67da">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="340" y="28" width="30" height="12" uuid="4ff7cee4-03ec-4eeb-a2b2-cd8b4752214d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Lugar:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="370" y="39" width="150" height="1" uuid="d70f2e0d-e01c-430a-992c-eeb351fec966">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="90" y="52" width="80" height="1" uuid="781d59e0-660f-43bf-b008-0421c32cc7bd">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="170" y="40" width="40" height="13" uuid="0e28edea-8330-4559-a56a-2fc78f823b36"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Est. Civil:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="210" y="52" width="100" height="1" uuid="a9248045-7443-4348-b23c-2183614e688c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="350" y="52" width="170" height="1" uuid="bf52e897-b0a5-41af-af8c-0507cb40a3c2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="53" width="70" height="13" uuid="99ee64aa-876f-4b5d-a7ff-9383f8b6772d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Domicilio Calle:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="340" y="53" width="19" height="13" uuid="eca692b8-721f-4a23-b129-056028dab848"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[N°:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="53" width="30" height="13" uuid="605f5301-b9f7-41c7-ae11-da8278d07199"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Dpto.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="450" y="53" width="30" height="13" uuid="4d5ec134-7dc5-4711-a7ce-cfe104bc7b28"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Planta:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="480" y="65" width="40" height="1" uuid="c2fc0fc0-67eb-4c8b-88e7-74a8fdfaf59c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="406" y="65" width="44" height="1" uuid="06ba6cc8-4551-4bbc-a0c2-cbd972cfd5a1">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="359" y="65" width="21" height="1" uuid="8894d386-346d-4fca-8ca6-5d9902dd4f97">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="60" y="79" width="204" height="1" uuid="223e5aa6-d0fc-42c9-8bd5-41c0f6111f80">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="66" width="20" height="14" uuid="9511357f-765e-479b-a03d-19b3d9fde4d1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Loc.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="264" y="66" width="26" height="14" uuid="ab922e37-a2d0-4691-baf9-756f72351b28"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Pcia.: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="390" y="66" width="30" height="14" uuid="332bf621-430f-413f-913a-c9894b1fb994"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[País:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="420" y="79" width="100" height="1" uuid="cb991600-21c6-45b5-a3b4-8d9ca8b6f00d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="290" y="79" width="100" height="1" uuid="b8083334-10e9-4ef6-a9d4-c28a01546169">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="60" y="93" width="60" height="1" uuid="8439433a-9915-4e56-af64-92bcf256c8a6">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="80" width="20" height="14" uuid="d249e120-946a-4142-a81a-137d04ec321b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[C.P.:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="80" width="40" height="14" uuid="d8b23779-d2d1-4182-a2f8-b1f5ea6be449"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Tel.  fijo:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="160" y="93" width="80" height="1" uuid="d021c0d1-c6a0-4ad0-9599-e462634357ba">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="349" y="79" width="60" height="14" uuid="ab1e3fcb-6c9b-4597-a8c0-77fbfc1cd19f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Prof./Actividad:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="410" y="93" width="110" height="1" uuid="a867dfb3-b986-419d-97ad-53f40cbb3866">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="240" y="80" width="30" height="14" uuid="c3e69c93-33e1-437e-93b6-b33192ee0afa"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Cel.:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="270" y="93" width="79" height="1" uuid="42ac4a1c-ef7a-4ae3-8916-1cf1bce6a3fa">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="94" width="40" height="14" uuid="33afd39d-bdbd-4cde-b27d-53419a5fe9f2"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Email 1:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="70" y="108" width="210" height="1" uuid="822a2b3c-b9e0-4b96-95d8-57d5a66d9e1a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="380" y="27" width="140" height="12" uuid="5c19d408-cecf-40b3-ae17-b65c12660d60"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAISNACIMIENTO}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="270" y="27" width="70" height="12" uuid="2b57d5bc-6ffe-4949-9ff7-03cea2539020"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECHANACIMIENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="220" y="40" width="90" height="12" uuid="b3064cb1-3bd7-4566-b5ea-ab9235618d79"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ESTADOCIVIL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="80" y="95" width="190" height="12" uuid="c1bc231d-922e-4e0b-95ba-b659e75acd68"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMAIL1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="430" y="67" width="90" height="12" uuid="0367d420-3cc1-452b-854a-42ba8d1a6d2e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PAIS}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="67" width="194" height="12" uuid="883fd749-cafd-42ca-a166-f8c7fe64c3aa"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LOCALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="53" width="230" height="12" uuid="d2d404f8-793e-45a5-b4b2-9d062a354da2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CALLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="415" y="53" width="35" height="12" uuid="f444367c-93cc-4bd3-9503-0c90b6992214"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{APARTAMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="490" y="53" width="30" height="12" uuid="f84df82e-c635-4f8a-9063-8ddcaf16a086"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PISO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="365" y="52" width="15" height="13" uuid="c42cff4d-2c6a-4bdc-a363-42f7ddce94aa"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="270" y="81" width="79" height="12" uuid="41a89c36-4610-4b00-bc3c-08e18a8c4af7"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CELULAR} == null ? "" : $F{CELULAR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="67" width="90" height="12" uuid="596e23af-0b44-4b98-ad08-f92f8eb0de05"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROVINCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="160" y="81" width="79" height="12" uuid="a09f174a-5542-4816-bf07-36cde9404b38"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TELEFONO} == null ? "" : $F{TELEFONO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="70" y="81" width="50" height="12" uuid="aa9aacd2-81a4-4223-9c84-2d73a74cb4c0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CPA_NUEVO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="40" width="75" height="12" uuid="98f791f0-93e1-4a59-b02a-f8c59fb4bb2b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NACIONALIDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="355" y="40" width="165" height="12" uuid="fa141723-dcba-42f4-a5bf-01852216e9c1"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRIMERNOMBRE_CONYUGE}+" "+$F{SEGUNDONOMBRE_CONYUGE}+" "+$F{APELLIDOPATERNO_CONYUGE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="420" y="81" width="100" height="12" uuid="94363cd1-79b2-4ddc-a590-39866c7d67e3"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PROFESION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="280" y="94" width="40" height="14" uuid="593b07ff-b72f-4389-80ba-7f2a76bf8ced"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Email 2:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="310" y="108" width="210" height="1" uuid="60537857-3f80-40e3-baff-9226dc050aa5">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="320" y="95" width="190" height="12" uuid="5f9ebfc5-98b8-4b71-a0b7-5997b2c46bd6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{EMAIL2} == null ? "" : $F{EMAIL2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="3" width="480" height="12" uuid="14f90d3d-ce9a-45af-95e8-63225fad036c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Num Titular}+"Titular"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="321">
+			<staticText>
+				<reportElement x="40" y="7" width="480" height="14" uuid="7fde32bc-8455-4675-9de6-00844c4fbbd7"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10.5" isBold="true"/>
+				</textElement>
+				<text><![CDATA[RECIBO. NOTIFICACIONES.]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="210" y="213" width="140" height="1" uuid="c5faeb20-7fda-48bb-87ad-4c1e200cdce2">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="210" y="262" width="140" height="1" uuid="6a34a880-e944-4576-8986-7aa09af11b51">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="210" y="162" width="140" height="1" uuid="a1f6984a-46b9-4104-9ee6-2f613c8df565">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="60" y="212" width="135" height="1" uuid="13933368-a328-450d-963d-d205c1980071">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="60" y="262" width="135" height="1" uuid="9dda9d7a-2553-4807-a52f-91833c66350a">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="60" y="162" width="135" height="1" uuid="97a04e9a-eaae-46c4-b9b3-a9279f639fe3">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="365" y="212" width="135" height="1" uuid="140d032b-d85a-4ff1-9d3b-f3637619be75">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="365" y="262" width="135" height="1" uuid="ba3b0765-65e6-4739-8f1f-f32841a13ce8">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="365" y="162" width="135" height="1" uuid="6f91ae85-7fc6-4f94-918c-704e40f41ee5">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<textField evaluationTime="Master">
+				<reportElement x="60" y="263" width="135" height="21" uuid="5cb2f149-85fe-410b-85e6-2c03ad0c1415"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10.5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Doc1}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Master">
+				<reportElement x="210" y="263" width="140" height="21" uuid="f4ae83ae-e18e-4053-8b49-f5e27e1f6ce7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10.5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Doc2}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Master">
+				<reportElement x="365" y="263" width="135" height="21" uuid="949806d3-350f-4836-8c3e-61a62ad6ae6b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10.5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Doc3}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Master">
+				<reportElement x="60" y="213" width="135" height="21" uuid="d930d7e2-4640-4c62-908d-2c8c58baeefc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10.5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Acl}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Master">
+				<reportElement x="60" y="163" width="135" height="21" uuid="09bb8cca-ecf8-4c5f-bc7a-7e8074c81297"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10.5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Firma1}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Master">
+				<reportElement x="210" y="213" width="140" height="21" uuid="6218dce7-4ae2-4c35-bda4-214671d308fe"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10.5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Acl1}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Master">
+				<reportElement x="365" y="163" width="135" height="21" uuid="31c05265-ba69-40dc-aeee-8d1153ce4384"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10.5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Firma3}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Master">
+				<reportElement x="365" y="213" width="135" height="21" uuid="bdb033c2-c505-49ac-9f4f-4ffbc0ac9201"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10.5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Acl2}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Master">
+				<reportElement x="210" y="163" width="140" height="21" uuid="b0e92a72-b170-4297-b241-b2f47cb91bcf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10.5" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{Firma2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="40" y="21" width="480" height="135" uuid="f6564c2d-5c33-441d-a518-dcde33ce15cd">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Me/nos NOTIFICO/NOTIFICAMOS en este acto, que estos documentos electrónicos han sido firmados con “firma/s ológrafa/s” de acuerdo a Comunicación “A” 6068 del BCRA, referida a: “Gestión crediticia”, “Clasificación de deudores”, “Conservación y reproducción de documentos” y “Protección de los usuarios de servicios financieros”. Instrumentación de documentos en soporte electrónico o de características similares; la cual puede ser consultada  ingresando a http.//www.bcra.gob.ar/BCRA. \nLos archivos que incluyen la totalidad de la documentación suscripta se remitirán a la dirección de correo electrónico informada por el cliente; o en su defecto se dejarán disponibles en AUTOCONSULTAS ingresando a través de http.//www.nbch.com.ar."]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="406" y="311" width="34" height="10" uuid="1eaca362-816b-48ca-a542-321031d4fd47"/>
+				<textElement>
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[DEP. 003]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="440" y="311" width="40" height="10" forecolor="#6B6B6B" uuid="634a2fec-a467-4593-8e9c-6822845f5985"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PÁG. " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="480" y="311" width="40" height="10" forecolor="#6B6B6B" uuid="f91b6916-70bb-49a2-8aaa-369ad0c1ab23"/>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["/" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

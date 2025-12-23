@@ -1,0 +1,664 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.objectsdomain.InteresesVistaInputImpl</class-name>
+        <query-name>query.InteresesVistaInput</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+
+						SELECT 
+							s.C1772 tipocta,
+							vd.GRUPO,
+							vd.IMP_MIN_PAGO,
+							vd.MODALIDADPAGO,
+							vd.VALORMODALIDADPAGO,
+							vd.MODALIDADENFERIADOPAGO,
+							vd.MODALIDADTIPOPERIODOPAGO,
+							vd.ALGORITMOPAGO,
+							vd.CODIGORANGOPAGO,
+							vd.DIFERENCIALNORESIDENTEPAGO,
+							vd.IMP_MIN_COBRO,
+							vd.MODALIDADENFERIADOCOBRO,
+							vd.MODALIDADTIPOPERIODOCOBRO,
+							vd.MODALIDADCOBRO,
+							vd.VALORMODALIDADCOBRO,
+							vd.ALGORITMOCOBRO,
+							vd.criterio_min_cobro,
+							vd.CODIGORANGOCOBRO,
+							vd.DIFERENCIALNORESIDENTECOBRO,
+							s.C1785 AS TIPO,
+							c.codigoresidencia AS codresidencia,
+							va.cod_rango AS codigorangoacuerdo,
+							s.C1604 sdoactual,
+							s.Sucursal,
+							s.Producto,
+							s.Cuenta,
+							s.C1730 rubrocontable,
+							s.Moneda,
+							s.Operacion,
+							s.Ordinal,
+							s.JTS_OID,
+							vd.MESES_COBRO,
+							vd.MESES_PAGO,
+							pl.C6318 AS TIPO_DEVENGADO,
+							c.IVA
+						FROM Saldos s
+						INNER JOIN CLI_Clientes c ON 
+							s.C1803 = c.codigocliente
+						INNER JOIN PLANCTAS pl ON 
+							pl.C6326 = s.C1730
+						INNER JOIN VTA_DEFINICION_VISTA vd ON 
+							s.PRODUCTO = vd.Producto
+							AND s.Moneda = vd.moneda
+							AND s.C1772 = vd.grupo
+						INNER JOIN VTA_GRUPOS gr ON 
+							gr.cod_grupo = vd.grupo
+						LEFT OUTER JOIN VTA_SOBREGIROS va ON 
+							va.estado = 1
+							AND s.JTS_OID = va.JTS_OID_SALDO
+							AND va.TZ_LOCK = 0
+						WHERE 
+							s.c1785 in (2, 3)
+							AND (s.jts_oid = ? OR (-1 = ?))
+							AND pl.C6318 in ('M', 'D')
+							AND (s.tz_lock = 0)
+							AND (vd.tz_lock = 0)
+							AND (c.tz_lock = 0) 
+							AND ( 
+								(gr.apertura_cli = 'S' AND s.jts_oid = vd.saldo_jts_oid)
+								OR  (gr.apertura_cli &lt;&gt; 'S' AND vd.grupo = 
+									(select 
+										case when exists(
+											select null
+											from saldos s2
+											INNER JOIN CLI_Clientes c2 ON 
+												s2.C1803 = c2.codigocliente
+											INNER JOIN VTA_DEFINICION_VISTA vd2 ON 
+												s2.PRODUCTO = vd2.Producto
+												AND s2.Moneda = vd2.moneda
+												AND s2.C1772 = vd2.grupo
+												AND vd2.grupo = c2.segmentocliente
+											INNER JOIN VTA_GRUPOS gr2 ON 
+												gr2.cod_grupo = vd2.grupo
+											WHERE 
+												(s2.jts_oid = s.jts_oid)
+												AND (s2.tz_lock = 0) 
+												AND (vd2.tz_lock = 0) 
+												AND (c2.tz_lock = 0)
+												AND (gr2.apertura_cli &lt;&gt; 'S')
+										) then 
+											convert(CHAR,c2.segmentocliente)
+										else '0'
+										end as segmentocliente
+									from 
+										CLI_Clientes c2 
+									where 
+										c2.codigocliente = c.codigocliente
+									)
+									)
+								) 
+					</sentence>
+        <attribute>
+            <attribute-name>tipoCuenta</attribute-name>
+            <column-name>TIPOCTA </column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>grupoPYCI</attribute-name>
+            <column-name>GRUPO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>minimoMonedaPago</attribute-name>
+            <column-name>IMP_MIN_PAGO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidadPago</attribute-name>
+            <column-name>MODALIDADPAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>valorModalidadPago</attribute-name>
+            <column-name>VALORMODALIDADPAGO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidadEnFeriadoPago</attribute-name>
+            <column-name>MODALIDADENFERIADOPAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidadTipoPeriodoPago</attribute-name>
+            <column-name>MODALIDADTIPOPERIODOPAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>algoritmoPago</attribute-name>
+            <column-name>ALGORITMOPAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoRangoPago</attribute-name>
+            <column-name>CODIGORANGOPAGO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diferenciaNoResidentePago</attribute-name>
+            <column-name>DIFERENCIALNORESIDENTEPAGO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>minimoMonedaCobro</attribute-name>
+            <column-name>IMP_MIN_COBRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidadEnFeriadoCobro</attribute-name>
+            <column-name>MODALIDADENFERIADOCOBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidadTipoPeriodoCobro</attribute-name>
+            <column-name>MODALIDADTIPOPERIODOCOBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>modalidadCobro</attribute-name>
+            <column-name>MODALIDADCOBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>valorModalidadCobro</attribute-name>
+            <column-name>VALORMODALIDADCOBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>algoritmoCobro</attribute-name>
+            <column-name>ALGORITMOCOBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>aplicaMinimoCobro</attribute-name>
+            <column-name>CRITERIO_MIN_COBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoRangoCobro</attribute-name>
+            <column-name>CODIGORANGOCOBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>diferenciaNoResidenteCobro</attribute-name>
+            <column-name>DIFERENCIALNORESIDENTECOBRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoRubro</attribute-name>
+            <column-name>TIPO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>clienteResidente</attribute-name>
+            <column-name>CODRESIDENCIA</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoRangoAcuerdoSobregiro</attribute-name>
+            <column-name>CODIGORANGOACUERDO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoActual</attribute-name>
+            <column-name>SDOACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_PRODUCTO_SALDOS</attribute-name>
+            <column-name>PRODUCTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Cuenta</attribute-name>
+            <column-name>CUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_RUBRO_CONTABLE</attribute-name>
+            <column-name>RUBROCONTABLE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Operacion</attribute-name>
+            <column-name>OPERACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldos_jts_oid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>mesesCobro</attribute-name>
+            <column-name>MESES_COBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>mesesPago</attribute-name>
+            <column-name>MESES_PAGO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoDevengado</attribute-name>
+            <column-name>TIPO_DEVENGADO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.objectsdomain.QueryPromedioCalculoInteres</class-name>
+        <query-name>query.QueryPromedioCalculoInteres</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+
+				SELECT SUM(PROMEDIO) / ? AS PROMEDIO, COUNT(*) AS REGISTROS FROM(
+
+				   SELECT CASE
+
+					 WHEN 'C' = ? THEN
+
+				   CASE WHEN 
+
+					 GRL_SALDOS_DIARIOS.SALDO_CON_FECHA_VALOR_COBRO &lt; 0 THEN
+
+					 GRL_SALDOS_DIARIOS.SALDO_CON_FECHA_VALOR_COBRO ELSE
+
+					 0
+
+					 END
+
+							 ELSE
+
+							   CASE WHEN 
+
+					 GRL_SALDOS_DIARIOS.SALDO_CON_FECHA_VALOR_PAGO &gt; 0 THEN
+
+					 GRL_SALDOS_DIARIOS.SALDO_CON_FECHA_VALOR_PAGO ELSE
+
+					 0
+
+					 END 
+
+				   END AS PROMEDIO  FROM GRL_SALDOS_DIARIOS
+
+					 WHERE FECHA &gt;= ?
+
+					   AND FECHA &lt;= ?
+
+					AND GRL_SALDOS_DIARIOS.SALDOS_JTS_OID = ?) T
+
+			</sentence>
+        <attribute>
+            <attribute-name>promedio</attribute-name>
+            <column-name>PROMEDIO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>registros</attribute-name>
+            <column-name>REGISTROS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.interesesvista.objectsdomain.DefinicionTasaImpl</class-name>
+        <entity-name>core.vo_DefinicionTasas</entity-name>
+        <table-name>VTA_DEFINICION_TASAS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoRango</attribute-name>
+            <column-name>CODIGORANGO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDesde</attribute-name>
+            <column-name>FECHADESDE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>montoRestarRecalculo</attribute-name>
+            <column-name>MONTORESTARCALCULO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoTasaBase</attribute-name>
+            <column-name>CODIGOTASABASE</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.automaticprocess.interesesvista.objectsdomain.RangoTasaImpl</class-name>
+        <entity-name>core.vo_RangosTasas</entity-name>
+        <table-name>VTA_RANGOS_TASAS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoRango</attribute-name>
+            <column-name>CODIGORANGO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDesde</attribute-name>
+            <column-name>FECHADESDE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>importeHasta</attribute-name>
+            <column-name>IMPORTEHASTA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>diferencialTasaBase</attribute-name>
+            <column-name>DIFERENCIALTASABASE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tasaCobrarPagar</attribute-name>
+            <column-name>TASA_COBRAR_PAGAR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>consideraTasaBase</attribute-name>
+            <column-name>CONSIDERA_TASA_BASE</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.objectsdomain.QueryMinimoImporteCalculoInteres</class-name>
+        <query-name>query.QueryMinimoImporteCalculoInteres</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+
+				 SELECT MIN(SALDO_CON_FECHA_VALOR_PAGO) AS MINIMOIMPORTE, COUNT(*) AS REGISTROS
+
+				 FROM GRL_SALDOS_DIARIOS
+
+				 WHERE FECHA &gt;= ? AND FECHA &lt;= ? 
+
+				 AND GRL_SALDOS_DIARIOS.SALDOS_JTS_OID = ?
+
+			</sentence>
+        <attribute>
+            <attribute-name>minimoImporte</attribute-name>
+            <column-name>MINIMOIMPORTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>registros</attribute-name>
+            <column-name>REGISTROS</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.historicocliente.valueobjects.QueryRecalculoHistoricoIntereses</class-name>
+        <query-name>query.QueryRecalculoHistoricoIntereses</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+
+				SELECT s.JTS_OID
+
+				  FROM Saldos s
+
+				 INNER JOIN CLI_Clientes c ON s.C1803 = c.codigocliente
+
+				 INNER JOIN PLANCTAS pl ON pl.C6326 = s.C1730
+
+				 INNER JOIN VTA_DEFINICION_VISTA vd ON s.PRODUCTO = vd.Producto
+
+								   AND s.Moneda = vd.moneda
+
+								   AND s.C1772 = vd.grupo
+
+				 INNER JOIN VTA_GRUPOS gr ON gr.cod_grupo = vd.grupo
+
+				  LEFT OUTER JOIN VTA_SOBREGIROS va ON va.estado = 1
+
+								   AND s.JTS_OID = va.JTS_OID_SALDO
+
+								   AND va.TZ_LOCK = 0
+
+				 WHERE s.c1785 in (2, 3)
+
+				   AND ((s.JTS_OID &gt;= ? AND s.JTS_OID &lt;= ?) OR - 1 = ?)
+
+				   AND pl.C6318 in ('M', 'D')
+
+				   AND (s.tz_lock = 0)
+
+				   AND (vd.tz_lock = 0)
+
+				   AND (c.tz_lock = 0) AND ((gr.apertura_cli = 'S' AND s.jts_oid = vd.saldo_jts_oid) 
+
+				   OR  (gr.apertura_cli &lt;&gt; 'S'))
+
+			</sentence>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>JTS_OID </column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.topaz.server.objectsdomain.TasaBaseImpl</class-name>
+        <entity-name>core.vo_TasasBase</entity-name>
+        <table-name>TASASBASE</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>TIPO_DE_TASA_BASE</attribute-name>
+            <column-name>TIPOTASABASE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>VIGENCIA_DESDE</attribute-name>
+            <column-name>VIGENCIADESDE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>TASA_BASE</attribute-name>
+            <column-name>TASA</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvista.valueobjects.QuerySaldosCobro</class-name>
+        <query-name>query.QuerySaldosCobro</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT S.C1620 AS FECHA_INICIO,
+						 S.C1604 AS SALDO_ACTUAL,
+						 S.JTS_OID,
+						 S.C1665 AS CONTRACUENTA,
+						 S.C1813 AS FECHA_DEVENGADO,
+						 S.C1820 AS DEVENGADO_COBRO,
+						 S.C1822 AS FECHA_COBRO,
+						 S.C1632 AS TASA,
+						 V.Valor_Vigencia  AS FECHA_VALOR_VIGENCIA,
+						 V.FECHA_VENCIMIENTO AS FECHA_VENCIMIENTO_ACUERDO
+					  FROM SALDOS S
+					 INNER JOIN CRE_PRODUCTOS_SOBREGIRO C ON S.PRODUCTO = C.PRODUCTO
+												 AND C.TIPO = 'C'
+												 AND S.C1728 IN ('N','V')
+												 AND S.TZ_LOCK = 0
+												 AND C.TZ_LOCK = 0
+					 INNER JOIN VTA_SOBREGIROS V ON S.OPERACION = V.NRO_AUTORIZACION     
+												 AND V.TZ_LOCK = 0                          
+												 AND (S.JTS_OID = ? OR -1 = ?) 
+			</sentence>
+        <attribute>
+            <attribute-name>fechaInicio</attribute-name>
+            <column-name>FECHA_INICIO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoActual</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>contracuenta</attribute-name>
+            <column-name>CONTRACUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDevengado</attribute-name>
+            <column-name>FECHA_DEVENGADO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>devengadoCobro</attribute-name>
+            <column-name>DEVENGADO_COBRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaCobro</attribute-name>
+            <column-name>FECHA_COBRO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tasa</attribute-name>
+            <column-name>TASA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValorVigencia</attribute-name>
+            <column-name>FECHA_ALTA_ACUERDO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaVencimientoAcuerdo</attribute-name>
+            <column-name>FECHA_VALOR_VIGENCIA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.interesesvistatipoplazo.valueobjects.QuerySaldosCobroTipoPlazo</class-name>
+        <query-name>query.QuerySaldosCobroTipoPlazo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT S.C1620 AS FECHA_INICIO,
+								  S.C1604 AS SALDO_ACTUAL,
+								  S.JTS_OID,
+								  S.C1665 AS CONTRACUENTA,
+								  S.C1813 AS FECHA_DEVENGADO,
+								  S.C1608 AS INTERESES_A_LIQUIDAR,
+								  S.C1609 AS INTERESES_CONTABILIZADOS,
+								  S.C1610 AS INTERESES_REALIZADOS,
+								  S.C1632 AS TASA
+						FROM SALDOS S
+						INNER JOIN CRE_PRODUCTOS_SOBREGIRO C ON S.PRODUCTO = C.PRODUCTO
+								AND C.TIPO = 'C'
+								--AND S.C1728 IN ('N','V')
+								AND S.TZ_LOCK = 0
+								AND C.TZ_LOCK = 0
+						WHERE S.C1604 &lt; 0  
+						AND (S.JTS_OID = ? OR -1 = ?) 
+				</sentence>
+        <attribute>
+            <attribute-name>fechaInicio</attribute-name>
+            <column-name>FECHA_INICIO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoActual</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>contracuenta</attribute-name>
+            <column-name>CONTRACUENTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDevengado</attribute-name>
+            <column-name>FECHA_DEVENGADO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>interesesALiquidar</attribute-name>
+            <column-name>INTERESES_A_LIQUIDAR</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>interesesContabilizados</attribute-name>
+            <column-name>INTERESES_CONTABILIZADOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>interesesRealizados</attribute-name>
+            <column-name>INTERESES_REALIZADOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tasa</attribute-name>
+            <column-name>TASA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.accounting.objectsdomain.SaldoDiarioExtend</class-name>
+        <query-name>query.QueryLatestAvailableNumeral</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT FECHA, SALDO_CON_FECHA_VALOR_COBRO, CUPO_SOBREGIRO FROM GRL_SALDOS_DIARIOS 
+				WHERE SALDOS_JTS_OID = ? 
+				AND FECHA = (
+   				SELECT MAX(FECHA)
+    			FROM GRL_SALDOS_DIARIOS
+    			WHERE SALDOS_JTS_OID = ?
+    			AND FECHA &lt; ?)
+		</sentence>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldo_fecha_valor_cobro</attribute-name>
+            <column-name>SALDO_CON_FECHA_VALOR_COBRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>cupoSobregiro</attribute-name>
+            <column-name>CUPO_SOBREGIRO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+</map>

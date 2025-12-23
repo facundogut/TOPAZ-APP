@@ -1,0 +1,26 @@
+﻿EXECUTE('
+INSERT INTO dbo.PARAMETROSGENERALES
+	(
+	CODIGO
+	, DESCRIPCION
+	, ALFA
+	, NUMERICO
+	, FECHA
+	, IMPORTE
+	, TASA
+	, TZ_LOCK
+	, FIRMA
+	)
+VALUES
+	(
+	254
+	, ''Dias de atraso''
+	, ''''
+	, 1825
+	, NULL
+	, 0
+	, 0
+	, 0
+	, NULL
+	)
+')

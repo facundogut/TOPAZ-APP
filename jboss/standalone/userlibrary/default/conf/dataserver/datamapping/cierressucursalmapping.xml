@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.SucursalesACerrar.Por.Empresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					select sucursal
+					  from sucursalessc
+					 where (estado = 'A' or estado = 'C') 
+					   and tz_lock = 0
+					   and virtual = 0
+					   and empresa = ?
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.SucursalesACerrar.Sin.Empresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					select sucursal
+					  from sucursalessc
+					 where (estado = 'A' or estado = 'C') 
+					   and tz_lock = 0			
+					   and virtual = 0
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.SucursalesACambiarFecha.Por.Empresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					select sucursal
+					  from sucursalessc s, parametros p
+					 where s.estado = 'F'
+					   and s.tz_lock = 0
+					   and s.virtual = 0
+					   and s.empresa = ?
+					   and s.fechaprocesoactual &lt; p.fechaproceso
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.SucursalesACambiarFecha.Sin.Empresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					select sucursal
+					  from sucursalessc s, parametros p
+					 where s.estado = 'F'
+					   and s.tz_lock = 0
+					   and s.virtual = 0
+					   and s.fechaprocesoactual &lt; p.fechaproceso
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.SucursalesAAperturarFecha.Sin.Empresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					select s.sucursal
+					  from sucursalessc s, parametros p
+					 where s.estado = 'F'
+					   and s.tz_lock = 0
+					   and s.virtual = 0
+					   and s.fechaprocesoactual = p.fechaproceso
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.SucursalesAAperturarFecha.Por.Empresa</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					select s.sucursal
+					  from sucursalessc s, parametros p
+					 where s.estado = 'F'
+					   and s.tz_lock = 0
+					   and s.virtual = 0
+					   and s.empresa = ?
+					   and s.fechaprocesoactual = p.fechaproceso
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+</map>

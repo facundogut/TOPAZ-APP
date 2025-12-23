@@ -1,0 +1,14 @@
+EXECUTE ('
+DELETE T
+FROM
+(
+SELECT *
+, DupRank = ROW_NUMBER() OVER (
+              PARTITION BY JUZGADO,ANO,EXPEDIENTE
+              ORDER BY (SELECT NULL)
+            )
+FROM DJ_CAUSAS
+) AS T
+WHERE DupRank > 1 
+
+')

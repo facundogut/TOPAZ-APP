@@ -1,0 +1,173 @@
+<!--Modal-->   	
+<div id="mask" ></div>     
+{{#view "imagesModal"}}
+<div id="imagesModalContainer" class="imagesModal">
+	<div id="newWindowButton">
+		<a class="downloadFile-btn"><i class="glyphicon glyphicon-new-window"></i></a>
+	</div> 
+	<div id="imageModal" class="modal_window imagesModal"></div>
+</div>
+{{/view}}
+{{#view "helpsModal"}}
+<div id="helpsModalContainer" class="helpsModal">
+	<div id="helpModal" class="modal_window helpsModal">
+		<div class="helpContainer">
+			<h2 id="helpTitle"></h2>
+			   
+			<a id="addFilterBtn" class="filterBtn glyphicon glyphicon-filter" alt="Filtros" title="Filtros" style="display:none;"></a>
+			<a id="removeFilterBtn" class="removeFilterBtn filterBtn glyphicon glyphicon-filter" alt="Filtros" title="Filtros" style="display:none;"></a>
+			
+			<a class="close-btn" {{action 'helpClose' target=view}}><i class="glyphicon glyphicon-remove"></i></a>
+			<div id="helpTableContainer"></div>
+		</div>
+	</div> 
+</div> 
+{{/view}}
+
+<div id="filterMask" ></div>   
+{{#view "filterModal" class="filterModal" id="filterModalContainer"}}
+	<div id="filterModal" class="modal_window helpsModal">
+		<div class="helpContainer">
+			<h2>FILTRADO DE REGISTROS</h2>
+			
+			<a class="close-btn" {{action 'closeModal' target=view}} role="button"><i class="glyphicon glyphicon-remove"></i></a>
+			
+			<div class="row">
+				<label class="label-color col-sm-12 col-xs-12" style="text-transform: uppercase; text-align: left; margin-bottom: 5px; margin-top: 35px;">CAMPO</label>
+			   	{{view Ember.Select content=view.fields value=view.selectedField optionValuePath="content.value" optionLabelPath="content.description"  class="form-control" prompt="Seleccione un campo..."}}
+			</div>  
+			<div class="row">
+				<label class="label-color col-sm-12 col-xs-12" style="text-transform: uppercase; text-align: left; margin-bottom: 5px;">OPERADOR</label>
+			   	{{view Ember.Select content=view.operators value=view.selectedOperator optionValuePath="content.value" optionLabelPath="content.description"  class="form-control" prompt="Seleccione un operador..."}}
+			</div>  
+			<div class="row">
+				<label class="label-color col-sm-12 col-xs-12" style="text-transform: uppercase; text-align: left; margin-bottom: 5px;">VALOR</label>
+                {{input type="text" value=view.selectedValue action="onFilterChange" targetObject=view class="form-control"}}
+			</div>    
+			{{#if view.error}}
+			<div role="alert" class="errorMessage form-group">
+				 {{view.error}}
+			</div>
+			{{/if}}
+			<div class="row">
+				<a  {{bind-attr class=":round-btn :send-btn "}} title="Enviar" {{action 'onFilterChange' target=view}} role="button"><i class="glyphicon glyphicon-ok" ></i></a>
+			</div> 
+		</div>
+	</div>
+{{/view}}
+
+<div id="disabledPageMask" ></div>
+{{#view "disabledPageModal"}}
+<div id="disabledPageModalContainer" class="helpsModal">
+	<div id="disabledPageModal" class="modal_window helpsModal">
+		<div class="helpContainer" style="width: 410px; text-align: left;">
+			<h2>Seguridad</h2>
+			
+			<a class="close-btn" {{action 'closeModal' target=view}} role="button"><i class="glyphicon glyphicon-remove"></i></a>
+			
+			<div id="helpTableContainer">
+				Usted no tiene los permisos necesarios para acceder a la pagina solicitada.
+			</div>
+		</div>
+	</div> 
+</div> 
+{{/view}}
+
+{{view contentBinding="this" templateName="HeaderView"}}
+ 
+<div class="frame-container">    
+	{{#if hasErrors}}
+		{{view contentBinding="errorData" templateName="ErrorsView"}}
+	{{/if}}
+	  
+	{{#if showFrames}}
+		{{#each frames}}
+			{{#if isEnabled}}
+				{{view contentBinding="this" templateName=templateName}}
+			{{/if}}
+		{{/each}}
+	{{/if}}
+</div>
+{{#view "parametersPanel" class="parametersPanel"}}
+	
+   		<div {{bind-attr class=":parametersContainer showParametersPanel:show:hide"}}>    	
+	 
+	       	<div class="parametersComboBox"> 
+	       		{{view Ember.Select content=view.homePages value=view.selectedPage optionValuePath="content.value" optionLabelPath="content.description"  class="form-control" prompt="Navegar a..."}}
+			</div>
+			
+			<div class="parametersGroup">
+				{{#each previousPages}}
+					<div class="parameter row" >
+						<div class="parameterHeader col-sm-12">
+							{{#view "parameterHeader" class="parameter-background-title"}}
+								<div class="parameterName">
+									<h2>{{title}}</h2>
+								</div>
+								<div class="parameterExpand">
+									<span class="glyphicon glyphicon-chevron-down"></span>
+								</div>
+							{{/view}}
+							<div class="line-parameterHeader"></div>
+							<div class="clear"></div>
+						</div> 
+						<div class="parameterContent" style="display: none;">     
+						{{#each attributes}}  
+							  <div class="row">
+								<label class="label-color col-sm-12 col-xs-12" style="text-transform: uppercase;">{{key}}</label>
+								<label class="label-normal col-sm-12 col-xs-12">{{value}}</label>
+							  </div>    
+						{{/each}}
+						</div>
+					</div>
+				{{/each}}         
+			
+				<div class="parameter row">
+					<div class="parameterHeader col-sm-12">
+						{{#view "parameterHeader" class="parameter-background-title"}}
+							<div class="parameterName">
+									<h2>{{id}}</h2>
+							</div>
+							<div class="parameterExpand">
+								<span class="glyphicon glyphicon-chevron-up"></span>
+							</div>
+						{{/view}}
+						<div class="line-parameterHeader"></div>
+						<div class="clear"></div>
+					</div>
+					<div class="parameterContent">     
+						{{#each attributes}}  
+						   <div class="row">
+								<label class="label-color col-sm-12 col-xs-12" style="text-transform: uppercase;">{{label}}</label>
+								
+								<div class="has-feedback">
+                                  	{{input type="text" value=value action="onParameterChange" targetObject=view title=tooltip class="form-control"}}
+                                  	
+									{{#if help}}
+  										<a {{action 'helpClick' help target=view}} role="button" class="round-btn form-control-feedback"><p style="line-height: normal;">?</p></a>
+									{{/if}}
+								</div>
+						   </div>    
+						{{/each}}
+						
+						<a  {{bind-attr class=":round-btn :send-btn view.loading:disabled-btn"}} title="Enviar" {{action 'onParameterChange' target=view}} role="button"><i class="glyphicon glyphicon-ok" ></i></a>
+												
+						{{#if parametersError}}
+						<div role="alert" class="errorMessage form-group">
+							 {{parametersError}}
+						</div>
+						{{/if}}
+					</div>
+				</div>   
+			</div> 
+    	</div>  	
+    	
+	   	<div class="showParametersPanelButton"> 
+			<a {{action 'parametersPanelButtonClick' target=view}} {{bind-attr class=":arrow-menu-btn showParametersPanel:closeArrow:openArrow"}} role="button"></a>
+	    </div>
+	   	<div class="clear"></div>
+{{/view}}
+   
+   	<!--Footer-->
+	<div class="footer row"></div> 
+	

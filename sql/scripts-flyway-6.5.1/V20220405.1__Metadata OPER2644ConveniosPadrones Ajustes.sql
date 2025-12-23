@@ -1,0 +1,7 @@
+﻿EXECUTE('
+UPDATE dbo.DICCIONARIO
+SET  DESCRIPCION = ''Id Ticket''
+	, PROMPT = ''Id Ticket''
+WHERE NUMERODECAMPO = 45202
+
+')

@@ -1,0 +1,19 @@
+﻿EXECUTE('
+----------------------------------
+--MODIFICACIÓN DESCRIPCIÓN CAMPO--
+----------------------------------
+UPDATE DICCIONARIO
+SET DESCRIPCION = ''Descripción''
+	, PROMPT = ''Descripción''
+WHERE NUMERODECAMPO = 43228
+----
+UPDATE DESCRIPTORES
+SET DESCRIPCION = ''Código Tasa Base''
+WHERE TITULO = 800 AND IDENTIFICACION = 4322
+----
+UPDATE OPERACIONES
+SET NOMBRE = ''ABMC de Tasas Base Código''
+	, DESCRIPCION = ''ABMC de Tasas Base Código''
+WHERE TITULO = 6850 AND IDENTIFICACION = 8001
+----
+')

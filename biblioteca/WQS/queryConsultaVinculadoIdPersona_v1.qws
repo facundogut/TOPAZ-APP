@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/vinculacion/gruposVinculadosxidPersona/{IdPersona}</uri>
+    <serviceDescription>Consulta Vinculado Por Id Persona</serviceDescription>
+    <title>Consulta Vinculado Por Id Persona</title>
+    <querys>
+        <query id="1" name="Query" type="MULTIPLE">
+            <sql>SELECT
+	CV.ID_PERSONA_VINCULADA PERSONA_VINCULADA,
+	CV.ID_PERSONA_VINCULANTE PERSONA_VINCULANTE,
+	vinculante.tipodocident TD_VINCULANTE,
+	vinculante.nrodocident  DOC_VINCULANTE,
+	CV.TIPO_PERSONA_VINCULANTE,
+	vinculante.nombre NOMBRE_VINCULANTE,
+	CV.TIPO_VINCULO TIPO,
+	vinculado.tipodocident TD_VINCULADO,
+	vinculado.nrodocident DOC_VINCULADO,
+	vinculado.nombre NOMBRE_VINCULADO,
+	CV.TIPO_PERSONA_VINCULADA,
+	CV.FECHA_INICIO,
+	CV.FECHA_FIN,
+	REL.[Descripcion vinculo] DESCRIPCION,
+	CV.MAYOR_DEUDA_12M_PREV DEUDA,
+	REL.[Id Relacion] TIP_REL 
+FROM CRE_VINCULACIONES (NOLOCK) CV
+	JOIN VW_CRE_VINCULACIONES_REL (NOLOCK) REL 
+		ON CV.TIPO_VINCULO = REL.[Id Vinculo]
+	LEFT JOIN VW_PERSONAS_F_Y_J (NOLOCK) vinculante
+		ON CV.ID_PERSONA_VINCULANTE = vinculante.NUMEROPERSONA
+	LEFT JOIN VW_PERSONAS_F_Y_J (NOLOCK) vinculado
+		ON CV.ID_PERSONA_VINCULADA = vinculado.NUMEROPERSONA
+
+WHERE CV.ID_PERSONA_VINCULADA = ?
+AND CV.TZ_LOCK = 0 </sql>
+            <input>
+                <inParameter description="Id Persona" type="INTEGER">IdPersona</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Vinculaciones">
+                    <outParameter description="Persona Vinculada" type="INTEGER">
+                        <queryname>PERSONA_VINCULADA</queryname>
+                        <servicename>ID_PERSONA_VINCULADA</servicename>
+                    </outParameter>
+                    <outParameter description="Persona Vinculante" type="INTEGER">
+                        <queryname>PERSONA_VINCULANTE</queryname>
+                        <servicename>ID_PERSONA_VINCULANTE</servicename>
+                    </outParameter>
+                    <outParameter description="Tipo Documento Vinculante" type="STRING">
+                        <queryname>TD_VINCULANTE</queryname>
+                        <servicename>TD_VINCULANTE</servicename>
+                    </outParameter>
+                    <outParameter description="Documento Vinculante" type="LONG">
+                        <queryname>DOC_VINCULANTE</queryname>
+                        <servicename>DOC_VINCULANTE</servicename>
+                    </outParameter>
+                    <outParameter description="Tipo Persona Vinculante" type="STRING">
+                        <queryname>TIPO_PERSONA_VINCULANTE</queryname>
+                        <servicename>TIPO_PERSONA_VINCULANTE</servicename>
+                    </outParameter>
+                    <outParameter description="Nombre Vinculante" type="STRING">
+                        <queryname>NOMBRE_VINCULANTE</queryname>
+                        <servicename>NOMBRE_VINCULANTE</servicename>
+                    </outParameter>
+                    <outParameter description="Tipo Vinculo" type="STRING">
+                        <queryname>TIPO</queryname>
+                        <servicename>TIPO_VINCULO</servicename>
+                    </outParameter>
+                    <outParameter description="Tipo Documento Vinculado" type="STRING">
+                        <queryname>TD_VINCULADO</queryname>
+                        <servicename>TD_VINCULADO</servicename>
+                    </outParameter>
+                    <outParameter description="Documento Vinculado" type="LONG">
+                        <queryname>DOC_VINCULADO</queryname>
+                        <servicename>DOC_VINCULADO</servicename>
+                    </outParameter>
+                    <outParameter description="Nombre Vinculado" type="STRING">
+                        <queryname>NOMBRE_VINCULADO</queryname>
+                        <servicename>NOMBRE_VINCULADO</servicename>
+                    </outParameter>
+                    <outParameter description="Tipo Persona Vinculada" type="STRING">
+                        <queryname>TIPO_PERSONA_VINCULADA</queryname>
+                        <servicename>TIPO_PERSONA_VINCULADA</servicename>
+                    </outParameter>
+                    <outParameter description="Fecha Inicio" type="STRING">
+                        <queryname>FECHA_INICIO</queryname>
+                        <servicename>FECHA_INICIO</servicename>
+                    </outParameter>
+                    <outParameter description="Fecha Fin" type="STRING">
+                        <queryname>FECHA_FIN</queryname>
+                        <servicename>FECHA_FIN</servicename>
+                    </outParameter>
+                    <outParameter description="Descripcion de Vinculo" type="STRING">
+                        <queryname>DESCRIPCION</queryname>
+                        <servicename>DESC_VINCULO</servicename>
+                    </outParameter>
+                    <outParameter description="Deuda" type="FLOAT">
+                        <queryname>DEUDA</queryname>
+                        <servicename>DEUDA</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>TIP_REL</queryname>
+                        <servicename>TIPO_RELACION </servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="Vinculaciones" type="SIMPLE">
+            <sql>select '' as campo from parametros where 1 = 0</sql>
+            <input/>
+            <output>
+                <level groupby="" name="campo">
+                    <outParameter description="" type="STRING">
+                        <queryname>campo</queryname>
+                        <servicename>vinculaciones</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/Sueldos/{version}/convenios/empleados</uri>
+    <serviceDescription>Convenios-Empleados</serviceDescription>
+    <title>Convenios-Empleados</title>
+    <querys>
+        <query id="1" name="Convenio-Empleado" type="SIMPLE">
+            <sql>declare @convenio AS NUMERIC(15,0)
+set @convenio=?
+
+SELECT DISTINCT doc.NroDocIdent AS cuil, 
+CASE
+WHEN pag.ID_ConvPago IS NULL THEN 0
+ELSE pag.Cuit
+END AS cuitEmpresa,
+doc.NOMBRE AS nombre,
+CASE
+WHEN vinc.ID_CONVENIO IS NULL THEN 'NO_VINCULADO'
+ELSE 'EXITO'
+END AS codigoResultado,
+CASE
+WHEN vinc.ID_CONVENIO IS NULL THEN 'CUIL no vinculado al convenio ' + CONVERT(VARCHAR(15),@convenio)
+ELSE 'CUIL vinculado al convenio '+CONVERT(VARCHAR(15),@convenio)
+END AS descripcionResultado
+FROM VW_PERSONAS_FYJ doc WITH(NOLOCK)
+LEFT JOIN CRE_VINCULACIONES_CONVENIOS vinc WITH(NOLOCK) ON doc.NUMEROPERSONA=vinc.ID_PERSONA
+AND vinc.ID_CONVENIO = @convenio
+LEFT JOIN CONV_CONVENIOS_PAG pag WITH(NOLOCK) 
+ON pag.ID_ConvPago=@convenio
+WHERE doc.TIPOPERSONA = 'F' 
+AND doc.TipoDocIdent = 'CUIL'
+AND doc.NroDocIdent = ?</sql>
+            <input>
+                <inParameter description="idConvenio" type="LONG">idConvenio</inParameter>
+                <inParameter description="cuilEmpleado" type="LONG">cuilEmpleado</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="Convenio-Empleado">
+                    <outParameter description="cuil" type="LONG">
+                        <queryname>cuil</queryname>
+                        <servicename>cuil</servicename>
+                    </outParameter>
+                    <outParameter description="cuitEmpresa" type="LONG">
+                        <queryname>cuitEmpresa</queryname>
+                        <servicename>cuitEmpresa</servicename>
+                    </outParameter>
+                    <outParameter description="nombre" type="STRING">
+                        <queryname>nombre</queryname>
+                        <servicename>nombre</servicename>
+                    </outParameter>
+                    <outParameter description="codigoResultado" type="STRING">
+                        <queryname>codigoResultado</queryname>
+                        <servicename>codigoResultado</servicename>
+                    </outParameter>
+                    <outParameter description="descripcionResultado" type="STRING">
+                        <queryname>descripcionResultado</queryname>
+                        <servicename>descripcionResultado</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

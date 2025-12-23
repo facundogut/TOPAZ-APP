@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>clientes/plazosFijo/{IdCliente}</uri>
+    <serviceDescription>Convenio de Sueldo</serviceDescription>
+    <title>Convenio de Sueldo</title>
+    <querys>
+        <query id="1" name="Qrty_PlazoFijo" type="MULTIPLE">
+            <sql>SELECT JTS_OID FROM VW_CUENTAS_DPF
+WHERE CLIENTE = ?
+AND bloqueo = 'No' </sql>
+            <input>
+                <inParameter description="" type="LONG">IdCliente</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="PlazosFijos">
+                    <outParameter description="JTS_OID" type="LONG">
+                        <queryname>JTS_OID</queryname>
+                        <servicename>JTS_OID</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="vacio" type="SIMPLE">
+            <sql>select '' as PlazosFijos from parametros with(nolock) where 1 = 0</sql>
+            <input/>
+            <output>
+                <level groupby="" name="vacio">
+                    <outParameter description="" type="STRING">
+                        <queryname>PlazosFijos</queryname>
+                        <servicename>PlazosFijos</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

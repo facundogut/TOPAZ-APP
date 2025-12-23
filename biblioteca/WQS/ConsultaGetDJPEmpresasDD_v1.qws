@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/getEmpHomCoelsa/{CUITEO}/{CONVENIO}/{pagina}/{largopagina}</uri>
+    <serviceDescription>Consulta las empresas homologadas por coelsa</serviceDescription>
+    <title>ConsultaGetDJPEmpresasDD</title>
+    <querys>
+        <query id="1" name="paginado" type="MULTIPLE">
+            <sql>DECLARE 
+  		
+  @CUITEO NUMERIC(15,0),
+  @CONVENIO VARCHAR(2),
+	
+  @pagina  AS INT ,
+  @largopagina AS INT ,
+ 
+  
+  @TotalRegistros INT = 0,
+  @resto INT = 0,
+  @primerRegistroPag INT = 0,
+  @ultimoRegistroPag INT =0;
+
+
+  SET @CUITEO = ?
+  SET @CONVENIO = ?
+  SET @pagina = ?
+  SET @largopagina = ?
+
+IF NOT (@CONVENIO LIKE '[T]' OR @CONVENIO LIKE '[D]')
+    THROW 50000, 'Parámetro @CONVENIO invalido', 1;
+
+SET @TotalRegistros = (
+  						SELECT COUNT(1) 
+						FROM SNP_PRESTACIONES_EMPRESAS t
+                        WHERE (CUIT_EO = @CUITEO OR 0 = @CUITEO)
+                        	AND TZ_LOCK = 0 AND (
+            @CONVENIO = 'T' OR 
+            (@CONVENIO = 'D' AND t.ID_CONVENIO != 0)
+          )
+ )
+
+  SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina)
+  SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1
+  SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina)
+  
+  IF (@resto &lt; 0)
+  	BEGIN
+  		SET @resto = 0
+  	END 
+  IF (@ultimoRegistroPag &gt; @TotalRegistros )
+  	BEGIN
+  	    SET @ultimoRegistroPag=@TotalRegistros
+  	END 
+  
+
+IF(@pagina&gt;(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)))
+BEGIN
+SELECT 
+	NULL AS CUIT,
+	NULL AS Nombre,
+	NULL AS Prestacion,
+	NULL AS Entidad,
+	NULL AS EntidadNombre,
+	NULL AS LargoId,
+	NULL AS SegundoVencimiento,
+	null AS PeriodicidadPago,
+	NULL AS ComisionUsoCuenta,
+	NULL AS ID_CONVENIO,
+	@pagina 																	AS paginaActual, 
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,
+	@largopagina 																AS registroPorPag,
+	@TotalRegistros 														  	AS totalRegistros,
+	@primerRegistroPag 													  		AS primerRegistroPag,
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,
+	@resto 																	  	AS siguientesRegistros 
+END
+ELSE
+BEGIN
+SELECT 	ROW_NUMBER() OVER(ORDER BY CUIT) AS ORDEN, 
+		CUIT,
+		Nombre,
+		Prestacion,
+		Entidad,
+		EntidadNombre,
+		LargoId,
+		SegundoVencimiento,
+		PeriodicidadPago,
+		ComisionUsoCuenta,
+		ID_CONVENIO,
+		paginaActual,
+		cantidadPaginas,
+		registroPorPag,
+		totalRegistros,
+		primerRegistroPag,
+		ultimoRegistroPag,
+		siguientesRegistros
+		
+
+FROM
+(
+SELECT
+  t.CUIT_EO as CUIT,
+  t.NOMBRE_EMPRESA as Nombre,
+  t.PRESTACION as Prestacion,
+  t.ENTIDAD as Entidad,
+  t.NOMENTIDAD AS EntidadNombre,  
+  t.LARGO_ID as LargoId, 
+  t.SEGUNDO_VTO as SegundoVencimiento, 
+  t.PERIODICIDAD_PAGO as PeriodicidadPago, 
+  t.TIPO_COMISION as ComisionUsoCuenta,
+  t.ID_CONVENIO as ID_CONVENIO,
+@pagina 																	AS paginaActual, 
+(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,
+@largopagina 																AS registroPorPag,
+@TotalRegistros 														  	AS totalRegistros,
+@primerRegistroPag 													  		AS primerRegistroPag,
+@ultimoRegistroPag 													  		AS ultimoRegistroPag,
+@resto 																	  	AS siguientesRegistros 	
+
+FROM SNP_PRESTACIONES_EMPRESAS t
+WHERE (CUIT_EO = @CUITEO OR 0 = @CUITEO)
+  AND TZ_LOCK = 0 AND (
+            @CONVENIO = 'T' OR 
+            (@CONVENIO = 'D' AND t.ID_CONVENIO != 0)
+          )
+) DATOS 
+
+ORDER BY ORDEN
+
+OFFSET ((@pagina - 1) * @largopagina) ROWS 
+FETCH NEXT @largopagina ROWS ONLY;
+
+END</sql>
+            <input>
+                <inParameter description="" type="LONG">CUITEO</inParameter>
+                <inParameter description="" type="STRING">CONVENIO</inParameter>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="data">
+                    <outParameter description="" type="LONG">
+                        <queryname>CUIT</queryname>
+                        <servicename>empresas.CUIT</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Nombre</queryname>
+                        <servicename>empresas.Nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Prestacion</queryname>
+                        <servicename>empresas.Prestacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>Entidad</queryname>
+                        <servicename>empresas.Entidad</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>EntidadNombre</queryname>
+                        <servicename>empresas.EntidadNombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>LargoId</queryname>
+                        <servicename>empresas.LargoId</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>SegundoVencimiento</queryname>
+                        <servicename>empresas.SegundoVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>PeriodicidadPago</queryname>
+                        <servicename>empresas.PeriodicidadPago</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ComisionUsoCuenta</queryname>
+                        <servicename>empresas.ComisionUsoCuenta</servicename>
+                    </outParameter>
+					<outParameter description="" type="LONG">
+						<queryname>ID_CONVENIO</queryname>
+						<servicename>empresas.IdConvenio</servicename>
+					</outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

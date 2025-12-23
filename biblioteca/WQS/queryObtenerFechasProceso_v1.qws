@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/usogeneral/getFechas</uri>
+    <serviceDescription>GENT003</serviceDescription>
+    <title>GENT003</title>
+    <querys>
+        <query id="1" name="FECHAS" type="SIMPLE">
+            <sql>SELECT CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET, FECHAPROCESO), 127) AS FECHAPROCESO, CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET, FECHAPROCESOANTERIOR), 127) AS FECHAPROCESOANTERIOR, CONVERT(VARCHAR(20), CONVERT(DATETIMEOFFSET, FECHAPROXIMOPROCESO), 127) AS FECHAPROXIMOPROCESO FROM PARAMETROS (NOLOCK)</sql>
+            <input/>
+            <output>
+                <level groupby="" name="fechas">
+                    <outParameter description="fechaAnterior" type="STRING">
+                        <queryname>FECHAPROCESOANTERIOR</queryname>
+                        <servicename>fechaAnterior</servicename>
+                    </outParameter>
+                    <outParameter description="fechaActual" type="STRING">
+                        <queryname>FECHAPROCESO</queryname>
+                        <servicename>fechaActual</servicename>
+                    </outParameter>
+                    <outParameter description="fechaSiguiente" type="STRING">
+                        <queryname>FECHAPROXIMOPROCESO</queryname>
+                        <servicename>fechaSiguiente</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

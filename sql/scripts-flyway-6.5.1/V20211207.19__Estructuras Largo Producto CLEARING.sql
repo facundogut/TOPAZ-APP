@@ -1,0 +1,7 @@
+﻿EXECUTE('
+------------------------
+--CLE_CHEQUES_CLEARING--
+------------------------
+ALTER TABLE CLE_CHEQUES_CLEARING ALTER COLUMN PRODUCTO NUMERIC (5, 0) NOT NULL
+------
+')

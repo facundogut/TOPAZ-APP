@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.topaz.server.loans.iof.IofComplementarioImpl</class-name>
+        <entity-name>core.vo.IofComplementario</entity-name>
+        <table-name>BS_IOF_COMPLEMENTARIO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldosJtsOid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroCuota</attribute-name>
+            <column-name>NUMERO_CUOTA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>vencimiento</attribute-name>
+            <column-name>VENCIMIENTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>capitalOriginal</attribute-name>
+            <column-name>CAPITAL_ORIGINAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>diasCobrados</attribute-name>
+            <column-name>DIAS_COBRADOS</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaMaxima</attribute-name>
+            <column-name>FECHA_MAXIMA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>capitalCancelado</attribute-name>
+            <column-name>CAPITAL_CANCELADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoCapital</attribute-name>
+            <column-name>SALDO_CAPITAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>capitalAdelantadoCuotaVencida</attribute-name>
+            <column-name>CAP_ADEL_CUO_VENC</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaAdelantadoCuotaVencida</attribute-name>
+            <column-name>FECHA_CAP_ADEL_CUO_VENC</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaPagoParcial</attribute-name>
+            <column-name>FECHA_PAGO_PARCIAL</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_SaldosMigrarIofComplementario</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT 
+						JTS_OID 
+					FROM SALDOS 
+					WHERE C1785 = 5 
+					AND C1604 &lt; 0
+					AND TZ_LOCK = 0
+					AND EXONERA_IOF NOT IN ('C','E','F','T')
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_SaldosMigrarIofComplementarioPorJtsOid</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT 
+						JTS_OID 
+					FROM SALDOS 
+					WHERE C1785 = 5 
+					AND C1604 &lt; 0
+					AND TZ_LOCK = 0
+					AND EXONERA_IOF NOT IN ('C','E','F','T')
+					AND JTS_OID = ?
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.topaz.server.loans.iof.IofComplementarioBaseCalculoImpl</class-name>
+        <entity-name>core.vo.IofComplementarioBaseCalculo</entity-name>
+        <table-name>BS_IOF_DETAIL_CALCULO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldosJtsOid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>hpJtsOid</attribute-name>
+            <column-name>HP_JTS_OID</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroCuota</attribute-name>
+            <column-name>NUMERO_CUOTA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>capital</attribute-name>
+            <column-name>CAPITAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDesde</attribute-name>
+            <column-name>FECHA_DESDE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaHasta</attribute-name>
+            <column-name>FECHA_HASTA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tarifa</attribute-name>
+            <column-name>TARIFA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.topaz.server.loans.iof.IofComplementarioBaseCalculoImpl</class-name>
+        <query-name>query.vo_IOFCompBaseCalculoDeUnPago</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT 
+						SALDOS_JTS_OID, 
+						HP_JTS_OID, 
+						NUMERO_CUOTA, 
+						SECUENCIAL, 
+						CAPITAL, 
+						FECHA_DESDE, 
+						FECHA_HASTA, 
+						TARIFA, 
+						MONTO
+					FROM BS_IOF_DETAIL_CALCULO 
+					WHERE SALDOS_JTS_OID = ? 
+					AND HP_JTS_OID = ? 
+					AND	TZ_LOCK = 0
+				</sentence>
+        <attribute>
+            <attribute-name>saldosJtsOid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>hpJtsOid</attribute-name>
+            <column-name>HP_JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroCuota</attribute-name>
+            <column-name>NUMERO_CUOTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>secuencial</attribute-name>
+            <column-name>SECUENCIAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>capital</attribute-name>
+            <column-name>CAPITAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaDesde</attribute-name>
+            <column-name>FECHA_DESDE</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaHasta</attribute-name>
+            <column-name>FECHA_HASTA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tarifa</attribute-name>
+            <column-name>TARIFA</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_SaldosMigracionDetalleCalculoIofComplementario</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT DISTINCT s.JTS_OID
+			FROM SALDOS s
+			WHERE
+				s.C1785 = 5 AND s.TZ_LOCK = 0 AND s.EXONERA_IOF IN ('A','B','D','N')
+				AND EXISTS (SELECT DISTINCT hp.SALDOS_JTS_OID  FROM BS_HISTORIA_PLAZO hp, HISTORICO_IOF hi
+							WHERE s.JTS_OID = hp.SALDOS_JTS_OID AND hp.TIPOMOV = 'P' AND hp.TZ_LOCK =0
+								  AND hp.FECHAPROCESOMOV &gt; ?
+								  AND hp.SALDOS_JTS_OID = hi.SALDOS_JTS_OID AND hp.JTS_OID = hi.HP_JTS_OID
+									 AND hi.IOF_COBRADO &gt; 0 )
+					</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+</map>

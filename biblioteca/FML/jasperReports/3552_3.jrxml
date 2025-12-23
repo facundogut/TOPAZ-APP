@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-08-20T14:40:42 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="3552_3" language="javascript" pageWidth="595" pageHeight="300" whenNoDataType="NoDataSection" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b260c78e-c299-4a87-b3df-55a3504b0886">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="JTSOID" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[WITH DATOS AS (
+SELECT
+    ROW_NUMBER() OVER(ORDER BY C.NUMEROCHEQUE) AS FILA, C.SERIE, C.ESTADO, C.NUMEROCHEQUE,
+CASE
+        WHEN C.NUMEROCHEQUE = CH.CHEQUEDESDE THEN C.NUMEROCHEQUE
+        WHEN C.ESTADO <> LAG(C.ESTADO) OVER(ORDER BY C.NUMEROCHEQUE) THEN C.NUMEROCHEQUE
+    END AS DESDE,
+CASE
+        WHEN LAG(C.ESTADO) OVER(ORDER BY C.NUMEROCHEQUE) = C.ESTADO THEN C.NUMEROCHEQUE
+    END AS HASTA,
+    CH.CHEQUEDESDE, CH.CHEQUEHASTA, S.CUENTA, S.C1803, S.SUCURSAL, SU.NOMBRESUCURSAL
+FROM
+    CHE_CHEQUES AS C, CHE_CHEQUERAS AS CH, SALDOS AS S, SUCURSALES AS SU
+WHERE
+    C.CUENTA = CH.CUENTA
+    AND C.MONEDA = CH.MONEDA
+    AND C.SUCURSAL = CH.SUCURSAL
+    AND C.PRODUCTO = CH.PRODUCTO
+    AND C.ORDINAL = CH.ORDINAL
+    AND C.OPERACION = CH.OPERACION
+    AND S.SUCURSAL = C.SUCURSAL
+    AND S.PRODUCTO = C.PRODUCTO
+    AND S.CUENTA = C.CUENTA
+    AND S.MONEDA = C.MONEDA 
+    AND S.OPERACION = C.OPERACION
+    AND S.ORDINAL = C.ORDINAL
+    AND C.NUMEROCHEQUE BETWEEN CH.CHEQUEDESDE AND CH.CHEQUEHASTA
+    AND C.SERIE = CH.SERIE
+    AND S.SUCURSAL = SU.SUCURSAL
+    AND S.JTS_OID = $P{JTSOID})
+SELECT
+    D.SERIE,
+    D.ESTADO,
+    D.DESDE,
+    (
+    SELECT
+        TOP 1 D2.DESDE-1
+    FROM
+        DATOS D2
+    WHERE
+        D2.FILA>D.FILA
+        AND D2.DESDE IS NOT NULL ) AS HASTA,
+        D.CHEQUEHASTA,
+        D.CUENTA, D.C1803, D.SUCURSAL, D.NOMBRESUCURSAL
+FROM
+    DATOS D
+WHERE
+    D.DESDE IS NOT NULL AND (D.ESTADO = 'C')]]>
+	</queryString>
+	<field name="SERIE" class="java.lang.String"/>
+	<field name="ESTADO" class="java.lang.String"/>
+	<field name="DESDE" class="java.math.BigDecimal"/>
+	<field name="HASTA" class="java.math.BigDecimal"/>
+	<field name="CHEQUEHASTA" class="java.math.BigDecimal"/>
+	<field name="CUENTA" class="java.math.BigDecimal"/>
+	<field name="C1803" class="java.lang.Double"/>
+	<field name="SUCURSAL" class="java.math.BigDecimal"/>
+	<field name="NOMBRESUCURSAL" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="92">
+			<staticText>
+				<reportElement x="53" y="2" width="380" height="35" uuid="73c67b4e-acc7-4a43-89ea-c2365ef99bba">
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AVISO DE CIERRE DE CUENTA CORRIENTE POR DECISION DEL CLIENTE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="47" width="55" height="15" uuid="116aedb9-5adb-4db5-94cf-5d365cf80742">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Sucursal:]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="434" y="2" width="120" height="15" uuid="2b73d813-87b6-4504-a511-4e52ae105d66">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="434" y="17" width="120" height="15" uuid="13b20ef1-dabd-412f-ab39-70b63841ca28">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="434" y="32" width="120" height="15" uuid="ca477233-99f4-425a-935f-c4f2d4bea424">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<rectangle>
+				<reportElement x="434" y="47" width="120" height="15" uuid="5ed31d4a-8e54-4651-b0e3-cd0fa4708305">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</rectangle>
+			<staticText>
+				<reportElement x="435" y="2" width="120" height="15" uuid="091a7935-ead5-4b20-a949-65a313d806a4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CLIENTE N°]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="435" y="32" width="120" height="15" uuid="591256db-7010-43f8-ab25-444efe16ffd1">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Center"/>
+				<text><![CDATA[CUENTA CORRIENTE N°]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="62" width="554" height="1" uuid="065b2be3-c9e6-4758-aa84-548b7485e8a4">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+			</line>
+			<staticText>
+				<reportElement x="0" y="69" width="480" height="15" uuid="cfd3e39e-2fe9-46d9-a8e5-ee024d474593">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Se deja constancia de haber recibido de conformidad los cheques sin utilizar detallados a continuación:
+]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="55" y="47" width="65" height="15" uuid="5705cacd-b45c-4a90-b050-94108e49876c">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="47" width="145" height="15" uuid="f035739f-c03f-4d09-8ea4-ef1d20fa0925">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{NOMBRESUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="446" y="47" width="100" height="15" uuid="2a5c8278-ef0e-44d7-8df1-f55c81ccf396">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{CUENTA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="446" y="17" width="100" height="15" uuid="25d65e71-da8d-4dbf-9469-b7bd1cca973f">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{C1803}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+			<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+			<staticText>
+				<reportElement x="0" y="0" width="95" height="15" uuid="90df34cf-3791-4c61-b2d3-f01ce7c705ab">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[Libreta de Cheque Serie ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="95" y="0" width="92" height="15" uuid="341c8b99-e729-4c9c-96be-675390938ca8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{SERIE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="187" y="0" width="92" height="15" uuid="3245b084-4c52-4ba3-a6c9-d4c698d4a1a8">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right"/>
+				<text><![CDATA[Nº]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="279" y="0" width="92" height="15" uuid="75d51826-a5fb-48da-b718-250fa77e4637">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{DESDE}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="371" y="0" width="92" height="15" uuid="6c37e03b-716a-4d20-a515-898ddfa7db53">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[al Nº]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="463" y="0" width="92" height="15" uuid="11e854c7-5344-46c3-a98f-3aac305a8ab9">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<textFieldExpression><![CDATA[$F{HASTA} == null ? $F{CHEQUEHASTA} : $F{HASTA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="80" splitType="Stretch">
+			<staticText>
+				<reportElement x="67" y="10" width="488" height="15" uuid="05d8a08f-ad09-4f48-a904-dd7fbafd63e7">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[La realización del depósito necesario para atender el pago de los cheques librados se acreditará mediante el]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="25" width="255" height="15" uuid="56654296-8ed6-4d1e-8daa-fdfdea8ff265">
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<text><![CDATA[comprobante de caja debidamente sellado.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="424" y="50" width="130" height="30" uuid="796706bc-eb71-46c7-a7fc-2e98818d5639"/>
+				<text><![CDATA[..............................................
+Firma y sello de Funcionario]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+</jasperReport>

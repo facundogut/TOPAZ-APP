@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.devengadodiferenciaintereses.objectsdomain.CronogramaDevengaDiferenciaIntereses</class-name>
+        <query-name>query.CronogramaDevengaDiferenciaTasaEfectivaMercado</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+				SELECT JTS_OID, NUMERO_DE_CUOTA, INTERES_PRESTAMO, INTERES_TASA_MERCADO
+				FROM BS_PLANPAGO_TASAMERCADO P  INNER JOIN SALDOS S ON (P.SALDOS_JTS_OID = JTS_OID)
+				WHERE P.TZ_LOCK = 0 AND S.TZ_LOCK = 0 AND
+				P.CONTABILIZADO='N' AND
+				(P.FECHA_VENCIMIENTO &lt;= (SELECT FECHAPROCESO FROM PARAMETROS)
+				OR C1604 = 0 OR C1728='C' 
+				OR NUMERO_DE_CUOTA &lt;= C1645) 
+				ORDER BY JTS_OID, NUMERO_DE_CUOTA 
+			</sentence>
+        <attribute>
+            <attribute-name>jtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>numeroCuota</attribute-name>
+            <column-name>NUMERO_DE_CUOTA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>interesPrestamo</attribute-name>
+            <column-name>INTERES_PRESTAMO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>interesTasaMercado</attribute-name>
+            <column-name>INTERES_TASA_MERCADO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+</map>

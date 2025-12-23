@@ -1,0 +1,50 @@
+service CIERRESBUZONES; 
+description "Cierres de buzones totales o parciales"; 
+action:	OperationQuery CIERRESBUZONES (
+	TipoCierre: string,
+	NroTransaccion: numeric,
+	NodoCliente: string,
+	TicketSesion: numeric,
+	InfoOrigen: string,
+	ModoAutentica: string,
+	CodCanal: string,
+	Origen: string,
+	NroDepOrigen: numeric,
+	IdAutentica: string
+	
+):[
+	C488: numeric as NroLote,
+	C428: numeric as FECHA,
+	C885: numeric as HORA
+]{ 
+  	 	
+	properties {
+		("operationNumber", "9936")
+	};
+
+
+action: SQLQuery TOTALBUZON() : [
+		XML_TAG: string as XML_TAG,
+		NRODEPORIGEN: numeric as Sucursal,
+		NROLOTE: numeric as NroLote,
+		NOMBRE_INTERFACE: string as Nombre_Interfase,
+		TOTALEFECTIVOPESOS: numeric as TotalEfectivoPesos,
+		TOTALEFECTIVODOLARES: numeric as TotalEfectivoDolares,
+		TOTALCHEQUEPESOS: numeric as TotalChequesPesos,
+		TOTALCHEQUEDOLARES:numeric as TotalChequesDolares
+
+	] {
+		properties {
+		
+			("statement", "SELECT 'Totales' AS XML_TAG, NRODEPORIGEN, NROLOTE, NOMBRE_INTERFACE, TOTALEFECTIVOPESOS, TOTALEFECTIVODOLARES, TOTALCHEQUEPESOS, TOTALCHEQUEDOLARES FROM ITF_HISTORICO_BUZON WHERE NODO = ? AND NROLOTE = ? AND NRODEPORIGEN = ? AND FECHACIERRE = ? AND HORACIERRE = ?"),
+				("0", "NodoCliente"), 
+				("1", "C488"),
+				("2", "NroDepOrigen"), 
+				("3", "C428"),
+				("4", "C885")
+			}
+						
+	}
+	
+
+}

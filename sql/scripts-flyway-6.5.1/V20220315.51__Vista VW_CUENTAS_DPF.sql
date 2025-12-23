@@ -1,0 +1,53 @@
+﻿EXECUTE('
+-----------------------------
+--NUEVOS CAMPOS DE LA VISTA--
+-----------------------------
+IF OBJECT_ID (''dbo.VW_CUENTAS_DPF'') IS NOT NULL
+	DROP VIEW dbo.VW_CUENTAS_DPF
+----
+')
+
+EXECUTE('
+----
+CREATE VIEW [dbo].[VW_CUENTAS_DPF](
+								CUENTA,
+								NOMBRE,
+								PRODUCTO,
+								DESCRIPCION,
+								MONEDA,
+								SUCURSAL,
+								OPERACION,
+								ORDINAL,
+								CLIENTE,
+								JTS_OID,
+								BLOQUEO,
+								CANCELACION	) 
+AS 
+SELECT S.CUENTA, 
+		C.NOMBRECLIENTE, 
+		S.PRODUCTO, 
+		P.C6251, 
+		S.MONEDA, 
+		S.SUCURSAL, 
+		S.OPERACION, 
+		S.ORDINAL, 
+		S.C1803,
+		S.JTS_OID,
+		CASE WHEN S.C1679=''1'' THEN ''Si'' ELSE ''No'' END AS BLOQUEO,
+		S.C1651
+FROM 
+	SALDOS AS S WITH (nolock) 
+INNER JOIN PRODUCTOS AS P WITH (nolock) ON
+	S.PRODUCTO= P.C6250 
+	AND P.TZ_LOCK = 0 
+INNER JOIN CLI_CLIENTES C WITH (nolock) ON 
+	C.CODIGOCLIENTE = S.C1803 
+	AND  C.TZ_LOCK = 0 
+WHERE 
+	S.TZ_LOCK = 0 
+	AND S.C1785 = 4 
+	AND (S.C1604 != 0 
+		OR S.C1734 = ''U'' 
+		OR S.C1734 = ''T'');
+-----
+')

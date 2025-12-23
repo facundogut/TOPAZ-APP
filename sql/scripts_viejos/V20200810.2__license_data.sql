@@ -1,0 +1,5 @@
+TRUNCATE TABLE license_data
+GO
+-- Respetar el salto de línea en el INSERT --
+INSERT INTO license_data values('TfuQT9xgc1bxrTPSg1o54pCqCwGV1+TZsDCCz15kHcPbFMuyJ9wkXqEAE81YGLKQFXWYbzLJCrAa
+JECRzaOv6y3PB4/OWijWOx7hyGduoOIa+LqyfJn4Vg0rRsTffRdC224N4Ogcn1Nt8EpykevNPg==','TOPAZBANKING',1.0)

@@ -1,0 +1,65 @@
+EXECUTE('
+	IF NOT EXISTS (SELECT 1  FROM SYS.COLUMNS WHERE  
+	OBJECT_ID = OBJECT_ID(N''CO_HIS_AJUSTE_X_INFLACION'') AND name = ''ULTIMA_FECHA_AJUSTE_TEMP'')
+	BEGIN
+		ALTER TABLE CO_HIS_AJUSTE_X_INFLACION ADD ULTIMA_FECHA_AJUSTE_TEMP DATETIME NULL;
+	END
+')
+
+EXECUTE('
+	IF NOT EXISTS (SELECT 1  FROM SYS.COLUMNS WHERE  
+	OBJECT_ID = OBJECT_ID(N''CO_HIS_AJUSTE_X_INFLACION'') AND name = ''PROCESADO'')
+	BEGIN
+		ALTER TABLE CO_HIS_AJUSTE_X_INFLACION ADD PROCESADO VARCHAR(1) NULL;
+	END
+')
+EXECUTE('
+BEGIN
+    IF EXISTS (
+        SELECT 1 
+        FROM sys.columns c
+        JOIN sys.types t ON c.user_type_id = t.user_type_id
+        WHERE c.object_id = OBJECT_ID(''CO_HIS_AJUSTE_X_INFLACION'') 
+        AND c.name = ''ULTIMA_FECHA_AJUSTE''
+        AND t.name IN (''varchar'', ''char'', ''text'', ''nvarchar'', ''nchar'', ''ntext'')
+    )
+    BEGIN
+        DECLARE @count INT = 0;
+
+        -- Copiar los datos a la nueva columna usando lotes
+        BEGIN TRANSACTION;
+            UPDATE CO_HIS_AJUSTE_X_INFLACION
+            SET ULTIMA_FECHA_AJUSTE_TEMP = 
+                CASE 
+                    WHEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 3) IS NOT NULL THEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 3)  -- DD/MM/YY
+                    WHEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 103) IS NOT NULL THEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 103) -- DD/MM/YYYY
+                    WHEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 5) IS NOT NULL THEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 5) -- DD-MM-YY
+                    WHEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 105) IS NOT NULL THEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 105) -- DD-MM-YYYY
+                    WHEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 120) IS NOT NULL THEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 120) -- YYYY-MM-DD
+                    WHEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 111) IS NOT NULL THEN TRY_CONVERT(DATETIME, ULTIMA_FECHA_AJUSTE, 111) -- YYYY/MM/DD
+                    ELSE NULL
+                END,
+                PROCESADO = ''S''
+            WHERE PROCESADO IS NULL;
+        COMMIT TRANSACTION;
+
+        -- Verificar si existen valores NULL después del ajuste
+        SELECT @count = COUNT(*) 
+        FROM CO_HIS_AJUSTE_X_INFLACION 
+        WHERE ULTIMA_FECHA_AJUSTE_TEMP IS NULL AND PROCESADO = ''S'';
+
+        -- Si hay registros con NULL, lanzar error
+        IF @count > 0
+        BEGIN
+            DECLARE @errorMessage NVARCHAR(200);
+            SET @errorMessage = ''Error: Existen '' + CAST(@count AS NVARCHAR(10)) + '' registros con ULTIMA_FECHA_AJUSTE_TEMP como NULL.'';
+            THROW 50000, @errorMessage, 1;
+        END
+
+        -- Eliminar la columna original y renombrar la nueva
+        ALTER TABLE CO_HIS_AJUSTE_X_INFLACION DROP COLUMN ULTIMA_FECHA_AJUSTE, PROCESADO;
+
+        EXEC sp_rename  ''CO_HIS_AJUSTE_X_INFLACION.ULTIMA_FECHA_AJUSTE_TEMP'' , ''ULTIMA_FECHA_AJUSTE'', ''COLUMN'';	
+    END
+END
+')

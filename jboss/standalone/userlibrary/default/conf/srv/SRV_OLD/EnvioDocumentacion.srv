@@ -1,0 +1,68 @@
+service EnvioDocumentacion;
+description "EnvioDocumentacion";
+
+action:SQLQuery BuscoTipoYNumero (
+  TIPO:       string,
+  NUMERO:     numeric,
+  FILTRO:     string, 
+  NOMBRE:     string, 
+  ARCHIVO=decode64zip(ARCHIVO),
+  COMENTARIO: string,
+  FECHA:      date,
+  TAMANIO:    numeric
+) : [
+  SCANTIDAD: numeric,
+  SID: numeric
+] {  properties { 
+    ("statement", "SELECT SCANTIDAD, SID FROM (SELECT SCANTIDAD, SID FROM (SELECT 1 AS SCANTIDAD, 1 AS SID FROM PARAMETROS UNION SELECT COUNT(1) AS SCANTIDAD, JTSOID AS SID FROM GRUPOSDOCUMENTOS WHERE TIPO=? AND NUMERO=? GROUP BY JTSOID) t GROUP BY SCANTIDAD, SID ORDER BY SID DESC) WHERE rownum=1"),
+    ("0", "TIPO"),
+    ("1", "NUMERO")
+  };
+  
+   action:SQLUpdate GruposDocumentos():[
+  ] {
+    condition { "SID == 1" };
+    properties{
+      ("statement", "INSERT INTO GRUPOSDOCUMENTOS (TIPO, NUMERO) VALUES (?, ?)"),
+      ("0", "TIPO"),
+      ("1", "NUMERO")
+    };
+
+  action:SQLQuery BuscoIdGruposDocumentosSinGrupo() : [
+      SID: numeric
+    ] {
+      properties{
+        ("statement", "SELECT JTSOID AS SID FROM (SELECT JTSOID FROM  GRUPOSDOCUMENTOS WHERE NUMERO=? ORDER BY JTSOID DESC) where rownum=1"),
+        ("0", "NUMERO")
+      };
+	  
+	  action:SQLUpdate CargaDocumentosSinGrupo():[
+      ] {
+        properties{
+          ("statement", "INSERT INTO  DOCUMENTOS (GROUPOID, FILTRO, NOMBRE, ARCHIVO, COMENTARIO, TAMANIO, FECHA) VALUES (?, ?, ?, ?, ?, ?, ?)"),
+          ("0", "SID"),
+          ("1", "FILTRO"),
+          ("2", "NOMBRE"),
+          ("3", "ARCHIVO"),
+          ("4", "COMENTARIO"),
+          ("5", "TAMANIO"),
+		  ("6", "FECHA")
+        }
+      }
+	} 
+  };
+   action:SQLUpdate CargaDocumentosConGrupo():[
+      ] {
+		condition { "SID > 1" };
+        properties{
+          ("statement", "INSERT INTO  DOCUMENTOS (GROUPOID, FILTRO, NOMBRE, ARCHIVO, COMENTARIO, TAMANIO, FECHA) VALUES (?, ?, ?, ?, ?, ?, ?)"),
+          ("0", "SID"),
+          ("1", "FILTRO"),
+          ("2", "NOMBRE"),
+          ("3", "ARCHIVO"),
+          ("4", "COMENTARIO"),
+          ("5", "TAMANIO"),
+		  ("6", "FECHA")		  
+        }
+  }
+  }

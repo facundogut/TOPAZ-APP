@@ -1,0 +1,311 @@
+VERSION:051
+TN  NN 1006TConsulta Generica                       C9671 00
+ NNNNN 3683   Ordinal Cab.   I NSNF00000701520030020202101100000000700070030013700
+/V=F(Request,"ORDINAL_CAB")
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3684   Fecha Ingreso  I NSNF00000701520030020202101100000000700070030013700
+/V=F(Request,"FECHA_INGRESO")
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3688   Tipo Doc.      INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3689   Total Fact.    INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TConsulta Sec. Generica Lineas           S9680 00
+/?=!I60
+ NNNNN 3695   Ordinal_Cab    INNSNA00000701520030020202101100000000700070030013700
+/V=C3683.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3696   Fecha Ingreso  INNSNA00000701520030020202101100000000700070030013700
+/V=C3684.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3704   Fecha Proceso  INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3701   Monto Lin.     INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0Y!I60
+/P=I60
+*N  NN *** Controlo los Importes de la Lineas con el Total de la Factura
+CNNNNN   00000000000000000000100
+/F=I60YC582#C3689.1
+/P=I61
+*N  NN *** Controlo los Tipode Socumentos
+CNNNNN   00000000000000000000100
+/F=A(C3688#"F")YA(C3688#"N")YA(C3688#"R")
+/P=I64
+TN  NN 1006TItero a la 2                            C0000 00
+/?=!I60Y!I64
+*N  NN *** Controlo que haya cargado Monto
+CNNNNN   00000000000000000000100
+/?=!I60
+/F=(C3701=0)
+/P=I63
+ NNNNN 0582   Total Monto    INNNNF00000701330027024300001100000000700070027012600
+/V=C582+C3701.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN MI00000000000000000000100
+/M=itero
+/R=2
+TN  NN 1001TAlta Generica                           A2181 00
+/?=I60Y!I61Y!I63Y!I64
+VNSSNS 030075000504120795SNND000000000000000000000000000000000000000
+/T= Alta de Facturas/Notas de Credito
+/C=193193193
+KNSSNS 030020002503130763000101
+/F=0011700NNN000000000Arial                                   
+ NSSNS 1307   Sucursal       INNNNA00004001550063027302101100000004000520063014400
+/V=C9502
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1308   Asiento        INNNNA03006701550090027302001100000006700520090014400
+/V=C9507
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1309   Fecha Asiento  INSNNA03009501550118025402001100000009500520118014400
+/V=C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3431   Ordinal movimi INNSNK00007401250321067900101100000000700070027012600
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3432   Tr real        INNSNK00007401250321067900101100000000700070027012600
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3433   Tr virtual     INNSNK00007401250321067900101100000000700070027012600
+/V=4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3434   Tr tipo        INNSNK00007401250321067900101100000000700070027012600
+/V=8
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4141   Tipo Documento INNSNA03012201550232031100101111000012600520146014400
+/V=C3688.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1303   Numero         INNNN 03012205710145068902101000000012204920145056000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3964   Serie          INNNN 03012203830145045202101000000012203300145037300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1301   Fecha Creacion INSNNA03016001550183025400001100000016000520183014400
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1302   JTS Saldo      INNNNK00019001550213027302001100000019000520213014400
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1304   Importe Total  INNNNA03022001550243027302001100000022000520243014400
+/V=C3689.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3439   Cod. Cliente   INNNNA03022001550243027302001100000022000520243014400
+/V=C3691.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1305   Impreso        INNNNK03025001550273027300101100000025000520273014400
+/V=N
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1306   Usuario        IDNNNA03028001550303027301101150000028000520303014400
+/V=C9505
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0028   Concepto       INNNNF00003401350054049200101100000003400270054014700
+/V="Recepción Facturas Cab " + C3683.1 + " Fecha Proceso " + C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TConsulta Sec. Generica Lineas           S9681 00
+/?=I60Y!I61Y!I63Y!I64
+ NNNNN 3695   Ordinal_Cab    INNSNA00000701520030020202101100000000700070030013700
+/V=C3683.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3696   Fecha Ingreso  INNSNA00000701520030020202101100000000700070030013700
+/V=C3684.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3704   Fecha Proceso  INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3701   Monto Lin.     INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I62
+CNNNNN   00000000000000000000100
+/?=!I62
+/F=C3702.5=0
+/P=I65
+TN  NN 1001TApertura Lineas de Factura              A2191 00
+/?=I60Y!I61Y!I63Y!I62Y!I64
+ NSSNS 1323   Sucursal       INNNNA00004001550063027302101100000004000520063014400
+/V=C9502
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1324   Asiento        INNNNA03006701550090027302001100000006700520090014400
+/V=C9507
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1325   Fecha Asiento  INSNNA03009501550118025402001100000009500520118014400
+/V=C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1326   Ordinal        INNSNA00007401250321067900101100000000700070027012600
+/V=C3697.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3435   Ordinal movimi INNSNK00007401250321067900101100000000700070027012600
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1327   Monto ImponibleINNSNA00007401250321067900101100000000700070027012600
+/V=C3701.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1328   Monto Factura  INNSNA00007401250321067900101100000000700070027012600
+/V=C3701.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1329   Operacion      INNSNK00007401250321067900101100000000700070027012600
+/V=9976
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1330   Id Cargo       INNSNA00007401250321067900101100000000700070027012600
+/V=C3702.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1331   Id Impuesto    INNSNK00007401250321067900101100000000700070027012600
+/?=!I65
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1331   Id Impuesto    INNSNA00007401250321067900101100000000700070027012600
+/?=I65
+/V=C3703.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1332   Concepto       INNSNA00007401250321067900101100000000700070027012600
+/V=C3700.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3437   Tr real        INNSNK00007401250321067900101100000000700070027012600
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3436   Tr virtual     INNSNK00007401250321067900101100000000700070027012600
+/V=4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3438   Tr Tipo        I NSNK00007401250321067900101100000000700070027012600
+/V=8
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificacion Generica                   M9681 00
+/?=I60Y!I61Y!I63Y!I62Y!I64
+ NNNNN 3695   Ordinal_Cab    INNSNA00000701520030020202101100000000700070030013700
+/V=C3683.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3696   Fecha Ingreso  INNSNA00000701520030020202101100000000700070030013700
+/V=C3684.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3697   Ordinal Lin.   INNSNA00000701520030020202101100000000700070030013700
+/V=C3697.5
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3698   Id. Asiento    INNNNA00000701330027024300001100000000700070027012600
+/V=C1324.6
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 3699   Suc. Asiento   INNNNA00000701330027024300001100000000700070027012600
+/V=C1323.6
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 3704   Fecha Proceso  INNNNA00000701330027024300001100000000700070027012600
+/V=C9500
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+TN  NN 1006TItero a la 5                            C0000 00
+/?=I60Y!I61Y!I62Y!I63Y!I64
+CNNNNN   00000000000000000000100
+/?=I65
+/A=I65
+CNNNNN  I00000000000000000000100
+/M=itero
+/R=5
+TN  NN 1009TModificacion Generica                   M9671 00
+ NNNNN 3683   Ordinal_Cab    I NSNA00000701520030020202101100000000700070030013700
+/V=C3683.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3684   Fecha Ingreso  INNSNL00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3685   Id. Asiento    INNSNA00000701520030020202101100000000700070030013700
+/V=C9507
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3686   Suc. Asiento   INNSNA00000701520030020202101100000000700070030013700
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3694   Fecha Proceso  INNSNA00000701520030020202101100000000700070030013700
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3693   Estado         INNSNK00000701520030020202101100000000700070030013700
+/?=I60OI62OI63
+/V=P
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3693   Estado         INNSNK00000701520030020202101100000000700070030013700
+/?=I61OI64
+/V=E
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3927   Texto          INNSNK00000701520030020202101100000000700070030013700
+/?=I61
+/V=Total Factura No coincide con Total Lineas
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3927   Texto          INNSNK00000701520030020202101100000000700070030013700
+/?=I64
+/V=Tipo de Documento Invalido
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3692   Descripc.      INNSNA00000701520030020202101100000000700070030013700
+/V=C3927.9
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*#I61#Total de Factura # Total lineas de Factura
+*#I62#Termina la Lectura de Lineas
+*#I63#Cargo o Impuesto Incorrecto
+*#I64#IdCago o IdImpuesto mal Cargados
+*#I65#Cargo en 0
+*#I66#Impuesto en 0
+*#I60#No hay mas Lineas de Factura

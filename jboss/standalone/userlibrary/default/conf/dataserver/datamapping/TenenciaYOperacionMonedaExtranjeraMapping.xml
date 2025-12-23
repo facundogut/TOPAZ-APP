@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.topaz.server.objectsdomain.SaldoVistaPlazoImpl</class-name>
+        <query-name>query.saldosMonExtranjera</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT JTS_OID, C1730, Moneda, Sucursal FROM SALDOS
+					WHERE MONEDA &lt;&gt; (SELECT MONNAC FROM PARAMETROS)
+					AND (C1604 &lt;&gt; 0)
+					AND TZ_LOCK = 0
+				</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SAL_RUBRO_CONTABLE</attribute-name>
+            <column-name>C1730</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Moneda</attribute-name>
+            <column-name>Moneda</column-name>
+            <column-type>int</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Sucursal</attribute-name>
+            <column-name>sucursal</column-name>
+            <column-type>int</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.topaz.server.objectsdomain.MonedaImpl</class-name>
+        <query-name>query.monedaMonExtranjera</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT C6399 FROM MONEDAS
+			WHERE C6399 &lt;&gt; (SELECT MONNAC FROM PARAMETROS)
+			AND TZ_LOCK = 0
+		</sentence>
+        <attribute>
+            <attribute-name>MON_MONEDA_MONEDAS</attribute-name>
+            <column-name>C6399</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

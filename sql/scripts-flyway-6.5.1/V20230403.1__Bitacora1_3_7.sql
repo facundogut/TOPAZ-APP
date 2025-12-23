@@ -1,0 +1,25 @@
+Execute('IF OBJECT_ID (''dbo.BITACORA_TJC_MAESTRO_SALDO'', ''U'') IS NOT NULL
+   DROP TABLE dbo.BITACORA_TJC_MAESTRO_SALDO;
+
+CREATE TABLE dbo.BITACORA_TJC_MAESTRO_SALDO
+(
+    ID_BITACORA bigint IDENTITY(1,1) NOT NULL PRIMARY KEY,
+    NUMERO_USUARIO varchar(20) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    P_DEUDA varchar(6) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    SALDO_PESOS varchar(16) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    SALDO_DOLARES varchar(16) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    CIERRE_PESOS varchar(16) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    CIERRE_DOLARES varchar(16) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    PAGOS_PESOS varchar(16) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    PAGOS_DOLARES varchar(16) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    Cod_ADMIN varchar(2) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    F_VENCIMIENTO varchar(8) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    Cod_CANCEL varchar(1) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    PAGO_MIN varchar(16) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    DIAS_ATRASO varchar(5) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    A_DEBITAR varchar(15) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    F_CIERRE varchar(8) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    ERROR varchar(MAX) COLLATE Latin1_General_CS_AS_KS_WS NOT NULL,
+    F_PROCESO datetime NOT NULL,
+    FyH_REAL datetime NOT NULL default getDate()
+);')

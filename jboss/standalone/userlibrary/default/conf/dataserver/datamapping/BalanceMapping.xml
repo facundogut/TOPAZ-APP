@@ -1,0 +1,603 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.balance.QueryBalanceChaco</class-name>
+        <query-name>query.Balance</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+												SELECT ID_BCE,
+													   CODIGO_INTERNO,
+													   SUCURSAL,
+													   MONEDA,
+													   SUM(SALDO_ANTERIOR) AS SALDO_ANTERIOR,
+													   SUM(SALDO_ACTUAL) AS SALDO_ACTUAL,
+													   SUM(DEBITOS) AS DEBITOS,
+													   SUM(CREDITOS) AS CREDITOS,
+													   SUM(SALDO_ANTERIOR_MN) AS SALDO_ANTERIOR_MN,
+													   SUM(SALDO_ACTUAL_MN) AS SALDO_ACTUAL_MN,
+													   SUM(DEBITOS_MN) AS DEBITOS_MN,
+													   SUM(CREDITOS_MN) AS CREDITOS_MN,
+													   SUM(PROMEDIO_DIARIO_ANTERIOR) AS PROMEDIO_DIARIO_ANTERIOR,
+													   SUM(PROMEDIO_DIARIO_ACTUAL) AS PROMEDIO_DIARIO_ACTUAL
+												  FROM (SELECT CBE.ID_BCE,
+														   CBE.CODIGO_INTERNO,
+														   SD.SUCURSAL,
+														   SD.MONEDA,
+														   SALDO_AJUSTADO AS SALDO_ANTERIOR,
+														   0 AS SALDO_ACTUAL,
+														   SALDO_AJUSTADO_MN AS SALDO_ANTERIOR_MN,
+														   0 AS SALDO_ACTUAL_MN,
+														   0 As DEBITOS,
+														   0 as CREDITOS,
+														   0 As DEBITOS_MN,
+														   0 as CREDITOS_MN,
+														   SD.PROMEDIO_DIARIO AS PROMEDIO_DIARIO_ANTERIOR,
+														   0 as PROMEDIO_DIARIO_ACTUAL
+													  FROM CO_BALANCE_ESTRUCTURA CBE, GRL_SALDOS_DIARIOS SD
+													 WHERE (CBE.ID_BCE = ? OR - 1 = ?)
+													   AND CBE.RUBRO_CONTABLE = SD.RUBROCONTABLE
+													   AND CBE.RELACION = 'R'
+													   AND CBE.NIVEL = 1
+													   AND SD.FECHA = ?
+													   AND CBE.TZ_LOCK = 0
+													   AND SD.TZ_LOCK = 0
+													UNION ALL
+													SELECT CBE.ID_BCE,
+														   CBE.CODIGO_INTERNO,
+														   M.SUCURSAL_CUENTA,
+														   M.MONEDA,
+														   0 AS SALDO_ANTERIOR,
+														   0 AS SALDO_ACTUAL,
+														   0 AS SALDO_ANTERIOR_MN,
+														   0 AS SALDO_ACTUAL_MN,
+														   (CASE
+														 WHEN (M.DEBITOCREDITO = 'D') THEN
+														  ROUND(M.CAPITALREALIZADO, 2)
+														 ELSE
+														  0
+														   END) as DEBITOS,
+														   (CASE
+														 WHEN (M.DEBITOCREDITO = 'C') THEN
+														  ROUND(M.CAPITALREALIZADO, 2)
+														 ELSE
+														  0
+														   END) as CREDITOS,
+														   (CASE
+														 WHEN (M.DEBITOCREDITO = 'D') THEN
+														  ROUND(M.EQUIVALENTEMN, 2)
+														 ELSE
+														  0
+														   END) as DEBITOS_MN,
+														   (CASE
+														 WHEN (M.DEBITOCREDITO = 'C') THEN
+														  ROUND(M.EQUIVALENTEMN, 2)
+														 ELSE
+														  0
+														   END) as CREDITOS_MN,
+														 0 AS PROMEDIO_DIARIO_ANTERIOR,
+														 0 AS PROMEDIO_DIARIO_ACTUAL
+													  FROM CO_BALANCE_ESTRUCTURA CBE,
+														   MOVIMIENTOS_CONTABLES M,
+														   ASIENTOS              A
+													 WHERE (CBE.ID_BCE = ? OR - 1 = ?)
+													   AND CBE.RUBRO_CONTABLE = M.RUBROCONTABLE
+													   AND CBE.RELACION = 'R'
+													   AND CBE.NIVEL = 1
+													   AND M.FECHAPROCESO = A.FECHAPROCESO
+													   AND M.SUCURSAL = A.SUCURSAL
+													   AND M.ASIENTO = A.ASIENTO
+													   AND A.ESTADO = 77
+														  -- M.C7844 campo con concepto 820
+													   AND ((M.FECHAPROCESO BETWEEN ? AND ? and M.MARCAAJUSTE = ' ') OR
+														   (M.FECHAVALOR BETWEEN ? AND ? and
+														   M.MARCAAJUSTE = 'A'))
+													   AND CBE.TZ_LOCK = 0
+													UNION ALL
+													SELECT CBE.ID_BCE,
+														   CBE.CODIGO_INTERNO,
+														   SD.SUCURSAL,
+														   SD.MONEDA,
+														   0 AS SALDO_ANTERIOR,
+														   SALDO_AJUSTADO AS SALDO_ACTUAL,
+														   0 AS SALDO_ANTERIOR_MN,
+														   SALDO_AJUSTADO_MN AS SALDO_ACTUAL_MN,
+														   0 As DEBITOS,
+														   0 as CREDITOS,
+														   0 As DEBITOS_MN,
+														   0 as CREDITOS_MN,
+														   0 AS PROMEDIO_DIARIO_ANTERIOR,
+														   SD.PROMEDIO_DIARIO AS PROMEDIO_DIARIO_ACTUAL
+													  FROM CO_BALANCE_ESTRUCTURA CBE, GRL_SALDOS_DIARIOS SD
+													 WHERE (CBE.ID_BCE = ? OR - 1 = ?)
+													   AND CBE.RUBRO_CONTABLE = SD.RUBROCONTABLE
+													   AND CBE.RELACION = 'R'
+													   AND CBE.NIVEL = 1
+													   AND SD.FECHA = ?
+													   AND CBE.TZ_LOCK = 0
+													   AND SD.TZ_LOCK = 0) t
+												 GROUP BY ID_BCE, CODIGO_INTERNO, SUCURSAL, MONEDA
+												 ORDER BY ID_BCE, CODIGO_INTERNO, SUCURSAL, MONEDA
+											</sentence>
+        <attribute>
+            <attribute-name>IdBCE</attribute-name>
+            <column-name>ID_BCE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CodigoInterno</attribute-name>
+            <column-name>CODIGO_INTERNO</column-name>
+            <column-type>string</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>Moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SaldoMesAntMO</attribute-name>
+            <column-name>SALDO_ANTERIOR</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SaldoFinMesMO</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>DebitosMO</attribute-name>
+            <column-name>DEBITOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CreditosMO</attribute-name>
+            <column-name>CREDITOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SaldoMesAntMN</attribute-name>
+            <column-name>SALDO_ANTERIOR_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>SaldoFinMesMN</attribute-name>
+            <column-name>SALDO_ACTUAL_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>DebitosMN</attribute-name>
+            <column-name>DEBITOS_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>CreditosMN</attribute-name>
+            <column-name>CREDITOS_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>promedioDiarioAnterior</attribute-name>
+            <column-name>PROMEDIO_DIARIO_ANTERIOR</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>promedioDiarioActual</attribute-name>
+            <column-name>PROMEDIO_DIARIO_ACTUAL</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.balance.reaplicacion.QueryBalanceReaplicacion</class-name>
+        <query-name>query.QueryBalanceReaplicacion</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT SUCURSAL,
+							   MONEDA,
+							   FECHA_VALOR,
+							   DEBITOS,
+							   CREDITOS,
+							   DEBITOS_MN,
+							   CREDITOS_MN,
+							   RUBROCONTABLE,
+							   FECHAPROCESO,
+							   ASIENTO,
+							   TRREAL,
+							   ORDINAL,
+							   TRVIRTUAL,
+							   TRTIPO,
+							   ESTADO,
+							   SUCURSAL_ASIENTO
+						  FROM (SELECT M.SUCURSAL_CUENTA AS SUCURSAL,
+									   M.MONEDA,
+									   M.FECHAVALOR AS FECHA_VALOR,
+									   (CASE
+										 WHEN (M.DEBITOCREDITO = 'D') THEN
+										  CAPITALREALIZADO
+										 ELSE
+										  0
+									   END) as "DEBITOS",
+									   (CASE
+										 WHEN (M.DEBITOCREDITO = 'C') THEN
+										  CAPITALREALIZADO
+										 ELSE
+										  0
+									   END) as "CREDITOS",
+									   (CASE
+										 WHEN (M.DEBITOCREDITO = 'D') THEN
+										  EQUIVALENTEMN
+										 ELSE
+										  0
+									   END) as "DEBITOS_MN",
+									   (CASE
+										 WHEN (M.DEBITOCREDITO = 'C') THEN
+										  EQUIVALENTEMN
+										 ELSE
+										  0
+									   END) as "CREDITOS_MN",
+									   M.RUBROCONTABLE,
+									   M.FECHAPROCESO,
+									   M.ASIENTO,
+									   M.TRREAL,
+									   M.ORDINAL,
+									   M.TRVIRTUAL,
+									   M.TRTIPO,
+									   A.ESTADO,
+									   M.SUCURSAL AS SUCURSAL_ASIENTO
+								  FROM MOVIMIENTOS_CONTABLES   M,
+									   ASIENTOS                A,
+									   MOVIMIENTOS_A_REAPLICAR R
+								 WHERE M.FECHAPROCESO = A.FECHAPROCESO
+								   AND M.SUCURSAL = A.SUCURSAL
+								   AND M.ASIENTO = A.ASIENTO
+								   AND A.ESTADO = 77
+								   AND M.FECHAVALOR &lt; M.FECHAPROCESO
+								   AND M.marcaajuste = 'A'
+								   AND M.FECHAPROCESO = ?
+								   AND M.FECHAPROCESO = R.FECHAPROCESO
+								   AND M.ASIENTO = R.ASIENTO
+								   AND M.SUCURSAL = R.SUCURSAL
+								   AND M.TRREAL = R.TRREAL
+								   AND M.ORDINAL = R.ORDINAL
+								   AND M.TRVIRTUAL = R.TRVIRTUAL
+								   AND M.TRTIPO = R.TRTIPO
+								   AND R.MARCA = 0
+								UNION ALL
+								SELECT M.SUCURSAL_CUENTA AS SUCURSAL,
+									   M.MONEDA,
+									   M.FECHAVALOR AS FECHA_VALOR,
+									   (CASE --- Los multiplico por -1 porque es baja.
+										 WHEN (M.DEBITOCREDITO = 'D') THEN
+										  CAPITALREALIZADO * -1
+										 ELSE
+										  0
+									   END) as "DEBITOS",
+									   (CASE
+										 WHEN (M.DEBITOCREDITO = 'C') THEN
+										  CAPITALREALIZADO * -1
+										 ELSE
+										  0
+									   END) as "CREDITOS",
+									   (CASE
+										 WHEN (M.DEBITOCREDITO = 'D') THEN
+										  EQUIVALENTEMN * -1
+										 ELSE
+										  0
+									   END) as "DEBITOS_MN",
+									   (CASE
+										 WHEN (M.DEBITOCREDITO = 'C') THEN
+										  EQUIVALENTEMN * -1
+										 ELSE
+										  0
+									   END) as "CREDITOS_MN",
+									   M.RUBROCONTABLE,
+									   M.FECHAPROCESO,
+									   M.ASIENTO,
+									   M.TRREAL,
+									   M.ORDINAL,
+									   M.TRVIRTUAL,
+									   M.TRTIPO,
+									   A.ESTADO,
+									   M.SUCURSAL AS SUCURSAL_ASIENTO
+								  FROM MOVIMIENTOS_CONTABLES   M,
+									   ASIENTOS                A,
+									   MOVIMIENTOS_A_REAPLICAR R
+								 WHERE M.FECHAPROCESO = A.FECHAPROCESO
+								   AND M.SUCURSAL = A.SUCURSAL
+								   AND M.ASIENTO = A.ASIENTO
+								   AND A.ESTADO = 42
+								   AND M.FECHAVALOR &lt; M.FECHAPROCESO
+								   AND M.FECHAPROCESO = ?
+								   AND M.FECHAPROCESO = R.FECHAPROCESO
+								   AND M.ASIENTO = R.ASIENTO
+								   AND M.SUCURSAL = R.SUCURSAL
+								   AND M.TRREAL = R.TRREAL
+								   AND M.ORDINAL = R.ORDINAL
+								   AND M.TRVIRTUAL = R.TRVIRTUAL
+								   AND M.TRTIPO = R.TRTIPO
+								   AND R.MARCA = 1) T
+						 ORDER BY FECHA_VALOR, RUBROCONTABLE, SUCURSAL, MONEDA
+				</sentence>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>debitos</attribute-name>
+            <column-name>DEBITOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>creditos</attribute-name>
+            <column-name>CREDITOS</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosMN</attribute-name>
+            <column-name>DEBITOS_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosMN</attribute-name>
+            <column-name>CREDITOS_MN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroContable</attribute-name>
+            <column-name>RUBROCONTABLE</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaContable</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>trReal</attribute-name>
+            <column-name>TRREAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>trVirtual</attribute-name>
+            <column-name>TRVIRTUAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>trTipo</attribute-name>
+            <column-name>TRTIPO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estado</attribute-name>
+            <column-name>ESTADO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalAsiento</attribute-name>
+            <column-name>SUCURSAL_ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.balance.TotalizedQueryBalanceChaco</class-name>
+        <entity-name>accounting.TotalizedQueryBalance</entity-name>
+        <table-name>CO_BALANCE_RESULTADOS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>FechaProceso</attribute-name>
+            <column-name>FECHA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>Sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>Moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>CodigoInterno</attribute-name>
+            <column-name>CODIGO_INTERNO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>idBCE</attribute-name>
+            <column-name>ID_BCE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>SaldoMesAntMO</attribute-name>
+            <column-name>SALDOSMESANTMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SaldoFinMesMO</attribute-name>
+            <column-name>SALDOFINMESMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>DebitosMO</attribute-name>
+            <column-name>DEBITOSMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>CreditosMO</attribute-name>
+            <column-name>CREDITOSMO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>DebitosMN</attribute-name>
+            <column-name>DEBITOSMN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>CreditosMN</attribute-name>
+            <column-name>CREDITOSMN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SaldoMesAntMN</attribute-name>
+            <column-name>SALDOMESANTMN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>SaldoFinMesMN</attribute-name>
+            <column-name>SALDOFINMESMN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoBalance</attribute-name>
+            <column-name>TIPO_BALANCE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>promedioDiarioActual</attribute-name>
+            <column-name>PROMEDIO_DIARIO_ACTUAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>promedioDiarioAnterior</attribute-name>
+            <column-name>PROMEDIO_DIARIO_ANTERIOR</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.automaticprocess.balance.EstructuraBalance</class-name>
+        <entity-name>core.vo_EstructuraBalance</entity-name>
+        <table-name>CO_BALANCE_ESTRUCTURA</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>id_bce</attribute-name>
+            <column-name>ID_BCE</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoInterno</attribute-name>
+            <column-name>CODIGO_INTERNO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>codigoBce</attribute-name>
+            <column-name>CODIGO_BCE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroContable</attribute-name>
+            <column-name>RUBRO_CONTABLE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>relacion</attribute-name>
+            <column-name>RELACION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>impresion</attribute-name>
+            <column-name>IMPRESION</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>nivel</attribute-name>
+            <column-name>NIVEL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>subNivel</attribute-name>
+            <column-name>SUBNIVEL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoBalance</attribute-name>
+            <column-name>TIPO_BALANCE</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.automaticprocess.balanceestructura.NivelBalance</class-name>
+        <entity-name>core.vo_NivelBalance</entity-name>
+        <table-name>CO_NIVELES_BALANCE</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>tz_lock</attribute-name>
+            <column-name>TZ_LOCK</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>nivel</attribute-name>
+            <column-name>NIVEL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>caracteres</attribute-name>
+            <column-name>CARACTERES</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>idBce</attribute-name>
+            <column-name>ID_BCE</column-name>
+            <key>primary</key>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.topaz.server.objectsdomain.MovimientosAReaplicar</class-name>
+        <entity-name>vo.core_MovimientosAReaplicar</entity-name>
+        <table-name>MOVIMIENTOS_A_REAPLICAR</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>trReal</attribute-name>
+            <column-name>TRREAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>trTipo</attribute-name>
+            <column-name>TRTIPO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>trVirtual</attribute-name>
+            <column-name>TRVIRTUAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>marca</attribute-name>
+            <column-name>MARCA</column-name>
+        </attribute>
+    </class>
+</map>

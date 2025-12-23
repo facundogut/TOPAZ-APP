@@ -1,0 +1,9 @@
+﻿EXECUTE('
+------------------------
+--FORMULARIO PRINCIPAL--
+------------------------
+UPDATE dbo.OPERACIONES
+SET FORMULARIOPRINCIPAL = 500
+WHERE TITULO = 3510 AND IDENTIFICACION = 3601
+----
+')

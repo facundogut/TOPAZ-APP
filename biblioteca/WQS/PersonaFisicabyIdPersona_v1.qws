@@ -1,0 +1,536 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/personaFisicabyIdPersona/{IdPersona}</uri>
+    <serviceDescription>Consulta persona fisica por IdPersona</serviceDescription>
+    <querys>
+        <query id="1" name="Query1" type="MULTIPLE">
+            <sql>
+SELECT pf.NUMEROPERSONAFISICA,
+	 'H' as TIPO_PERSONA ,
+	--(CASE WHEN dpf.TIPOPERSONA IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=1861 AND IDIOMA='E' AND OPCIONINTERNA=dpf.TIPOPERSONA)ELSE '' END) AS TIPO_PERSONA,
+	(CASE WHEN CAST (pf.FECHANACIMIENTO AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,pf.FECHANACIMIENTO,126)  END ) AS FECHANACIMIENTO,  	
+	(CASE WHEN pf.ESTADOCIVIL IS NOT NULL THEN pf.ESTADOCIVIL ELSE '' END) AS ESTADOCIVIL,
+	(CASE WHEN pf.ESTADOCIVIL IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO = 1403 AND IDIOMA= 'E' AND OPCIONINTERNA= pf.ESTADOCIVIL) ELSE '' END) AS DESCR_EST_CIVIL,
+	CASE WHEN pf.NUMEROPERSONAFISICA = pfc.NUMEROPERSONAFISICA Then isnull(pfc.NUMEROPERSONAFISICACONY,0) ELSE isnull(pfc.NUMEROPERSONAFISICA,0) END AS idConyuge,
+	(CASE WHEN pf.SEXO IS NOT NULL THEN pf.SEXO ELSE '' END) AS SEXO,
+	(CASE pf.SEXO WHEN 'M' THEN 'MASCULINO' WHEN 'F' THEN 'FEMENINO' ELSE '' END) AS DESCR_SEXO,
+	(CASE WHEN pf.PAISRESIDENCIA IS NOT NULL THEN pf.PAISRESIDENCIA ELSE '0' END) AS PAISRESIDENCIA,
+	(CASE WHEN pf.PAISRESIDENCIA IS NOT NULL THEN(SELECT NOMBREPAIS FROM CLI_PAISES WHERE CODIGOPAIS=pf.PAISRESIDENCIA) ELSE 'SIN IDENTIFICAR' END ) AS DESCR_PAIS_RECIDENCIA,
+	(CASE WHEN pf.PRIMERNOMBRE IS NOT NULL THEN pf.PRIMERNOMBRE ELSE '' END) AS nombres,
+	ISNULL(pf.APELLIDOPATERNO, '') AS apellidos,
+	ISNULL(PF.APELLIDOPATERNO, '') + ' ' + ISNULL(PF.PRIMERNOMBRE, '') AS nombre_completo,
+	(CASE WHEN pf.PAISNACIMIENTO IS NOT NULL THEN pf.PAISNACIMIENTO ELSE '0' END) AS PAISNACIMIENTO,
+	(CASE WHEN pf.PAISNACIMIENTO IS NOT NULL THEN (SELECT NOMBREPAIS FROM CLI_PAISES WHERE CODIGOPAIS=pf.PAISNACIMIENTO) ELSE 'SIN IDENTIFICAR' END ) AS NOMBRE_PAIS_NACIMIET,
+	(CASE WHEN pf.NACIONALIDAD IS NOT NULL THEN pf.NACIONALIDAD ELSE '' END) AS NACIONALIDAD,
+	
+	-- Lugar Nacimiento
+	(COALESCE ( 
+				(SELECT LO.DESCRIPCION_DIM3 FROM CLI_LOCALIDADES LO WHERE LO.CODIGOPAIS  = pf.PAISNACIMIENTO AND LO.DIM1 = pf.PROVINCIA_NAC AND LO.DIM2 = pf.DEPARTAMENTO_NAC AND LO.DIM3 = pf.LOCALIDAD_NAC)
+				, pf.LOCALIDAD_NAC_EXT
+			)) AS LUGARNACIMIENTO,
+	
+	
+	(CASE pf.EMPLEADO_BC_BANCO WHEN '1' THEN 'false' WHEN '2' THEN 'true' ELSE '' END) AS EMPLEADO_BANCO,
+ 	(CASE WHEN CAST (pf.FECHAALTA AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,pf.FECHAALTA,126)  END ) AS FECHAALTA,  	
+ 	(CASE WHEN CAST (pf.FECHAULTACTUALIZACION AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,pf.FECHAULTACTUALIZACION,126)  END ) AS FECHAULTACTUALIZACION,  	
+ 	(CASE WHEN pf.COD_PROFESION IS NOT NULL THEN pf.COD_PROFESION ELSE '' END) AS COD_PROFESION,
+ 	(CASE WHEN pf.COD_PROFESION IS NOT NULL THEN (SELECT DESCRIPCION FROM CLI_PROFESIONES WHERE PROFESION=pf.COD_PROFESION) ELSE '' END) AS DES_PROFESION,
+ 	(CASE WHEN pf.CODIGODERESIDENCIA IS NOT NULL THEN pf.CODIGODERESIDENCIA ELSE '' END) AS CODIGODERESIDENCIA,
+ 	(CASE WHEN pf.CODIGODERESIDENCIA IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO = 1441 AND IDIOMA= 'E' AND OPCIONINTERNA=pf.CODIGODERESIDENCIA) ELSE '' END) AS DESCR_RESIDENCIA,
+    (CASE WHEN pf.FORMA_LLEGADA_BANCO IS NOT NULL THEN pf.FORMA_LLEGADA_BANCO ELSE 0 END ) AS FORMA_LLEGADA_BANCO,
+    (CASE WHEN pf.FORMA_LLEGADA_BANCO IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=1904 AND IDIOMA='E' AND OPCIONINTERNA= pf.FORMA_LLEGADA_BANCO) ELSE ' ' END) AS DESCR_FORM_ACCESO_BANCO,
+    (CASE WHEN pf.NIVEL_APERTURA IS NOT NULL THEN CAST(pf.NIVEL_APERTURA AS VARCHAR(3)) ELSE '' END) AS NIVEL_APERTURA,
+    (CASE WHEN pf.NIVEL_APERTURA IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=2203 AND IDIOMA='E' AND OPCIONINTERNA=pf.NIVEL_APERTURA) ELSE '' END) AS DESCR_APERTURA, 
+    (CASE pf.CONC_ACREEDORES WHEN 'S' THEN 'true' WHEN 'N' THEN 'false' ELSE '' END) AS CONCURSO_ACREEDORES,
+    (CASE WHEN pf.SECTOR IS NOT NULL THEN CAST(pf.SECTOR AS INT) ELSE 0 END) AS SECTOR,
+    (CASE WHEN pf.SECTOR IS NOT NULL THEN (SELECT DESCRIPCION FROM CLI_SECTORES WHERE SECTOR=pf.SECTOR) ELSE '' END)AS DESCRIPCION_SECTOR,
+    (CASE WHEN pf.MOTIVO_VINC  IS NOT NULL THEN CAST(pf.MOTIVO_VINC AS VARCHAR(2)) ELSE '' END) AS VINCULACION,
+	(CASE WHEN pf.MOTIVO_VINC IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=33273 AND IDIOMA='E' AND OPCIONINTERNA= pf.MOTIVO_VINC) ELSE '' END) AS DESCR_VINCULACION,
+	(CASE WHEN pf.SUC_ALTA IS NOT NULL THEN pf.SUC_ALTA ELSE 0 END) AS SUC_ALTA,
+    (CASE WHEN pf.SUC_ALTA IS NOT NULL THEN (SELECT  NOMBRESUCURSAL  FROM SUCURSALES WHERE  pf.SUC_ALTA=SUCURSAL) ELSE '' END)AS NOMBRESUCURSAL,
+	(CASE WHEN pf.NIVEL_RIESGO IS NOT NULL THEN pf.NIVEL_RIESGO  ELSE 0 END) AS NIVEL_RIESGO,
+ 	(CASE WHEN pf.NIVEL_RIESGO IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=33357 AND IDIOMA='E' AND OPCIONINTERNA=pf.NIVEL_RIESGO)ELSE '' END) AS DESCR_NIVEL_RIESGO,
+	(CASE WHEN pf.NIF IS NOT NULL THEN pf.NIF ELSE ''END) AS NIF,
+	(CASE WHEN pf.IGA IS NOT NULL THEN pf.IGA ELSE ''END) AS IGA,
+	(CASE WHEN pf.IGA IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=2787 AND IDIOMA='E' AND OPCIONINTERNA=pf.IGA) ELSE '' END)  DESCR_IGA,
+	(CASE WHEN pf.MONOTRIBUTO IS NOT NULL THEN pf.MONOTRIBUTO ELSE '' END) AS MONOTRIBUTO,
+	(CASE WHEN pf.MONOTRIBUTO IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=1909 AND IDIOMA='E' AND OPCIONINTERNA=pf.MONOTRIBUTO) ELSE '' END) AS DESCR_MONOTRIBUTO,
+	(CASE WHEN pf.IVA IS NOT NULL THEN pf.IVA ELSE '' END) AS IVA,
+    (CASE WHEN pf.IVA IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=2789 AND IDIOMA='E' AND OPCIONINTERNA= pf.IVA) ELSE '' END) AS DESCR_IVA,
+      
+    --"iibbCaba":
+	(CASE WHEN pf.IIBB_CABA_PERCEPCION_COND IS NOT NULL THEN pf.IIBB_CABA_PERCEPCION_COND ELSE '' END) AS IIBB_CABA_PERC,
+ 	(CASE WHEN pf.IIBB_CABA_PERCEPCION_ALI IS NOT NULL THEN pf.IIBB_CABA_PERCEPCION_ALI  ELSE 0 END) AS IIBB_CABA_ALI,
+    
+    
+
+    --"iibbCorrientes": 
+    (CASE WHEN pf.IIBB_CORRIENTES_RECAUD IS NOT NULL THEN pf.IIBB_CORRIENTES_RECAUD ELSE '' END) AS IIBB_CORRIENTES_RECAUD,
+	(CASE WHEN pf.IIBB_CORRIENTES_ALI IS NOT NULL  THEN pf.IIBB_CORRIENTES_ALI ELSE 0 END) AS IIBB_CORRIENTES_ALI,
+
+	--Lista Negra
+    (CASE WHEN pf.INCLUIDO_LISTA_NEGRA IS NOT NULL THEN pf.INCLUIDO_LISTA_NEGRA ELSE '' END) AS INCLUIDO_LISTA_NEGRA,
+    (CASE WHEN pf.INCLUIDO_LISTA_NEGRA IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=1906 AND IDIOMA='E' AND OPCIONINTERNA=pf.INCLUIDO_LISTA_NEGRA) ELSE '' END)AS DESCR_LISTA_NEGRA,
+    
+	--Lista Blanca
+	(CASE (SELECT COUNT(*) FROM CLI_LISTA_BLANCA WHERE TIPO_DOCUMENTO=dpf.TIPODOCUMENTO AND DOCUMENTO= dpf.NUMERODOCUMENTO) WHEN 0 THEN 'false' ELSE 'true' END) AS listaBlanca, 
+      
+    (CASE pf.INCLUIDO_PEP WHEN 'N' THEN 'false' WHEN 'S' THEN 'true' ELSE '' END) AS INCLUIDO_PEP,
+	(CASE pf.IN_INAES WHEN 'N' THEN 'false' WHEN 'S' THEN 'true' ELSE '' END) AS IN_INAES,
+	(CASE pf.IN_UIF WHEN 'N' THEN 'false' WHEN 'S' THEN 'true' ELSE '' END) AS IN_UIF,
+	(CASE pf.SUJETO_UIF WHEN 'N' THEN 'false' WHEN 'S' THEN 'true' ELSE '' END) AS SUJETO_UIF,
+	(CASE pf.DEC_JURADA WHEN 'N' THEN 'false' WHEN 'S' THEN 'true' ELSE '' END) AS DEC_JURADA,
+	(CASE pf.INSC_UIF WHEN 'N' THEN 'false' WHEN 'S' THEN 'true' ELSE '' END) AS INSC_UIF,
+	
+    --pf.FALLECIDO,
+    (CASE  pf.FALLECIDO WHEN 'N' THEN 'false' WHEN 'S' THEN 'true' ELSE '' END) AS  FALLECIDO,
+    (CASE WHEN CAST (pf.FECHAFALLECIMIENTO AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,pf.FECHAFALLECIMIENTO,126)  END ) AS FECHAFALLECIMIENTO,  	
+    (CASE  pf.ESTADO WHEN '1' THEN 'false' WHEN '0' THEN 'true' ELSE '' END) AS  habilitado, 
+    (CASE WHEN pf.ESTADO IS NOT NULL THEN pf.ESTADO ELSE 0 END) AS ID_ESTADO,  
+	(CASE WHEN pf.ESTADO IS NOT NULL THEN (SELECT DESCRIPCION FROM OPCIONES WHERE NUMERODECAMPO=33366 AND IDIOMA='E' AND OPCIONINTERNA=pf.ESTADO) ELSE '' END)AS DESCR_ESTADO,
+    
+    ---datos documentoIdentificativo
+	--tipodocumento
+	(CASE WHEN dpf.TIPODOCUMENTO IS NOT NULL THEN dpf.TIPODOCUMENTO ELSE '' END) AS TIPODOCUMENTO,
+	(CASE WHEN dpf.TIPODOCUMENTO IS NOT NULL THEN dpf.TIPODOCUMENTO ELSE '' END) AS DESCR_DOCUMENTO,
+    (CASE WHEN dpf.NUMERODOCUMENTO IS NOT NULL THEN dpf.NUMERODOCUMENTO ELSE '' END) AS NUMERODOCUMENTO,
+	(CASE WHEN dpf.COD_PAIS_ORIGEN IS NOT NULL THEN dpf.COD_PAIS_ORIGEN ELSE 0 END) AS COD_PAIS_ORIGEN,
+	(CASE WHEN dpf.COD_PAIS_ORIGEN IS NOT NULL THEN (SELECT NOMBREPAIS FROM CLI_PAISES WHERE CODIGOPAIS=dpf.COD_PAIS_ORIGEN) ELSE '' END) AS DESCR_PAIS_DOC,
+   
+    -- datos documentoFisico 
+    (CASE WHEN dpf.TIPO_DOC_FISICO IS NOT NULL THEN dpf.TIPO_DOC_FISICO ELSE '' END) AS TIPO_DOC_FISICO,
+	(CASE WHEN dpf.TIPO_DOC_FISICO IS NOT NULL THEN dpf.TIPO_DOC_FISICO ELSE '' END) AS DESCR_DOCUMENTO_FISCO,
+    (CASE WHEN dpf.NUM_DOC_FISICO IS NOT NULL THEN dpf.NUM_DOC_FISICO ELSE '' END) AS NUM_DOC_FISICO,
+	(CASE WHEN dpf.COD_PAIS_ORIGEN IS NOT NULL THEN dpf.COD_PAIS_ORIGEN  ELSE 0 END) AS cod_pais_origen_docF,
+    (CASE WHEN dpf.COD_PAIS_ORIGEN IS NOT NULL THEN (SELECT NOMBREPAIS FROM CLI_PAISES WHERE CODIGOPAIS=dpf.COD_PAIS_ORIGEN) ELSE '' END) AS DESCR_PAIS_DOC_FISCO,
+	(CASE WHEN dpf.NRO_TRAMITE IS NOT NULL THEN dpf.NRO_TRAMITE ELSE '0' END) AS NRO_TRAMITE,
+	(CASE WHEN dpf.EJEMPLAR IS NOT NULL THEN dpf.EJEMPLAR ELSE '' END) AS EJEMPLAR,
+	(CASE WHEN CAST (dpf.FECHAVENCIMIENTO AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,dpf.FECHAVENCIMIENTO,126)  END ) AS FECHAVENCIMIENTO,  	
+
+ ---actividad economica
+ 	(CASE WHEN ae.CODIGO_ACTIVIDAD IS NOT NULL THEN CAST(ae.CODIGO_ACTIVIDAD AS INT) ELSE 0 END) AS CODIGO_ACTIVIDAD,
+	(CASE WHEN ae.CODIGO_ACTIVIDAD IS NOT NULL THEN (SELECT DESCRIPCION FROM CLI_Cod_Act_AFIP WHERE CODIGO_ACT_AFIP=ae.CODIGO_ACTIVIDAD) ELSE '' END) AS DESCR_ACTIVIDAD,
+ 	(CASE WHEN ae.ORDINAL_ACTIVIDAD IS NOT NULL THEN ae.ORDINAL_ACTIVIDAD  ELSE '0' END )AS ORDINAL_ACTIVIDAD,
+	--idBCRA
+	(CASE WHEN 		(SELECT bcra.CODIGO_BCRA 
+		 FROM CLI_Cod_Act_BCRA bcra 
+			JOIN cli_cod_act_afip afip ON bcra.CODIGO_BCRA=afip.CODIGO_BCRA
+	   	 WHERE afip.CODIGO_ACT_AFIP = ae.CODIGO_ACTIVIDAD  
+		) 
+	 IS NOT NULL THEN 
+
+			(SELECT bcra.CODIGO_BCRA FROM CLI_Cod_Act_BCRA bcra 
+				JOIN cli_cod_act_afip afip ON bcra.CODIGO_BCRA=afip.CODIGO_BCRA
+	   		 WHERE afip.CODIGO_ACT_AFIP = ae.CODIGO_ACTIVIDAD
+	   		)
+			
+	 ELSE 0 END 
+	) AS idBCRA,
+	
+	(CASE ae.VERIFICADO_AFIP WHEN  'N' THEN 'false' WHEN 'S' THEN 'true' ELSE '' END) AS verificadoAFIP,
+	(CASE WHEN CAST (ae.FECHA_VERIFICADO AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,ae.FECHA_VERIFICADO,126)  END ) AS FECHA_VERIFICADO,  	
+ 
+	(CASE WHEN ae.INICIO_ACTIVIDAD IS NOT NULL THEN ae.INICIO_ACTIVIDAD  ELSE 0 END) AS INICIO_ACTIVIDAD,
+	
+	(CASE WHEN ae.CONSEJO_PROFESIONAL IS NOT NULL THEN ae.CONSEJO_PROFESIONAL ELSE '' END) AS CONSEJO_PROFESIONAL,
+	(CASE WHEN ae.NRO_MAT_PROFESIONAL IS NOT NULL THEN ae.NRO_MAT_PROFESIONAL ELSE 0 END) AS NRO_MAT_PROFESIONAL,
+	(CASE WHEN CAST (ae.FECHA_INSCRIPCION_CNA AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,ae.FECHA_INSCRIPCION_CNA,126)  END ) AS FECHA_INSCRIPCION_CNA,  	
+	(CASE WHEN CAST (ae.FECHA_VENCIMIENTO_CNA AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,ae.FECHA_VENCIMIENTO_CNA,126)  END ) AS FECHA_VENCIMIENTO_CNA,  	
+	(CASE WHEN ae.IERIC IS NOT NULL  THEN ae.IERIC ELSE 0 END) AS IERIC,
+	(CASE WHEN CAST (ae.FECHA_VENC_IERIC AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,ae.FECHA_VENC_IERIC,126)  END ) AS FECHA_VENC_IERIC,  	
+	(CASE WHEN CAST (ae.FECHA_INICIO_IERIC AS VARCHAR(100)) IS NULL  THEN NULL ELSE CONVERT(varchar,ae.FECHA_INICIO_IERIC,126)  END ) AS FECHA_INICIO_IERIC, 
+	(CASE WHEN ae.CARACTER_IERIC IS NOT NULL THEN ae.CARACTER_IERIC ELSE '' END) AS CARACTER_IERIC,
+    (CASE WHEN teb.tam_actual IS NOT NULL THEN teb.tam_actual ELSE '' END) AS tamanioEmp,
+    (CASE WHEN ae.ORDEN_AFIP = 1 OR ae.ORDINAL_ACTIVIDAD = 1 THEN 'Primaria' ELSE 'Secundaria' END) AS TipoActividad
+
+    FROM CLI_PERSONASFISICAS pf
+JOIN CLI_DocumentosPFPJ dpf ON pf.NUMEROPERSONAFISICA=dpf.NUMEROPERSONAFJ
+LEFT JOIN CLI_ACTIVIDAD_ECONOMICA ae ON ae.CODIGO_PERSONA_CLIENTE=pf.NUMEROPERSONAFISICA
+LEFT JOIN CLI_PFCONYUGE pfc ON (pfc.NUMEROPERSONAFISICA = pf.NUMEROPERSONAFISICA OR pfc.NUMEROPERSONAFISICACONY = pf.NUMEROPERSONAFISICA)
+LEFT JOIN CLI_ClientePersona ccp ON ccp.NUMEROPERSONA = pf.NUMEROPERSONAFISICA AND ccp.TITULARIDAD = 'T' AND LEFT(ccp.TZ_LOCK,1) IN (0,2,4)
+LEFT JOIN CRE_TAM_EMP_BITACORA teb ON teb.CLIENTE = ccp.CODIGOCLIENTE AND LEFT(teb.TZ_LOCK,1) IN (0,2,4)
+ WHERE pf.NUMEROPERSONAFISICA = ?  AND  
+		((pf.TZ_LOCK &lt; 300000000000000 OR pf.TZ_LOCK &gt;= 400000000000000) AND (pf.TZ_LOCK = 0 OR pf.TZ_LOCK &gt;= 200000000000000))AND 
+		((dpf.TZ_LOCK &lt; 300000000000000 OR dpf.TZ_LOCK &gt;= 400000000000000) AND (dpf.TZ_LOCK = 0 OR dpf.TZ_LOCK &gt;= 200000000000000)) AND 
+	   	((ae.TZ_LOCK &lt; 300000000000000 OR ae.TZ_LOCK &gt;= 400000000000000 OR ae.TZ_LOCK IS NULL) AND (ae.TZ_LOCK = 0 OR ae.TZ_LOCK &gt;= 200000000000000 OR ae.TZ_LOCK IS NULL))
+</sql>
+            <input>
+                <inParameter description="Id de persona fsica" type="INTEGER">IdPersona</inParameter>
+            </input>
+            <output>
+                <level groupby="NUMEROPERSONAFISICA" name="Resultados1">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NUMEROPERSONAFISICA</queryname>
+                        <servicename>idPersona</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHANACIMIENTO</queryname>
+                        <servicename>fechaNacimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ESTADOCIVIL</queryname>
+                        <servicename>estadoCivil.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_EST_CIVIL</queryname>
+                        <servicename>estadoCivil.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>SEXO</queryname>
+                        <servicename>sexo.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_SEXO</queryname>
+                        <servicename>sexo.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>PAISRESIDENCIA</queryname>
+                        <servicename>paisResidencia.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_PAIS_RECIDENCIA</queryname>
+                        <servicename>paisResidencia.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombres</queryname>
+                        <servicename>nombre.nombres</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>apellidos</queryname>
+                        <servicename>nombre.apellidos</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>nombre_completo</queryname>
+                        <servicename>nombre.nombreCompleto</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>PAISNACIMIENTO</queryname>
+                        <servicename>paisNacimiento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NOMBRE_PAIS_NACIMIET</queryname>
+                        <servicename>paisNacimiento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NACIONALIDAD</queryname>
+                        <servicename>nacionalidad</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>LUGARNACIMIENTO</queryname>
+                        <servicename>lugarNacimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>EMPLEADO_BANCO</queryname>
+                        <servicename>empleadoBanco</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHAALTA</queryname>
+                        <servicename>fechaAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHAULTACTUALIZACION</queryname>
+                        <servicename>fechaUltimaActualizacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>COD_PROFESION</queryname>
+                        <servicename>profesion.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DES_PROFESION</queryname>
+                        <servicename>profesion.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CODIGODERESIDENCIA</queryname>
+                        <servicename>residencia.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_RESIDENCIA</queryname>
+                        <servicename>residencia.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>FORMA_LLEGADA_BANCO</queryname>
+                        <servicename>formaAccesoBanco.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_FORM_ACCESO_BANCO</queryname>
+                        <servicename>formaAccesoBanco.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NIVEL_APERTURA</queryname>
+                        <servicename>nivelApertura.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_APERTURA</queryname>
+                        <servicename>nivelApertura.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>CONCURSO_ACREEDORES</queryname>
+                        <servicename>concursoAcreedores</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>SECTOR</queryname>
+                        <servicename>sector.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCRIPCION_SECTOR</queryname>
+                        <servicename>sector.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>VINCULACION</queryname>
+                        <servicename>motivoVinculacion.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_VINCULACION</queryname>
+                        <servicename>motivoVinculacion.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>SUC_ALTA</queryname>
+                        <servicename>sucursalAlta.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NOMBRESUCURSAL</queryname>
+                        <servicename>sucursalAlta.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NIVEL_RIESGO</queryname>
+                        <servicename>nivelRiesgo.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_NIVEL_RIESGO</queryname>
+                        <servicename>nivelRiesgo.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NIF</queryname>
+                        <servicename>nif</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IGA</queryname>
+                        <servicename>condicionImpositiva.iga.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_IGA</queryname>
+                        <servicename>condicionImpositiva.iga.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>MONOTRIBUTO</queryname>
+                        <servicename>condicionImpositiva.monotributo.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_MONOTRIBUTO</queryname>
+                        <servicename>condicionImpositiva.monotributo.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IVA</queryname>
+                        <servicename>condicionImpositiva.iva.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_IVA</queryname>
+                        <servicename>condicionImpositiva.iva.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IIBB_CABA_PERC</queryname>
+                        <servicename>condicionImpositiva.iibbCaba.percepcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>IIBB_CABA_ALI</queryname>
+                        <servicename>condicionImpositiva.iibbCaba.alicuota</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>IIBB_CORRIENTES_RECAUD</queryname>
+                        <servicename>condicionImpositiva.iibbCorrientes.recaudacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>IIBB_CORRIENTES_ALI</queryname>
+                        <servicename>condicionImpositiva.iibbCorrientes.alicuota</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>INCLUIDO_LISTA_NEGRA</queryname>
+                        <servicename>controles.listaNegra.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_LISTA_NEGRA</queryname>
+                        <servicename>controles.listaNegra.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>listaBlanca</queryname>
+                        <servicename>controles.listaBlanca</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>INCLUIDO_PEP</queryname>
+                        <servicename>controles.pep</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>IN_INAES</queryname>
+                        <servicename>controles.inhablitadoINAES</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>IN_UIF</queryname>
+                        <servicename>controles.inhabilitadoUIF</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>SUJETO_UIF</queryname>
+                        <servicename>controles.sujetoObligadoUIF.sujetoObligado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>DEC_JURADA</queryname>
+                        <servicename>controles.sujetoObligadoUIF.presentaDDJJ</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>INSC_UIF</queryname>
+                        <servicename>controles.sujetoObligadoUIF.presentaInscipcionUIF</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>FALLECIDO</queryname>
+                        <servicename>estado.fallecido</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHAFALLECIMIENTO</queryname>
+                        <servicename>estado.fechaFallecimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>habilitado</queryname>
+                        <servicename>estado.habilitado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ID_ESTADO</queryname>
+                        <servicename>estado.motivo.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_ESTADO</queryname>
+                        <servicename>estado.motivo.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIPODOCUMENTO</queryname>
+                        <servicename>documentoIdentificativo.tipoDocumento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_DOCUMENTO</queryname>
+                        <servicename>documentoIdentificativo.tipoDocumento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NUMERODOCUMENTO</queryname>
+                        <servicename>documentoIdentificativo.numeroDocumento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>COD_PAIS_ORIGEN</queryname>
+                        <servicename>documentoIdentificativo.paisDocumento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_PAIS_DOC</queryname>
+                        <servicename>documentoIdentificativo.paisDocumento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIPO_DOC_FISICO</queryname>
+                        <servicename>documentoFisico.tipoDocumento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_DOCUMENTO_FISCO</queryname>
+                        <servicename>documentoFisico.tipoDocumento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NUM_DOC_FISICO</queryname>
+                        <servicename>documentoFisico.numeroDocumento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cod_pais_origen_docF</queryname>
+                        <servicename>documentoFisico.paisDocumento.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_PAIS_DOC_FISCO</queryname>
+                        <servicename>documentoFisico.paisDocumento.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NRO_TRAMITE</queryname>
+                        <servicename>documentoFisico.numeroTramite</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>EJEMPLAR</queryname>
+                        <servicename>documentoFisico.ejemplar</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHAVENCIMIENTO</queryname>
+                        <servicename>documentoFisico.fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TIPO_PERSONA</queryname>
+                        <servicename>tipoPersona</servicename>
+                    </outParameter>
+                    <outParameter description="Id PF del conyuge en caso de la PF tenga" type="LONG">
+                        <queryname>idConyuge</queryname>
+                        <servicename>estadoCivil.idConyuge</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tamanioEmp</queryname>
+                        <servicename>tamañoEmpresa</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="actividadesEconomicas">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CODIGO_ACTIVIDAD</queryname>
+                        <servicename>id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESCR_ACTIVIDAD</queryname>
+                        <servicename>descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>idBCRA</queryname>
+                        <servicename>idBCRA</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BOOLEAN">
+                        <queryname>verificadoAFIP</queryname>
+                        <servicename>verificadoAFIP</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_VERIFICADO</queryname>
+                        <servicename>fechaVerificacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>INICIO_ACTIVIDAD</queryname>
+                        <servicename>periodoInicio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CONSEJO_PROFESIONAL</queryname>
+                        <servicename>consejoProfesional.consejo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NRO_MAT_PROFESIONAL</queryname>
+                        <servicename>consejoProfesional.numeroMatricula</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_INSCRIPCION_CNA</queryname>
+                        <servicename>cna.fechaInscripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_VENCIMIENTO_CNA</queryname>
+                        <servicename>cna.fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>IERIC</queryname>
+                        <servicename>ieric.numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_VENC_IERIC</queryname>
+                        <servicename>ieric.fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>FECHA_INICIO_IERIC</queryname>
+                        <servicename>ieric.fechaInicio</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CARACTER_IERIC</queryname>
+                        <servicename>ieric.caracter</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ORDINAL_ACTIVIDAD</queryname>
+                        <servicename>orden</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TipoActividad</queryname>
+                        <servicename>tipoActividad</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

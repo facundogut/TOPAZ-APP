@@ -1,0 +1,74 @@
+﻿EXECUTE('
+ALTER PROCEDURE [dbo].[SP_ACTUALIZA_BCRA]
+	@p_id_proceso FLOAT(53),     /* Identificador de proceso */
+	@p_dt_proceso DATETIME,   /* Fecha de proceso */
+	@p_ret_proceso FLOAT OUT, /* Estado de ejecucion SQL(0:Correcto, 2: Error) */
+	@p_msg_proceso VARCHAR(MAX) OUT
+AS
+BEGIN
+	DECLARE 
+	------- Campos para el LOG --------
+	@c_log_tipo_error varchar(30),
+	@c_log_tipo_informacion VARCHAR(30),
+	-----------------------------------	
+	@contador NUMERIC(10)
+	SET @contador = 0;
+	------- Campos para el LOG --------
+	SET @c_log_tipo_error = ''E'';
+	SET @c_log_tipo_informacion = ''I'';
+	-----------------------------------	
+
+	BEGIN TRY
+        
+		SET @contador =	(SELECT count(1)
+		FROM ITF_BCRA_CENDEU b WITH (NOLOCK)
+		INNER JOIN (SELECT DISTINCT doc.TIPODOCUMENTO, doc.NUMERODOCUMENTO, c.CODIGOCLIENTE
+		FROM CLI_CLIENTES c WITH (NOLOCK)
+		INNER JOIN CLI_CLIENTEPERSONA cp WITH (NOLOCK) ON c.CODIGOCLIENTE = cp.CODIGOCLIENTE AND cp.TITULARIDAD = ''T'' AND cp.TZ_LOCK = 0
+		INNER JOIN CLI_DocumentosPFPJ doc WITH (NOLOCK) ON cp.NUMEROPERSONA = doc.NUMEROPERSONAFJ AND doc.TZ_LOCK = 0
+		WHERE c.FECHAAPERTURA = (SELECT FECHAPROCESO FROM PARAMETROS WITH (NOLOCK)) AND c.TZ_LOCK = 0) a ON b.NRO_IDENTIFICACION = a.NUMERODOCUMENTO AND a.CODIGOCLIENTE NOT IN (SELECT CODIGOCLIENTE FROM CRE_BCRA_CENDEU WITH (NOLOCK) WHERE COD_ENTIDAD = b.COD_ENTIDAD)
+		WHERE b.TPO_IDENTIFICACION = 11)				
+		
+		IF @contador > 0
+		BEGIN
+			INSERT INTO CRE_BCRA_CENDEU (FECHA_PROCESO, COD_ENTIDAD, FECHA, CODIGOCLIENTE, TPO_IDENTIFICACION, NRO_IDENTIFICACION, ACTIVIDAD, SITUACION_BCRA, PRESTAMOS, PARTICIPACIONES, GARANTIAS, OTROS_CONCEPTOS, DEUDA_TOTAL, GARANTIA_A, GARANTIA_B, SIN_GARANTIAS, CONTRA_GARANTIA_A, CONTRA_GARANTIA_B, SIN_CONTRA_GARANTIA, PREVISIONES, DEUDA_CUBIERTA, PROCESO_JUDICIAL, REFINANCIACIONES, RECATEGORIZACION, SIT_JURIDICA, IRR_DISP_TECNICA, DIAS_ATRASO, SITUACION_ENTIDAD, TZ_LOCK)
+			SELECT b.Fecha_Proceso, b.COD_ENTIDAD, b.FECHA, a.CODIGOCLIENTE, b.TPO_IDENTIFICACION, b.NRO_IDENTIFICACION, b.ACTIVIDAD, b.SITUACION_BCRA, b.PRESTAMOS, b.PARTICIPACIONES, b.GARANTIAS, b.OTROS_CONCEPTOS, (b.PRESTAMOS +  b.PARTICIPACIONES + b.GARANTIAS + b.OTROS_CONCEPTOS) AS DEUDA_TOTAL, b.GARANTIA_A, b.GARANTIA_B, b.SIN_GARANTIAS, b.CONTRA_GARANTIA_A, b.CONTRA_GARANTIA_B, b.SIN_CONTRA_GARANTIA, b.PREVISIONES, b.DEUDA_CUBIERTA, b.PROCESO_JUDICIAL, b.REFINANCIACIONES, b.RECATEGORIZACION, b.SIT_JURIDICA, b.IRR_DISP_TECNICA, b.DIAS_ATRASO, b.SITUACION_NBCH AS SITUACION_ENTIDAD, 
+			0 AS TZ_LOCK
+			FROM ITF_BCRA_CENDEU b WITH (NOLOCK)
+			INNER JOIN (SELECT DISTINCT doc.TIPODOCUMENTO, doc.NUMERODOCUMENTO, c.CODIGOCLIENTE
+			FROM CLI_CLIENTES c WITH (NOLOCK) 
+			INNER JOIN CLI_CLIENTEPERSONA cp WITH (NOLOCK) ON c.CODIGOCLIENTE = cp.CODIGOCLIENTE AND cp.TITULARIDAD = ''T'' AND cp.TZ_LOCK = 0
+			INNER JOIN CLI_DocumentosPFPJ doc WITH (NOLOCK) ON cp.NUMEROPERSONA = doc.NUMEROPERSONAFJ AND doc.TZ_LOCK = 0
+			WHERE c.FECHAAPERTURA = (SELECT FECHAPROCESO FROM PARAMETROS WITH (NOLOCK)) AND c.TZ_LOCK = 0) a ON b.NRO_IDENTIFICACION = a.NUMERODOCUMENTO 
+			AND a.CODIGOCLIENTE NOT IN (SELECT CODIGOCLIENTE FROM CRE_BCRA_CENDEU WITH (NOLOCK) WHERE COD_ENTIDAD = b.COD_ENTIDAD)
+			WHERE b.TPO_IDENTIFICACION = 11 AND b.TZ_LOCK = 0
+		END
+		  
+		    SET @p_msg_proceso = ''El Proceso de Actualización de BCRA ha finalizado correctamente. Registros procesados: ''+ CONVERT(VARCHAR(10), @contador)
+			SET @p_ret_proceso = 1 		
+			
+			-- Logueo de información
+			EXECUTE PKG_LOG_PROCESO$proc_ins_log_proceso 
+				@p_id_proceso,
+		    	@p_dt_proceso,
+		    	''SP_ACTUALIZA_BCRA'',
+		    	@p_cod_error = @p_ret_proceso, 
+				@p_msg_error = @p_msg_proceso, 
+				@p_tipo_error = @c_log_tipo_informacion
+		END TRY
+							             
+		BEGIN CATCH
+	
+	        SET @p_ret_proceso = ERROR_NUMBER()
+	        SET @p_msg_proceso = ''Ocurrió un error en el Proceso de Actualización de BCRA: '' + ERROR_MESSAGE()
+	
+			EXECUTE PKG_LOG_PROCESO$proc_ins_log_proceso 
+	        	@p_id_proceso = @p_id_proceso, 
+	        	@p_fch_proceso = @p_dt_proceso, 
+	        	@p_nom_package = ''SP_ACTUALIZA_BCRA'', 
+	        	@p_cod_error = @p_ret_proceso, 
+	        	@p_msg_error = @p_msg_proceso, 
+	       		@p_tipo_error = @c_log_tipo_informacion
+		END CATCH
+END
+')

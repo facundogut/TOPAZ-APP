@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>sibe/lineasDisponibles</uri>
+    <serviceDescription>Obtiene el listado de las lineas de creditos disponibles para SIBE</serviceDescription>
+    <title>SIBE Lineas Disponibles</title>
+    <querys>
+        <query id="1" name="Consulta Lineas Credito Disponibles SIBE" type="MULTIPLE">
+            <sql>
+				WITH LineasDisponibles 
+				AS 
+				(
+					SELECT 
+					p.C6250 AS id, 
+					p.C6251 AS descripcionLinea, 
+					1 AS cuotaMinima, 
+					ISNULL(TP.CANT_CUOTA_MAXIMA, 1) AS cuotaMaxima, 
+					Case when CTR.DESCRIPCION= 'Largo Plazo Dolar' then 'Largo Plazo' else CTR.DESCRIPCION end AS tipoPlazo, 
+					O.OPCIONINTERNA AS subSistema, 
+					ISNULL(TP.REQUIERE_GARANTIA,'N') AS garantiaObligatoriaSN, 
+					ISNULL(TP.REQUIERE_SEGURO,'N')  AS seguroObligatorioSN, 
+					ISNULL(TB.TASA, 1) AS tasaMinima, 
+					ISNULL(T.PUNTOS + TB.TASA, 1) AS tasa, 
+					100.0 AS porcentajeMaximo, 
+					ROW_NUMBER() OVER (PARTITION BY p.C6250 ORDER BY CASE WHEN T.TARIFA = 1 THEN 1 ELSE 2 END) AS rn 
+					FROM PRODUCTOS p 
+					JOIN  CRE_FAMILIAS CR ON p.C6283 = CR.FAMILIAPROD  AND CR.TZ_LOCK = 0 
+					JOIN  CRE_TIPOS_RIESGOS CTR ON CTR.CODIGO_RIESGO = CR.RIESGO 
+					LEFT JOIN  TOPESPRODUCTO TP ON p.C6250 = TP.CODPRODUCTO AND TP.TZ_LOCK = 0 
+					LEFT JOIN OPCIONES O ON O.NUMERODECAMPO = 6800 
+					LEFT JOIN TASAS T ON T.PRODUCTO = p.C6250 AND T.CLIENTE = 0 AND (T.TARIFA = 1 OR T.TARIFA = 0) AND T.TZ_LOCK = 0 
+					LEFT JOIN TASASBASE TB ON T.TIPOTASAINT = TB.TIPOTASABASE AND TB.TZ_LOCK = 0 AND (TB.VIGENCIADESDE &lt;= (SELECT FECHAPROCESO FROM PARAMETROS) AND TB.VIGENCIAHASTA &gt;= (SELECT FECHAPROCESO FROM PARAMETROS WITH(NOLOCK))) 
+					WHERE p.TZ_LOCK = 0  AND O.OPCIONINTERNA = P.C6800 AND p.EVALUA_DEUDA = 'S'  AND CTR.CODIGO_RIESGO > 0 
+				)
+				SELECT 
+				id, 
+				descripcionLinea, 
+				cuotaMinima, 
+				cuotaMaxima, 
+				tipoPlazo, 
+				subSistema, 
+				garantiaObligatoriaSN, 
+				seguroObligatorioSN, 
+				tasaMinima, 
+				tasa, 
+				porcentajeMaximo 
+				FROM LineasDisponibles 
+				WHERE rn = 1 
+			</sql>
+            <input/>
+            <output>
+                <level groupby="" name="DatosLineas">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>id</queryname>
+                        <servicename>id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>descripcionLinea</queryname>
+                        <servicename>descripcionLinea</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cuotaMaxima</queryname>
+                        <servicename>cuotaMaxima</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cuotaMinima</queryname>
+                        <servicename>cuotaMinima</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>tipoPlazo</queryname>
+                        <servicename>tipoPlazo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>subSistema</queryname>
+                        <servicename>subSistema</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>tasa</queryname>
+                        <servicename>tasa</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>garantiaObligatoriaSN</queryname>
+                        <servicename>garantiaObligatoriaSN</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>seguroObligatorioSN</queryname>
+                        <servicename>seguroObligatorioSN</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>porcentajeMaximo</queryname>
+                        <servicename>porcentajeMaximo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>tasaMinima</queryname>
+                        <servicename>tasaMinima</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

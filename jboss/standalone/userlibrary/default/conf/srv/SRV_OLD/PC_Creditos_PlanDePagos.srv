@@ -1,0 +1,28 @@
+service PlanDePagos; 
+description "Servicio Plan de pagos"; 
+
+action:	SQLQuery Entity ( 
+ IDSALDO: string
+): [ 
+	NUMEROCUOTA: string,
+	FECHAPROGRAMADA: string,
+   	CAPITAL: string,
+	COMPENSATORIO: string,
+	CARGOS: string,
+	TOTALCUOTA: string,
+	CAPITALPAGADO: string,
+	COMPENSATORIOPAGADO: string,
+	GASTOSPAGADOS: string,
+	TOTALPAGADO: string,
+	FECHAPAGO: string,
+	DIASATRASO: string
+	]
+{ 
+  	properties { 
+  	("statement", "SELECT NUMEROCUOTA, FECHAPROGRAMADA, TO_CHAR(CAPITAL,'9999G999G999G999G999D99') AS CAPITAL, TO_CHAR(COMPENSATORIO,'9999G999G999G999G999D99') AS COMPENSATORIO, TO_CHAR((NVL(Gastos,0)),'9999G999G999G999G999D99') AS CARGOS, TO_CHAR(Capital+Compensatorio+ NVL(Gastos,0),'9999G999G999G999G999D99') AS TOTALCUOTA, TO_CHAR(CapitalPagado,'9999G999G999G999G999D99') AS CAPITALPAGADO, TO_CHAR(CompensatorioPagado,'9999G999G999G999G999D99') AS COMPENSATORIOPAGADO, TO_CHAR(NVL(GastoPagado,0),'9999G999G999G999G999D99') AS GASTOSPAGADOS, TO_CHAR(CapitalPagado+CompensatorioPagado+NVL(GastoPagado,0),'9999G999G999G999G999D99') AS TOTALPAGADO, CASE WHEN DIASATRASO < 0 THEN 0 ELSE DIASATRASO END AS DIASATRASO, FECHAPAGO FROM (SELECT p.C2300 AS NumeroCuota, To_char(p.C2302,'dd/mm/yyyy') AS FechaProgramada, p.C2304 AS Capital, p.C2305 AS Compensatorio, (SELECT SUM(importe_gasto) FROM GASTOS_POR_CUOTA WHERE SALDOS_JTS_OID = ? AND NUMERO_CUOTA=p.C2300) AS Gastos, p.C2304-p.C2309 AS CapitalPagado, p.C2305-p.C2310 AS CompensatorioPagado, (SELECT SUM(importe_gasto-Saldo_Gasto) FROM GASTOS_POR_CUOTA WHERE SALDOS_JTS_OID = ? AND NUMERO_CUOTA=p.C2300) AS GastoPagado, CASE WHEN C2309>0 THEN ' ' ELSE to_char(p.C2313,'dd/mm/yyyy') END AS FechaPago, case when (p.c2309+p.c2310=0)then (p.C2313-p.C2302) ELSE (CASE WHEN (select fechaproceso from parametros)-p.c2302>0 THEN (select fechaproceso from parametros)-p.c2302 ELSE 0 END) end AS DiasAtraso FROM PLANPAGOS p WHERE SALDO_JTS_OID = ? )"),
+	("0", "IDSALDO"),
+	("1", "IDSALDO"),
+	("2", "IDSALDO")
+	}
+}
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.aplicacionInstrucciones.MovimientoAAplicar</class-name>
+        <query-name>query.MovimientoAAplicar</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT sd.saldos_jts_oid as saldo_jts_oid,
+					         
+						   sd.SALDO_AJUSTADO as monto,
+						   s.empresa,
+						   p.c6304 as grupo_balance
+					FROM grl_saldos_diarios sd,
+						 saldos s,
+						 planctas p
+					     
+					Where s.tz_lock = 0 and
+							sd.tz_lock = 0 and
+							p.tz_lock = 0 and
+							c6326 = s.c1730 and
+						 	sd.saldos_jts_oid = s.jts_oid and
+							  
+							s.Moneda = ? and
+							(c6304 in (?,?) )
+							AND sd.fecha = ?
+							AND sd.SALDO_AJUSTADO &lt;&gt; 0
+				</sentence>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>saldo_jts_oid</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>monto</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresa</attribute-name>
+            <column-name>empresa</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>grupo_balance</attribute-name>
+            <column-name>grupo_balance</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.aplicacionInstrucciones.MovimientoAAplicar</class-name>
+        <entity-name>core.cierre.vo_MovimientoAAplicar</entity-name>
+        <table-name>RESUMEN_MOVIMIENTOS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>jts_oid</column-name>
+            <key>primary</key>
+            <attribute-id-generator>selfNumerator</attribute-id-generator>
+        </attribute>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>saldo_jts_oid</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>monto</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>signo</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>procesada</attribute-name>
+            <column-name>procesada</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>RUBRO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>cuenta</attribute-name>
+            <column-name>CUENTA</column-name>
+        </attribute>
+    </class>
+</map>

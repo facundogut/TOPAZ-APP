@@ -1,0 +1,262 @@
+EXECUTE('
+CREATE OR ALTER PROCEDURE SP_ASOCI_INTE_JUZG
+   @P_NUM_JUZG  float(12),
+   @P_NUM_SOLIC float(12),
+   @P_NUM_PER float(12),
+   @P_ASIENTO float(10),
+   @P_OPERACION VARCHAR(4),
+   @P_USUARIO VARCHAR(10),
+   @P_HORA VARCHAR(8),
+   @P_FECHA_VENCIMIENTO DATE,
+   
+   @P_RET_PROCESO float(53)  OUTPUT,
+   @P_MSG_PROCESO varchar(max)  OUTPUT
+      
+AS 
+
+   BEGIN
+
+      SET @P_RET_PROCESO = NULL
+      SET @P_MSG_PROCESO = NULL
+      
+      DECLARE
+
+         @FECHA DATETIME,
+         @FECHA_ANTERIOR DATETIME,
+         @CANT NUMERIC(5),
+         @row_number NUMERIC(6),
+         @v_constante VARCHAR(1),
+         @v_numerador NUMERIC,
+         @v_correlativo NUMERIC(10),
+         
+         --DECLARO VARIABLES TEMPORALES PARA RECORER TABLA AUXILIAR--
+		 @NRO_SOLICITUDTemp NUMERIC (12, 0),
+   		 @ID_PERSONATemp NUMERIC (12, 0),
+   		 @NRO_JUZGADOTemp  NUMERIC (12, 0), 
+   		 @JTS_OID_CUENTATemp NUMERIC (10, 0),
+   		 @NRO_CAUSATemp NUMERIC (12, 0),
+      	 @ACTORTemp VARCHAR(3),
+      	 @FECHA_INTEGRACIONTemp DATETIME,
+      	 @FECHA_CESETemp DATETIME,
+      	 @ACTIVOTemp VARCHAR(1),
+      	 @ESTADOTemp VARCHAR(1),
+      	 @FECHA_ESTADOTemp DATETIME,
+      	 @SUCURSALTemp NUMERIC (5, 0),
+      	 @TIPO_ENTIDADTemp NUMERIC (5, 0),
+   		 @TIPO_PODERTemp NUMERIC (5, 0)
+      	 
+      	 
+      --SET @CANT = 0
+      SELECT @FECHA = FECHAPROCESO FROM PARAMETROS
+      SELECT @FECHA_ANTERIOR = FECHAPROCESOANTERIOR FROM PARAMETROS
+      
+      --DECLARO TABLA AUXILIAR--
+	  DECLARE @Tabla_ASOCI_INTE_JUZG TABLE(
+		NRO_SOLICITUD NUMERIC (12, 0), 
+      	ID_PERSONA NUMERIC (12, 0), 
+      	NRO_JUZGADO NUMERIC (12, 0), 
+      	JTS_OID_CUENTA NUMERIC (10, 0),
+      	NRO_CAUSA NUMERIC (12, 0),
+      	ACTOR VARCHAR(3),
+      	FECHA_INTEGRACION DATETIME,
+      	FECHA_CESE DATETIME,
+      	ACTIVO VARCHAR(1),
+      	ESTADO VARCHAR(1),
+      	FECHA_ESTADO DATETIME,
+      	SUCURSAL NUMERIC (5, 0),
+      	TIPO_ENTIDAD NUMERIC (5, 0), 
+      	TIPO_PODER NUMERIC (5, 0),
+      	FILAS BIGINT,
+      	ESTADO_DJ_CAUSA VARCHAR(1)
+	  )
+	  
+	 
+	 
+      --COMPLETO TABLA AUXILIAR--
+	  INSERT INTO 
+		@Tabla_ASOCI_INTE_JUZG
+      SELECT s.NRO_SOLICITUD, 
+      	     s.ID_PERSONA, 
+      	     s.NRO_JUZGADO, 
+      	     cc.JTS_OID_CUENTA,
+      	     cc.NRO_CAUSA,
+      	     s.ACTOR,
+      	     s.FECHA_INTEGRACION,
+      	     s.FECHA_CESE,
+      	     s.ACTIVO,
+      	     s.ESTADO,
+      	     s.FECHA_ESTADO,
+      	     s.SUCURSAL,
+      	     tt.TIPO_ENTIDAD,
+      	     tt.TIPO_PODER,
+      	     row_number() OVER(ORDER BY s.NRO_SOLICITUD) AS filas,
+      	     c.ESTADO
+	  FROM DJ_SOLICITUD_AD_INTEG_JUZ s WITH (NOLOCK)
+	  INNER JOIN DJ_CAUSAS c WITH (NOLOCK) ON c.JUZGADO=s.NRO_JUZGADO 
+	  	AND c.TZ_LOCK = 0
+	  INNER JOIN DJ_CAUSA_CUENTA cc WITH (NOLOCK) ON c.NRO_CAUSA=cc.NRO_CAUSA
+	  	AND (cc.TZ_LOCK < 300000000000000 OR cc.TZ_LOCK >= 400000000000000)
+	  ,PYF_TIPOPODER_X_TIPOENTIDAD tt WITH (NOLOCK)
+	  WHERE s.NRO_JUZGADO  = @P_NUM_JUZG
+	  	AND s.NRO_SOLICITUD = @P_NUM_SOLIC
+	  	AND s.ID_PERSONA = @P_NUM_PER
+	  	AND s.TZ_LOCK = 0
+		AND s.ESTADO = ''I''  
+		AND c.ESTADO NOT IN (''T'')
+		AND cc.JTS_OID_CUENTA NOT IN (SELECT b.JTS_OID_CUENTA FROM DJ_BENEFICIARIOS b WHERE (b.TZ_LOCK < 300000000000000 OR b.TZ_LOCK >= 400000000000000))
+		AND tt.TIPO_ENTIDAD = 2 AND tt.TZ_LOCK = 0
+      
+    
+      BEGIN TRANSACTION	
+      
+       BEGIN TRY
+	       	  	
+				/*SE DAN DE ALTA LOS PODERES ACTIVOS*/
+	      		INSERT INTO PYF_APODERADOS
+				SELECT 
+					0,
+					TA.JTS_OID_CUENTA,--@JTS_OID_CUENTATemp,
+					TA.TIPO_PODER,--@TIPO_PODERTemp,
+					TA.TIPO_ENTIDAD,--@TIPO_ENTIDADTemp,
+					TA.ID_PERSONA,--@ID_PERSONATemp,
+					'''',
+					1,
+					0,
+					1,
+					0,
+					@P_FECHA_VENCIMIENTO,
+					@FECHA,
+					NULL,
+					NULL,
+					NULL,
+					''''
+				FROM @Tabla_ASOCI_INTE_JUZG  AS TA
+				WHERE TA.ESTADO_DJ_CAUSA = ''A''
+				
+				
+				/*SE DAN DE ALTA LOS PODERES INACTIVOS*/
+	      		INSERT INTO PYF_APODERADOS
+				SELECT 
+					0,
+					TA.JTS_OID_CUENTA,--@JTS_OID_CUENTATemp,
+					TA.TIPO_PODER,--@TIPO_PODERTemp,
+					TA.TIPO_ENTIDAD,--@TIPO_ENTIDADTemp,
+					TA.ID_PERSONA,--@ID_PERSONATemp,
+					'''',
+					1,
+					0,
+					1,
+					0,
+					@FECHA_ANTERIOR,
+					@FECHA,
+					@P_FECHA_VENCIMIENTO,
+					NULL,
+					NULL,
+					TA.JTS_OID_CUENTA
+				FROM @Tabla_ASOCI_INTE_JUZG  AS TA
+				WHERE TA.ESTADO_DJ_CAUSA = ''I''
+				
+			 	
+				/*SE DA DE ALTA LA BITACORA PODERES ACTIVOS*/
+				INSERT INTO BITACORA_APODERADOS 
+				SELECT 
+					@FECHA,
+					TA.SUCURSAL,--@SUCURSALTemp,
+					@P_ASIENTO,
+					TA.FILAS,
+					''A'',
+					@P_OPERACION,
+					@P_USUARIO,
+					@P_HORA,
+					TA.JTS_OID_CUENTA,--@JTS_OID_CUENTATemp,
+					TA.TIPO_ENTIDAD,--@TIPO_ENTIDADTemp,
+					TA.TIPO_PODER,--@TIPO_PODERTemp,
+					TA.ID_PERSONA,--@ID_PERSONATemp,
+					'''',
+					1,
+					0,
+					1,
+					0,
+					@P_FECHA_VENCIMIENTO,
+					@FECHA,
+					NULL,
+					NULL,
+					0,
+					0
+				FROM @Tabla_ASOCI_INTE_JUZG AS TA
+				WHERE TA.ESTADO_DJ_CAUSA = ''A''
+				
+				
+				/*SE DA DE ALTA LA BITACORA PODERES INACTIVO*/
+				INSERT INTO BITACORA_APODERADOS 
+				SELECT 
+					@FECHA,
+					TA.SUCURSAL,--@SUCURSALTemp,
+					@P_ASIENTO,
+					TA.FILAS,
+					''A'',
+					@P_OPERACION,
+					@P_USUARIO,
+					@P_HORA,
+					TA.JTS_OID_CUENTA,--@JTS_OID_CUENTATemp,
+					TA.TIPO_ENTIDAD,--@TIPO_ENTIDADTemp,
+					TA.TIPO_PODER,--@TIPO_PODERTemp,
+					TA.ID_PERSONA,--@ID_PERSONATemp,
+					'''',
+					1,
+					0,
+					1,
+					0,
+					@FECHA_ANTERIOR,
+					@FECHA,
+					@P_FECHA_VENCIMIENTO,
+					NULL,
+					0,
+					TA.JTS_OID_CUENTA
+				FROM @Tabla_ASOCI_INTE_JUZG AS TA
+				WHERE TA.ESTADO_DJ_CAUSA = ''I''
+				
+			
+					/*SE DA DE ALTA EL INTEGRANTE*/
+					INSERT INTO DJ_INTEGRANTES_CAUSAS
+					SELECT
+						c.NRO_CAUSA,
+						s.ACTOR,
+						s.ID_PERSONA,
+						@FECHA,
+						NULL,
+						0,
+						''S''
+					FROM DJ_SOLICITUD_AD_INTEG_JUZ s WITH (NOLOCK)
+					INNER JOIN DJ_CAUSAS c WITH (NOLOCK) ON c.JUZGADO=s.NRO_JUZGADO 
+						AND c.TZ_LOCK = 0
+					WHERE s.NRO_JUZGADO = @P_NUM_JUZG
+	  				AND s.NRO_SOLICITUD = @P_NUM_SOLIC
+	  			    AND s.ID_PERSONA = @P_NUM_PER
+	  					
+   
+			COMMIT TRANSACTION;
+			
+			SET @P_RET_PROCESO = 1
+		    SET @P_MSG_PROCESO = ''Se asocio nuevo integrante correctamente.''
+			 
+		END TRY     
+		
+		BEGIN CATCH
+			ROLLBACK TRANSACTION
+			SET @P_RET_PROCESO = ERROR_NUMBER()
+			SET @P_MSG_PROCESO = ERROR_MESSAGE()
+			EXECUTE dbo.pkg_constantes$VarcharConstantes ''C_LOG_TIPO_ERROR'', @v_constante OUTPUT;
+		END CATCH
+		 	      
+ END
+')
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,31 @@
+EXECUTE('
+IF OBJECT_ID (''dbo.VW_CONCILIACION_MANUAL'') IS NOT NULL
+	DROP VIEW dbo.VW_CONCILIACION_MANUAL
+')
+EXECUTE('
+CREATE VIEW [dbo].[VW_CONCILIACION_MANUAL] (
+											   
+											   [Fecha Proceso], --475
+											   [Fecha Mensaje],--476
+											   [Acción],--1051
+											   [Estado],--1963
+											   [Inconsistencia],--3804
+											   [Descripción Estado],--37362
+											   [JTS OID])
+AS 
+SELECT C.TOPAZPROCESSDATE,C.FECHAMENSAJE,
+CASE WHEN C.CORRECCIONAUTOMATICA=1
+THEN ''Extorno''
+WHEN C.CORRECCIONAUTOMATICA=0
+THEN ''Administrativa''
+ELSE NULL END,
+CASE WHEN C.CORREGIDO=0
+THEN ''Pendiente''
+WHEN C.CORREGIDO=1
+THEN ''Corregido'' 
+ELSE NULL END,
+C.INCONSISTENCIA,
+C.DESCRIPCIONCORRECCION,
+C.JTS_OID
+FROM TJD_TLF_CONCILIACION C WITH(NOLOCK)
+')

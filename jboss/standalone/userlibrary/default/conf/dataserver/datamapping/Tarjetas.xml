@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map>
+	<class>
+		<class-name>topsystems.automaticprocess.tarjetas.valueojbects.DatosAuditoria</class-name>
+		<entity-name>core.vo_DatosAuditoria</entity-name>
+		<table-name>TJD_DATOS_AUDITORIA</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>numeroTarjeta</attribute-name>
+			<column-name>ID_TARJETA</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>estado</attribute-name>
+			<column-name>ESTADO</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaModificacion</attribute-name>
+			<column-name>FECHA_MODIFICACION</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>horaModificacion</attribute-name>
+			<column-name>HORA_MODIFICACION</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>inicialesUsuario</attribute-name>
+			<column-name>INICIALES_USUARIO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>operacion</attribute-name>
+			<column-name>OPERACION</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>sucursal</attribute-name>
+			<column-name>SUCURSAL</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>asiento</attribute-name>
+			<column-name>ASIENTO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>tz_lock</column-name>
+		</attribute>
+	</class>	
+	<query>
+		<class-name>topsystems.automaticprocess.tarjetas.valueojbects.QueryTarjetasSuspension</class-name>
+		<query-name>core.tarjetas.vo_QueryTarjetasSuspension</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>select t.id_tarjeta AS ID_TARJETA, max(FECHA_MODIFICACION) AS FECHA_MODIFICACION
+			  from TJD_TARJETAS t, TJD_DATOS_AUDITORIA a
+			 where t.ESTADO = ?
+			   and t.id_tarjeta = a.id_tarjeta
+			   and a.ESTADO = ?
+			   AND a.TZ_LOCK = 0
+			   AND t.TZ_LOCK = 0
+			 group by t.id_tarjeta
+		</sentence>
+		<attribute>
+			<attribute-name>idTarjeta</attribute-name>
+			<column-name>ID_TARJETA</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>fechaModificacion</attribute-name>
+			<column-name>FECHA_MODIFICACION</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+	</query>	
+</map>

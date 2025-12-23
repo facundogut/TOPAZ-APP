@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/DetallePrestamo/{Sucursal}/{Cuenta}/{Operacion}/{Ordinal}</uri>
+    <serviceDescription>Servicio que devuelve el detalle de los prestamos a partir de la clave</serviceDescription>
+    <title></title>
+    <querys>
+        <query id="1" name="getCreditos" type="SIMPLE">
+            <sql>Declare @Suc Numeric(5) = ?;
+Declare @Cuenta Numeric(12) = ?;
+Declare @Ope Numeric(12) = ?;
+Declare @Ord Numeric(6) = ?;
+
+SELECT s.SUCURSAL AS IdSucursal,
+(SELECT sc.NOMBRESUCURSAL  FROM SUCURSALES sc WHERE sc.SUCURSAL = s.SUCURSAL AND sc.TZ_LOCK=0) AS NombreSucursal,
+s.PRODUCTO AS IdProducto,
+(SELECT p.C6251 FROM PRODUCTOS p WHERE p.C6250 = s.PRODUCTO AND p.TZ_LOCK=0) AS NombreProducto,
+s.CUENTA,
+s.MONEDA AS IdMoneda,
+(SELECT m.C6400 FROM MONEDAS m WHERE m.C6399 = s.MONEDA AND m.TZ_LOCK=0) AS DescMoneda,
+s.OPERACION,
+s.ORDINAL,
+s.C1704 AS solicitud,
+ISNULL(CONVERT(varchar(10),s.C1620,103),0) AS fechaAlta,
+(CASE WHEN s.C1642 = 0 THEN ISNULL(DATEDIFF(day, s.C1620, s.C1628), 0) ELSE s.C1642 END) AS plazoDias,
+s.C1601 AS capitalInicial,
+s.C1604 AS saldoCapital,
+s.C1644 AS cantOriginalCuotas,
+s.C1645 AS cantCuotasPendientes,
+--hp.CUOTA AS importeCuota,
+s.C1612 as importeCuota,
+ISNULL(CONVERT(varchar(10),s.C1627,103),0) AS fechaVencimiento,
+s.CUOTAS_GRACIA AS Cuotas_gracia,
+S.C1632 AS TNA,
+S.C1632 AS TEA,
+s.JTS_OID,
+ISNULL((SELECT cr.CFT FROM CRE_SALDOS cr WHERE cr.SALDOS_JTS_OID = s.JTS_OID),0) AS CFT,
+(SELECT SUBSTRING(cod.DESCRIPCION, 8, LEN(cod.DESCRIPCION)) AS estado FROM CR_CODIGOS_ATRASO_CARTERA cod WHERE s.C1728 = cod.COD_ATRASO) AS Estado
+FROM SALDOS s (NOLOCK)
+WHERE s.SUCURSAL=@Suc AND s.CUENTA=@Cuenta and s.OPERACION=@Ope AND s.ORDINAL=@Ord</sql>
+            <input>
+                <inParameter description="" type="STRING">Sucursal</inParameter>
+                <inParameter description="" type="STRING">Cuenta</inParameter>
+                <inParameter description="" type="STRING">Operacion</inParameter>
+                <inParameter description="" type="STRING">Ordinal</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="credito">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>IdSucursal</queryname>
+                        <servicename>credito.sucursal.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NombreSucursal</queryname>
+                        <servicename>credito.sucursal.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>IdProducto</queryname>
+                        <servicename>credito.producto.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>NombreProducto</queryname>
+                        <servicename>credito.producto.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>CUENTA</queryname>
+                        <servicename>credito.cuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>IdMoneda</queryname>
+                        <servicename>credito.moneda.id</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DescMoneda</queryname>
+                        <servicename>credito.moneda.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>OPERACION</queryname>
+                        <servicename>credito.operacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ORDINAL</queryname>
+                        <servicename>credito.ordinal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>solicitud</queryname>
+                        <servicename>solicitud</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaAlta</queryname>
+                        <servicename>fechaAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>plazoDias</queryname>
+                        <servicename>plazoDias</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>capitalInicial</queryname>
+                        <servicename>capitalInicial</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>saldoCapital</queryname>
+                        <servicename>saldoCapital</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantOriginalCuotas</queryname>
+                        <servicename>cantOriginalCuotas</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantCuotasPendientes</queryname>
+                        <servicename>cantCuotasPendientes</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>importeCuota</queryname>
+                        <servicename>importeCuota</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Cuotas_gracia</queryname>
+                        <servicename>cuotasGracia</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>TNA</queryname>
+                        <servicename>TNA</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>CFT</queryname>
+                        <servicename>CFT</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Estado</queryname>
+                        <servicename>estado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>JTS_OID</queryname>
+                        <servicename>JTS_OID</servicename>
+                    </outParameter>
+                    <outParameter description="" type="FLOAT">
+                        <queryname>TEA</queryname>
+                        <servicename>TEA</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

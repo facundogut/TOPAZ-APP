@@ -1,0 +1,29 @@
+﻿CREATE PROCEDURE sp_dj_buscar_dem_ben
+@pTipoDoc VARCHAR(4),
+@pTipoPersona VARCHAR(1),
+@pNroDoc VARCHAR(20),
+@pNroPersona NUMERIC(12) OUT
+AS
+DECLARE
+	@vNroPersona NUMERIC(12),
+	@vCont NUMERIC(6)
+BEGIN
+	SELECT TOP 1 @vNroPersona = d.NUMEROPERSONAFJ  
+	FROM CLI_DocumentosPFPJ D 
+	WHERE D.TIPODOCUMENTO=@pTipoDoc AND 
+	D.NUMERODOCUMENTO=@pNroDoc AND
+	d.TZ_LOCK=0
+	
+	IF @pTipoPersona = 'F'
+		SELECT @vCont = COUNT(*) FROM CLI_PERSONASFISICAS PF WHERE PF.NUMEROPERSONAFISICA=@vNroPersona
+	ELSE
+		SELECT @vCont = COUNT(*) FROM CLI_PERSONASJURIDICAS PJ WHERE PJ.NUMEROPERSONAJURIDICA=@vNroPersona
+	
+	IF @vCont = 0 BEGIN
+		SET @vNroPersona = 0
+	END
+	
+	SET @pNroPersona = @vNroPersona
+END
+GO
+

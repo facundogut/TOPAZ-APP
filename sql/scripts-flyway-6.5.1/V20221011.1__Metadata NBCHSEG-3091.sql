@@ -1,0 +1,13 @@
+﻿EXECUTE('
+--------------------------------------------
+--AJUSTE PERMITE BAJA EN ABMC DE CONVENIOS--
+--------------------------------------------
+UPDATE dbo.OPERACIONES
+SET PERMITEBAJA = ''N''
+WHERE TITULO = 2600 AND IDENTIFICACION = 2627
+--
+UPDATE dbo.OPERACIONES
+SET PERMITEBAJA = ''N''
+WHERE TITULO = 2600 AND IDENTIFICACION = 2649
+----
+')

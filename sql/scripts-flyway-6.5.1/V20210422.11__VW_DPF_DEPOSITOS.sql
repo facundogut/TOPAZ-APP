@@ -1,0 +1,36 @@
+/****** Object:  View [dbo].[VW_DPF_DEPOSITOS]    Script Date: 25/02/2021 10:05:02 ******/
+DROP VIEW [dbo].[VW_DPF_DEPOSITOS]
+GO
+
+/****** Object:  View [dbo].[VW_DPF_DEPOSITOS]    Script Date: 25/02/2021 10:05:02 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[VW_DPF_DEPOSITOS](
+									[DEPOSITO],
+									[DESCRIPCION DEPOSITO], -- 1850
+									[EMAIL], -- 410
+									[SUCURSAL], -- 43759
+									[DESCRIPCION SUCURSAL], -- 5010
+									[CENTRALIZADORA] -- 611
+) AS 
+				SELECT	d.[CODIGO], 
+						d.DESCRIPCION, 
+						d.EMAIL, 
+						d.SUCURSAL, 
+						s.DESCRIPCION, 
+						o.DESCRIPCION 
+				FROM DPF_DOCS_DEPOSITOS d WITH (NOLOCK)
+					INNER JOIN SUCURSALESSC s WITH (NOLOCK) ON d.SUCURSAL = s.SUCURSAL
+					INNER JOIN OPCIONES o WITH (NOLOCK) ON o.OPCIONINTERNA = d.CENTRALIZADORA 
+				WHERE 
+					o.NUMERODECAMPO = 34717
+					AND o.IDIOMA = 'E'
+					AND d.TZ_LOCK = 0
+					AND s.TZ_LOCK = 0;
+	GO
+
+

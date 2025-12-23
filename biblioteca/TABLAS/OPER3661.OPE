@@ -1,0 +1,699 @@
+VERSION:053_5
+TN  NN 1006TConsulta Genérica                       C00001 00
+*N  NN -- Operación para para visualizar Firmas desde la lectura o ingreso manual de un Cheque  -----------------------------------------
+*N  NN -- Fecha de creación 19/08/2010  versión 001 ------------------------------------------------------------------------------------
+*N  NN --------------    modif. 24/08/2010  versión 002 ------- se elimina que solicite y controle ch y serie en ing. manual  ------
+*N  NN ----------------------------------------------------------------------------------------------------------------------------------------------------
+VNSSNS 050006000803250783NNND000020000000000000000000000000000000000
+/T=Consulta de Cheques Clearing 
+/C=192192192
+KNNNNN 050001001102480763000101
+/T=Consulta de Cheques Clearing
+/F=0012700NNN000000000Arial                                   
+ NNNNN 00410   Ingrese Cheque I SSN 05002801320051064300001100000002800230051011900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=(C410<' ')
+/A=I20
+*N  NN ---  I150: C410 vacío, o sea que no se leyó un cheque (en lectora)  ---------------------------------
+CNNNNN   00000000000000000000100
+/F=F(LEN,C410)=0
+/P=I150
+/M=Tira de caracteres desde lectora de cheques vacía
+*N  NN --- Se despliegan todos los campos de ingreso ---
+CNNNNN  w00000000000000000000100
+/?=I150
+/R=C1
+*N  NN ------------------------------------------------------------
+*N  NN --- Cre_Parametros = 779 Fecha Tope Control Cta Vieja   (heredado de la Oper3554, pero no aplicado en este caso)
+ NNNNN 04620   Código param.  INNSNK00006106900084074000101100000006105450084067500
+/V=779
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07516   Fecha Control  INNSN 05005805970081074700101100000005804520081058200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=(C7516=C9500)O(C7516>C9500)
+/F=(C7516=C9500)O(C7516>C9500)
+/P=I112
+CNNNNN   00000000000000000000100
+/F=C9500>C7516
+/P=I114
+*N  NN ------------------------------------------------------------------------------------------------------------------------
+*N  NN --- Si no hay tira leída desde el cheque => solicita: Sucursal, Moneda, y Cuenta (vieja o nueva) -----------------------------------------------
+ NNNNN 00001   Sucursal       I NSN 05006001320083021402101100000006000230083008700
+/?=I150
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00003   Moneda         I NSN 05009001320113018800101100000009000230113010000
+/?=I150
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00049   Cuenta Topaz   I SSNK05012101320144032502101100000012100230144011600
+/?=I150
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00119   Cuenta Legada  I SSNK05015201320175032502101100000015400230177011600
+/?=I150
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -- Se controla si hay ingreso manual y no se ingresa cuenta ------------------
+CNNNNN ME00000000000000000000100
+/?=I150
+/F=(F(LEN,C49)=0)Y(F(LEN,C119)=0)
+/M=Debe ingresar un Nro. de Cuenta, por favor!
+CNNNNN ME00000000000000000000100
+/?=I150Y(C49=0Y(A(C119="")OA(C119="0")))
+/M=Debe ingresar un Nro. de Cuenta, por favor!
+*N  NN -- Se construye la Cuenta Legada en base a lo ingresado manualmente [sucursal][tipo producto][001][cuenta vieja ingresada]
+*N  NN -- Sucursal    [999]
+ NNNNN 00121   Texto          INNSNK00000701520030045200101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00121   Cta (armado de)INNSNF00000701520030045200101000000000700070030013700
+/?=I150Y(C1<10)
+/V="00"+C1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00121   Cta (armado de)INNSNF00000701520030045200101000000000700070030013700
+/?=I150Y(C1>9)Y(C1<100)
+/V="0"+C1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00121   Cta (armado de)INNSNF00000701520030045200101000000000700070030013700
+/?=I150Y(C1>99)
+/V=C1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -- T.Prod. x Moneda    [999]  +  infijo [999]: "001" 
+ NNNNN 00121   Cta (armado de)INNSNF05018004500203064400101000000018503450208043000
+/?=I150Y(C3=0)
+/V=C121+"020"+"001"
+/C=128128128
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00121   Cta (armado de)INNSNF05018004500203064400101000000018503450208043000
+/?=I150Y(C3=2225OC3=2222OC3=2223OC3=2224OC3=2230)
+/V=C121+"021"+"001"
+/C=128128128
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -- Cuenta ingresada en textbox   [999999999]
+ NNNNN 00124   Cta.Ingres (*) INNSNF05018004500203064400101000000018503450208043000
+/?=I150Y(C49=0)
+/V=F(PAD,F(VAL,C119),10)
+/C=128128128
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00121   Cuenta Antigua IDNSNF05018004500203064402101050000018503450208044400
+/?=I150Y(C49=0)
+/V=C121+C124
+/C=128128128
+/F=0012400NNN255255255Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ------------------------------------------------------------------------------------------------------------------------------------------------------
+ NSSNS 00661   Numerico de 4  INNSNF05005904020082049912101000000005902950082039100
+/?=!I150YI20
+/V=F(MID,C410,2,2)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 04905   Codigo de BancoINNSNF05005906860082074610101000000005905650082066500
+/?=!I150YI20
+/V=F(MID,C410,14,2)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04906   Sucursal       ICNSNF05006002550083033712101050000006502450088030900
+/?=!I150YI20Y1=0
+/V=F(MID,C410,16,3)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2014-06-17 17:49:06TOP
+ NNNNN 04906   Sucursal       ICNSNK05006002550083033712101050000006502450088030900
+/?=!I150YI20
+/V=1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2014-06-17 17:49:20TOP
+ NSSNS 04907   Nombre del Bco.INNSN 00002100560041036710101100000000700070027012600
+/?=!I150YI20
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=!I150Y1=0
+/F=(C9509=0)
+/M=Error - Banco No Registrado 
+*$2014-06-17 17:49:38TOP
+ NNNNN 06021   Sucursal       ICNSNA05006002550083033712101050000006502430088030700
+/?=!I150YI20
+/V=C4906
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06020   Nombre         ICNSN 05006003450083064212101050000008900280112009200
+/?=!I150YI20
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN --  Datos de la tira leída antes de la subrutina --------------------------
+*N  NN ----- Comienza SubProceso Cta.Vieja - Cta.Nueva ***********************
+ NNNNN 00049   Cuenta Topaz   INNSNF05012004500143064302101000000012003450143043800
+/?=!I150
+/V=F(MID,C410,24,10)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00119   Texto          INNSNK00000701520030045200101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00119   Cuenta Legada  INNSNF05015004500173064302101000000015003450173043800
+/?=!I150YI20Y((C661=90)O(C661=91)O(C661=94))
+/V=F(MID,C410,16,3)+"020001"+F(MID,C410,24,10)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00119   Cuenta Legada  INNSNF05015004500173064502101000000015003450173044300
+/?=!I150YI20Y((C661=22)O(C661=92)O(C661=95))
+/V=F(MID,C410,16,3)+"021001"+F(MID,C410,24,10)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00003   Moneda         ICNSNK05009002550113033600101050000009302350116031200
+/?=!I150Y((C661=90)O(C661=91)O(C661=94))YA(C9503#"3551")
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00003   Moneda         ICNSNK05009002550113033600101050000009302350116031200
+/?=!I150Y((C661=22)O(C661=92)O(C661=95))YA(C9503#"3551")
+/V=2225
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06400   Descripcion    ICNSN 05009003450113049100101050000000700070030013700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00661   Numerico de 4  INNSNF00005904020082049912101000000005902950082039100
+/?=!I150YI20
+/V=F(MID,C410,2,2)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04906   Sucursal       INNSNF00008901320112021412101000000008900280112009200
+/?=!I150YI20
+/V=F(MID,C410,16,3)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN C49 asume el valor de la cuenta en el CMC7
+ NNNNN 00049   Cuenta         INNSNF00012301320146022910101000000012300280146011800
+/?=!I150YI20
+/V=F(MID,C410,24,10)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Controla existencia en Cuenta Legada C9509=1 - I61
+ NNNNN 00922   Cuenta legada  INNSNA00005001950073047200001100000005000750073019400
+/?=!I150
+/V=C119
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08626   Lectura        INNSN 00000701520030020202101100000000700070030013700
+/?=!I150
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -- leo ITF_EQUIV_CUENTAS por Cuenta Legada --------
+ NNNNN 00922   Cuenta legada  INNSNA00005001950073047200001100000005000750073019400
+/?=I150Y(C49=0)
+/V=C121
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08626   Lectura        INNSN 00000701520030020202101100000000700070030013700
+/?=I150Y(C49=0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -- leo ITF_EQUIV_CUENTAS por Cuenta Topaz ----------
+ NNNNN 08620   Sucursal       INNSNA00005001950073047200001100000005000750073019400
+/?=I150Y(C49#0)
+/V=C1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08621   Producto       INNSNK00005001950073047200001100000005000750073019400
+/?=I150Y(C49#0)
+/V=2101
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08622   Cuenta         INNSNA00005001950073047200001100000005000750073019400
+/?=I150Y(C49#0)
+/V=C49
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08623   Moneda         INNSNA00005001950073047200001100000005000750073019400
+/?=I150Y(C49#0)
+/V=C3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08626   Lectura        INNSN 00000701520030020202101100000000700070030013700
+/?=I150Y(C49#0)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ------------------------------------------------------------------
+CNNNNN   00000000000000000000100
+/A=I61
+*N  NN --- I61: Si Cuenta Legada (Cta. Vieja) existe en ITF_EQUIV_CUENTAS ---- 
+CNNNNN   00000000000000000000100
+/?=C9509=1
+/P=I61
+/M=Prendio I61
+CNNNNN   00000000000000000000100
+/?=!I61
+/M=No Prendio I61
+*N  NN Se carga la Clave Topaz
+ NNNNN 08620   Sucursal       INNSN 00000701520030020202101100000000700070030013700
+/?=I61
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08621   Producto       INNSN 00000701520030020202101100000000700070030013700
+/?=I61
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08622   Cuenta         INNSN 00000701520030020202101100000000700070030013700
+/?=I61
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08623   Moneda         INNSN 00000701520030020202101100000000700070030013700
+/?=I61
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08624   Operación      INNSN 00000701520030020202101100000000700070030013700
+/?=I61
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08625   Ordinal        INNSN 00000701520030020202101100000000700070030013700
+/?=I61
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08626   Lectura        INNSN 00000701520030020202101100000000700070030013700
+/?=I61
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Se controla si  dato ingreso en C922 es Valido-Cliente Existe
+ NNNNN 00902   Codigo Cliente INNSNF00000701520030030202101100000000700070030013701
+/?=!I61
+/V=C49/100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01002   Nomb.Reducido  INNNN 00000701520030045200101100000000700070030013700
+/?=!I61
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=!I61YC9509=0
+/M=Error - Codigo Cuenta No es Válido
+ NNNNN 00002   Cliente        IDNSNF05021301330236022802101050000022000250243008600
+/?=(I20Y!I61)YA(C9503#"3551")
+/V=C0049/100
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00002   Cliente        IDNSNF05021301320236022802101050000022000250243008600
+/?=(I20YI61)YA(C9503#"3551")
+/V=C8622/100
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00002   Cliente        INNSNF00012000970143019202101000000012100300144009100
+/?=(I20Y!I61)YA(C9503="3551")
+/V=C902
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00002   Cliente        INNSNF00012000970143019202101000000012100300144009100
+/?=(I20YI61)YA(C9503="3551")
+/V=C8622/100
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01002   Nomb.Reducido  INNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01000   Nombre Cliente ICNSN 05021302530236064200101050000000700070030013700
+/?=I20YA(C9503#"3551")
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01000   Nombre Cliente INNSN 00012002060143054900101000000000700070030013700
+/?=I20YA(C9503="3551")
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Se guarda el C8622-Cuenta Topaz en C49
+ NNNNN 00049   Cuenta Origen  INNSNF00012303040146039902101000000012402490147031000
+/?=I20YI61
+/V=C8622
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00049   Cuenta Origen  INNSNF00012303040146039902101000000012402490147031000
+/?=I20Y!I61
+/V=C49
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ------ Fin SubProceso Cta.Vieja - Cta.Nueva *************************************
+*N  NN ---------------------------------------------------------------------------------
+*N  NN Control por Cuenta Legada SubRutina 1012
+*N  NN Control por Cuenta Topaz SubRutina 1014
+*N  NN --  Datos RESUMEN ----------------------------------------------------
+ NNNNN 00049   Cuenta Topaz   IDNSN 05012004500143064302101050000012003450143043800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00119   Cuenta Legada  IDNSN 05014904500172064402101050000015003450173043800
+/?=I61
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08622   Cuenta Topaz   IDNSNA05012004500143064302101050000012003450143043800
+/?=I61
+/V=C8622.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ---------------------------------------------------------------------------------
+ NSSNS 04907   Nombre del Bco.INNSN 00002100560041036710101100000000700070027012600
+/?=!I150
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011700NNN000000000Arial                                   
+ NSSNS 04908   Nombre SucursalINNSN 00003900560059036710101100000000700070027012600
+/?=!I150
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04161   Número Cheque  IDNSNF05018201330205022812101050000018600230209011900
+/?=!I150YI20
+/V=F(MID,C410,6,6)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00537   Serie          IDNSNF05018202900205032800101050000018602550209028500
+/?=!I150YI20
+/V=F(MID,C410,4,2)
+/m=>
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -- No se debe solicitar Nro.Cheque y Serie ----------------------------------------
+ NSSNS 04161   Número Cheque  I NSNK05018201330205022802101000000018600230209011900
+/?=I150 Y I999
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00537   Serie          I NSNK05018202900205032800101000000018602550209028500
+/?=I150 Y I999
+/m=>
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -------------------------------------------------------
+ NNNNN 04528   Número Serie:  INNSNF01013200310272069600101100000010900640129022000
+/?=!I150
+/V=C537.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04529   Número Cheque: INSSNF01013200310272069600101100000010900640129022000
+/?=!I150
+/V=C4161.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04530   Código Plaza:  INNSN 00000701520030020202101100000000700070030013700
+/?=!I150
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Cheque                         C01541 00
+/?=!I150
+ NNNNN 04528   Número Serie:  INNSNF00013200310272069600101100000010900640129022000
+/V=C537.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04529   Número Cheque: INSSNF00013200310272069600101100000010900640129022000
+/V=C4161.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=C9509=1
+/P=I160
+/M=Existe en Cheques Recibidos
+CNSSNS ME00000000000000000000100
+/?=C9509=0Y1=0
+/M=Registro Inexistente en Cheques Recibidos !
+*$2014-06-17 17:50:28TOP
+TN  NN 1006TConsulta Generica                       C00211 00
+*N  NN -- Si hay lectura autom. de cheque => leo la tabla CLE_CHEQUES_CLEARING_RECIBIDO
+ NNNNN 04528   Número Serie:  INNSNA00002901420052021200101100000002900170052012700
+/?=!I150
+/V=C4528.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04529   Número Cheque: INNSNA00002904560052056600101100000002903310052044100
+/?=!I150
+/V=C4529.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04530   Código Plaza:  INNSN 00005601420079021200101100000005600170079012700
+/?=!I150
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04532   Sucursal:      INNSN 00010801420131021200101100000010800170131012700
+/?=!I150
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04535   Producto:      INNSN 00019001420213021200101100000019000170213012700
+/?=!I150
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04533   Moneda:        INNSN 00013601420159021200101100000013600170159012700
+/?=!I150
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04534   Cuenta:        INNSN 00016401420187025200101100000016400170187012700
+/?=!I150
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 04536   Operación:     INNSN 00021501420238021200101100000021500170238012700
+/?=!I150
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -- Si es lectura autom. => carga Saldos a partir de datos desde el cheque en Cheques Recibidos -------------
+ NSSNS 01591   Sucursal       INNNNF00002401460044023002101100000002400340044012300
+/?=!I150
+/V=C4532.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 01592   Producto       INNNNF00005201460072023002101100000005200340072012300
+/?=!I150
+/V=C4535.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 01594   Moneda         INNNNF00007701460097023002101100000007700340097012300
+/?=!I150
+/V=C4533.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01593   Cuenta         INNNNF00015407050174078902101100000015405930174068200
+/?=!I150
+/V=C4534.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01595   Operacion      INNNNF00010301460123023002101100000010200340122012300
+/?=!I150
+/V=C4536.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -- Si hay ingreso manual => carga Saldo a partir de los datos desde la tabla de Equivalencias --------
+ NSSNS 01591   Sucursal       INNNNF00002401460044023002101100000002400340044012300
+/?=I150
+/V=C8620.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 01592   Producto       INNNNF00005201460072023002101100000005200340072012300
+/?=I150
+/V=C8621.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 01594   Moneda         INNNNF00007701460097023002101100000007700340097012300
+/?=I150
+/V=C8623.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01593   Cuenta         INNNNF00015407050174078902101100000015405930174068200
+/?=I150
+/V=C8622.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ------------------------------------------------------------------------------------------------------------------------
+ NNNNN 01596   Ordinal        INNNNK00000701260027014702001100000000700070027011900
+/V=0
+/F=0013700NNN000000128Arial                                   
+/f=0013700NNN000000128Arial                                   
+ NNNNN 01611   Intereses Dev  INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=C9509=1
+/P=I165
+/M=Registro existente en Saldos
+CNNNNN ME00000000000000000000100
+/?=C9509=0Y1=0
+/M=Registro Inexistente en Saldos
+*$2014-06-17 17:52:36TOP
+ NNNNN 01810   OID Saldo      INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01803   Nro. Cliente   INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00002   Cliente        INNSNF00000701520030020202101100000000700070030013700
+/V=C49.1/100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2014-06-18 12:37:52MDRU
+ NNNNN 01002   Nomb.Reducido  INNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01000   Nombre Cliente INNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Autorizados                    C00001 00
+*N  NN --- Datos para validar las visitas por las firmas
+ NNNNN 00641   Alfa de 24(52A)INNSNK00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00641   Alfa de 24(52A)INNSNF05026001300280059502001100000026500070285012600
+/V="02"+C1810.3
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 04010   Nro. Cta Poder INNNNA05011001960133028002101100000011000770133016600
+/V=C641
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 04013   Poder          INNNNK05014002000163039500101100000014000750163016400
+/V=4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  800000000000000000000100
+/?=!I150YI160YI165
+/T=Firmas
+CNNNNN  800000000000000000000100
+/?=I150YI165
+/T=Firmas
+TN  NN 1006TConsultas                               C00001 00
+ NNNNN 00028   Concepto       INNSNK00000701520030045200101100000000700070030013700
+/V=Consulta de Firmas
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=I150
+/A=I150
+CNNNNN   00000000000000000000100
+/?=I165
+/A=I165
+CNNNNN   00000000000000000000100
+/?=I160
+/A=I160
+CNNNNN   00000000000000000000100
+/?=I20
+/A=I20
+CNNNNN   00000000000000000000100
+/?=I61
+/A=I61
+*N  NN ----------  se "cerea" todos los campos involucrados en el armado de las Cuentas para no arrastrar valor ----------
+ NNNNN 00121   Texto          INNSNK00000701520030045200101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00049   Cuenta Topaz   INNSNK05012004500143064302101000000012003450143043800
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00119   Cuenta Legada  INNSNK05014904500172064402101000000015003450173043800
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN --------------  además se busca en ITF_EQUIV_CUENTAS con valores en cero --------------------
+*N  NN --------------  para que no arrastre lectura sobre esta tabla --------------------
+ NNNNN 08620   Sucursal       INNSNK00000701520030020202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08621   Producto       INNSNK00000701520030020202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08622   Cuenta         INNSNK00000701520030020202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08623   Moneda         INNSNK00000701520030020202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08624   Operación      INNSNK00000701520030020202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08625   Ordinal        INNSNK00000701520030020202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08626   Lectura        INNSN 00000701520030020202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN -------------------------------------------------------------------------------------------------------------------------------------
+CNNNNN  I00000000000000000000100
+/M=Al inicio...
+/R=1
+*#I61#I61
+*#I20#I20
+*#I160#I160
+*#I150#I150
+*#I165#I165
+*#I112#I112

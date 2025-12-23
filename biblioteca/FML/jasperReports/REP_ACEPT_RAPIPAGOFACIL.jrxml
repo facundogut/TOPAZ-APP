@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2025-02-06T11:17:42 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="REP_ACEPT_RAPIPAGOFACIL" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7dd7295d-fbba-40cb-a9f9-076b04c67bc5">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<parameter name="EMPRESA_REP" class="java.lang.String"/>
+	<parameter name="ENTE_REP" class="java.lang.String"/>
+	<parameter name="ARCHIVO_ENTRADA" class="java.lang.String"/>
+	<parameter name="NOMBRE_REP" class="java.lang.String"/>
+	<parameter name="ID_CAB" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 	
+	count(*) cant_det, 
+	cab.totalregistros total_registros,
+	(cab.totalregistros - count(*)) rechazados,
+	sum(det.importe) importe_grabado,
+	cab.totalimporte total_importe,
+	(cab.totalimporte - sum(det.importe)) importe_rechazado,	
+	convert(VARCHAR(10), cab.fecha_cobranza, 103) fecha_cobranza
+	FROM REC_CAB_RECAUDOS_CANAL (nolock) cab 
+	JOIN REC_DET_RECAUDOS_CANAL (nolock) det ON cab.id = det.id_Cabezal 
+		WHERE cab.id =  $P{ID_CAB} GROUP BY cab.totalregistros, cab.fecha_cobranza, cab.totalimporte]]>
+	</queryString>
+	<field name="cant_det" class="java.lang.Integer"/>
+	<field name="total_registros" class="java.lang.Integer"/>
+	<field name="rechazados" class="java.lang.Integer"/>
+	<field name="importe_grabado" class="java.math.BigDecimal"/>
+	<field name="total_importe" class="java.math.BigDecimal"/>
+	<field name="importe_rechazado" class="java.math.BigDecimal"/>
+	<field name="fecha_cobranza" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="88" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="20" width="240" height="30" uuid="12058148-fa1e-494c-8c84-5b252be041b1"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[NUEVO BANCO DEL CHACO S.A.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="370" y="20" width="170" height="30" uuid="411ea9e3-1fd2-4552-8f65-9edebd8a8419"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[-  Reporte de aceptados]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="550" y="20" width="140" height="30" uuid="45643087-f55b-4cbe-9002-cf7d6803a3e6"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nombre Reporte:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="140" height="30" uuid="5d28143e-7dfd-4e06-a5a5-ff26df014812"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Nombre de archivo:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="85" width="794" height="1" uuid="38873c92-115e-45ee-adb5-fac3f68c408b"/>
+			</line>
+			<textField>
+				<reportElement x="270" y="20" width="90" height="30" uuid="0512067e-4b4e-4d94-9dc4-a96404793261"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{EMPRESA_REP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="150" y="50" width="120" height="30" uuid="d3998877-49b4-4457-8981-28d98b970bc4"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{ARCHIVO_ENTRADA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="290" y="50" width="100" height="30" uuid="21e2d105-52ec-4f9a-9062-aa9f09a60ab3"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{ENTE_REP}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="696" y="20" width="100" height="30" uuid="55f831a0-9d23-46c6-aba9-b9fe7fcd6dbb"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{NOMBRE_REP}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="420" y="50" width="140" height="30" uuid="2afdbfb7-3e0d-43f9-84e9-9fa2e72170c5"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Fecha Cobranza:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="560" y="50" width="100" height="30" uuid="d1b0c4c9-dc0b-437a-939d-eb3676e7b010"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{fecha_cobranza}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="156" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="60" width="150" height="30" uuid="3f7ae733-21c6-4b59-95fa-1e28baac7b5d"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total de Registros: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="150" height="30" uuid="a1402130-2a95-4cec-b8eb-1fe99902ec94"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total de Rechazos:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="120" width="150" height="30" uuid="c53535f6-0be3-4a42-8306-a668a95d1a36"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[Total de Aceptados: ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="2" y="40" width="794" height="1" uuid="1b6d395b-4f4e-4458-a2d6-768d955bb949"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="10" width="238" height="30" uuid="a1a60f48-b262-4cb4-b007-9b34d6197139"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="false" isItalic="false"/>
+				</textElement>
+				<text><![CDATA[No hay registros rechazados.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="170" y="120" width="100" height="30" uuid="0f72dcec-735b-4327-bbae-089a484a1521"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cant_det}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="60" width="100" height="30" uuid="f1992a5f-03b8-43be-8ba1-4ffbefa1954a"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_registros}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="170" y="90" width="100" height="30" uuid="abcec50f-c9da-4604-942f-e4e2a18c632c"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{rechazados}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="120" width="330" height="30" uuid="5875b1ba-c388-4dce-a05d-ccb9b9c4ac50"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe_grabado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="60" width="330" height="30" uuid="278473f5-26a9-4727-9564-9ea1a7b6c1b9"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_importe}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="280" y="90" width="330" height="30" uuid="c43adc4b-9ea8-4208-95e9-66934fd5f4ea"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{importe_rechazado}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

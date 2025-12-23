@@ -1,0 +1,557 @@
+VERSION:055_5
+*N  NN -- Algoritmo de validación se toma desde:
+*$2020-10-08 09:51:50ALVAROC
+*N  NN -- https://es.wikipedia.org/wiki/Clave_%C3%9Anica_de_Identificaci%C3%B3n_Tributaria
+*$2020-10-08 09:51:56ALVAROC
+*N  NN -- Si, el cliente nos envio ese link de wikipedia para implementarlo
+*$2020-10-08 09:52:13ALVAROC
+*N  NN @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*&- Se cambió la lógica para que se puedan utilizar otros separadores además de @, 
+*&los mismos se determinan según cuál se encuentra presente en la trama obtenida 
+*&por el lector de códigos de barras.
+*&- También se agregó para el caso de los documentos duplicados la letra "F", ya 
+*&que solo se tenía en cuenta la letra "M" y esa solo viene cuando se trata de un 
+*&documento de una persona del género masculino.
+*&- Se agregó lógica para determinar el prefijo del documento según el género 
+*&obtenido desde el código de barras para cuando no viene incluido en la trama del 
+*&código de barras.
+*&- Se agregó una llamada a un nuevo SP que se encarga de generar el código 
+*&verificador correspondiente al documento cuando no vienen incluídos en la trama 
+*&del código de barras.
+*$2020-10-08 11:22:45ALVAROC
+*N  NN @002 NBCHSEG-234 Persona Humana - Validación - Código de barras – DNI
+*&- Se cambió la lógica para que se puedan utilizar otros separadores además de @, 
+*&los mismos se determinan según cuál se encuentra presente en la trama obtenida 
+*&por el lector de códigos de barras.
+*&- Se agrega un control con una llamada al procedimiento 
+*&almacenado "SP_AparicionesCaracterEnCadena" para determinar la cantidad de 
+*&separadores presente en la cadena obtenida desde el lector/ingresada a mano, si 
+*&tiene menos de 6 caracteres debe marcar la lectura como inválida.
+*$2020-10-08 14:36:18ALVAROC
+*N  NN @003 NBCHSEG-295 Validación de Longitud del código de barras
+*&- Se modifica validación de largo de cadena obtenida desde lectora de código de 
+*&barras (se validaba que el largo fuese de al menos 65 caracteres, ahora se 
+*&verifica que sean al menos 40).
+*$2020-11-12 10:16:59ALVAROC
+CNNNNN   00000000000000000000100
+/A=I677I678
+*$2021-11-19 15:00:01FMK
+ NSSNN 09208   CodigoBarra                                       INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:52:19ALVAROC
+ NNNNN 03265   DNI Nuevo/Viejo                                   INNSNF000007015200300202001011000000007000700300137000
+/V=F(MID, C9208.0, 1,1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-04-07 12:33:44FMK
+ NNNNN 33965   Mensaje error                                     INNNNK000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 14:21:50ALVAROC
+*N  NN INICIO @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 14:22:00ALVAROC
+*N  NN Se dejan separadores en capos para luego determinar cual se debe utilizar
+*$2020-10-08 10:55:04ALVAROC
+*N  NN Los separadores son exclusivos, si se detecta la presencia de uno de ellos, el otro no estará
+*$2020-10-08 10:55:32ALVAROC
+ NNNNN 00556   Separador                                         INNNNK000007015200300202001011000000007000700300137000
+/V="
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 14:19:16ALVAROC
+ NNNNN 00866   Separador                                         INNNNK000007015200300202001011000000007000700300137000
+/V=@
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 14:19:16ALVAROC
+CNNNNN   00000000000000000000100
+/F=C3265.0=C556OC3265.0=C866
+/P=I230
+/M=DNI viejo
+*$2020-10-08 10:55:59ALVAROC
+*N  NN INICIO @003 NBCHSEG-295 Validación de Longitud del código de barras
+*$2020-11-12 10:17:05ALVAROC
+CNNNNN ME00000000000000000000100
+/F=F(LEN,C9208)<40
+/P=I231
+/M=Lectura Inválida
+*$2020-12-10 14:52:23FMK
+*N  NN FIN @003 NBCHSEG-295 Validación de Longitud del código de barras
+*$2020-11-12 10:17:08ALVAROC
+CNNNNN ME00000000000000000000100
+/?=!I231
+/F=F(POS,C9208,C556)=0YF(POS,C9208,C866)=0
+/P=I231
+/M=Lectura Inválida
+*$2020-12-10 14:52:52FMK
+CNNNNN   00000000000000000000100
+/?=!I231
+/F=F(POS,C9208,C556)>0
+/P=I677
+/M=Separado por comillas
+*$2021-11-19 14:20:09FMK
+CNNNNN   00000000000000000000100
+/?=!I231Y!I677
+/F=F(POS,C9208,C866)>0
+/P=I678
+/M=Separado por arrobas
+*$2021-11-19 14:21:09FMK
+CNNNNN ME00000000000000000000100
+/?=!I677Y!I678Y!I231
+/P=I231
+/M=Lectura Inválida
+*$2021-11-19 14:21:46FMK
+ NNNNN 00556   Separador                                         INNNNA000007015200300202001011000000007000700300137000
+/?=!I231YI678
+/V=C866
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-11-19 14:22:15FMK
+*N  NN FIN @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 14:37:27ALVAROC
+*N  NN INICIO @002 NBCHSEG-234 Persona Humana - Validación - Código de barras – DNI
+*$2020-10-08 14:36:56ALVAROC
+ NNNNN 00565   Cantidad de separadores                           INNSNK000007015200300302021011000000007000700300137000
+/?=!I231
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 12:32:56ALVAROC
+CNNNNN  m00000000000000000000100
+/?=!I231
+/R=TOP/CLIENTES SP_AparicionesCaracterEnCadena C9208,C556,C565 O
+*$2020-10-08 14:31:23ALVAROC
+*N  NN Lectura invalida - Menos de 6 separadores
+*$2020-12-10 14:59:08FMK
+CNNNNN ME00000000000000000000100
+/?=!I231
+/F=C565<6
+/P=I231
+/M=Lectura Inválida
+*$2020-12-10 14:59:42FMK
+*N  NN FIN @002 NBCHSEG-234 Persona Humana - Validación - Código de barras – DNI
+*$2020-10-08 14:37:20ALVAROC
+*N  NN DNI Viejo
+*$2020-04-08 10:40:01FMK
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C9208, 2, F(LEN,C9208)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-26 17:34:53FMK
+*N  NN INICIO @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:14:07ALVAROC
+ NNNNN 33340   Documento                                         INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(RTRIM, F(LTRIM, F(MID,C9208, 1, F(POS, C9208,C556)-2)))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:14:11ALVAROC
+CNNNNN   00000000000000000000100
+/?=(F(POS,C33340,"M")>0)Y(!I231YI230)
+/P=I232
+/M=Documento duplicado
+*$2020-10-08 09:38:38ALVAROC
+CNNNNN   00000000000000000000100
+/?=(F(POS,C33340,"F")>0)Y(!I231YI230)
+/P=I232
+/M=Documento duplicado
+*$2020-10-08 09:38:44ALVAROC
+ NNNNN 33340   Documento                                         INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230YI232
+/V=F(MID,C33340, 2, F(LEN,C33340))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:39:17ALVAROC
+ NNNNN 33340   Documento                                         INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230YI232
+/V=F(PAD, F(VAL, C33340), 8)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:39:23ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:07:09ALVAROC
+ NNNNN 33341   Ejemplar                                          INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:07:21ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:07:33ALVAROC
+*N  NN Me salteo el digito x
+*$2020-05-26 17:34:53FMK
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:07:48ALVAROC
+ NNNNN 33342   Apellido 1                                        INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:08:01ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:08:20ALVAROC
+ NNNNN 33344   Nombre 1                                          INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:08:32ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:08:43ALVAROC
+*N  NN Me salteo el país
+*$2020-05-26 17:35:10FMK
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:08:53ALVAROC
+ NNNNN 33346   Fecha Nacimiento                                  INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:09:01ALVAROC
+*N  NN FIN @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:15:58ALVAROC
+ NNNNN 33346   Fecha Nacimiento                                  INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C33346,7,4)+F(MID,C33346,4,2)+F(MID,C33346,1,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-26 17:35:10FMK
+*N  NN INICIO @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:16:09ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:09:10ALVAROC
+ NNNNN 33347   Sexo                                              INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:09:18ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:09:25ALVAROC
+ NNNNN 33348   Fecha Emision                                     INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:09:31ALVAROC
+*N  NN FIN @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:16:17ALVAROC
+ NNNNN 33348   Fecha Emision                                     INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C33348,7,4)+F(MID,C33348,4,2)+F(MID,C33348,1,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-26 17:35:10FMK
+*N  NN INICIO @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:17:18ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:09:45ALVAROC
+ NNNNN 33349   Nro Tramite                                       INNSNF000007015200300452001010000000007000700300137000
+/?=!I231YI230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:09:51ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231YI230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:09:58ALVAROC
+*N  NN En caso de que el código de barras no incluya prefijo y dígito verificador
+*$2020-10-08 09:07:18ALVAROC
+ NNNNN 33339   Documento                                         INNNNF000007015200300302001011000000007000700300137000
+/?=!I231YI230Y(C33347='M')
+/V="20"+C33340
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:07:42ALVAROC
+ NNNNN 33339   Documento                                         INNNNF000007015200300302001011000000007000700300137000
+/?=!I231YI230Y(C33347='F')
+/V="27"+C33340
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:08:23ALVAROC
+ NNNNN 00950   Digito Verificador                                INNSN 000007015200300202001011000000007000700300137000
+/?=!I231YI230
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:27:44ALVAROC
+CNNNNN  m00000000000000000000100
+/?=!I231YI230
+/R=TOP/CLIENTES SP_GeneraDigVerifCUITL C33339,C950 O
+*$2020-10-08 09:08:36ALVAROC
+ NNNNN 33339   Documento                                         INNNNF000007015200300302001011000000007000700300137000
+/?=!I231YI230YA(C950="10")
+/V="23"+C33340
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:48:15ALVAROC
+CNNNNN  m00000000000000000000100
+/?=!I231YI230YA(C950="10")
+/R=TOP/CLIENTES SP_GeneraDigVerifCUITL C33339,C950 O
+*$2020-10-08 09:48:45ALVAROC
+ NNNNN 33339   Documento                                         INNNNF000007015200300302001011000000007000700300137000
+/?=!I231YI230
+/V=C33339+C950
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:08:45ALVAROC
+*N  NN DNI nuevo
+*$2020-05-26 17:35:10FMK
+ NNNNN 33349   Nro Tramite                                       INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:10:07ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231Y!I230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:10:13ALVAROC
+ NNNNN 33342   Apellido 1                                        INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:10:19ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231Y!I230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:10:29ALVAROC
+ NNNNN 33344   Nombre 1                                          INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:10:35ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231Y!I230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:10:45ALVAROC
+ NNNNN 33347   Sexo                                              INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:10:53ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231Y!I230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:11:00ALVAROC
+ NNNNN 33340   Documento                                         INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:11:06ALVAROC
+*N  NN FIN @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:17:11ALVAROC
+CNNNNN   00000000000000000000100
+/?=(F(POS,C33340,"M")>0)Y(!I231Y!I230)
+/P=I232
+*$2020-07-21 13:43:10FMK
+*N  NN INICIO @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:17:24ALVAROC
+CNNNNN   00000000000000000000100
+/?=(F(POS,C33340,"F")>0)Y(!I231Y!I230)
+/P=I232
+*$2020-10-07 11:19:18ALVAROC
+ NNNNN 33340   Documento                                         INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230YI232
+/V=F(MID,C33340, 2, F(LEN,C33340))
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-07-21 13:44:45FMK
+ NNNNN 33340   Documento                                         INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230YI232
+/V=F(PAD, F(VAL, C33340), 8)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-06 15:37:01ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231Y!I230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:11:25ALVAROC
+ NNNNN 33341   Ejemplar                                          INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:11:31ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231Y!I230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:11:39ALVAROC
+ NNNNN 33346   Fecha Nacimiento                                  INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:12:13ALVAROC
+*N  NN FIN @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:17:33ALVAROC
+ NNNNN 33346   Fecha Nacimiento                                  INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C33346,7,4)+F(MID,C33346,4,2)+F(MID,C33346,1,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-26 17:43:48FMK
+*N  NN INICIO @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:17:49ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231Y!I230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:12:29ALVAROC
+ NNNNN 33348   Fecha Emision                                     INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:12:35ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231Y!I230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:12:42ALVAROC
+ NNNNN 33348   Fecha Emision                                     INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C9208, 1, F(POS, C9208,C556)-1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:12:47ALVAROC
+*N  NN FIN @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:18:03ALVAROC
+ NNNNN 33348   Fecha Emision                                     INNSNF000007015200300452001010000000007000700300137000
+/?=!I231Y!I230
+/V=F(MID,C33348,7,4)+F(MID,C33348,4,2)+F(MID,C33348,1,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-26 17:43:48FMK
+*N  NN INICIO @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 11:18:24ALVAROC
+ NNNNN 09208   CodigoBarra                                       INNSNF000007015200300452001011000000007000700300137000
+/?=!I231Y!I230
+/V=F(RIGHT, C9208, F(LEN,C9208)-F(POS,C9208,C556) )
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 15:12:54ALVAROC
+*N  NN Armo el documento con los dígitos complementarios
+*$2020-05-26 17:24:17FMK
+ NNNNN 33339   Documento                                         INNNNF000007015200300302001011000000007000700300137000
+/?=!I231Y!I230YF(LEN,C9208)=3
+/V=F(MID, C9208,1,2) +C33340 + F(MID,C9208,3,1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-05-26 17:37:08FMK
+*N  NN Dejo el documento como esta
+*$2020-05-26 17:24:08FMK
+*N  NN En caso de que el código de barras no incluya prefijo y dígito verificador
+*$2020-10-07 11:22:29ALVAROC
+ NNNNN 33339   Documento                                         INNNNF000007015200300302001011000000007000700300137000
+/?=!I231Y!I230YF(LEN,C9208)#3Y(C33347='M')
+/V="20"+C33340
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 17:35:48ALVAROC
+ NNNNN 33339   Documento                                         INNNNF000007015200300302001011000000007000700300137000
+/?=!I231Y!I230YF(LEN,C9208)#3Y(C33347='F')
+/V="27"+C33340
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 17:35:53ALVAROC
+ NNNNN 00950   Digito Verificador                                INNSN 000007015200300202001011000000007000700300137000
+/?=!I231Y!I230YF(LEN,C9208)#3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:27:34ALVAROC
+CNNNNN  m00000000000000000000100
+/?=!I231Y!I230YF(LEN,C9208)#3
+/R=TOP/CLIENTES SP_GeneraDigVerifCUITL C33339,C950 O
+*$2020-10-07 17:34:51ALVAROC
+ NNNNN 33339   Documento                                         INNNNF000007015200300302001011000000007000700300137000
+/?=!I231Y!I230YF(LEN,C9208)#3YA(C950="10")
+/V="23"+C33340
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-08 09:49:13ALVAROC
+CNNNNN  m00000000000000000000100
+/?=!I231Y!I230YF(LEN,C9208)#3YA(C950="10")
+/R=TOP/CLIENTES SP_GeneraDigVerifCUITL C33339,C950 O
+*$2020-10-08 09:49:17ALVAROC
+ NNNNN 33339   Documento                                         INNNNF000007015200300302001011000000007000700300137000
+/?=!I231Y!I230YF(LEN,C9208)#3
+/V=C33339+C950
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-07 17:36:51ALVAROC
+*N  NN FIN @001 NBCHSEG-79 Errores del Uso del Codigo de Barras
+*$2020-10-08 14:37:59ALVAROC
+*N  NN INICIO @002 NBCHSEG-234 Persona Humana - Validación - Código de barras – DNI
+*$2020-10-08 14:37:45ALVAROC
+ NNNNN 33965   Mensaje error                                     INNNNK000007015200300452001011000000007000700300137000
+/?=I231Y1=0
+/V=Lectura inválida
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-12-10 15:00:23FMK
+*N  NN FIN @002 NBCHSEG-234 Persona Humana - Validación - Código de barras – DNI
+*$2020-10-08 14:37:55ALVAROC
+*#I677#Separador por comillas
+*#I678#Separador por arrobas
+*#I231#Trama invalida
+*#I230#DNI Viejo
+*#I232#Documento duplicado

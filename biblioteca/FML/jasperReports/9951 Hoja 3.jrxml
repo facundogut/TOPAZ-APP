@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="9951" language="groovy" pageWidth="576" pageHeight="792" columnWidth="576" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="369"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="Direccion">
+		<parameter name="ID_SOLICITUD" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT  dim1.C1481+', '+dim2.C1207+', '+dim3.C1216+', '+dim4.NOMDIM4+', '+d.REFERENCIA as DIR
+	FROM SL_SOLICITUDCREDITO s, TC_DIRECCIONES d,
+	TC_DIR_DIM1 dim1,TC_DIR_DIM2 dim2,TC_DIR_DIM3 dim3,TC_DIR_DIM4 dim4
+	WHERE d.ID=s.C5187 AND d.FORMATO='P' AND d.TIPODIRECCION='R' AND
+	dim1.C1480=d.DIM1 AND
+	dim2.C1205=d.DIM1 AND dim2.C1206=d.DIM2 AND
+	dim3.C1212=d.DIM1 AND dim3.C1214=d.DIM2 AND dim3.C1215=d.DIM3 AND
+	dim4.CODDIM1=d.DIM1 AND dim4.CODDIM2=d.DIM2 AND dim4.CODDIM3=d.DIM3 AND dim4.CODDIM4=d.DIM4
+	AND s.C5000=$P{ID_SOLICITUD}*100 AND
+	(s.tz_lock < 300000000000000 OR s.tz_lock >= 400000000000000) AND (s.tz_lock < 100000000000000 OR s.tz_lock >= 200000000000000) AND
+	(d.tz_lock < 300000000000000 OR d.tz_lock >= 400000000000000) AND (d.tz_lock < 100000000000000 OR d.tz_lock >= 200000000000000)]]>
+		</queryString>
+		<field name="DIR" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="DataMoneda">
+		<parameter name="codigo" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT (c6401) simbolo FROM CO_MONEDAS WHERE C6399 =$P{codigo}]]>
+		</queryString>
+		<field name="simbolo" class="java.lang.String"/>
+	</subDataset>
+	<parameter name="NRO_SOLICITUD" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[Select C5036, MONEDA from SL_SOLICITUDCREDITO where C5000 =$P{NRO_SOLICITUD}*100]]>
+	</queryString>
+	<field name="C5036" class="java.math.BigDecimal"/>
+	<field name="MONEDA" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="708" splitType="Stretch">
+			<staticText>
+				<reportElement x="2" y="0" width="573" height="708"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Arial" size="9"/>
+				</textElement>
+				<text><![CDATA[CLAUSULA  SEPTIMA: IMPUTACIÓN DE PAGOS: Los  deudores tienen  derecho a que por el presente crédito  se les imputen los pagos que el siguiente orden: 1) costo y gastos de recuperación extrajudicial o judicial 2) a los intereses moratorios que pudieran existir; 3) gastos  que pudieren proceder conforme a lo estipulado en este contrato 4) comisiones que pudieren proceder conforme a lo estipulado en este contrato  5) a los intereses corrientes adeudados; 6) a la amortización al principal    aceptan  que todo pago que efectúen a EL ACREEDOR bajo el presente crédito se imputará en el siguiente orden: i) gastos que pudieren proceder conforme a lo estipulado en este contrato; ii) comisiones que pudieren proceder conforme a lo estipulado en este contrato; iii) a los intereses moratorios que pudieran existir; iv) a los intereses corrientes adeudados; v) al mantenimiento de valor; vi) a la amortización al principal.
+En cualquier momento, Los deudores  tendrán  derecho a solicitar –a EL ACREEDOR- información relativa al estado de cumplimiento del presente contrato, incluyendo la información de sus saldos deudores y de los conceptos a que se hayan aplicado los pagos efectuados por él.
+En caso de duda o inconformidad sobre la correcta u oportuna aplicación de sus pagos, los deudores son  invitados a formular sus consultas, quejas o reclamos en las sucursales  de EL ACREEDOR donde celebró el presente contrato y/o efectúa ordinariamente sus pagos. Cada pago efectuado por los deudores se documentará con recibos emitidos por EL ACREEDOR.
+
+CLAUSULA OCTAVA: MANTENIMIENTO DE VALOR: Los  Deudores entienden  y aceptan  que el presente crédito estará sujeto a mantenimiento de valor con respecto al dólar de los Estados Unidos de América. Por lo anterior, Los deudores  se obligan a pagar cualquier incremento en la cuota que por deslizamiento o devaluación que sufra la moneda córdoba con respecto al dólar de los Estados Unidos de América, según tipo de cambio oficial establecido por el Banco Central de Nicaragua a la fecha del cumplimiento de cada pago pactado. El tipo de cambio oficial aplicado puede ser consultado, por los  deudores, en la página web de dicha institución o en cualquiera de las sucursales de EL ACREEDOR.
+
+CLAUSULA NOVENA: OBLIGACIÓN DE INFORMACIÓN. AUTORIZACIÓN DE CONSULTA CENTRAL DE RIESGO: LOS DEUDORES declaran  que es cierta la información suministrada a EL ACREEDOR en forma previa y/o durante la celebración de este contrato y se obliga a proveer a EL ACREEDOR toda información relevante que le sea requerida por éste. De igual forma, Los DEUDORES se obligan a presentar a EL ACREEDOR, sin necesidad de ningún requerimiento de parte éste, toda información que EL ACREEDOR deba conocer sobre cualquier circunstancia que afecte o pudiera llegar a afectar negativamente la posibilidad -de EL ACREEDOR- de recuperar los fondos desembolsados bajo el presente crédito y/o de ejecutar las garantías constituidas a su favor.
+LOS  DEUDORES  autorizan  a EL ACREEDOR, en forma expresa y anticipada, sin necesidad de autorización ulterior, para dar a conocer a, o recibir de las Centrales de Riesgos autorizadas, presentes o futuras, información relacionada con el historial de pagos y comportamiento crediticio de Los DEUDORES y EL FIADOR. La revocación futura que LOS DEUDORES  eventualmente hicieren de la presente autorización, podrán facultar a EL ACREEDOR, a juicio de éste, para proceder al vencimiento anticipado del presente contrato y a cobrar cualquier saldo deudor, de capital o intereses, a cargo de Los DEUDORES, que reflejare el departamento de contabilidad de EL ACREEDOR.
+
+CLAUSULA DECIMA: VENCIMIENTO ANTICIPADO: Los DEUDORES entienden  y aceptan que EL ACREEDOR podrá dar por vencido el plazo del Mutuo aquí otorgado y exigir el inmediato y total pago de la suma adeudada, sin necesidad de requerimiento alguno, judicial o extrajudicial, pudiendo reclamar el pago total de lo adeudado, los daños y perjuicios, los gastos, trámites y honorarios causados para hacerle cumplir con sus obligaciones, en caso que Los DEUDORES cayeren en una o varias de las siguientes situaciones: a) En caso de mora o incumplimiento de cualquier obligación bajo el presente contrato; b) Por cualquier declaración hecha por Los DEUDORES a EL ACREEDOR que resultare ser falsa, engañosa o maliciosa; c) Por destinar los fondos desembolsados por EL ACREEDOR para fines distintos de los establecidos en este contrato o para la comisión de cualquier actividad ilícita, incluyendo lavado de dinero y/o financiamiento al terrorismo; d) Por quiebra, insolvencia o concurso de acreedores de LOS DEUDORES; e) Por el mero hecho de que un tercero entablare ejecución judicial en contra de LOS DEUDORES  y dicha ejecución, a juicio de EL ACREEDOR, afectare su capacidad para honrar el presente contrato; f) Por no comunicar inmediatamente por escrito a EL ACREEDOR de cualquier circunstancia o hecho que, de acuerdo al buen juicio de EL ACREEDOR, pudiera tener un efecto adverso en la capacidad de pago de parte de LOS DEUDORES, o en su habilidad de cumplir fielmente con todas las obligaciones contenidas en el presente contrato; g) Si hubieren claros indicios de operaciones inusuales o sospechosas realizadas por LOS DEUDORES (inclusive con fondos propios) que induzcan a presumir la comisión del delito de lavado de dinero y de otras actividades ilícitas, incluida la del terrorismo; h) Si LOS DEUDORES ocultaren sus domicilios o no pudieren  ser localizados en el domicilio señalados, y/o cambiare la dirección de sus domicilios y no fuere notificada la misma a EL ACREEDOR o, cuando habiendo informado sobre la nueva dirección, fuere imposible ubicarla; i) Si los deudores fueren privados de su libertad en ocasión de la investigación de delitos o faltas que afecten su capacidad de pago; j) Por deterioro de la solvencia económica de Los DEUDORES, motivado por adeudos contraídos que afecten su capacidad de pago;  k) Por la negativa de LOS DEUDORES a tomar y/o renovar la póliza requerida por EL ACREEDOR y/o endosarla en garantía a favor de éste, en su carácter de primer beneficiario de la misma.
+Es expresamente convenido que los deudores estarán asistidos del mismo derecho para terminar unilateralmente el presente contrato, en caso que EL ACREEDOR incumpliere cualquiera de sus obligaciones establecidas en el mismo. En tal supuesto, los deudores deberán  cancelar en forma inmediata el saldo deudor que hubiere a su cargo y que apareciere reflejado en la contabilidad de EL ACREEDOR, con los intereses devengados a la fecha y sin incurrir en ningún tipo de penalización por terminación anticipada del contrato.
+
+CLAUSULA DECIMA PRIMERA: ENTREGA DE RECIBOS DE PAGO Y DE DOCUMENTO DE CANCELACIÓN DEL CRÉDITO: En caso que, por error de EL ACREEDOR, éste emitiere y entregare a Los DEUDORES un recibo de pago correspondiente a una cuota posterior a la que debería corresponder conforme los pagos recibidos, dicha circunstancia no extinguirá los pagos intermedios a que está obligado LOS DEUDORES, procediendo únicamente la sustitución del recibo de pago erróneo.
+De igual forma, en caso que por error de LOS DEUDORES pagaren  indebidamente un monto previamente cancelado, éste tendrá derecho al reembolso del monto ya pagado o, a su discreción, a que se aplique dicho monto al saldo de la deuda.
+Una vez que LOS DEUDORES  hubieren cancelados la totalidad de la  cuota del saldo deudor ____________________  a su cargo, EL ACREEDOR se obliga a entregarle, dentro de un plazo de hasta cinco días hábiles, el recibo de cancelación correspondiente.
+
+CLAUSULA DÉCIMA  SEGUNDA: DOMICILIO: Los DEUDORES para cualquier efecto jurídico, incluyendo cualquier acción prejudicial o judicial que deba promover EL ACREEDOR en su contra como consecuencia del incumplimiento del presente contrato, señala el siguiente domicilio: ____________________________________________________________________________________.- ]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement key="table" style="table" x="43" y="692" width="532" height="16"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Direccion">
+						<datasetParameter name="ID_SOLICITUD">
+							<datasetParameterExpression><![CDATA[$P{NRO_SOLICITUD}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="532">
+						<jr:detailCell style="table_TD" height="16" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="532" height="16"/>
+								<textElement>
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{DIR}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField pattern="#,##0.00">
+				<reportElement mode="Opaque" x="435" y="641" width="73" height="13"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Arial" size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{C5036}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="404" y="641" width="30" height="12"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="DataMoneda">
+						<datasetParameter name="codigo">
+							<datasetParameterExpression><![CDATA[$F{MONEDA}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="30">
+						<jr:detailCell style="table 1_TD" height="12" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="30" height="12"/>
+								<textElement verticalAlignment="Middle">
+									<font fontName="Arial" size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.String"><![CDATA[$F{simbolo}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+		</band>
+	</detail>
+</jasperReport>

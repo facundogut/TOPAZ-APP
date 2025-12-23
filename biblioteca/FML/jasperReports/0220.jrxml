@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2020-05-15T11:53:36 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RegistroFirmaPFPJ" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9595ffc2-cca0-4398-b0d7-d4cbcc99c133">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<parameter name="NUMPER" class="java.lang.Integer">
+		<parameterDescription><![CDATA[Número de Persona]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT P.PRIMERNOMBRE, P.SEGUNDONOMBRE, P.APELLIDOPATERNO,P.APELLIDOMATERNO,D.TIPO_DOC_FISICO,  D.NUM_DOC_FISICO, D.TIPODOCUMENTO, D.NUMERODOCUMENTO,  
+P.FECHANACIMIENTO, P.NACIONALIDAD, 
+(SELECT NOMBREPAIS FROM CLI_PAISES WHERE CODIGOPAIS=D.COD_PAIS_ORIGEN) AS NOMBREPAIS
+FROM CLI_PERSONASFISICAS AS P, CLI_DOCUMENTOSPFPJ AS D 
+WHERE (P.NUMEROPERSONAFISICA = D.NUMEROPERSONAFJ) 
+AND P.NUMEROPERSONAFISICA=$P{NUMPER}
+AND P.TZ_LOCK=0 AND D.TZ_LOCK = 0]]>
+	</queryString>
+	<field name="PRIMERNOMBRE" class="java.lang.String"/>
+	<field name="SEGUNDONOMBRE" class="java.lang.String"/>
+	<field name="APELLIDOPATERNO" class="java.lang.String"/>
+	<field name="APELLIDOMATERNO" class="java.lang.String"/>
+	<field name="TIPO_DOC_FISICO" class="java.lang.String"/>
+	<field name="NUM_DOC_FISICO" class="java.lang.String"/>
+	<field name="TIPODOCUMENTO" class="java.lang.String"/>
+	<field name="NUMERODOCUMENTO" class="java.lang.String"/>
+	<field name="FECHANACIMIENTO" class="java.sql.Timestamp"/>
+	<field name="NACIONALIDAD" class="java.lang.String"/>
+	<field name="NOMBREPAIS" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="64">
+			<image>
+				<reportElement x="-20" y="-20" width="595" height="84" uuid="077ce317-85a7-4fa0-b253-bf3a141b5bee"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root") + "logolargo.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="210" y="0" width="310" height="30" uuid="e2184a8e-a4f1-4dcd-91e9-c781860d94a5"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DECLARACIÓN JURADA SOBRE LA CONDICIÓN DE 
+PERSONAS EXPUESTAS POLITICAMENTE]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="726" splitType="Stretch">
+			<staticText>
+				<reportElement x="40" y="62" width="216" height="20" uuid="55994c62-80d8-4e2f-b197-1ebfdc68bfbb"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[En caso afirmativo indicar detalladamente el motivo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="72" width="480" height="29" uuid="102f8ddf-0552-48f9-bb19-a97e263d0260"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Además, asume el compromiso de informar cualquier modificación que se produzca a este respecto, dentro de los treinta (30) días de ocurrida, mediante la presentación de una nueva declaración jurada.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="22" width="91" height="20" uuid="9ef2382c-425f-47d7-bd5c-c42f8d6666f7"/>
+				<textElement verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[El/la (1) que suscribe]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="94" width="80" height="12" uuid="36856da2-28a5-45ee-832d-74827fd05a98"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Tipo de Documento:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="120" y="32" width="351" height="1" uuid="b934a0d4-048f-4589-82c5-39f47928ec7c">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="120" y="106" width="40" height="1" uuid="842b393e-a454-46f8-954b-2cebb22b3c6f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="350" y="106" width="170" height="1" uuid="5455254f-edd7-487c-8c50-24846b8a5ecb">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="90" y="118" width="120" height="1" uuid="b306b0c7-b69e-4b0a-ad47-082922b61353">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="230" y="72" width="290" height="1" uuid="48f9ca25-1039-43fe-bb5c-985782f5272d">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement x="40" y="106" width="30" height="12" uuid="f91cb8f5-a615-41df-91ca-92ca50c8e5b2"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPODOCUMENTO}+"."]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="210" y="94" width="80" height="12" uuid="cfd23d60-5ad0-407a-badf-25528cf1db54"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUM_DOC_FISICO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="106" width="110" height="13" uuid="1052a114-a591-4e28-9c01-e68936dd9a6c"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NUMERODOCUMENTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="94" width="40" height="12" uuid="13acd46d-4769-4695-ba4d-b3048d1e2d4b"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_DOC_FISICO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="471" y="22" width="49" height="20" uuid="744430dc-dfed-44bd-bf7f-10e56eda3057"/>
+				<textElement textAlignment="Right" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[(2)  declara]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="32" width="480" height="40" uuid="201d6e20-d23e-46dd-a483-edd538f73cb9"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[bajo juramento que los datos consignados en la presente son correctos, completos y fiel expresión de la verdad y que SI / NO (1) se encuentra incluido/a y/o alcanzado/a dentro de la “Nómina de Personas Expuestas Políticamente” aprobada por la Unidad de Información Financiera, que ha leído.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="290" y="94" width="70" height="12" uuid="fbdaca86-39f0-40e1-a70e-95fa3d819fe0"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[País de Emisión:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="160" y="94" width="40" height="12" uuid="f254752f-6d09-47c0-9443-a66924f03e4b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[(3) N°:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="200" y="106" width="89" height="1" uuid="5289d218-419c-40d8-8639-45d77c970e69">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="70" y="106" width="20" height="12" uuid="836a4dd9-1bf0-4e41-99ee-3e144817c9f7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[N°:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="210" y="106" width="100" height="13" uuid="22eaf970-b529-4555-b20b-5b2fed3b46c3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Carácter de invocado (4):]]></text>
+			</staticText>
+			<line>
+				<reportElement x="310" y="119" width="210" height="1" uuid="a4cb1158-e986-4e64-af48-4af63ca5670e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="152" width="480" height="90" uuid="1225c285-b3a7-4414-8387-d33cc0f90453"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[(1) Tachar lo que no corresponda.
+(2) Integrar con el nombre  y apellido del cliente, en el caso de personas físicas, aun cuando en su representación firme un apoderado.
+(3) Indicar DNI, LE o LC para argentinos nativos. Para extranjeros: DNI extranjeros, Carné internacional, Pasaporte, Certificado provisorio, Documento de identidad del respectivo país, según corresponda.
+(4) Indicar titular, representante legal, apoderado. Cuando se trate de apoderado, el poder otorgado debe ser amplio y general y estar vigente a la fecha en que se suscriba la presente declaración.
+]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="230" width="480" height="30" uuid="af34ee10-91ae-458a-a128-114ee34fbf6f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nota: Esta declaración deberá ser integrada por DUPLICADO, el que intervenido por la entidad servirá como constancia de recepción de la presente para el cliente.]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="40" y="260" width="480" height="1" uuid="994b19b5-2617-4624-9417-4df5ad4431bd">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="40" y="150" width="480" height="1" uuid="b4807de6-eb46-4749-abd2-8d9b107ec031">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.75"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="440" width="480" height="30" uuid="ab400c83-20c8-4a2c-9e95-b5046dc6f3a8"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resolución 134/2018 - RESOL-2018-134-APN-UIF/MHA 
+ARTÍCULO 1º.- PERSONAS EXPUESTAS POLITICAMENTE EXTRANJERAS.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="470" width="480" height="190" uuid="c3dd0836-ed8c-49b9-8b22-b5b66d78af69"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="0.0"/>
+				</textElement>
+				<text><![CDATA[Son consideradas Personas Expuestas Políticamente Extranjeras, los funcionarios públicos pertenecientes a países extranjeros, que se desempeñen o se hayan desempeñado, en alguno de los cargos que se detallan a continuación:
+a. Jefe de Estado, jefe de Gobierno, Gobernador, Intendente, Ministro, Secretario, Subsecretario de Estado u otro cargo gubernamental equivalente.
+b. Miembro del Parlamento, Poder Legislativo, o de otro órgano de naturaleza equivalente.
+c. Juez, Magistrado de Tribunales Superiores u otra alta instancia judicial, o administrativa, en el ámbito del Poder Judicial.
+d. Embajador o cónsul, de un país u organismo internacional.
+e. Autoridad, apoderado, integrantes del órgano de administración o control y miembros relevantes de partidos políticos extranjeros.
+f. Oficial de alto rango de las fuerzas armadas (a partir de coronel o grado equivalente en la fuerza y/o país de que se trate) o de las fuerzas de seguridad pública (a partir de comisario o rango equivalente según la fuerza y/o país de que se trate).
+g. Miembro de los órganos de dirección y control de empresas de propiedad estatal.
+h. Miembro de los órganos de dirección o control de empresas de propiedad privada o mixta; cuando el Estado posea 
+una participación igual o superior al VEINTE POR CIENTO (20%) del capital o del derecho a voto, o ejerza de forma directa o indirecta el control de la compañía.
+i. Director, gobernador, consejero, síndico o autoridad equivalente de bancos centrales y otros organismos de regulación y/o supervisión.
+j. Director, subdirector; miembro de la junta, directorio, alta gerencia, o cargos equivalentes, apoderados, representantes l
+egales o autorizados, de una organización internacional, con facultades de decisión, administración o disposición.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="660" width="480" height="14" uuid="7b485f06-3789-419c-a58c-f72e4b231014"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ARTÍCULO 2º.- PERSONAS EXPUESTAS POLITICAMENTE NACIONALES]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="674" width="480" height="52" uuid="5a8da18c-decf-4c1e-9d1f-39529b859118"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Son  consideradas  Personas  Expuestas  Políticamente  Nacionales,  los  funcionarios  públicos  del  país  que  se  desempeñen  o  se  hayan desempeñado en alguno de los siguientes cargos:
+a. Presidente o Vicepresidente de la Nación.
+b. Senador o Diputado de la Nación.
+c. Magistrado del Poder Judicial de la Nación.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="131" y="20" width="340" height="12" uuid="d97c36f8-2530-4e98-9e01-2e20af022211"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PRIMERNOMBRE}+" "+$F{SEGUNDONOMBRE}+" "+$F{APELLIDOPATERNO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="360" y="94" width="160" height="12" uuid="2df234af-8557-4fcb-af4b-ad7114420c77"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{NOMBREPAIS}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="131" width="60" height="12" uuid="81debc2d-1c0d-403e-9fed-6bd4b780fafa"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Lugar y Fecha:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="100" y="142" width="190" height="1" uuid="03ece890-02f4-4ad3-bde5-02d97a294b85">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="290" y="131" width="30" height="12" uuid="d5e759c6-747f-48c7-bbd5-ea44f61adc7e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9"/>
+				</textElement>
+				<text><![CDATA[Firma:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="320" y="142" width="200" height="1" uuid="b032ba87-e755-4c44-a1ec-553ed6fc897f">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="270" width="480" height="148" uuid="96d2647d-fbaf-472a-bdc7-e62069d83d05"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[“Por la presente se informa al Cliente:
+a) Que los datos personales aquí brindados serán utilizados por el Nuevo Banco del Chaco S.A. (Banco) para la identificación del Cliente en su operatoria con el Banco y el análisis de la presente solicitud. Podrán ser enviados a organismos de control y judiciales legalmente facultados para el acceso a los mismos.
+b) Que los datos integrarán la base de datos de clientes de titularidad de Nuevo Banco del Chaco S.A., con domicilio en Güemes N° 102, Resistencia, Chaco. 
+c) Que el suministro de los datos resulta necesario y obligatorio a los efectos mencionados precedentemente, siendo susceptible de ser rechazada la presente solicitud en caso de no proporcionarse los mismos o si éstos fueran inexactos. 
+d) Que el Cliente es responsable de la exactitud de los datos suministrados.
+e) Que el Cliente posee la facultad de solicitar acceso, actualización, rectificación y/o supresión de sus datos personales conforme lo dispuesto por la ley 25.326.
+f) La Agencia de Acceso a la Información Pública, en su carácter de Órgano de Control de la ley 25.326, tiene la atribución de atender las denuncias y reclamos que interpongan quienes resulten afectados en sus derechos por incumplimiento de las normas vigentes en materia de protección de datos personales.”]]></text>
+			</staticText>
+		</band>
+		<band height="728">
+			<staticText>
+				<reportElement x="40" y="0" width="480" height="339" uuid="59aab3b1-4610-4829-845a-06d588131452"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="0.0"/>
+				</textElement>
+				<text><![CDATA[d. Magistrado del Ministerio Público de la Nación.
+e. Defensor del Pueblo de la Nación o Defensor del Pueblo Adjunto.
+f. Jefe de Gabinete de Ministros, Ministro, Secretario o Subsecretario del Poder Ejecutivo Nacional.
+g. Interventor federal, o colaboradores del interventor federal con categoría no inferior a Director o su equivalente.
+h. Síndico General de la Nación o Síndico General Adjunto de la Sindicatura General de la Nación; Presidente o Auditor General de la Auditoría General de la Nación; autoridad superior de un ente regulador o de los demás órganos que integran los sistemas de control del sector público  nacional;  miembros  de  organismos  jurisdiccionales  administrativos, o personal de dicho organismo, con categoría  no  inferior  a  la  dedirector o su equivalente.
+i.  Miembro del Consejo de la Magistratura de la Nación o del Jurado de Enjuiciamiento.
+j.  Embajador o Cónsul.
+k. Personal de las Fuerzas Armadas, de la Policía Federal Argentina, de Gendarmería Nacional, de la Prefectura Naval Argentina, del Servicio Penitenciario Federal o de la Policía de Seguridad Aeroportuaria con jerarquía no menor de coronel o grado equivalente según la fuerza.
+l. Rector, Decano o Secretario de las Universidades Nacionales.
+m. Funcionario  o  empleado  con  categoría  o  función  no  inferior  a  la  de  Director  General  o  Nacional,  de  la  Administración  Pública  Nacional, centralizada o descentralizada, de entidades autárquicas, bancos y entidades financieras del sistema oficial, de las obras sociales administradas por  el  Estado,  de  empresas  del  Estado,  las  sociedades  del  Estado  y  el  personal  con  similar  categoría  o  función,  designado  a  propuesta  del Estado en sociedades de economía mixta, sociedades anónimas con participación estatal o en otros entes del sector público.
+n. Funcionario  o  empleado  público  nacional encargado  de  otorgar  habilitaciones  administrativas,  permisos o concesiones, para el  ejercicio de cualquier actividad; como así  también  todo  funcionario o empleado público encargado de controlar  el  funcionamiento de dichas actividades o de ejercer cualquier otro control en virtud de un poder de policía.
+o. Funcionario público de algún organismo de control de servicios públicos, con categoría no inferior a la de Director General o Nacional.
+p. Personal del Poder Legislativo de la Nación, con categoría no inferior a la de Director.
+q. Personal del Poder Judicial de la Nación o del Ministerio Público de la Nación, con categoría no inferior a Secretario.
+r. Funcionario o empleado público que integre comisiones de adjudicación  de  licitaciones, de  compra o de recepción de bienes, o participe  en la toma de decisiones de licitaciones o compras.
+s.  Funcionario público responsable de administrar  un  patrimonio  público o privado, o controlar o fiscalizar los ingresos públicos  cualquiera fuera su naturaleza.
+t. Director o Administrador de alguna entidad sometida al control externo del Honorable Congreso de la Nación, de conformidad con lo dispuesto en el artículo 120 de la Ley Nº 24.156.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="360" width="480" height="289" uuid="e1f9bc85-dba8-4601-8077-b1ffc1879c91"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9" isBold="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="0.0"/>
+				</textElement>
+				<text><![CDATA[Son consideradas Personas Expuestas Políticamente, los funcionarios públicos que se desempeñen o se hayan desempeñado en alguno de los siguientes cargos, a nivel Provincial, Municipal o de la Ciudad Autónoma de Buenos Aires:
+a. Gobernador o Vicegobernador, Intendente o Vice-intendente, Jefe de Gobierno o Vicejefe de Gobierno.
+b. Ministro de Gobierno, Secretario, Subsecretario, Ministro de los Tribunales Superiores de Justicia de las provincias o de la Ciudad Autónoma de Buenos Aires.
+c. Juez o Secretario de los Poderes Judiciales Provinciales o de la Ciudad Autónoma de Buenos Aires.
+d. Magistrado perteneciente al Ministerio Público, o su equivalente, en las provincias o en la Ciudad Autónoma de Buenos Aires.
+e. Miembro del Consejo de la Magistratura o del Jurado de Enjuiciamiento, o su equivalente, de las Provincias o de la Ciudad Autónoma de Buenos Aires.
+f. Defensor del Pueblo o Defensor del Pueblo Adjunto, en las Provincias o en la Ciudad Autónoma de Buenos Aires.
+g. Jefe de Gabinete de Ministros, Ministro, Secretario o Subsecretario del Poder Ejecutivo de las Provincias o de la Ciudad Autónoma de Buenos Aires.
+h. Legislador provincial, municipal o de la Ciudad Autónoma de Buenos Aires.
+i. Máxima autoridad de los organismos de control o de los entes autárquicos provinciales, municipales o de la Ciudad Autónoma de Buenos Aires.
+j. Máxima autoridad de las sociedades de propiedad de los estados provinciales, municipales o de la Ciudad Autónoma de Buenos Aires.
+k. Rector, Decano o Secretario de universidades provinciales.
+l. Funcionario o empleado público encargado de otorgar habilitaciones administrativas, permisos o concesiones, para el ejercicio de cualquier actividad; como así también todo funcionario o empleado público encargado de controlar el funcionamiento de dichas actividades o de ejercer cualquier otro control en virtud de un poder de policía.
+m. Funcionario de organismos de control de los servicios públicos provinciales o de la Ciudad de Buenos Aires, con categoría no inferior a la de Director General o Provincial.
+n. Funcionario o empleado público que integre comisiones de adjudicación de licitaciones, de compra o de recepción de bienes, o participe en la toma de decisiones de licitaciones o compras.
+o.  Funcionario público que tenga por  función administrar un patrimonio público o privado, o controlar o fiscalizar los ingresos públicos cualquiera fuera su naturaleza.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="339" width="480" height="21" uuid="d45ad122-a47a-45fb-a712-19321333faaa"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ARTÍCULO  3º.- PERSONAS EXPUESTAS POLITICAMENTE PROVINCIALES, MUNICIPALES Y DE LA CIUDAD AUTONOMA DE BUENOS AIRES.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="649" width="480" height="14" uuid="67ab2a0d-fff4-4448-96c2-f544a8e2c27a"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ARTÍCULO 4º.- OTRAS PERSONAS EXPUESTAS POLITICAMENTE.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="663" width="480" height="65" uuid="d0ab5ae1-94ee-460d-956c-0b2ac4f7d69f"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Sin perjuicio de lo expuesto en los artículos precedentes, son consideradas Personas Expuestas Políticamente aquellas personas que se desempeñen o se hayan desempeñado en alguno de los siguientes cargos:
+a. Autoridad, apoderado, candidato o miembro relevante de partidos políticos o alianzas electorales, ya sea a nivel  nacional o distrital, de conformidad con lo establecido en las Leyes N° 23.298 y N° 26.215.
+b. Autoridad de los órganos de dirección y administración de organizaciones sindicales y empresariales (cámaras, asociaciones y otras formas de agrupación corporativa).]]></text>
+			</staticText>
+		</band>
+		<band height="718">
+			<staticText>
+				<reportElement x="40" y="0" width="480" height="160" uuid="8b0f32dd-7749-4c4e-acb7-211d34018072"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Con respecto a las organizaciones sindicales, el alcance comprende a las personas humanas con capacidad de decisión, administración, control o disposición del patrimonio de la organización sindical.
+Con respecto a  las organizaciones empresariales, el alcance comprende a las personas humanas de las mencionadas organizaciones que, en función de su cargo:
+     1.  tengan capacidad  de  decisión,  administración,  control o disposición  sobre fondos provenientes del sector público nacional, provincial, municipal o de la Ciudad Autónoma de Buenos Aires, o
+     2. realicen actividades con fines de lucro, para la organización o sus representados, que involucren la gestión, intermediación o contratación habitual con el Estado nacional, provincial, municipal o de la Ciudad Autónoma de Buenos Aires.
+c. Autoridad, representante legal o integrante de la Comisión Directiva de las obras sociales contempladas en la Ley Nº 23.660. El alcance comprende a las personas humanas de las mencionadas organizaciones con capacidad  de decisión, administración, control o disposición del patrimonio de las obras sociales.
+d. Las personas humanas con capacidad de decisión, administración, control o disposición del patrimonio de personas jurídicas privadas en los términos del 148 del Código Civil y Comercial de la Nación, que reciban fondos públicos destinados a terceros y cuenten con poder de control y disposición respecto del destino de dichos fondos.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="160" width="480" height="14" uuid="e9663a49-15c0-43a8-ba94-eb6327afd5d5"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ARTÍCULO 5º.- PERSONAS EXPUESTAS POLITICAMENTE POR CERCANÍA O AFINIDAD.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="174" width="480" height="116" uuid="9d83a2cd-3189-4bc9-b9d7-87cd273c3171"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Son consideradas Personas Expuestas Políticamente por cercanía o afinidad, todos aquellos sujetos que posean vínculos personales o jurídicos con quienes cumplan, o hayan cumplido, las funciones establecidas en los artículos 1° a 4° de la presente.
+A los fines indicados se consideran los siguientes vínculos:
+a. Cónyuge o conviviente reconocido legalmente.
+b. Familiares en línea ascendente, descendente, y colateral hasta el segundo grado de consanguinidad o afinidad.
+c. Personas allegadas o cercanas: debe entenderse como tales a aquellas personas públicas y comúnmente conocidas por su íntima asociación a la persona definida como Persona Expuesta Políticamente.
+d. Personas con las cuales se hayan establecido relaciones jurídicas de negocios del tipo asociativa, aún de carácter informal, cualquiera fuese su naturaleza.
+e. Toda otra relación o vínculo que por sus características y en función de un análisis basado en riesgo, a criterio del sujeto obligado, pueda resultar relevante.]]></text>
+			</staticText>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="40" y="370" width="132" height="1" uuid="c2b7886c-afa5-4f80-a488-22fcaad29b37">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="214" y="370" width="132" height="1" uuid="77f474fb-46c7-45c5-bc70-47752579c9ed">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="388" y="370" width="132" height="1" uuid="dc9733e2-1aaf-406e-8da8-528b1539a637">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="370" width="132" height="20" uuid="4b9abe04-19c3-4c04-ba2c-f6cfe60519ee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Firma]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="214" y="370" width="132" height="20" uuid="a5a9977d-4b37-4149-a2ab-b76a2b4e8d8a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Aclaración]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="388" y="370" width="132" height="20" uuid="7c6fbd12-7bc0-45ac-b539-2bb6106fd7cc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIPO_DOC_FISICO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="40" y="420" width="70" height="20" uuid="5776521d-5263-4099-82ab-9040fb982560"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Lugar y Fecha:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="110" y="440" width="235" height="1" uuid="54c4a4ef-2d7b-4d9e-a023-51b4175de370">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="40" y="456" width="480" height="1" uuid="ddca6ee4-9d9c-4202-8aa9-9e4e00d9ddda">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.x" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.75" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="470" width="480" height="14" uuid="91b90870-7de9-40e2-8c88-80e817010a76"/>
+				<textElement textAlignment="Justified" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PARA USO EXCLUSIVO DEL BANCO: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="484" width="480" height="26" uuid="7d7aad7d-2382-4943-a627-55a7e8a0fac2"/>
+				<textElement textAlignment="Justified" verticalAlignment="Top">
+					<font fontName="Times New Roman" size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Verificamos que la/s firma/s que antecede/n concuerda/n con la/s registrada/s en nuestros libros y fue/ron puesta/s en nuestra presencia.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="532" width="60" height="20" uuid="45fe2853-d814-40aa-b9da-7962bd7b54e8"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Confeccionó: ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="100" y="551" width="110" height="1" uuid="a87d2f36-0473-484c-a18d-b20411dfe55e">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="210" y="532" width="24" height="20" uuid="2054cc10-751f-429b-9c4a-145c4810eaa6"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Jefe:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="233" y="551" width="95" height="1" uuid="1db31d90-82cb-4ed7-a4d8-110199ff1105">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="328" y="532" width="100" height="20" uuid="1b4722ee-e527-4cfa-9ead-2790e9736e56"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Funcionario supervisor: ]]></text>
+			</staticText>
+			<line>
+				<reportElement x="428" y="551" width="92" height="1" uuid="6d1933d7-e226-476b-b6c2-2ef876d07b60">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="40" y="560" width="70" height="20" uuid="430b5f78-a149-4b06-9783-54c9c6ebb2c5"/>
+				<textElement verticalAlignment="Bottom">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Observaciones:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="110" y="580" width="410" height="1" uuid="e3f3054e-6aa5-48d1-9844-bfedc2f373de">
+					<property name="com.jaspersoft.studio.unit.y" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="pixel"/>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="10" splitType="Stretch">
+			<staticText>
+				<reportElement x="380" y="0" width="40" height="10" uuid="d1a4654c-33c2-45f7-8c99-f6a448caaa24"/>
+				<textElement>
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<text><![CDATA[DEP. 073]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="440" y="0" width="40" height="10" forecolor="#6B6B6B" uuid="c13169d9-8813-4e7e-bd23-87aaed036131"/>
+				<textElement textAlignment="Right">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["PÁG. " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="480" y="0" width="40" height="10" forecolor="#6B6B6B" uuid="5ec63548-b006-422a-8abf-990d57f5cd51"/>
+				<textElement textAlignment="Left">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA["/" + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MM/yy">
+				<reportElement x="420" y="0" width="20" height="10" uuid="fc645ae7-8674-4d56-ac3c-0eb8523f32cc"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

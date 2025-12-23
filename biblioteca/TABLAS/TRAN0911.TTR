@@ -1,0 +1,360 @@
+VERSION:051
+*N  NN *************************************************************************************************************
+*N  NN ###################################
+*N  NN ### DESCRIPCIÓN de la SubRutina  (E X C H A N G E).-
+*N  NN ###################################
+*N  NN ***
+*N  NN ***                           Dada una MONEDA1, un IMPORTE1 (en la Moneda 1), una MONEDA2 y un Sentido de Conversión (Compra/Venta)
+*N  NN ***                           se convertirá y calculará un IMPORTE2.
+*N  NN ***                           La rutina devolverá: IMPORTE2 (convertido), TIPOCONV (Compra/Venta/Arbitraje) y T.C. (Tipo de Cambio utilizado).-
+*N  NN ***
+*N  NN ***                           Hay que cargar: Moneda 1 en el C7770, Moneda2 en el C7772, Importe1 en el C7771 y Sentido en el C7775.-
+*N  NN ***
+*N  NN *************************************************************************************************************
+*N  NN ***
+*N  NN #####################
+*N  NN ### ENTRADAS de la SubRutina.-
+*N  NN #####################
+*N  NN ***
+*N  NN ***                           C7770 (Código de la Moneda 1) .-
+*N  NN ***                           C7771 (Importe en la Moneda 1).-
+*N  NN ***                           C7772 (Código de la Moneda 2).-
+*N  NN ***                           C7775 (Sentido de la Conversión : Compra / Venta).-
+*N  NN ***
+*N  NN #####################
+*N  NN ### SALIDAS de la SubRutina.-
+*N  NN #####################
+*N  NN ***
+*N  NN ***                           C7773 (Importe en la Moneda 2 - Convertido)
+*N  NN ***                           C7774 (Tipo de Conversión : Compra / Venta / Arbitraje).-
+*N  NN ***                           C7776 (Tipo de Cambio utilizado).-
+*N  NN ***
+*N  NN #####################
+*N  NN ### VARIABLES de la SubRutina.-
+*N  NN #####################
+*N  NN ***
+*N  NN ***                           C7777 (Tipo de Moneda 1 : Dólar / Otras Extranjeras / Nacional).-
+*N  NN ***                           C7778 (Tipo de Moneda 2 : Dólar / Otras Extranjeras / Nacional).-
+*N  NN ***                           C7779 (Factor Moneda 1 : Divide / Multiplica).-
+*N  NN ***                           C7780 (Factor Moneda 2 : Divide / Multiplica).-
+*N  NN ***                           C7781 (Tipo de Cambio).-
+*N  NN ***
+*N  NN *************************************************************************************************************
+*N  NN *** Cereo los Indicadores a utilizar.-
+CNNNNN   00000000000000000000100
+/A=I211I212I213I214I215I216I217I218
+*N  NN #
+*N  NN #####################
+*N  NN ### Datos Moneda 1.-
+*N  NN #####################
+*N  NN #
+ NNNNN 7770   Moneda 1       INNNN 00003201910052028200101100000003200450052016400
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7771   Importe 1      INNNN 00006401910084030101001100000006400450084016400
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7777   Tipo Moneda 1  INNNNA00009601910116030100101150000009600450116016400
+/V=C6403
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7779   Factor Moneda 1INNNNA00012801910148030100101150000012800450148016400
+/V=C6442
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 0003   Moneda         INNSNA00000701520027020200001100010000700070027013700
+/V=C7770
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 6425   T.Cambio CompraINNSN 00000701520027020200001100010000700070027013701
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 6427   T.Cambio Venta INNSN 00000701520027020200001100010000700070027013701
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 7781   T.C.(1)        INNNNA00016001910180030100101000000016000450180016401
+/?=(C7775='V')
+/V=C6425
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7783   A.(1)          INNNNA00019201910212030100101000000019200450212016401
+/?=(C7775='V')
+/V=C6429
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7781   T.C.(1)        INNNNA00016001910180030100101000000016000450180016401
+/?=(C7775='C')
+/V=C6427
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7783   A.(1)          INNNNA00019201910212030100101000000019200450212016401
+/?=(C7775='C')
+/V=C6431
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN #
+*N  NN #####################
+*N  NN ### Datos Moneda 2.-
+*N  NN #####################
+*N  NN #
+ NNNNN 7772   Moneda 2       INNNN 00003206100052070100101100000003204650052058400
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7778   Tipo Moneda 2  INNNNA00009606100116072000101100000009604650116058400
+/V=C6403.0
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7780   Factor Moneda 2INNNNA00012806100148072000101150000012804650148058400
+/V=C6442
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 0003   Moneda         INNSNA00000701520027020200001100010000700070027013700
+/V=C7772
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 6425   T.Cambio CompraINNSN 00000701520027020200001100010000700070027013701
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 6427   T.Cambio Venta INNSN 00000701520027020200001100010000700070027013701
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+ NNNNN 7782   T.C.(2)        INNNNA00016006100180072000101000000016004650180058400
+/?=(C7775='V')
+/V=C6425
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7784   A.(2)          INNNNA00019206100212072000101050000019204650212058400
+/?=(C7775='V')
+/V=C6429
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7782   T.C.(2)        INNNNA00016006100180072000101000000016004650180058400
+/?=(C7775='C')
+/V=C6427
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7784   A.(2)          INNNNA00019206100212072000101050000019204650212058400
+/?=(C7775='C')
+/V=C6431
+/C=255255255
+/F=0011400NNN000000000Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN #
+*N  NN #####################
+*N  NN ### Comparaciones.-
+*N  NN #####################
+*N  NN #
+CNNNNN   00000000000000000000100
+/?=(C7770=C7772)
+/P=I211
+/M=Las Monedas son iguales...
+CNNNNN   00000000000000000000100
+/?=(C7770#C7772)
+/P=I212
+/M=Las Monedas son distintas...
+*N  NN *** Si las Monedas son iguales, el (Importe 2 = Importe 1)
+ NNNNN 7773   Importe 2      INNNNA00025804190278052901101050000025802740278039300
+/?=(I211)
+/V=C7771
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN *** Si alguna de las Monedas es UI => Aviso y cancelo (Macro Principio).-
+*N  NN Se quita el control sobre las monedas UI
+CNNNNN MP00000000000000000000100
+/?=((C7777='I')O(C7778='I'))Y1=0
+/M=Una de las Monedas es U.I. Se cancela la ejecución....
+*N  NN *** Si las Monedas son distintas => averiguo si una de ellas es PESOS => COMPRA ó VENTA.-
+CNNNNN   00000000000000000000100
+/?=(I212)Y(C7777='N')
+/P=I213
+/M=Monedas distintas, pero Moneda 1 es PESOS...
+CNNNNN   00000000000000000000100
+/?=(I212)Y(C7778='N')
+/P=I214
+/M=Monedas distintas, pero Moneda 2 es PESOS...
+*N  NN *** Si las Monedas son distintas, y ninguna es PESOS => ARBITRAJE.-
+CNNNNN   00000000000000000000100
+/?=!(I211)Y!(I213OI214)
+/P=I215
+/M=Monedas Extranjeras distintas, es ARBITRAJE...
+*N  NN #
+*N  NN #####################
+*N  NN ###        (I213)
+*N  NN #####################
+*N  NN #
+ NNNNN 7773   Importe 2      INNNNF00025804190278052901101000000025802740278039300
+/?=(I213)
+/V=C7771/C7782
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7776   Tipo de Cambio INNNNA00036304190383052901101000000036302630383038200
+/?=(I213)
+/V=C7782
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN #
+*N  NN #####################
+*N  NN ###        (I214)
+*N  NN #####################
+*N  NN #
+ NNNNN 7773   Importe 2      INNNNF00025804190278052901101050000025802740278039300
+/?=(I214)
+/V=C7771*C7781
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7776   Tipo de Cambio INNNNA00036304190383052901101050000036302740383039300
+/?=(I214)
+/V=C7781
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN #
+*N  NN *** El Tipo de Conversión queda como el Sentido que trae.-
+ NNNNN 7774   Tipo ConversiónINNSNA00000701520030020202101100000000700070030013700
+/?=(I213)O(I214)
+/V=C7775
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000##########...                           
+*N  NN #
+*N  NN #####################
+*N  NN ###        ARBITAJE     (I215)
+*N  NN #####################
+*N  NN #
+*N  NN *** Para los cálculos de los Arbitrajes, siempre se toma en cuenta el FACTOR (Divide/Multiplica) de las Monedas involucradas.-
+*N  NN *** Primero, averiguo qué tipo de Arbitraje es:
+*N  NN *** (Mon1 = USD y Mon2 # USD) => I216
+*N  NN *** (Mon1 # USD y Mon2 = USD) => I217
+*N  NN *** (Mon1 # USD y Mon2 # USD) => I218
+CNNNNN   00000000000000000000100
+/?=(I215)Y(C7777='D')Y(C7778='E'OC7778='I')
+/P=I216
+/M=/Mon1 = USD / Mon2 # USD/
+CNNNNN   00000000000000000000100
+/?=(I215)Y(C7777='E'OC7777='I')Y(C7778='D')
+/P=I217
+/M=/Mon1 # USD / Mon2 = USD/
+CNNNNN   00000000000000000000100
+/?=(I215)Y(C7777='E'OC7777='I')Y(C7778='E'OC7778='I')
+/P=I218
+/M=/Mon1 # USD / Mon2 # USD/
+*N  NN #
+*N  NN *** Caso 1 => I216
+ NNNNN 7773   Importe 2      INNNNF00025804190278052901101050000025802740278039300
+/?=(I216)Y(C7780='D')
+/V=C7771*C7784
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7773   Importe 2      INNNNF00025804190278052901101050000025802740278039300
+/?=(I216)Y(C7780='M')
+/V=C7771/C7784
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN #
+*N  NN *** Caso 2 => I217
+ NNNNN 7773   Importe 2      INNNNF00025804190278052901101050000025802740278039300
+/?=(I217)Y(C7779='D')
+/V=C7771/C7783
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7773   Importe 2      INNNNF00025804190278052901101050000025802740278039300
+/?=(I217)Y(C7779='M')
+/V=C7771*C7783
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN #
+*N  NN *** Caso 3 => I218
+*N  NN           *** Calculo el Equivalente en USD de la Moneda Comprada.-
+ NNNNN 0740   Equiv. USD     INNNNF00025804190278052901101050000025802740278039300
+/?=(I218)Y(C7779='D')
+/V=C7771/C7783
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 0740   Equiv. USD     INNNNF00025804190278052901101050000025802740278039300
+/?=(I218)Y(C7779='M')
+/V=C7771*C7783
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN           *** Obtengo el Importe2 (de la Moneda Vendida).-
+ NNNNN 7773   Importe 2      INNNNF00025804190278052901101050000025802740278039300
+/?=(I218)Y(C7780='D')
+/V=C740*C7784
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7773   Importe 2      INNNNF00025804190278052901101050000025802630278038200
+/?=(I218)Y(C7780='M')
+/V=C740/C7784
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN #
+ NNNNN 7774   Tipo ConversiónINNNNK00029304190313052901101050000029302630313038200
+/?=(I215)
+/V=A
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7775   Sentido Conv.  INNNNK00032804190348052901101050000032802630348038200
+/?=(I215)
+/V=C
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7776   Tipo de Cambio INNNNA00041003770430048701101050000041002320430035100
+/?=(I215)Y(I216)
+/V=C7784
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7776   Tipo de Cambio INNNNA00041003770430048701101050000041002320430035100
+/?=(I215)Y(I217)
+/V=C7783
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+ NNNNN 7776   Tipo de Cambio INNNNA00041003770430048701101050000041002320430035100
+/?=(I215)Y(I218)
+/V=C7784
+/C=000000000
+/F=0011700NNN255255255Arial                                   
+/f=0011400NNN000000000Arial                                   
+*N  NN #
+*N  NN *************************************************************************************************************
+*#I217#/Mon1 # USD / Mon2 = USD/
+*#I218#/Mon1 # USD / Mon2 # USD/
+*#I211#Las Monedas son iguales
+*#I212#Las Monedas son distintas
+*#I213#Monedas distintas, pero Moneda 1 es PESOS
+*#I214#Monedas distintas, pero Moneda 2 es PESOS
+*#I215#Monedas Extranjeras distintas, es ARBITRAJE
+*#I216#/Mon1 = USD / Mon2 # USD/

@@ -1,0 +1,31 @@
+/****** Object:  View [dbo].[VW_PYF_PODER_X_ENTIDAD]    Script Date: 24/02/2021 16:06:34 ******/
+DROP VIEW [dbo].[VW_PYF_PODER_X_ENTIDAD]
+GO
+
+/****** Object:  View [dbo].[VW_PYF_PODER_X_ENTIDAD]    Script Date: 24/02/2021 16:06:34 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[VW_PYF_PODER_X_ENTIDAD]
+									(TIPO_PODER,
+									DESCRIPCION_TIPO_PODER,
+									TIPO_ENTIDAD,
+									DESCRIPCION_TIPO_ENTIDAD
+									)
+AS
+						SELECT X.TIPO_PODER, 
+								P.DESCRIPCION, 
+								X.TIPO_ENTIDAD, 
+								E.DESCRIPCION 
+						FROM PYF_TIPOPODER_X_TIPOENTIDAD AS X with (nolock)
+								LEFT JOIN PYF_TIPOENTIDAD AS E with (nolock) ON X.TIPO_ENTIDAD = E.TIPO_ENTIDAD 
+								LEFT JOIN PYF_TIPOPODERES AS P with (nolock) ON X.TIPO_PODER = P.TIPO_PODER 
+						WHERE	X.TZ_LOCK = 0
+								AND E.TZ_LOCK = 0
+								AND P.TZ_LOCK = 0
+GO
+
+

@@ -1,0 +1,1 @@
+﻿EXECUTE ('update CLI_ACTIVIDAD_ECONOMICA set orden_afip = 99 where verificado_afip = ''N''')

@@ -1,0 +1,816 @@
+VERSION:054_5
+TN  NN 1006TAccion                                  C00001 00
+VNSSNS 01-001000103850800SSSD000000000000000000000000000000000000000
+/T=Accion
+/C=192192192
+KNNNNN 010011012700330595000100
+/T=Ejec. Orden Depósito o Recepción Valores Físicos
+/F=0019400NNN000000000Arial                                   
+KNNNNN 010038001402650745000001
+/T=Cliente
+/F=0012700NNN000000000Arial                                   
+*N  NN /* Filtro tabla Por la Condicion =>*/ 
+*N  NN /* TIPOFE='F' AND ESTADOORDEN = 'I' AND TIPOORDEN = 'R' */
+ NSSNN 08010   Filtro ayuda   INNSNK00000701500027321000001100000000700070027012600
+/V=TIPOFE='F' AND ESTADOORDEN = 'I' AND TIPOORDEN = 'R'
+ NNNNN 09620                  I NSN 01005700310255071602101060000002710220047114100
+/L=0
+/F=0012700NNN000000000Arial                                   
+*N  NN /* Apago el I100 utilizado para preguntar si se procesa parcial o no */
+CNNNNN   00000000000000000000100
+/A=I200
+*N  NN /* Apago el I105 - I110 utilizado para Control de Ingreso Parcial */
+CNNNNN   00000000000000000000100
+/A=I110
+CNNNNN   00000000000000000000100
+/A=I105
+TN  NN 1006TConsulta sobre Titulo Realizo Controles C00001 00
+*N  NN /* Fuerzo Lectura sobre Ordenes para obtener Cod. Titulo */
+ NNNNN 60252   Nro. de Orden  INNSNA00002902190049033900101100000007501840095030300
+/V=C9620.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60105   Fecha SolicitudINNSN 00003005430050066302101100000014008480158095600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60254   Cod. Titulo    INNSN 00005705600077068000101100000011102120131033100
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* Fuerza Lectura sobre Titulos */
+ NNNNN 60152   Codigo Titulo  INNSNA00002801430048026300121000300002800150048009300
+/V=C60254.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60184   Estado Valor   INNSN 00000701500027021000021100300000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* Se controla si estado valor de titulo esta bloqueado */
+CNNNNN M 00000000000000000000110
+/F=A(C60184.0#"C")
+/P=I40
+/M="No se puede Operar con Titulo: " + C60152.0 + " Bloqueado !"
+ NNNNN 60003   Codigo         INNSNA00000701500027021002001100000000700070027012600
+/V=C60211.00
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60003   Codigo         INNSNA00000701500027021002001100000000700070027012600
+/V=C60211.00
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60004   Rub Act Simp   INNSN 00000701500027033002001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60005   Rub Pas Simple INNSN 00000701500027033002001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60006   Rub Act Gar    INNSN 00000701500027033002001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00007   Producto       INNSNA00002601460046019802101100000002600370046010500
+/V=C60190.00
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06250   Nro. Producto  INNSNA00002601460046019802101100000002600370046010500
+/V=C0007.00
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06252   Tipo Producto  INNSN 00002601460046019802101100000002600370046010500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08175   Tipo Especie   INNSN 00002601460046019802101100000002600370046010500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C6252.00=7YC8175.00=3
+/P=I50
+*&Letras
+TN  NN 1006TConsulta sobre Ordenes                  C00001 00
+/?=!I40
+CNNNNN  w00000000000000000000100
+/?=!I50
+/R=C6400
+CNNNNN  w00000000000000000000100
+/?=I50
+/R=C476
+VNSSNS 020001000404690800NSSD000000000000000000000000000000000000000
+/T=Consulta sobre Ordenes
+/C=192192192
+KNNNNN 020006000703640784000101
+/T=Datos
+KNNNNN 020029002900490201000100
+/T=Nro. de Solicitud de Recepcion
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60252   Nro. de Orden  IDNSNA02002902190049033902101150000007501840075018400
+/V=C9620.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020030037000500523000100
+/T=Fecha de la Solicitud
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60105   Fecha SolicitudIDNSN 02003005430050066302101150000014008480158095600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020057002900770201000100
+/T=Fecha Valor
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60105   Fecha SolicitudI NSN 02005602190076032102001100000017108480189095600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020057037000770523000100
+/T=Código de Valor
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60254   Cod. Titulo    IDNSN 02005705430077066302101150000011102120111021200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* Fuerza Lectura sobre Titulos */
+ NNNNN 60152   Codigo Titulo  INNSNA00002801430048026300121000300002800150048009300
+/V=C60254.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60153   Nombre Papel   IDNSNA02008702190107067600121150300008700290107020100
+/V=C60153
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60154   Cod. Especie   IDNSN 02011602190136027900121150300011600290136020100
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60079   CodEspecieTipo INNSNA00000701500027021002001100000000700070027012600
+/V=C60154.00
+/f=0013700NNN000000000Arial                                   
+ NNNNN 60080   Descripción    ICNSN 02011802960139067500101150000013603190136031900
+/C=255255255
+/f=0013700NNN000000000Arial                                   
+KNNNNN 020146002901660201000100
+/T=Cuenta Inversion
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60253   Cod. Cliente   IDNSN 02014602190166031302121150300018202130182021300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* Fuerza Lectura sobre Clientes */
+ NNNNN 00902   Codigo Cliente INNSNA00000701500027033002021100300000700070027012600
+/V=C60253.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020146032201660432000100
+/T=Nombre del Cliente
+/F=0012700NNN000000000Arial                                   
+ NNNNN 01029   Interm Financ. INNSN 02014804890168076200121100300017903190199043800
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01000   Nombre Cliente IDNSN 02014804890168076200121150300017903190179031900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020175002901950201000100
+/T=Físico/Escritural
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60265   TIPOFE         IDNSN 02017502190195031300101150000020902130209021300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020175032401950483000100
+/T=Fecha de Vencimiento 
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60169   Vencimiento    ICNSN 02017504890195060902101050000017105090171050900
+/?=!I50
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00476   Vencimiento    IENSN 02017504890195060902101000000017105090191062800
+/?=I50
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020202002902220201000100
+/T=Moneda de Emision
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60257   Moneda         IDNSN 02020202190222031302101150000019802160198021600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 06399   Moneda         INNSNA00000730028611575602151160700200110002021111900
+/V=C60257.0
+/L=0
+ NNNNN 06400   Descripción    ICNSNA02020203240222056400101150000015309220168100300
+/V=C6400.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020227002902470201000100
+/T=Cupón
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60198   Tasa de InteresIDNSN 02022702190247031302101150000017808380198095700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020227002902470201000000
+/?=(C60164.00=3)
+/T=Sin Tasa
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60198   Tasa de InteresIDNSN 02022702190247031302101050000017808380198095700
+/?=((C60164=1)O(C60164=2))
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06470   Tipo Tasa Base INNNNA00011804240138053902101000000000700070027012600
+/?=((C60164=4)O(C60164=5))
+/V=C60204.00
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+ NSSNS 06471   Descripcion    INNNN 00011804240138053902101000000000700070027012600
+/?=((C60164=4)O(C60164=5))
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+ NSSNS 06472   Tasa Base      INNNN 00011804240138053902101000000000700070027011200
+/?=((C60164=4)O(C60164=5))
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+ NNNNN 00055   Tasa           IDNSNF02022702190247031302101050000017808380198095700
+/?=((C60164=4)O(C60164=5))
+/V=C6472.00+C60217.00
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C60197>0
+/P=I65
+/A=I66
+KNNNNN 020227037802470524000100
+/?=I65
+/T=Nro. de Cupón Adherido
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60181   Cupon          IDNSNA02022705440247063802101150000022005610220056100
+/?=I65
+/V=C60276.00
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=I65
+/F=C60277.00>0
+/P=I41
+*N  NN ** campos compartidos con cupones**
+KNNNNN 020256037802760524000100
+/?=I65YI41
+/T=Cantidad de Cupones 
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60181   Cupon          IDNSNA02025605440276063802101150000025805650278068400
+/?=I65YI41
+/V=C60277
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60190   Producto Topaz INNSN 02025605440276063802101100000025805650278068400
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020256002902760201000100
+/T=Valor Nominal a recibir
+/F=0012700NNN000000000Arial                                   
+ NNNNN 60256   ValorNominal   IDNSN 02025602190276035302101150000025802370258023700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00052   Valor nominal  INNNNA00022201490242026202001100000022200170242012200
+/V=C60256.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020286002903060201000100
+/T=Comentarios
+/F=0012700NNN000000000Arial                                   
+ NNNNN 03911   Texto          I SSN 02028602190306066100001000000023108990251101800
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020308002903570197000101
+/T=Administrado
+/F=0012700NNN000000000Arial                                   
+ NNNNN 00327   Opcion Si/No   I NSN 02033100500351013700001130000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C327.0='S'
+/P=I20
+CNNNNN   00000000000000000000100
+/?=I65
+/F=C60171.00='S'
+/P=I67
+ NNNNN 60040   Codigo Titulo  INNSNA00000701520027020200001100000000700070027013700
+/V=C60254.00
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 60039   Precio         INNSN 00000701520027020200001100000000700070027013700
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 60181   Cupón          INNSN 00000701520027020200001100000000700070027013700
+/?=I66
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+TN  NN 1006TConsulta Generica                       C00001 00
+/?=I67
+*N  NN **********************************************************************************
+VNNNNN 240333030801360204SSSD000000000000000000000000000000000000000
+/T=Ejecución Operación Alta de Laminas
+/C=192192192
+KNNNNN 240006000700610190000101
+/F=0012400NNN000000000Arial                                   
+ NSSNS 00199   Cod. Titulo    INNNNA00000701500027027002001100000000700070027012600
+/V=C60254.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 03598   Nro. operacion INNSNA00000701500027021000001100000000700070027012600
+/V=C9503
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/P=I204
+ NNNNN 00611   Numerico de 4  INNSNK00000701500027021000001100000000700070027012600
+/V=21
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60152   Cod. Título    INNSNA00000701500027027002001100000000700070027012600
+/V=C60254.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00701   Importe        INNSNK00000701360027037602001100000000700070027011200
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  M24002900190051017701100
+/R=tzpcapt.exe /O 1206
+/T=Situación de Láminas
+ NNNNN 00701   Importe        INNSNL00005700450077028502001100000000700070027011200
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/?=C701#C60256.3
+/P=I34
+/M=Valor nominal diferente al ingresado
+TN  NN 1006TConsulta si Procesa Por Total           C00001 00
+/?=I67YI34
+VNSSNS 050289022501210290NSSD000000000000000000000000000000000000000
+/T=Pregunta
+/C=192192192
+KNNNNN 050001001100490267000101
+/T=¿ Procesa Por el total ingresado ?
+/F=0012700NNN000000000Arial                                   
+ NNNNN 00327   Opcion Si/No   I NSNK05002200480042022800001130000000700070027012600
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C327.0='S'
+/P=I35
+CNNNNN  P00000000000000000000100
+/?=!I35
+TN  NN 0007TAlta Automática de Saldos               T00211 00
+/?=!I40
+ NNNNN 00001   Sucursal       INNSNA00003901590059021902001100000003900160059013500
+/V=C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00003   Moneda         INNSNA00007001600090022002021100300007100190091013800
+/V=C60157.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06326   Rubro Contable INNSNA00000701520027020200021100300000700070027013700
+/V=C60004.2
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 06300   Nombre         INNSN 00000701520027020200021100300000700070027013700
+/V= 
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 00005   Cuenta         INNSNK00000701500027033002001100000000700070027012600
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00006   Referencia     INNSNK00014101690161034902001100000014100260161014500
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00008   Ordinal        INNSNK00014101690161034902001100000014100260161014500
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00007   Producto       INNSNK00002601460046019802101100000002600370046010500
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00023   Caja/Diario    INNSNK00000701500027021002021100300000700070027012600
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00024   Debito/Credito INNSNK00000701500027021002021100300000700070027012600
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00025   Fecha Valor    INNSNA00003501640055028402121100300003500310055015000
+/V=C9500
+/C=255255255
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00029   Importe Debito INNSNA00000701360027037602021100300000700070027011200
+/V=C0052.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06674   Valor Nominal  INNSNA00000701360027037602021100300000700070027011200
+/V=C0052.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 0061TCrédito  de Plazo                       A00211 00
+/?=!I40
+VNSSNS 070000062000720182NSSV000020000000000000000000000000000000000
+/T= 
+/C=192192192
+KNNNNN 070014001500330069000101
+/T=Ordinal :
+/F=0012700NNN000000000Arial                                   
+ NNNNN 00001   Sucursal       INNSNA00003901590059021902001100000003900160059013500
+/V=C0001.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00003   Moneda         INNSNA00007001600090022002021100300007100190091013800
+/V=C60157.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06400   Descripcion    INNSN 00000701520030045200121100300000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00004   Rubro OperativoINNSNA00009801660118034602001100000009800230118014200
+/V=C60005.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00005   Cuenta         INNSNF00000701520027020200001100000000700070027013700
+/V=C60253.3 * 100
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 00006   Referencia     INNSNA00014101690161034902001100000014100260161014500
+/V=C60152.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Si es letras el producto en cust. es de acciones 9530
+ NNNNN 00007   Producto       INNSNA00002601460046019802101100000002600370046010500
+/?=!I50
+/V=C60190.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00007   Producto       INNSNK00002601460046019802101100000002600370046010500
+/?=I50
+/V=9530
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 07507   NumOrd         INNSN 00000701500027027002001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00008   Ordinal        ICNSNA07001400810034013502001150000001000260030004600
+/V=C7507.00
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06250   Nro. Producto  INNSNA00002601460046019802101100000002600370046010500
+/V=C0007.00
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06252   Tipo Producto  INNSN 00002601460046019802101100000002600370046010500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01592   Producto       INNSNA00002601460046019802101100000002600370046010500
+/V=C007.00
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00023   Caja/Diario    INNSNK00000701500027021002021100300000700070027012600
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00024   Debito/Credito INNSNK00000701500027021002021100300000700070027012600
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01621   Fecha Val.Inic INNSNA00000701500027027002001100000000700070027012600
+/V=C25.00
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01627   Fecha de Vto.  INNSNA00000701500027027002001100000000700070027012600
+/?=C6252#1
+/V=C60169.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01628   Fecha Prox.Vto INNSNA00000701500027027002001100000000700070027012600
+/?=C6252#1
+/V=C60169.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01627   Fecha de Vto.  INNSNA00000701500027027002001100000000700070027012600
+/?=I50
+/V=C476.0.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01628   Fecha Prox.Vto INNSNA00000701500027027002001100000000700070027012600
+/?=I50
+/V=C476.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02886   Importe        INNNNA00006301480083031902101100000006200220083013100
+/V=C0052.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02777   Cod. Titulo    INNSNF00003501640055028402121100300003500310055015000
+/V=C6.0
+/C=255255255
+/f=0012700NNN000000000Arial                                   
+ NSSNS 08131   SUM Ganancias  INNSNF00000701360027037602021100300000700070027011200
+/V=C0052.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06672   Precio Compra  INNSNF00000701520027020200021100300000700070027013700
+/V=C60039.3
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 06673   Pcio valuacion INNSNF00000701520027020200021100300000700070027013700
+/V=C60039.5
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NSSNS 08128   Clas valores   INNSNK00000701360027037602021100300000700070027011200
+/V=2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 08127   Cupon Inicial  INNSNF00000701360027037602021100300000700070027011200
+/V=C60181.6
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00025   Fecha Valor    INNSNA00003501640055028402121100300003500310055015000
+/V=C25.6
+/C=255255255
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01611   Intereses Dev  INNSN 00003501640055028402121100300003500310055015000
+/?=C6252#1
+/C=255255255
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01740   Saldo Anterior INNSNF00003501640055028402121100300003500310055015000
+/V=C0052.3
+/C=255255255
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00029   Importe CreditoINNSNA00000701360027037602021100300000700070027011200
+/V=C0052.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06676   Marca Adm.     INNSNK00000701360027037602021100300000700070027011200
+/?=I20
+/V=S
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06676   Marca Adm.     INNSNK00000701360027037602021100300000700070027011200
+/?=!I20
+/V=N
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01803   Nro. Cliente   INNSNA00000701500027033002021100300000700070027012600
+/V=C60253.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01804   Rubro OperativoINNSNF00000701500027033002021100300000700070027012600
+/V=C60005.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01785   Tipo Producto  INNSNA00000701520027020200001100000000700070027013700
+/V=C6252.00
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+TN  NN 1006TEnvio de correo                         C00000 00
+VNNNNN 910063000703730796SSSD000000000000000000000000000000000000000
+/T=Envio de correo por no validar
+/C=192192192
+KNNNNN 910010001002790764000101
+/F=0012400NNN000000000Arial                                   
+KNNNNN 910041002500610163000100
+/T=Dirección de e-mail:
+/F=0013700NNN000000000Arial                                   
+ NNNNN 03042   Numerador MailsINNSN 00000701500027015002001100000000700070027012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03424   Id             INNSNA00000701500027039002001100000000700070027012600
+/V=C3042
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03425   To:            IENSN 91004201970062060800001100000000701710027029000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03236   Funcionalidad  INNSNK00000701500027075002001100000000700070027012600
+/V=VALORES
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03237   Parametro      INNSNK00000701500027075002001100000000700070027012600
+/V=GENERAL
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03426   From:          INNSNA00000701500027321002001100000000700070027012600
+/V=C3238
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03427   Subject:       INNSNK00000701500027321002001100000000700070027012600
+/V=Ejecucion o recepcion de valores fisicos
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03428   Texto          INNSNF91009202740186071400100100000009200470113017700
+/?=I40
+/V="Orden " + C60252.2 + "Rechazada por valor bloqueado"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03428   Texto          INNSNF91009202740186071400100100000009200470113017700
+/V=C3428+F(CHR,13)+F(CHR,10)+"Enviado por : "+C9505
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 910075002500950163000100
+/T=Texto
+/F=0013700NNN000000000Arial                                   
+ NNNNN 03428                  I NSNF91007001970241062300100100000001168007013681210
+/V=C3428+F(CHR,13)+F(CHR,10)+"Sucursal : "+C9502
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03429   Status         INNSNK00000701500027021002001100000000700070027012600
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TAlta en Ordenes                         M60001 00
+*$2014-07-24 15:47:58EAG
+ NNNNN 60252   Nro. de Orden  INNSNA00000701500027027002001100000000700070027012600
+/V=C60252.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60111   EstadoOrden    INNSNK00000701500027021002001100000000700070027012600
+/?=I40
+/V=R
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60268   Motivo Rechazo INNSNK00000701500027087000021100300000700070027012600
+/?=I40
+/V=Lamina Interdicta no se procesa parcialmente
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60111   EstadoOrden    INNSNK00000701500027021002001100000000700070027012600
+/?=!I40
+/V=L
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00028   Concepto       INNSNK00000701500027051000001100000000700070027012600
+/V=Ejec. Dep.Val. Fis.
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificacion Generica Cuenta de InversioM09371 00
+/?=!I40
+ NNNNN 60131   Codigo Cliente INNSNA00000701520027020200001100000000700070027013700
+/V=C60253.3
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ NNNNN 60137   Estado         INNSNK00000701520027020200001100000000700070027013700
+/V=A
+/F=0013700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+TN  NN 1006TConcepto                                C00000 00
+ NNNNN 00028   Concepto       INNNNF00000701330027024300001100000000700070027012600
+/V="Ejecucion Nro de Solic: " + C60252.3
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+TN  NN 1008TConsulta Sec. Generica                  S09181 00
+/?=!I40YI65
+/F=C3756=C60152.4
+CNNNNN   00000000000000000000100
+/F=C9509=0
+/P=I150
+ NNNNN 60015                  INNSN 00000701520030030202101100000000700070030013700
+/?=!I150
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60013   Desde Laminas  INNSN 00000701520030030202101100000000700070030013700
+/?=!I150
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60010   Importe        INNSN 00000701520030030202101100000000700070030013700
+/?=!I150
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00489   Contador       INNSNK00000701520030030202101100000000700070030013700
+/?=!I150YC489=5
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03815                  INNSNF00000701520030045200101100000000700070030013700
+/?=!I150YC489=0
+/V=""
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03815                  INNSNF00000701520030045200101100000000700070030013700
+/?=!I150
+/V=C3815.13
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00489   Contador       INNSNF00000701520030030202101100000000700070030013700
+/?=!I150
+/V=C489 +1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Iteración                      C00001 00
+/?=!I40
+ NNNNN 60252   Nro. de Orden  INNSNA00002902190049033902101150000007501840075018400
+/V=C9620.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60254   Cod. Titulo    INNSN 00005705430077066302101150000011102120111021200
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60152   Codigo Titulo  INNSNA00002801430048026300121000300002800150048009300
+/V=C60254.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60153   Nombre Papel   INNSNA00008702190107067600121150300008700290107020100
+/V=C60153
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60177   Fisi/Escri     INNSN 00008702190107067600121100300008700290107020100
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60253   Cod. Cliente   INNSN 00014602190166031302121150300018202130182021300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60257   Moneda         INNSN 00020202190222031302101150000019802160198021600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 06399   Moneda         INNSNA00000730028611575602151160700200110002021111900
+/V=C60257.0
+/L=0
+ NNNNN 06400   Descripción    INNSN 00020203240222056400101100000015309220168100300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06402   Codigo SWIFT   INNSN 00020203240222056400101100000015309220168100300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60256   ValorNominal   INNSN 00025602190276035302101150000025802370258023700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60276   Nro. Cupón     INNSN 00025602190276035302101100000025802370278035600
+/?=I65
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 60277   Cant. Cupones  INNSN 00025602190276035302101100000025802370278035600
+/?=I65
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03911   Texto          INSSNA00028602190306066100001000000023108990251101800
+/V=C3911.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 03815                  INNSNF00000701520030045200101100000000700070030013700
+/?=I65
+/V=C3815 +"Nro. " + C60013.12 + " (" + C60010.12 + ")   "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+FNNNNN 0950001    C N   
+/?=(!I65)O(I150)O(C489=5)
+FNNNNN 0951001    C N   
+/?=(!I65)O(I150)O(C489=5)
+CNNNNN   00000000000000000000100
+/?=((!I65)O(I150)O(C489=5))Y!I160
+/P=I160
+CNNNNN  I00000000000000000000100
+/?=I65Y!I150
+/R=12
+*#I50#Letras
+*#I40#
+*#I41#Ind cupones
+*#I160#Imprime por primera vez
+*#I150#No hay más laminas

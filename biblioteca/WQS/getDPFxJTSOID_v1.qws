@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/plazoFijo/{JTS_OID}</uri>
+    <serviceDescription>Consulta Plazo Fijo por JTS_OID</serviceDescription>
+    <title>getDPFxJTSOID</title>
+    <querys>
+        <query id="1" name="Query1" type="SIMPLE">
+            <sql>DECLARE @JTS_OID NUMERIC(10)  = ?;
+
+            SELECT 
+            M.C6400 AS monedaDescripcion,
+            SA.MONEDA AS monedaId,
+            SA.SUCURSAL AS sucursal,
+            SA.CUENTA AS cuenta,
+            SA.OPERACION AS operacionNumero,
+            SA.C1604 AS capital,
+            SA.C1601 AS capitalOriginal,
+            SA.C1608 AS interesVencimiento,
+            SA.C1600 AS montoOriginal,
+            SA.C1632 AS tasaInteres,
+            SA.C1698 AS spread,
+            SA.C1688 AS ordinalRenovacion,
+            CONVERT(varchar,SA.C1620,23) AS fechaApertura,
+            CONVERT(varchar,SA.C1627,23) AS fechaVencimiento,
+            DATEDIFF(day,SA.C1620,SA.C1627) AS plazoDias,
+            SA.C1679 AS bloqueoCodigo,
+            O.DESCRIPCION AS bloqueoDescripcion,
+            SA.C1604 AS saldoActual,
+            SA.C1608 AS saldoInteres, 
+            (SA.C1604 + SA.C1608) AS totalVencimiento,
+            P.C6250 AS codigoProducto,
+            P.C6251 AS productoDescripcion,
+            0 AS campaniaCodigo,
+            'Default' AS campaniaDescripcion, 
+            SA.JTS_OID AS JTS_OID,
+            SA.C1800 AS ID_CANAL,
+            CAN.DSC_CANAL AS DESC_CANAL,
+            SA.C1659 AS ID_RENOVACION, 
+            O2.DESCRIPCION AS DESC_RENOVACION,
+            pzos.CERTIFICADO_DPF,
+            CASE
+                WHEN (SA.C1604 != 0 OR SA.C1734 = 'U' OR SA.C1734 = 'T') THEN 'VIGENTE'
+                ELSE 'CANCELADO'
+            END AS estado
+            FROM SALDOS (nolock) SA
+            JOIN PRODUCTOS (nolock) P ON SA.PRODUCTO = P.C6250 AND P.TZ_LOCK = 0 
+            JOIN CLI_CLIENTES (nolock) C ON C.CODIGOCLIENTE = SA.C1803 AND  C.TZ_LOCK = 0 
+            JOIN MONEDAS (nolock) M ON M.C6399 = SA.MONEDA AND M.TZ_LOCK=0
+            LEFT JOIN OPERACIONES (nolock) OP ON OP.IDENTIFICACION = SA.OPERACION AND OP.TZ_LOCK=0 AND OP.IDENTIFICACION NOT IN (0)
+            JOIN OPCIONES (nolock) O ON O.NUMERODECAMPO = 1679 AND O.OPCIONINTERNA = SA.C1679
+            JOIN CLI_CANALES (nolock) CAN ON CAN.COD_CANAL = SA.C1800
+            JOIN OPCIONES (nolock) O2 ON O2.NUMERODECAMPO = 1659 AND O2.OPCIONINTERNA = SA.C1659
+            join PZO_SALDOS (nolock) pzos on SA.JTS_OID = pzos.JTS_OID_SALDO AND pzos.TZ_LOCK = 0
+            WHERE SA.JTS_OID = @JTS_OID AND LEFT(SA.TZ_LOCK, 1) IN (0,4) AND SA.C1785 = 4
+			
+			</sql>
+            <input>
+                <inParameter description="JTS_OID" type="INTEGER">JTS_OID</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="DatosPlazo">
+                    <outParameter description="" type="STRING">
+                        <queryname>monedaDescripcion</queryname>
+                        <servicename>moneda.monedaDescripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>monedaId</queryname>
+                        <servicename>moneda.monedaId</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGINT">
+                        <queryname>CERTIFICADO_DPF</queryname>
+                        <servicename>numeroCertPreimpreso</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESC_CANAL</queryname>
+                        <servicename>canal.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ID_CANAL</queryname>
+                        <servicename>canal.ID</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>DESC_RENOVACION</queryname>
+                        <servicename>renovacion.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ID_RENOVACION</queryname>
+                        <servicename>renovacion.ID</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>sucursal</queryname>
+                        <servicename>sucursal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cuenta</queryname>
+                        <servicename>cuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>operacionNumero</queryname>
+                        <servicename>operacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>codigoProducto</queryname>
+                        <servicename>producto.codigoProducto</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>productoDescripcion</queryname>
+                        <servicename>producto.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>capital</queryname>
+                        <servicename>capital</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>capitalOriginal</queryname>
+                        <servicename>capitalOriginal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>interesVencimiento</queryname>
+                        <servicename>interesVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>montoOriginal</queryname>
+                        <servicename>montoOriginal</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>tasaInteres</queryname>
+                        <servicename>tasaInteres</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>spread</queryname>
+                        <servicename>spread</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ordinalRenovacion</queryname>
+                        <servicename>ordinalRenovacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaApertura</queryname>
+                        <servicename>fechaApertura</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaVencimiento</queryname>
+                        <servicename>fechaVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>plazoDias</queryname>
+                        <servicename>plazoDias</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>bloqueoCodigo</queryname>
+                        <servicename>bloqueo.bloqueoCodigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>bloqueoDescripcion</queryname>
+                        <servicename>bloqueo.bloqueoDescripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>saldoActual</queryname>
+                        <servicename>importesMonedaOrigen.saldoActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>saldoInteres</queryname>
+                        <servicename>importesMonedaOrigen.saldoInteres</servicename>
+                    </outParameter>
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>totalVencimiento</queryname>
+                        <servicename>importesMonedaOrigen.totalVencimiento</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>campaniaCodigo</queryname>
+                        <servicename>campania.campaniaCodigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>campaniaDescripcion</queryname>
+                        <servicename>campania.campaniaDescripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>JTS_OID</queryname>
+                        <servicename>JTS_OID</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>estado</queryname>
+                        <servicename>estado</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

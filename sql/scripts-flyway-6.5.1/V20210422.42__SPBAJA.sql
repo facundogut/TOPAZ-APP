@@ -1,0 +1,16 @@
+﻿EXECUTE('
+
+
+ALTER PROCEDURE SP_DPF_BAJA_DOCUMENTOS
+(@pLote VARCHAR(10), @pCodigoDoc NUMERIC(5), @pCodigoDep NUMERIC(5), @pCantidadDesde NUMERIC(10), @pCantidadHasta NUMERIC(10))
+AS
+BEGIN 
+	UPDATE DPF_DOCS_DOCUMENTOS SET ESTADO_DOCUMENTO = 2
+	WHERE LOTE = @pLote AND 
+		  CODIGO_TIPO = @pCodigoDoc AND 
+		  OPERATIVA = @pCodigoDoc AND
+		  CODIGO_DEPOSITO = @pCodigoDep AND 
+		  ID_DOCUMENTO BETWEEN @pCantidadDesde AND @pCantidadHasta;
+END
+
+')

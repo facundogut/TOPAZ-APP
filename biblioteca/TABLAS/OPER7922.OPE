@@ -1,0 +1,337 @@
+VERSION:055_5
+TN  NN 1006TInicio                                  C00000 00
+*$2025-02-13 10:05:30c00candigi
+ NNNNN 00199   idCausa                                           INNNNI000007013300270243000011000000007000700270126000
+/V=idCausa
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-13 10:05:27c00candigi
+ NNNNN 00760   Narrativo                                         INNNNI000007013300270243000011000000007000700270126000
+/V=estado
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*$2025-02-13 09:26:56c00candigi
+*N  NN EX C42
+*$2025-02-13 09:27:15c00candigi
+*N  NN VALIDACIONES PARAMETRO
+*$2025-02-13 09:17:54c00candigi
+CNNNNN   00000000000000000000100
+/F=C199.0 = 0
+/P=I99I500
+/M=parametro idCausa
+*$2025-02-13 09:17:02c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=! ( A(C760.0="A") O A(C760.0="I") )
+/P=I99I501
+/M=Parametro invalido: estado
+*$2025-02-13 09:27:55c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=F(LEN, C760)#1
+/P=I99I502
+/M=Parametro invalido: estado
+*$2025-02-13 09:28:21c00candigi
+*N  NN Existe causa? está transferida?
+*$2025-02-13 09:46:14c00candigi
+ NNNNN 33134   Nro. Causa                                        INNSNA000016015900390309001011000000016001400390144000
+/V=C199.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:05:23c00candigi
+ NNNNN 33141   Estado                                            INNNN 000044015900670309001011000000044001400670144000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:05:25c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C9509.0=0
+/P=I99I503
+/M=Error: no se encontro la causa
+*$2025-02-13 09:37:19c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C33141.0='T'
+/P=I99I504
+/M=Error: Causa transferida
+*$2025-02-13 09:37:05c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C33141.0=C760.0
+/P=I99I505
+/M=Error: Causa con estado igual al estado recibido.
+*$2025-02-13 09:48:06c00candigi
+*N  NN Calcular motivo modificación
+*$2025-02-13 10:10:22c00candigi
+ NNNNN 00762   MOTIVO MOD.                                       INNNNA000007015200300452001011000000007000700300137000
+/?=!I99
+/V=C760.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:10:10c00candigi
+ NNNNN 00762   MOTIVO MOD.                                       INNNNK000007015200300452001011000000007000700300137000
+/?=!I99 Y C760.0='I'
+/V=B
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:10:04c00candigi
+*N  NN Obtener juez
+*$2025-02-13 10:12:12c00candigi
+ NNNNN 00080   Descriptor DJ_INTEGRANTES_CAUSAS                  INNSNK000007015200300302021011000000007000700300137000
+/V=3323
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:19:30c00candigi
+ NNNNN 00565   NUMERODECAMPO: ID_PERSONA                         INNSNK000007015200300302021011000000007000700300137000
+/V=33184
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:17:10c00candigi
+ NNNNN 00450   WHERE                                             INNNNF000007015200300452001011000000007000700300137000
+/V="TZ_LOCK = 0 AND ACTIVO = 'S' AND ACTOR IN ('JUZ','JU1') AND NRO_CAUSA = "+C199.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:26:15c00candigi
+ NNNNN 03251   ID_JUEZ                                           INNSNF000007015200300302021011000000007000700300137000
+/V=F(MAXIMO, C80, C565, C450)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:19:20c00candigi
+*N  NN Obtener secretario
+*$2025-02-13 10:18:45c00candigi
+ NNNNN 00080   Descriptor DJ_INTEGRANTES_CAUSAS                  INNSNK000007015200300302021011000000007000700300137000
+/V=3323
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:19:35c00candigi
+ NNNNN 00565   NUMERODECAMPO: ID_PERSONA                         INNSNK000007015200300302021011000000007000700300137000
+/V=33184
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:18:49c00candigi
+ NNNNN 00450   WHERE                                             INNNNF000007015200300452001011000000007000700300137000
+/V="TZ_LOCK = 0 AND ACTIVO = 'S' AND ACTOR IN ('SEJ','SE1') AND NRO_CAUSA = "+C199.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:26:24c00candigi
+ NNNNN 03258   ID_SECRETARIO                                     INNSNF000007015200300302021011000000007000700300137000
+/V=F(MAXIMO, C80, C565, C450)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:19:15c00candigi
+*N  NN Inactivación o Activación?
+*$2025-02-13 10:23:27c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C760.0='A'
+/P=I100
+/M=activacion
+*$2025-02-13 10:24:30c00candigi
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C760.0='I'
+/P=I200
+/M=inactivacion
+*$2025-02-13 10:30:20c00candigi
+TN  NN 1009TModificacion Generica                   M33151 00
+/?=!I99
+*$2025-02-13 10:21:06c00candigi
+ NNNNN 33134   Nro. Causa                                        INNSNA000016015900390309001011000000016001400390144000
+/V=C199.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:05:16c00candigi
+ NNNNN 33141   Estado                                            INNSNF000016015900390309001011000000016001400390144000
+/V=F(RTRIM,C760.1)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:28:20c00candigi
+TN  NN 1001TAlta historico                          A33201 00
+/?=!I99
+*$2025-02-13 10:21:15c00candigi
+ NNNNN 33161   Nro. Causa                                        INNSNA000007015200300302021011000000007000700300137000
+/V=C199.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:05:50c00candigi
+ NNNNN 33162   Fecha                                             INNNNA000007015200300302001011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:05:50c00candigi
+CNNNNN  m00000000000000000000100
+/R=TOP/CLIENTES SP_DJ_OBTENER_ORDINAL_HIST C33161 I, C9500 I, C33188 O
+*$2025-02-13 10:05:50c00candigi
+ NNNNN 33188                                                     INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:05:50c00candigi
+ NNNNN 33164   Juez                                              INNNNA000007015200300302021011000000007000700300137000
+/V=C3251.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:19:53c00candigi
+ NNNNN 33165   Secretario                                        INNSNA000007015200300302021011000000007000700300137000
+/V=C3258.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:20:04c00candigi
+ NNNNN 33166   Motivo Mod.                                       INNSNA000007015200300202001011000000007000700300137000
+/V=C762.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:10:52c00candigi
+ NNNNN 33167   Valor Anterior                                    INNSNA000007015200300452001011000000007000700300137000
+/V=C33141.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:31:04c00candigi
+ NNNNN 33168   Valor Nuevo                                       INNSNF000007015200300452001011000000007000700300137000
+/V=F(RTRIM, C760.1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:31:46c00candigi
+ NNNNN 33291   USUARIO                                           INNNNA000007015200300302001011000000007000700300137000
+/V=C9505
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:32:36c00candigi
+ NNNNN 33292   HORA                                              INNSNA000007015200300302001011000000007000700300137000
+/V=C9506
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:33:24c00candigi
+TN  NN 1006TRetorno                                 C00000 10
+*$2022-11-24 15:57:46JPG
+ NNNNN 00622   RETORNO                                           INNNNK000007015200300302001011000000007000700300137000
+/V=OK
+/P=RETORNO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-24 15:57:46JPG
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/V=200
+/P=ERR_HTTP_CODE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-11-24 15:57:46JPG
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99
+/V=1
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:22:04c00candigi
+ NNNNN 00623   Error retorno                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99
+/V=Error en la operación
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:22:09c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=!I99
+/V=0
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:22:24c00candigi
+ NNNNN 00623   Activacion retorno                                INNSNK000007015200300452001011000000007000700300137000
+/?=!I99
+/V=OK
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:34:03c00candigi
+ NNNNN 00623   Activacion retorno                                INNSNK000007015200300452001011000000007000700300137000
+/?=!I99 Y I100
+/V=Activación realizada
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:25:31c00candigi
+ NNNNN 00623   Inactivacion retorno                              INNSNK000007015200300452001011000000007000700300137000
+/?=!I99 Y I200
+/V=Inactivación realizada
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 10:25:37c00candigi
+*N  NN Salida por error
+*$2025-02-13 09:20:30c00candigi
+ NNNNN 00623   Error retorno                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I500
+/V=Parámetro inválido: idCausa
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 09:21:00c00candigi
+ NNNNN 00623   Error retorno                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I501
+/V=Parámetro inválido: estado -> Valores posibles A o I
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 09:28:42c00candigi
+ NNNNN 00623   Error retorno                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I502
+/V=Parámetro inválido: estado
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 09:30:22c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99 Y I503
+/V=2
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 09:33:35c00candigi
+ NNNNN 00623   Error retorno                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I503
+/V=Error: Causa inexistente
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 09:34:28c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99 Y I504
+/V=4
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 09:36:33c00candigi
+ NNNNN 00623   Error retorno                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I504
+/V=Error: Causa transferida
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 09:36:37c00candigi
+ NNNNN 00048   codigoResultado                                   INNNNK000007015200300302021011000000007000700300137000
+/?=I99 Y I505
+/V=21
+/P=respuesta.codigoResultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 09:48:35c00candigi
+ NNNNN 00623   Error retorno                                     INNSNK000007015200300452001011000000007000700300137000
+/?=I99 Y I505
+/V=Error: Causa con estado igual al estado recibido
+/P=respuesta.descripcion
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2025-02-13 09:48:30c00candigi
+*#I502#Parametro invalido: estado
+*#I501#parametro estado
+*#I500#parametro idCausa
+*#I200#inactivacion
+*#I99#Hubo Error
+*#I100#activacion
+*#I505#Error: Causa con estado igual al estado recibido.
+*#I504#Error: Causa transferida
+*#I503#estado, valores posibles

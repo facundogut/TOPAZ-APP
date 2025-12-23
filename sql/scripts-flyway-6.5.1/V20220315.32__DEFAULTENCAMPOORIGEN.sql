@@ -1,0 +1,6 @@
+﻿EXEC('
+DECLARE @ObjectName NVARCHAR(100)
+SELECT @ObjectName = OBJECT_NAME([default_object_id]) FROM SYS.COLUMNS
+WHERE [object_id] = OBJECT_ID(''[dbo].[TOPESPRODUCTO]'') AND [name] = ''ORIGEN_TRAN_PROG'';
+EXEC(''ALTER TABLE [dbo].[TOPESPRODUCTO] DROP CONSTRAINT '' + @ObjectName)
+')

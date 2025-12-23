@@ -1,0 +1,17 @@
+service ActividadCreditos; 
+description "ActividadCreditos"; 
+
+action:	SQLQuery Entity ( 
+ IDSALDO: string
+): [ 
+	NROSOLICITUD: string,
+	CODIGOCIIU: string,
+	FECHADESEMBOLSO: string
+	]
+{ 
+  	properties { 
+  	("statement", "SELECT sl.NUMEROSOLICITUD AS NROSOLICITUD, sl.COD_ACTIVIDAD_CIIU  + ' - ' + ac.DESCRIPCION AS CODIGOCIIU, CONVERT(VARCHAR(10),sl.FECHADESEMBOLSO,103) AS FECHADESEMBOLSO FROM SALDOS s JOIN CRE_SOLICITUDCREDITO sl ON sl.NUMEROSOLICITUD = s.C1704 AND sl.TZ_LOCK NOT LIKE '3%'  JOIN CLI_Cod_Act_AFIP ac ON ac.CODIGO_ACT_AFIP = sl.COD_ACTIVIDAD_CIIU AND ac.TZ_LOCK NOT LIKE '3%' WHERE s.JTS_OID = ? AND s.TZ_LOCK NOT LIKE '3%' "),
+	("0", "IDSALDO")
+	}
+}
+

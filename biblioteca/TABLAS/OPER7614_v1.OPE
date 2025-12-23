@@ -1,0 +1,559 @@
+VERSION:055_5
+*VERSION_ANTERIOR:0
+TN  NN 1006TRecibo parametros                       C00000 00
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 44267   JTS_OID                                           INNSNI000007015200300202001011000000007000700300137000
+/V=jtsoid
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00537   VENCIMIENTO                                       INNNNI000007015200300202001011000000007000700300137000
+/V=accionVencimiento
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN ***Controlo vencimiento exista en OPCIONES
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/F=(C537#'C')Y(C537#'M')Y(C537#'N')Y(C537#'S')Y(C537#'V')
+/P=I20I99
+*$2024-09-04 11:09:54LAUTAROS
+*N  NN Leo saldo
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 01810   OID Saldo                                         INNSNA000007015200300302021011000000007000700300137000
+/V=C44267.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 01611   Intereses Dev                                     INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN ***Control si existe saldo
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C9509#0
+/P=I300
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C9509=0
+/P=I99
+/A=I300
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN ***Verificar especificamente el codigo para indicadores
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN *****A la hora de definir plazos, tasas, etc
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=C537#'N'YC1659='N'Y!I99
+/P=I21
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=C537#'N'YC1659='C'Y!I99
+/P=I21
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=C537#'N'YC1659='M'Y!I99
+/P=I21
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=C537#'N'YC1659='V'Y!I99
+/P=I21
+*$2025-05-14 17:28:26LAUTAROS
+*N  NN ***Que el DPF se encuentre vigente
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=(C1604.0=0OC1604.0<0)O(C1627.0<C9500)
+/P=I30I99
+*$2024-09-04 11:33:45LAUTAROS
+*N  NN ***código de acción indicado sea distinto al actual para el DPF indicado
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C537.0=C1659.0
+/P=I35I99
+*$2024-07-24 16:05:42LAUTAROS
+TN  NN 1006TValidación de Canal                     C00000 00
+/?=!I99
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN *M
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00002   Cliente                                           INNSNA000007015200270302020011000100007000700270137000
+/V=C1803.1
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 08539   Calidad Cliente                                   INNSN 000007015200270202020011000100007000700270137000
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 01052   Segmento                                          INNSN 000007015200270202020011000100007000700270137000
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 01926   Código Paquete                                    INNSNA000103014201230193000010000000103004801230123000
+/V=C1770.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 01967   Código Campaña                                    INNSNA000103014201230193000010000000103004801230123000
+/V=C1771.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN -----Ejecuto Macro que busca
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN -------------------------Primer caso busca si para la campaña y paquete seleccionados existe tarifa
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN -----------------------------------------------C535=1 Encontro Tarifa y la retorna en el campo 526
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00535   Plazo en dias                                     INNSNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN -------------------------Segundo caso busca si para la campaña=0 y paquete seleccionado existe tarifa
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN -----------------------------------------------C535 # 1 Y C536=1 Encontro Tarifa para Campaña 0 y la retorna en el campo 526
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00536   Plazo en dias                                     INNSNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN ********************          ********************          ********************          ********************
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN *** Canal 4, HB NBCH
+*$2024-08-22 15:24:36LAUTAROS
+ NNNNN 33800   Código                                            INNNNK000007015200300302021011000000007000700300137000
+/V=208
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-22 15:24:36LAUTAROS
+ NNNNN 33803   Numérico                                          INNNN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-22 15:24:36LAUTAROS
+ NNNNN 00395   Canal HB NBCH                                     INNSNF000007015200300202021011000000007000700300137000
+/V=C33803.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-22 15:24:36LAUTAROS
+*N  NN ***
+*$2024-08-22 15:24:36LAUTAROS
+*N  NN *** Validacion producto por canal
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 09103   Condición                                         INNSNF000007015200300452001011000000007000700300137000
+/V="TZ_LOCK=0 AND CODIGO=208"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-22 16:38:58LAUTAROS
+ NNNNN 00612   Nro campo                                         INNSNK000007015200300302021011000000007000700300137000
+/V=33803
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 43759   Descriptor                                        INNSNK000007015200300202021011000000007000700300137000
+/V=3380
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00613   Resultado                                         INNSNF000007015200300302021011000000007000700300137000
+/V=F(MAXIMO,C43759,C612,C9103)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 08794   Canal Origen                                      INNSNA000418012804380239001010000000418002104380097000
+/V=C613.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 05330   Código de Canal                                   INNSNA000007015200300202021011000000007000700300137000
+/V=C8794.0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 05331   Descripción                                       INNSN 000007015200300452001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 34931   Producto                                          INNSNA000007015200300202021011000000007000700300137010
+/V=C6250
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 34932   Moneda                                            INNSNA000007015200300202021011000000007000700300137010
+/V=C1594.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-22 16:00:00LAUTAROS
+ NNNNN 34933   Canal                                             INNSNA000007015200300202021011000000007000700300137010
+/?=1=0
+/V=C8794
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-14 15:26:50LAUTAROS
+ NNNNN 34933   Canal                                             INNSNA000007015200300202021011000000007000700300137010
+/V=C395
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-08-22 15:24:53LAUTAROS
+ NNNNN 34934   Habilitado                                        INNSN 000007015200300202001011000000007000700300137010
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=!I99
+/F=C9509=0YC8794#0
+/P=I99I36
+/M="Producto no disponible para el canal " + C5331.0
+*$2024-08-22 16:33:23LAUTAROS
+CNNNNN   00000000000000000000110
+/?=!I99
+/F=C34934='N'YC8794#0
+/P=I99I37
+/M="Producto deshabilitado para el canal" + C5331.0
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN **** Fin validacion producto por canal
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN **** Fin canal de usuario ****
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00594                                                     INNSNK000007015200270202000011000100007000700270137000
+/V=0
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00825                                                     INNSNK000007015200270202000011000100007000700270137000
+/V=0
+/F=0013700NNN000000000Arial                                   
+/c=127127127
+/f=0013700NNN255255255Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN  R00000000000000000000100
+/R=212
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN *
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN Ejecuto SP_DETERMINACION_TARIFA
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00526   Tarifa                                            INNSNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 02237   PuntosTasa                                        INNSNK000007015200300202021011000000007000700300137000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN *** INICIO GAP 2 ***
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN  m00000000000000000000100
+/?=1=0
+/R=TOP/CLIENTES, SP_DETERMINACION_TARIFA, C1926 I, C1967 I, C606 I, C1800.1 I, C1592.2, C1594.2, C526 O, C2237 O
+*$2024-08-14 15:35:50LAUTAROS
+*N  NN *** FIN GAP 2 ***
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00526   Tarifa                                            INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+CNNNNN   00000000000000000000100
+/?=C526=0Y1=0
+/P=I99I38
+/M=No existe tarifa definida para los datos ingresados
+*$2024-08-14 15:35:57LAUTAROS
+CNNNNN   00000000000000000000100
+/?=C2237=0Y1=0
+/P=I99I39
+/M=No existe tasa definida para los datos ingresados
+*$2024-08-14 15:30:30LAUTAROS
+*N  NN *
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN Se comenta el mensaje de error en la busqueda de tarifa pues la tasa que finalmente se utiliza es la de la tabla  DPF_PRE_CANCELACION C2229
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN y no la tasa que se deduce de la busqueda que haria el Core a partir de la Tarifa de DETERMINACION_TARIFAS
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN ********************          ********************          ********************          ********************
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN *M
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 06499   Tarifa                                            INNSNA000192016502120216000010000000192004602120146000
+/V=C526
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN *
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 06493   Cliente                                           INNNNA000046015300660219020011000000046002700660139000
+/V=C1803.1
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 06476   Valor Tarifa                                      INNNNF000075015300950219020011000000075002700950139000
+/V=C6499
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00003   Moneda                                            INNNNA000075015300950219020011000000075002700950139000
+/V=C1594.1
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00007   Producto                                          INNNNA000075015300950219020011000000075002700950139000
+/V=C1592.1
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00026   Plazo en Dias                                     INNNNF000075015300950219020011000000075002700950139000
+/V=C1627.1-C1621.1
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00029   Importe                                           INNNNA000075015300950219020011000000075002700950139000
+/V=C1604.1
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00098   Tasa de Interes                                   INNNN 000075015300950219020011000000075002700950139000
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+TN  NN 0069TModificacion Datos -No Importes         M00211 00
+/?=!I99
+*$2024-07-24 16:05:42LAUTAROS
+ NSSNN 01810   OID Saldo                                         INNSNA000007015200300302021011000000007000700300137000
+/V=C1810.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 01611   Intereses Dev                                     INNSN 000007015200300302021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 01659   Cod.Renovacion                                    INNSNA000007015200300202001011000000007000700300137000
+/V=C537.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NSSNS 00098   Tasa Pizarra                                      INNSNA000097017001200270021010000000097004601200158000
+/?=I21
+/V=C098.3
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 06476   Valor Tarifa                                      INNNNA000075015300950219020011000000075002700950139000
+/?=I21
+/V=C6499.3
+/f=0013700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NSSNS 01639   Spread Prox Ren                                   INNSN 000122017001450270021010000000122004601450158000
+/?=(I21YC1639#0)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NSSNS 01639   Spread Próx. Ren.                                 INNSNA000122017001450270021010000000122004601450158000
+/?=(I21YC1639=0)
+/V=C1698
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NSSNS 00026   Plazo en Días                                     INNNNF000064060000840677021010000000064044100840542000
+/?=I21
+/V=C1627-C1621
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NSSNS 01689   Plazo Próx. Ren.                                  INNSNA000147017001700270021010000000147004601700158000
+/?=I21
+/V=C0026.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NSSNS 01710   Impte. Suma/Rest                                  INNSNK000172024001950407020010000000172004601950151000
+/?=I21
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NSSNS 01660   Fecha Vig. Renov.                                 INSNNA000222017002450270001010000000222004602450158000
+/?=I21
+/V=C1627
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN ****Se agrega C1640='T' - CDS-686
+*$2025-03-14 15:38:13LAUTAROS
+CNNNNN   00000000000000000000100
+/F=C537='M'OC537='C'
+/P=I22
+*$2025-03-14 16:07:35LAUTAROS
+ NSSNN 01640   Tasa y Plazo                                      INNSNK000007015200300202001011000200007000700300137000
+/?=I22
+/V=T
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-14 15:54:25LAUTAROS
+ NSSNN 01640   Tasa y Plazo                                      INNSNK000007015200300202001011000200007000700300137000
+/?=!I22
+/V= 
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN226115000Georgia                                 
+*$2025-03-14 15:59:02LAUTAROS
+TN  NN 1006TRetorno                                 C00000 10
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00622   RETORNO                                           INNNNK000007015200300302001011000000007000700300137000
+/V=OK
+/P=RETORNO
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00616   ERR_HTTP_CODE                                     INSNNK000007015200300452001011000000007000700300137000
+/V=200
+/P=ERR_HTTP_CODE
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN Resultado OK
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=!I99
+/V=0
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=!I99
+/V=Acción al vencimiento modificada
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*N  NN Resultado con error
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99Y!I300
+/V=100
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99Y!I300
+/V=No existe la cuenta
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI20
+/V=101
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI20
+/V=El código de Vencimiento no es valido
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI30
+/V=102
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI30
+/V=El DPF no se encuentra vigente
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI35
+/V=103
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI35
+/V=El código de acción es igual al actual
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI36
+/V=104
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI36
+/V=Producto no disponible para el canal
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI37
+/V=105
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI37
+/V=Producto deshabilitado para el canal
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI38
+/V=106
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI38
+/V=No existe tarifa definida para los datos ingresados
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 00664   codigo                                            INNSNK000007015200300202021011000000007000700300137000
+/?=I99YI39
+/V=107
+/P=codigo
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+ NNNNN 04968   resultado                                         INNNNK000007015200300452001011000000007000700300137000
+/?=I99YI39
+/V=No existe tasa definida para los datos ingresados
+/P=resultado
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2024-07-24 16:05:42LAUTAROS
+*#I30#El DPF no se encuentra vigente
+*#I300#Existe Saldo
+*#I37#Producto deshabilitado para el cana
+*#I99#Error
+*#I36#Producto no disponible para el canal
+*#I35#Codfigo es igual al C1695
+*#I39#No existe tasa definida
+*#I38#No existe tarifa definida
+*#I20#El codigo de Vencimiento no es valido
+*#I21#Renueva Capital
+*#I22#C1640='T'

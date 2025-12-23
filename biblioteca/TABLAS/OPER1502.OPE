@@ -1,0 +1,291 @@
+VERSION:051
+TN  NN 1006TConsulta Lotes a procesar               C0000 00
+VN  NN 010005000504500800NNND000000000000000000000000000000000000000
+/T=Procesar Lote de Alta Masiva
+/C=192192192
+KN  NN 010007000703670781000101
+ NNNNN 8010   Filtro ayuda   INNSNK00000701520030020200101100000000700070030013700
+/V=ESTADO = 0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8934   Lote           IENSN 01002500180359077002101160000000700070030013700
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8942   Hubo errores?  INNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificacion Generica                   M2491 00
+VNNNNN 020000000604660797SSSD000000000000000000000000000000000000000
+/T=Lote a procesar
+/C=192192192
+KNNNNN 020010001003810767000101
+/F=0012400NNN000000000Arial                                   
+ NNNNN 8934   Lote           IDNSNA02003801320061023202101150000003800370061012400
+/V=C8934.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V="LOTE = " + C8934
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7408   Lote           IESSN 02007800370272073602101160000000700070030013700
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020285003703050175000100
+/T=¿Da de alta clientes?
+/F=0012700NNN000000000Arial                                   
+ NNNNN 8935   Abre Cliente?  IENSN 02028501900553032200101112000029501780318030800
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 020315003703350175000100
+/T=¿Asocia convenio?
+/F=0012700NNN000000000Arial                                   
+ NNNNN 8936   Abre Productos?IENSN 02031501900577032200101012000029501780318030800
+/?=C2399.1=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8936                  IINSNK02031501900335032200101050000028209300305106000
+/?=C2399.1#0
+/V=S
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=A(C8935="N") Y A(C8936="S")  
+/M=Error. No puede asociar convenios si no da de alta clientes.
+KNNNNN 020340003703600175000100
+/T=Sucursal asociada a 
+/F=0012700NNN000000000Arial                                   
+KNNNNN 020355003703750175000100
+/T=clientes/productos
+/F=0012700NNN000000000Arial                                   
+ NNNNN 3960   Sucursal       IENSN 02035001900370023800101100000029501780318030800
+/?=A(C8935="S")
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0001   Sucursal       INNSNA00000701520030020202101100000000700070030013700
+/?=A(C8935="S")
+/V=C3960.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6020   Nombre         ICNSN 02035002600370061100101150000000700070030013700
+/?=A(C8935="S")
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8937   Estado         INNSNK00000701520030020200101100000000700070030013700
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9517   Fila Variab PanINNSNK00000701520030020202101100000000700070030013700
+/V=18
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/P=I20
+TN  NN 1006TConsulta Generica                       C2490 00
+/?=A(C8936.2="S")
+VNNNNN 05-001000704680797SSSD000000000000000000000000000000000000000
+/T=Convenios del cliente
+/C=192192192
+KNNNNN 050010001001840767000101
+/F=0012400NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/?=C2399.1#0
+/V="ID_CONVENIO="+C2399.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 5531   Ayuda ConveniosIENSN 05002700210173075702101160000000700070030013700
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  w00000000000000000000100
+/R=957
+ NNNNN 3466   Nro. Convenio  INNSNA00000701520030020202101100000000700070030013700
+/V=C5531
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 3478   Pago Parcial   INNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V="COD_PAQUETE = " + C3296
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1926   Código         INNSNA00000701520030020202101100000000700070030013700
+/V=C8627
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1927   Descripción    INNSN 00000701520030045200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 050184001002390767000101
+/T=Tarjeta de Débito
+/F=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(F(RTRIM,C2791)#"")OA(F(RTRIM,C2792)#"")
+/P=I21
+/M=Hay tarjeta de débito
+KNNNNN 050206010502260364000000
+/?=I21
+/T=¿De dónde debitará los gastos de la tarjeta?
+/F=0012700NNN000000000Arial                                   
+ NNNNN 2643   Cta.Gtos.Tarj. IENSNK05020303720548064200101012000000700070030013700
+/?=I21
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=I21YA(C2643=" ")
+/M=Error. Opción no válida.
+KNNNNN 050242000803980765000001
+/?=1=0
+/T=Seleccionar productos del Convenio
+/F=0012700NNN000000000Arial                                   
+ NNNNN 0957                  IESSN 05026000200382075502101060000000700070030013700
+/?=1=0
+/L=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1008TRef-Itera para identificar seleccionadosS0960 00
+/?=1=0YA(C8936.2="S")
+/F=P553
+ NNNNN 1985   Activo         INNNN 00000701330027024300001100000000700070027012600
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509#0
+/P=I123
+ NNNNN 1978   Código ProductoINNSN 00003501310053016512001000000000700070027011200
+/?=I123
+/F=0012400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+ NNNNN 1979   Moneda         INNSN 00003500070053011910001000000000700070027011200
+/?=I123
+/F=0012400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+TN  NN 1001TAlta Generica                           A2571 00
+/?=1=0YA(C8936.2="S")YI123
+VNNNNN 030185000602780493SSSD000000000000000000000000000000000000010
+/T="Productos para lote "+C8934.1
+/C=192192192
+KNNNNN 030010001001990472000101
+/F=0012700NNN000000000Arial                                   
+ NNNNN 8938   Lote           INNSNA00000701520030020202101100000000700070030013700
+/V=C8934.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8939   Producto       IDNSNA03005701070080016202101150000005700310080009500
+/V=C1978.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6251   Descripcion    ICNSN 03005701910080046000101150000000700070030013700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8940   Moneda         IDNSNA03009701070120016202101150000009700310120009500
+/V=C1979.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6400   Descripcion    ICNSN 03009701910120046000101150000000700070030013700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8941   Lectura        INNSN 00000701520030020200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Generica                       C3110 00
+/?=1=0YA(C8936.2="S")YI123
+ NNNNN 5262   Cod. Producto  INNNNA00005001440070017202001000000005000110070013700
+/V=C8939.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 5263   Moneda         INNNNA00005001440070017202001000000005000110070013700
+/V=C8940.5
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 5264   Monto Minimo ApINNNN 20005001440070017202001000000005000110070013700
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=Error - Moneda NO Habilitada para el Producto
+VNNNNN 040185049802780307SSSV000000000000000000000000000000000000010
+/T="Productos ingresados para lote "+C8934.1
+/?=I20
+/C=192192192
+KNNNNN 040004000600240063000100
+/?=I20
+/T=Producto
+/F=0012700NNN000000000Arial                                   
+KNNNNN 040004021100240263000100
+/?=I20
+/T=Moneda
+/F=0012700NNN000000000Arial                                   
+ NNNNN 8892   Producto       ICNSNA04002400070047004912101150000000700070030013700
+/V=C8939.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 4990   Descrip        ICNSNA04002400480047021210101150000000700070030013700
+/V=C6251.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0971   Moneda         ICNSNA04002402110047024910101150000000700070030013700
+/V=C8940.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0622   Alfanumer. 20  ICNSNA04002402480047029310101150000000700070030013700
+/V=C6401.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9517   Fila Variab PanINNSNF00000701520030020202101100000000700070030013700
+/V=C9517+18
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9517>210
+/P=I20
+ NNNNN 9517   Fila Variab PanINNSNK00000701520030020202101100000000700070030013700
+/?=I20
+/V=18
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Generica                       C0000 00
+/?=1=0YI123
+CNNNNN  I00000000000000000000100
+/R=4
+TN  NN 1009TModificacion Generica                   M2491 00
+ NNNNN 8934   Lote           INNSNA02003801320061023202101100000003800370061012400
+/V=C8934.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2399   Convenio       INNSNA00000701520030020202101100000000700070030013700
+/V=C3466.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2643   Cta.Gtos.Tarj. INNSNA05020303720548064200101012000000700070030013700
+/?=I21
+/V=C2643.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Generica                       C0001 00
+/?=1=0
+ NNNNN 8934   Lote           INNSNA02003801320061023202101100000003800370061012400
+/V=C8934.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+DN  NN 1500OV00
+*#I20#Nueva pantalla
+*#I21#Hay tarjeta de débito
+*#I123#Procesa otro producto del convenio

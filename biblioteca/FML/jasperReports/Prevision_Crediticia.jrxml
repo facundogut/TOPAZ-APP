@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Previsiones_Crediticias" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString>
+		<![CDATA[SELECT
+				c.C0902 AS Nro_Cliente,
+				c.C1000 AS Nombre_Cliente,
+				c.CalifAlin as Calificacion_Alineada,
+				s.MONEDA,
+				s.C1730 AS Rubro_Contable,
+				s.criterio AS Tipo_Credito,
+				s.Producto,
+				s.CUENTA AS Nro_Pmo,
+				p.SALDO_CAPITAL,
+				p.SALDO_INTERES_ACTIVO,
+				p.MONTO_TOTAL_GTIA_CAPITAL,
+				p.MONTO_TOTAL_GTIA_INTERES,
+				p.RESERVA_BASICA_CAPITAL,
+				p.RESERVA_BASICA_INTERES,
+				(CASE WHEN p.RESERVA_X_DESCUBIERTO_CAPITAL+p.RESERVA_X_DESCUBIERTO_INTERES>p.RESERVA_MINIMA_X_CAPITAL+p.RESERVA_MINIMA_X_INTERES THEN p.RESERVA_X_DESCUBIERTO_CAPITAL ELSE 0 END) AS RES_CONT_X_DESCUBIERTO_CAPITAL,
+				(CASE WHEN p.RESERVA_X_DESCUBIERTO_CAPITAL+p.RESERVA_X_DESCUBIERTO_INTERES>p.RESERVA_MINIMA_X_CAPITAL+p.RESERVA_MINIMA_X_INTERES THEN p.RESERVA_X_DESCUBIERTO_INTERES ELSE 0 END) AS RES_CONT_X_DESCUBIERTO_INTERES,
+				(CASE WHEN p.RESERVA_X_DESCUBIERTO_CAPITAL+p.RESERVA_X_DESCUBIERTO_INTERES<p.RESERVA_MINIMA_X_CAPITAL+p.RESERVA_MINIMA_X_INTERES THEN p.RESERVA_MINIMA_X_CAPITAL ELSE 0 END) AS RES_CONT_MINIMA_CAPITAL,
+				(CASE WHEN p.RESERVA_X_DESCUBIERTO_CAPITAL+p.RESERVA_X_DESCUBIERTO_INTERES<p.RESERVA_MINIMA_X_CAPITAL+p.RESERVA_MINIMA_X_INTERES THEN p.RESERVA_MINIMA_X_INTERES ELSE 0 END) AS RES_CONT_MINIMA_INTERES,
+				p.FECHA_CONTABILIZADO
+				FROM SALDOS s, CL_CLIENTES c, HISTORICO_CALCULO_PREVISIONES p
+				WHERE s.C1803=c.C0902
+				AND s.jts_oid=p.SALDOS_JTS_OID
+				AND p.FECHA_PROCESO=(SELECT FECHAPROCESO FROM PARAMETROS)
+				ORDER BY c.C0902, s.CRITERIO, s.c1730]]>
+	</queryString>
+	<field name="NRO_CLIENTE" class="java.math.BigDecimal"/>
+	<field name="NOMBRE_CLIENTE" class="java.lang.String"/>
+	<field name="CALIFICACION_ALINEADA" class="java.lang.String"/>
+	<field name="MONEDA" class="java.math.BigDecimal"/>
+	<field name="RUBRO_CONTABLE" class="java.math.BigDecimal"/>
+	<field name="TIPO_CREDITO" class="java.math.BigDecimal"/>
+	<field name="PRODUCTO" class="java.math.BigDecimal"/>
+	<field name="NRO_PMO" class="java.math.BigDecimal"/>
+	<field name="SALDO_CAPITAL" class="java.math.BigDecimal"/>
+	<field name="SALDO_INTERES_ACTIVO" class="java.math.BigDecimal"/>
+	<field name="MONTO_TOTAL_GTIA_CAPITAL" class="java.math.BigDecimal"/>
+	<field name="MONTO_TOTAL_GTIA_INTERES" class="java.math.BigDecimal"/>
+	<field name="RESERVA_BASICA_CAPITAL" class="java.math.BigDecimal"/>
+	<field name="RESERVA_BASICA_INTERES" class="java.math.BigDecimal"/>
+	<field name="RES_CONT_X_DESCUBIERTO_CAPITAL" class="java.math.BigDecimal"/>
+	<field name="RES_CONT_X_DESCUBIERTO_INTERES" class="java.math.BigDecimal"/>
+	<field name="RES_CONT_MINIMA_CAPITAL" class="java.math.BigDecimal"/>
+	<field name="RES_CONT_MINIMA_INTERES" class="java.math.BigDecimal"/>
+	<field name="FECHA_CONTABILIZADO" class="java.sql.Timestamp"/>
+	<group name="Cliente">
+		<groupExpression><![CDATA[$F{NRO_CLIENTE}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<textField>
+					<reportElement x="271" y="10" width="247" height="31"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{NOMBRE_CLIENTE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="197" y="10" width="74" height="31"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[NOMBRE:]]></text>
+				</staticText>
+				<textField pattern="###0">
+					<reportElement x="84" y="10" width="113" height="31"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.Double"><![CDATA[$F{NRO_CLIENTE}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="10" y="10" width="74" height="31"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CLIENTE:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="652" y="10" width="143" height="31"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="9"/>
+					</textElement>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{CALIFICACION_ALINEADA}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="518" y="10" width="134" height="31"/>
+					<textElement textAlignment="Right" verticalAlignment="Bottom">
+						<font size="10" isBold="true"/>
+					</textElement>
+					<text><![CDATA[CALIFICACION ALINEADA:]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="9">
+				<line>
+					<reportElement x="1" y="4" width="801" height="1"/>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<group name="Prestamo">
+		<groupExpression><![CDATA[$F{NRO_PMO}]]></groupExpression>
+		<groupHeader>
+			<band height="50">
+				<staticText>
+					<reportElement x="295" y="25" width="67" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[SALDO CAPITAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="362" y="14" width="55" height="36"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[MONTO TOTAL GTIA. CAPITAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="1" y="25" width="74" height="25"/>
+					<textElement verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[RUBRO CONTABLE]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="183" y="14" width="57" height="36"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[NRO. PRESTAMO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="117" y="25" width="68" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[PRODUCTO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="75" y="5" width="42" height="45"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[TIPO CREDITO]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="582" y="5" width="55" height="45"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[RESERVA CONTABLE POR DESCUBIERTO CAPITAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="692" y="5" width="55" height="45"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[RESERVA CONTABLE MINIMA CAPITAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="527" y="5" width="55" height="45"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[RESERVA BASICA INTERES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="417" y="5" width="55" height="45"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[MONTO TOTAL GARANTIA INTERESES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="747" y="5" width="55" height="45"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[RESERVA CONTABLE MINIMA INTERES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="472" y="5" width="55" height="45"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[RESERVA BASICA CAPITAL]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="637" y="5" width="55" height="45"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[RESERVA CONTABLE POR DESCUBIERTO INTERES]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="240" y="25" width="55" height="25"/>
+					<textElement textAlignment="Center" verticalAlignment="Bottom">
+						<font size="7" isBold="false"/>
+					</textElement>
+					<text><![CDATA[MONEDA]]></text>
+				</staticText>
+			</band>
+		</groupHeader>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="295" y="14" width="217" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[PREVISIONES ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="34" width="127" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[CONTABILIZADO]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="446" y="34" width="66" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[$F{FECHA_CONTABILIZADO}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="422" y="34" width="24" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[AL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="695" y="0" width="52" height="20"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[FECHA:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="747" y="1" width="48" height="19"/>
+				<textElement>
+					<font fontName="Arial" size="7"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="527" y="0" width="53" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{RESERVA_BASICA_INTERES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="472" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{RESERVA_BASICA_CAPITAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="185" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NRO_PMO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="582" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{RES_CONT_X_DESCUBIERTO_CAPITAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="692" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{RES_CONT_MINIMA_CAPITAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="1" y="0" width="74" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{RUBRO_CONTABLE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="637" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{RES_CONT_X_DESCUBIERTO_INTERES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="747" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{RES_CONT_MINIMA_INTERES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="417" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{MONTO_TOTAL_GTIA_INTERES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="117" y="0" width="68" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{PRODUCTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="362" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{MONTO_TOTAL_GTIA_CAPITAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="75" y="0" width="42" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{TIPO_CREDITO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="295" y="0" width="67" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{SALDO_CAPITAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="240" y="0" width="55" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{MONEDA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/beneficiariosConvenio/{idConvenio}/{pagina}/{largopagina}</uri>
+    <serviceDescription>ConsultaBeneficiariosConvenio</serviceDescription>
+    <title>ConsultaBeneficiariosConvenio</title>
+    <querys>
+        <query id="1" name="paginado" type="MULTIPLE">
+            <sql>
+
+DECLARE @CONVENIO NUMERIC(12,0),
+
+  @pagina  AS INT ,
+  @largopagina AS INT ,
+  
+
+  
+  @TotalRegistros INT = 0,
+  @resto INT = 0,
+  @primerRegistroPag INT = 0,
+  @ultimoRegistroPag INT =0;
+  SET @CONVENIO =?;
+  SET @pagina =?;
+  SET @largopagina =?;
+
+  SET @TotalRegistros =(SELECT COUNT(*) FROM (SELECT ID_PERSONA,DOCUMENTO FROM CRE_VINCULACIONES_CONVENIOS (nolock) WHERE ID_CONVENIO=@CONVENIO AND 
+((TZ_LOCK &lt; 300000000000000 OR TZ_LOCK &gt;= 400000000000000) AND (TZ_LOCK &lt; 100000000000000 OR TZ_LOCK &gt;= 200000000000000))
+  GROUP BY ID_PERSONA, DOCUMENTO ) AS subConsulta);
+  
+  IF(@TotalRegistros=0)
+  BEGIN
+  SET @primerRegistroPag = 0
+
+  SET @ultimoRegistroPag = 0
+  SET @resto = 0;
+  
+  SELECT
+  		NULL AS ORDEN, 
+	   	NULL AS	IdPersona,
+		NULL AS cuit,
+		@pagina AS paginaActual,
+		0	AS cantidadPaginas,
+		@largopagina 	AS registroPorPag,
+	@TotalRegistros    	AS totalRegistros,
+	@primerRegistroPag 													  		AS primerRegistroPag,
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,
+	@resto 																	  	AS siguientesRegistros 	
+END
+ELSE
+BEGIN
+  SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina)
+  SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1
+  SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina)
+  
+  IF (@resto &lt; 0)
+  	BEGIN
+  		SET @resto = 0
+  	END 
+  IF (@ultimoRegistroPag &gt;@TotalRegistros )
+  	BEGIN
+  	    SET @ultimoRegistroPag=@TotalRegistros
+  	END 
+
+
+IF(@pagina&gt;(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)))
+BEGIN
+SELECT NULL AS IdPersona,
+	NULL AS cuit,
+	@pagina 																	AS paginaActual, 
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,
+	@largopagina 																AS registroPorPag,
+	@TotalRegistros 														  	AS totalRegistros,
+	@primerRegistroPag 													  		AS primerRegistroPag,
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,
+	@resto 																	  	AS siguientesRegistros 
+END
+ELSE
+BEGIN
+SELECT 	ROW_NUMBER() OVER(ORDER BY cuit) AS ORDEN, 
+		IdPersona,
+		cuit,
+		paginaActual,
+		cantidadPaginas,
+		registroPorPag,
+		totalRegistros,
+		primerRegistroPag,
+		ultimoRegistroPag,
+		siguientesRegistros
+		
+
+FROM
+(SELECT ID_PERSONA AS IdPersona,
+	DOCUMENTO AS cuit,
+	@pagina 																	AS paginaActual, 
+	(select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) 				AS cantidadPaginas,
+	@largopagina 																AS registroPorPag,
+	@TotalRegistros 														  	AS totalRegistros,
+	@primerRegistroPag 													  		AS primerRegistroPag,
+	@ultimoRegistroPag 													  		AS ultimoRegistroPag,
+	@resto 																	  	AS siguientesRegistros 		
+	FROM CRE_VINCULACIONES_CONVENIOS (nolock) WHERE ID_CONVENIO=@CONVENIO AND 
+((TZ_LOCK &lt; 300000000000000 OR TZ_LOCK &gt;= 400000000000000) AND (TZ_LOCK &lt; 100000000000000 OR TZ_LOCK &gt;= 200000000000000))
+group by ID_PERSONA,DOCUMENTO
+
+) DATOS 
+ORDER BY ORDEN
+OFFSET ((@pagina - 1) * @largopagina) ROWS 
+FETCH NEXT @largopagina ROWS ONLY;
+
+END
+END  </sql>
+            <input>
+                <inParameter description="" type="INTEGER">idConvenio</inParameter>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="beneficiarios">
+                    <outParameter description="" type="LONG">
+                        <queryname>IdPersona</queryname>
+                        <servicename>IdPersona</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>cuit</queryname>
+                        <servicename>cuit</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

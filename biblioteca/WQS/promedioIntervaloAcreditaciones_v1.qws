@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>promedioIntervaloAcreditaciones/{cuit}/{mesDesde}/{mesHasta}</uri>
+    <serviceDescription>Promedio Intervalo Acreditaciones</serviceDescription>
+    <title>promedioIntervaloAcreditaciones</title>
+    <querys>
+        <query id="1" name="ListadoAcreditaciones" type="MULTIPLE">
+            <sql>DECLARE @cuit VARCHAR(20) = ?&#13;
+DECLARE @fecha_desde VARCHAR(6) = ?&#13;
+DECLARE @fecha_hasta VARCHAR(6) = ?&#13;
+&#13;
+&#13;
+IF ISNUMERIC(@cuit) = 0 OR ISNUMERIC(@fecha_desde) = 0 OR ISNUMERIC(@fecha_hasta) = 0&#13;
+    OR LEN(@cuit) &lt;&gt; 11&#13;
+    OR CONVERT(DATE, LEFT(@fecha_hasta, 4) + '-' + RIGHT(@fecha_hasta, 2) + '-01') &gt; GETDATE()&#13;
+    OR CONVERT(DATE, LEFT(@fecha_desde, 4) + '-' + RIGHT(@fecha_desde, 2) + '-01') &gt; CONVERT(DATE, LEFT(@fecha_hasta, 4) + '-' + RIGHT(@fecha_hasta, 2) + '-01')&#13;
+BEGIN&#13;
+    THROW 50000, 'Error: Uno o más campos tienen valores inválidos.', 1;&#13;
+END&#13;
+ELSE&#13;
+BEGIN&#13;
+&#13;
+if(&#13;
+				SELECT SUM(cm.IMPORTE_MOVIMIENTOS) AS TotalAcreditaciones&#13;
+			FROM grl_contador_movimientos cm&#13;
+			INNER JOIN saldos s ON cm.SALDOS_JTS_OID=s.JTS_OID&#13;
+	 		INNER JOIN TTR_CODIGO_TRANSACCION_DEF ttr ON cm.CODIGO_TRANSACCION=ttr.CODIGO_TRANSACCION&#13;
+	 		INNER JOIN VW_CLI_X_DOC vwcli ON s.C1803 = vwcli.CODIGOCLIENTE&#13;
+			WHERE CONCAT(cm.anio, RIGHT(REPLICATE('0', 2) + CAST(cm.mes AS VARCHAR(2)), 2)) BETWEEN @fecha_desde AND @fecha_hasta AND&#13;
+	  			  s.C1785 IN (2,3) AND&#13;
+	  			  ttr.UTILIZA_CONTADOR_MOVIM = 'S' AND&#13;
+	  			  s.MONEDA = 1 AND&#13;
+	  			  s.TZ_LOCK=0 AND&#13;
+	  			  cm.TZ_LOCK=0 AND&#13;
+	  			  ttr.TZ_LOCK=0 AND	  			  &#13;
+	  			  vwcli.NUMERODOC=@cuit&#13;
+			&#13;
+) &lt;&gt; 0&#13;
+begin&#13;
+;WITH DateSequence AS (&#13;
+    SELECT DATEFROMPARTS(LEFT(@fecha_desde, 4), RIGHT(@fecha_desde, 2), 1) AS AnioMes&#13;
+    UNION ALL&#13;
+    SELECT DATEADD(MONTH, 1, AnioMes)&#13;
+    FROM DateSequence&#13;
+    WHERE AnioMes &lt; DATEFROMPARTS(LEFT(@fecha_hasta, 4), RIGHT(@fecha_hasta, 2), 1)&#13;
+)&#13;
+SELECT CAST(tabla3.AnioMes AS VARCHAR(6)) AS mes, CAST(tabla3.TotalAcreditaciones AS numeric(15, 2)) AS totalAcreditaciones,&#13;
+       CAST(AVG(tabla3.TotalAcreditaciones) OVER () AS numeric(15, 2)) AS promedioAcreditaciones&#13;
+FROM(&#13;
+SELECT tabla1.AnioMes AS AnioMes, ISNULL(tabla2.TotalAcreditaciones, 0) AS TotalAcreditaciones&#13;
+FROM (&#13;
+-- Obtención de todos los aniomes entre las fechas especificadas&#13;
+SELECT FORMAT(AnioMes, 'yyyyMM') AS AnioMes&#13;
+FROM DateSequence&#13;
+&#13;
+) AS tabla1 &#13;
+LEFT JOIN (&#13;
+			SELECT DISTINCT CONCAT(cm.anio, RIGHT('0' + CAST(cm.mes AS VARCHAR(2)), 2)) AS AnioMes, SUM(cm.IMPORTE_MOVIMIENTOS) AS TotalAcreditaciones&#13;
+			FROM grl_contador_movimientos cm&#13;
+			INNER JOIN saldos s ON cm.SALDOS_JTS_OID=s.JTS_OID&#13;
+	 		INNER JOIN TTR_CODIGO_TRANSACCION_DEF ttr ON cm.CODIGO_TRANSACCION=ttr.CODIGO_TRANSACCION&#13;
+	 		INNER JOIN VW_CLI_X_DOC vwcli ON s.C1803 = vwcli.CODIGOCLIENTE&#13;
+			WHERE CONCAT(cm.anio, RIGHT(REPLICATE('0', 2) + CAST(cm.mes AS VARCHAR(2)), 2)) BETWEEN @fecha_desde AND @fecha_hasta AND&#13;
+	  			  s.C1785 IN (2,3) AND&#13;
+	  			  ttr.UTILIZA_CONTADOR_MOVIM = 'S' AND&#13;
+	  			  s.MONEDA = 1 AND&#13;
+	  			  s.TZ_LOCK=0 AND&#13;
+	  			  cm.TZ_LOCK=0 AND&#13;
+	  			  ttr.TZ_LOCK=0 AND	  			  &#13;
+	  			  vwcli.NUMERODOC=@cuit&#13;
+			GROUP BY anio, mes&#13;
+		  ) AS tabla2 &#13;
+ON tabla1.AnioMes= tabla2.AnioMes&#13;
+) AS tabla3							&#13;
+OPTION (MAXRECURSION 0);&#13;
+END&#13;
+ELSE&#13;
+begin&#13;
+SELECT null AS mes, null AS totalAcreditaciones,&#13;
+       null AS promedioAcreditaciones&#13;
+end&#13;
+&#13;
+&#13;
+END</sql>
+            <input>
+                <inParameter description="cuit" type="STRING">cuit</inParameter>
+                <inParameter description="fecha desde" type="STRING">mesDesde</inParameter>
+                <inParameter description="fecha hasta" type="STRING">mesHasta</inParameter>
+            </input>
+            <output>
+                <level groupby="promedioAcreditaciones" name="promedioAcreditaciones">
+                    <outParameter description="promedioAcreditaciones" type="DOUBLE">
+                        <queryname>promedioAcreditaciones</queryname>
+                        <servicename>promedioAcreditaciones</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="meses">
+                    <outParameter description="" type="DOUBLE">
+                        <queryname>totalAcreditaciones</queryname>
+                        <servicename>totalAcreditaciones</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>mes</queryname>
+                        <servicename>mes</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

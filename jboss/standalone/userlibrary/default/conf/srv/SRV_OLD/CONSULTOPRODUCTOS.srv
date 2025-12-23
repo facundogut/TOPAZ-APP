@@ -1,0 +1,34 @@
+service CONSULTOPRODUCTOS; 
+description "Parámetros de entrada al servicio ConsultoProductos"; 
+
+action:	SQLQuery CONSULTOPRODUCTOS ( 
+	
+	NodoCliente: string,
+	TicketSesion: numeric,
+	InfoOrigen: string,
+	ModoAutentica: string,
+	CodCanal: string,
+	Origen: string,
+	NroDepOrigen: numeric,
+	NroTransaccion: numeric,
+	IdAutentica: string,
+	TipoProceso: string,
+	IdInvocaTopaz: string	
+): [ 
+ 	CODERROR: numeric, 
+ 	C6250: numeric as Codigo,
+	C6251: string as Descripcion,
+	C6252: numeric as Tipo ,
+	C6253: string as TipoTasa,
+	C6259: string as TipoCalcCap,
+	C6283: string as Familia,
+	C6285: string as DescripcionTipo
+	
+	
+	
+] { 
+  	properties { 
+  	("statement", "SELECT 0 AS CODERROR,p.C6250,p.C6251,p.C6252,(SELECT o.descripcion FROM opciones o WHERE o.numerodecampo=6253 AND o.idioma='E' AND to_char(p.c6253) = o.opcioninterna) as C6253,(SELECT o.descripcion FROM opciones o WHERE o.numerodecampo=6259 AND o.idioma='E' AND to_char(p.c6259) = o.opcioninterna) as C6259,p.C6283, (SELECT o.descripcion FROM Opciones o WHERE o.numerodecampo=6252 AND o.idioma='E' AND to_char(p.c6252) = o.opcioninterna) as C6285 FROM Productos p WHERE p.tz_lock=0 ORDER BY p.C6250") 
+	
+	}
+}

@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/ConsultaApoderadosSaldosCliente/{idCliente}/{pagina}/{largopagina}</uri>
+    <serviceDescription>Devuelve los apoderados relacionados a los saldos de un id cliente</serviceDescription>
+    <title>ConsultaApoderadosSaldosCliente</title>
+    <querys>
+        <query id="1" name="paginado" type="MULTIPLE">
+            <sql>
+                DECLARE @idAux NUMERIC(12,0) = TRY_CAST(? AS NUMERIC(12,0)); 
+DECLARE @fechaProceso DATE = (SELECT FORMAT(FECHAPROCESO, 'yyyy-MM-dd') FROM PARAMETROS); 
+
+DECLARE @pagina INT = ?;  -- Página a mostrar
+DECLARE @largopagina INT = ?;  -- Registros por página
+DECLARE @TotalRegistros INT = 0;
+DECLARE @primerRegistroPag INT = 0;
+DECLARE @ultimoRegistroPag INT = 0;
+DECLARE @resto INT = 0;
+
+-- Calcula el total de registros
+SET @TotalRegistros = (
+    SELECT COUNT(*) 
+        FROM (
+            SELECT DISTINCT pas.id_entidad, pas.ID_PERSONA 
+            FROM PYF_APODERADOS pas
+            JOIN SALDOS s 
+            ON pas.ID_ENTIDAD = s.JTS_OID 
+            AND s.C1803 = @idAux
+            WHERE pas.TIPO_ENTIDAD = 2 
+            AND pas.TZ_LOCK = 0
+        ) subquery
+);
+
+-- Calcula los límites de paginación
+SET @primerRegistroPag = ((@pagina - 1) * @largopagina) + 1;
+SET @ultimoRegistroPag = @pagina * @largopagina;
+SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina);
+
+IF (@resto &lt; 0)
+BEGIN
+    SET @resto = 0;
+END 
+IF (@ultimoRegistroPag &gt; @TotalRegistros)
+BEGIN
+    SET @ultimoRegistroPag = @TotalRegistros;
+END 
+
+IF(@pagina &gt; (SELECT dbo.ITFcantPaginas(@TotalRegistros, @largopagina)))
+BEGIN
+    SELECT
+        NULL AS 'idSaldo',
+        NULL AS 'idPersona',
+        NULL AS 'nombrePersona',
+        NULL AS 'codApoderamiento',
+        NULL AS 'descApoderamiento',
+        @pagina AS paginaActual, 
+        (SELECT dbo.ITFcantPaginas(@TotalRegistros, @largopagina)) AS cantidadPaginas,
+        @largopagina AS registroPorPag,
+        @TotalRegistros AS totalRegistros,
+        @primerRegistroPag AS primerRegistroPag,
+        @ultimoRegistroPag AS ultimoRegistroPag,
+        @resto AS siguientesRegistros;
+END
+ELSE
+BEGIN
+    SELECT 
+        ROW_NUMBER() OVER(ORDER BY pas.ID_ENTIDAD, pas.ID_PERSONA) AS ORDEN, 
+        pas.ID_ENTIDAD AS 'idSaldo',
+        pas.ID_PERSONA AS 'idPersona',
+        CONCAT(cpf.APELLIDOPATERNO, cpf.APELLIDOMATERNO, cpf.PRIMERNOMBRE, cpf.SEGUNDONOMBRE) AS 'nombrePersona',
+        pas.APODERAMIENTO AS 'codApoderamiento',
+        COALESCE(pt.DESCRIPCION, '') AS 'descApoderamiento',
+        @pagina AS paginaActual, 
+        (SELECT dbo.ITFcantPaginas(@TotalRegistros, @largopagina)) AS cantidadPaginas,
+        @largopagina AS registroPorPag,
+        @TotalRegistros AS totalRegistros,
+        @primerRegistroPag AS primerRegistroPag,
+        @ultimoRegistroPag AS ultimoRegistroPag,
+        @resto AS siguientesRegistros
+    FROM SALDOS s
+    JOIN PYF_APODERADOS pas ON pas.ID_ENTIDAD = s.JTS_OID AND s.C1803 = @idAux AND pas.TIPO_ENTIDAD = 2 AND pas.TZ_LOCK = 0
+    INNER JOIN CLI_PERSONASFISICAS cpf ON cpf.NUMEROPERSONAFISICA = pas.ID_PERSONA AND cpf.TZ_LOCK = 0
+    LEFT JOIN PYF_TIPOAPODERAMIENTO pt (NOLOCK) ON pt.CODAPODERAMIENTO = pas.APODERAMIENTO AND pt.TZ_LOCK = 0 
+    WHERE s.TZ_LOCK = 0
+    
+    ORDER BY ORDEN
+    OFFSET ((@pagina - 1) * @largopagina) ROWS 
+    
+    FETCH NEXT @largopagina ROWS ONLY;
+END;
+
+            </sql>
+            <input>
+                <inParameter description="Apoderados de saldos de un cliente" type="STRING">idCliente</inParameter>
+                <inParameter description="" type="INTEGER">pagina</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+            </input>
+            <output>
+                <level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="idPersona" name="data">
+                    <outParameter description="idSaldo" type="LONG">
+                        <queryname>idSaldo</queryname>
+                        <servicename>apoderamiento.idSaldo</servicename>
+                    </outParameter>
+                    <outParameter description="idPersona" type="LONG">
+                        <queryname>idPersona</queryname>
+                        <servicename>apoderamiento.persona.id</servicename>
+                    </outParameter>
+                    <outParameter description="nombrePersona" type="STRING">
+                        <queryname>nombrePersona</queryname>
+                        <servicename>apoderamiento.persona.nombre</servicename>
+                    </outParameter>
+                    <outParameter description="codApoderamiento" type="LONG">
+                        <queryname>codApoderamiento</queryname>
+                        <servicename>apoderamiento.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="descripcionApoderamiento" type="STRING">
+                        <queryname>descApoderamiento</queryname>
+                        <servicename>apoderamiento.descripcion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

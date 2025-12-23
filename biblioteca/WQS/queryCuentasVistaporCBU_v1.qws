@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/productos/cuentaVista/cbu/{CBU}</uri>
+    <serviceDescription>Consulta Cuenta Vista por CBU</serviceDescription>
+    <querys>
+        <query id="1" name="CUENTAS" type="MULTIPLE">
+            <sql>DECLARE @CBU VARCHAR(30);
+
+SET @CBU = ?;
+
+IF LEN(@CBU) &lt; 23
+SELECT DISTINCT SD.JTS_OID 
+
+FROM 		  VTA_SALDOS VT (NOLOCK)
+INNER JOIN SALDOS SD (NOLOCK) ON SD.JTS_OID = VT.JTS_OID_SALDO
+
+WHERE (SD.C1785 IN(2,3)) 
+AND (VT.CTA_CBU = @CBU)  
+AND ((SD.TZ_LOCK &lt; 300000000000000 OR SD.TZ_LOCK &gt;= 400000000000000) AND (SD.TZ_LOCK &lt; 100000000000000 OR SD.TZ_LOCK &gt;= 200000000000000))
+AND ((VT.TZ_LOCK &lt; 300000000000000 OR VT.TZ_LOCK &gt;= 400000000000000) AND (VT.TZ_LOCK &lt; 100000000000000 OR VT.TZ_LOCK &gt;= 200000000000000))
+
+ELSE 
+
+SELECT TOP 0 NULL AS JTS_OID</sql>
+            <input>
+                <inParameter description="" type="STRING">CBU</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="jts_oid">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>JTS_OID</queryname>
+                        <servicename>jts_oid</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

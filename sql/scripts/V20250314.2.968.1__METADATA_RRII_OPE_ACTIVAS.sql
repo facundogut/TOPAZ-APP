@@ -1,0 +1,58 @@
+EXECUTE('
+IF OBJECT_ID (''RRII_OPE_ACTIVAS'') IS NOT NULL
+	DROP TABLE RRII_OPE_ACTIVAS
+')
+EXECUTE('
+CREATE TABLE RRII_OPE_ACTIVAS
+	(
+	FECHA_PARAMETRO DATE,
+	JTS_OID         NUMERIC (10),
+	Sucursal        BIGINT,
+	TD              INT,
+	ND              NUMERIC (20),
+	[TOP]           INT,
+	NOM             VARCHAR (70),
+	CGA             VARCHAR (100),
+	TGA             INT,
+	CMO             INT,
+	CAP             DECIMAL (15, 2),
+	INTC            DECIMAL (15, 2),
+	INTDP           DECIMAL (15, 2),
+	PRE             DECIMAL (15, 2),
+	CLA             VARCHAR (2),
+	FEC             DATETIME,
+	ATR             INT,
+	CORI            DECIMAL (15, 2),
+	FORI            DATETIME,
+	IDOC            NUMERIC (15, 2),
+	TACUER          NUMERIC (15, 2),
+	FACUER          DATETIME,
+	PACUER          INT,
+	DSD             BIGINT,
+	NOP             BIGINT,
+	CODLIN          INT,
+	ADMTC           VARCHAR (12),
+	FULTC           INT,
+	FUP             DATETIME,
+	IUP             NUMERIC (32, 11),
+	TCART           INT,
+	CCIC            BIGINT,
+	OCID            INT,
+	CC36            INT,
+	TPG             INT,
+	CLAS6           VARCHAR (2),
+	OCDP            INT,
+	OASP            INT,
+	CLAAB           INT,
+	CUABO           VARCHAR (3),
+	VALTAS          INT,
+	CLAIN           INT,
+	CODCRED         INT,
+	LIM             INT,
+	FECLIM          INT,
+	CTANALI         INT,
+	CODES           INT,
+	PAGMIN          INT,
+	METORI          INT
+	)
+')

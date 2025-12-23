@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.cambiovencimiento.CorrimientoVtoDPF</class-name>
+        <query-name>query.CorrimientoVtoDPF</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT
+				S.JTS_OID SAL_JTS_OID,
+				S.C1627 FECHA_VTO
+			FROM 
+				SALDOS AS S WITH (nolock)
+			INNER JOIN (
+				SELECT 
+					DATEPART(DD, P.FECHA) AS DIA,
+					DATEPART(MM, P.FECHA) AS MES,
+					DATEPART(YY, P.FECHA) AS ANIO, 
+					P.SUCURSAL,
+					-1 AS REGION,
+					'P' AS TIPO
+				FROM PAROS AS P WITH (nolock)
+				WHERE
+					P.TZ_LOCK = 0
+
+				UNION ALL
+
+				SELECT
+					F.DIA,
+					F.MES,
+					F.ANIO,
+					F.SUCURSAL,
+					F.REGION,
+					CASE F.TIPO
+						WHEN 'S' THEN 'S'
+						ELSE 'F'
+					END AS TIPO
+				FROM FERIADOS AS F WITH (nolock)
+				WHERE
+					F.TZ_LOCK = 0
+					AND (F.PAIS = 0 
+							OR F.PAIS = (
+										SELECT NUMERICO 
+										FROM PARAMETROSGENERALES WITH (nolock)
+										WHERE 
+											CODIGO = 1 
+											AND TZ_LOCK = 0	)
+					)
+			) AS PAROS_FERIADOS ON
+				((S.C1659 = 'N' AND PAROS_FERIADOS.TIPO = 'P') OR (PAROS_FERIADOS.TIPO &lt;&gt; 'P'))
+				AND (
+					(PAROS_FERIADOS.TIPO IN ('P','F')
+					AND	(CONCAT(CAST(ISNULL(NULLIF(PAROS_FERIADOS.ANIO, 0), DATEPART(YY, S.C1627)) AS VARCHAR(4))+'-',
+								dbo.AGREGOCEROS(CAST(ISNULL(NULLIF(PAROS_FERIADOS.MES, 0), DATEPART(MM, S.C1627)) AS VARCHAR(2)), 2)+'-',
+								dbo.AGREGOCEROS(CAST(ISNULL(NULLIF(PAROS_FERIADOS.DIA, 0), DATEPART(DD, S.C1627)) AS VARCHAR(2)), 2)
+							) = CONVERT(VARCHAR, S.C1627, 23)
+						)
+					)
+					OR
+					(PAROS_FERIADOS.TIPO = 'S'
+					AND (((@@datefirst + datepart(weekday, S.C1627) + 1 ) % 7 ) + 1 = PAROS_FERIADOS.DIA)
+					)
+				)
+				AND (PAROS_FERIADOS.SUCURSAL = S.SUCURSAL 
+					OR PAROS_FERIADOS.SUCURSAL = -1	)
+				AND (PAROS_FERIADOS.REGION = (	SELECT REGION_FERIADOS 
+												FROM SUCURSALESSC WITH (nolock)
+												WHERE 
+													SUCURSAL = S.SUCURSAL
+													AND TZ_LOCK = 0	)
+					OR PAROS_FERIADOS.REGION = -1	)
+			WHERE
+				S.C1785 = 4
+				AND S.C1604 &gt; 0
+				AND S.TZ_LOCK = 0
+        </sentence>
+        <attribute>
+            <attribute-name>Jts_Oid</attribute-name>
+            <column-name>SAL_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fchaVto</attribute-name>
+            <column-name>FECHA_VTO</column-name>
+            <column-type>date</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.cambiovencimiento.DPFCambioVencimiento</class-name>
+        <entity-name>core.DPFCambioVencimiento</entity-name>
+        <table-name>DPF_CAMBIO_VTO_POR_PARO</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>JtsOid</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <key>primary</key>
+            <attribute-id-generator>selfNumerator</attribute-id-generator>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoJtsOid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA_PROCESO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>vtoFinalOriginal</attribute-name>
+            <column-name>VENCIMIENTO_ORIGINAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>nuevoVtoFinal</attribute-name>
+            <column-name>NUEVO_VENCIMIENTO</column-name>
+        </attribute>
+    </class>
+</map>

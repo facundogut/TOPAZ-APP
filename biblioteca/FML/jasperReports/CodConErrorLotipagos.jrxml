@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2022-10-20T09:50:10 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LDAAMMDD" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="a7b8817d-79d1-4925-84fc-8da259c24dc3">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<queryString>
+		<![CDATA[SELECT nomarchivo,(SELECT CAST(FechaProceso AS DATE) FROM parametros) AS FechaProceso,
+(SELECT CantidadRegistros FROM ITF_INTERMEDIA_LOTIPAGOS WHERE TipoRegistro = 3) AS CantidadRegistros,
+(SELECT Count(*) FROM ITF_INTERMEDIA_LOTIPAGOS WHERE TipoRegistro = 2 AND ConError = 'S') AS RegRechazados
+ FROM ITF_INTERMEDIA_LOTIPAGOS GROUP BY nomarchivo;]]>
+	</queryString>
+	<field name="nomarchivo" class="java.lang.String"/>
+	<field name="FechaProceso" class="java.lang.String"/>
+	<field name="CantidadRegistros" class="java.math.BigDecimal"/>
+	<field name="RegRechazados" class="java.lang.Integer"/>
+	<variable name="NomArchivo" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="112" splitType="Stretch">
+			<staticText>
+				<reportElement x="200" y="30" width="200" height="30" uuid="b788514a-1a1a-45e0-9b98-534aeffc4fe1"/>
+				<textElement>
+					<font size="16"/>
+				</textElement>
+				<text><![CDATA[Códigos de error]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="220" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="0" width="100" height="30" uuid="0a9c6b9b-26a1-44b1-94f8-a3a3008a394d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Archivo:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="30" width="100" height="30" uuid="f887c45b-f4ab-4c6d-a4e0-f0e7ca3dea6a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Fecha de proceso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="60" width="100" height="30" uuid="a2695595-093b-48ad-8def-69391f6c4cad"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Hora de proceso:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="90" width="110" height="30" uuid="6cdc56a2-a3d2-4d98-9db4-a1cd7bc617d5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Total.Reg Procesados:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="120" width="110" height="30" uuid="dc9be648-0b02-47e9-93ae-ad5a566b5c3a"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[Registros Rechazados:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="190" width="359" height="30" uuid="e1e09bac-064a-42a7-be1a-28d1c6770a81"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<text><![CDATA[LOS CODIGOS DE ERROR SE ENCUENTRAN DETALLADOS EN LA TABLA:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="100" y="0" width="230" height="30" uuid="b40184ec-8224-4020-8262-d3a1bbb0940d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nomarchivo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="100" y="30" width="100" height="30" uuid="1cc4d2cc-d6a7-4ad4-943d-799a02170156"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FechaProceso}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="90" width="100" height="30" uuid="804ac5a0-9a03-4fe8-a1cd-a3683e9f7364"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{CantidadRegistros}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="120" width="100" height="30" uuid="989624ae-d574-4760-9c34-2230559d5011"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{RegRechazados}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH:mm">
+				<reportElement x="100" y="60" width="100" height="30" uuid="9ec595bc-5ce9-4898-ab61-5e110a406e6f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="170" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="100" height="30" uuid="4f37949e-8544-43fc-b24c-7c1c2ead3806"/>
+				<text><![CDATA[Código]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="40" y="10" width="100" height="30" uuid="6aad9e6a-7590-4f2f-9ca8-8427818a1252"/>
+				<text><![CDATA[Descripción]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="280" height="120" uuid="76d2d65e-c40a-411e-bc45-79153d79087c"/>
+				<text><![CDATA[001	El campo número de convenio incorrecto
+002	El campo fecha de pago es una fecha inválida
+003	El campo importe cobrado es cero
+004	El campo código de barras se encuentra en blanco
+005	Convenio no activo 
+006	Nro de agencia debe ser numérico
+007	Fecha de cabezal debe ser igual a fecha de pago
+008        Convenio no pertecene al canal 2]]></text>
+			</staticText>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

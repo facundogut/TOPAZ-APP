@@ -1,0 +1,31 @@
+service CuentaVistaListaCajaAhorro; 
+description "Srv CVListCajaAhorro"; 
+
+action:	SQLQuery Entity (  
+ IDCLIENTE: string,
+ IDMONEDA: string
+): [ 
+	PRODUCTO: string,
+	TIPOCUENTA: string,
+	TIPOPRODUCTO: string,
+   	NRO_CUENTA: string,
+	MONEDA: string,
+   	SALDO_ACTUAL: string,
+	SALDO_DISPONIBLE: string,
+   	SALDO_BLOQUEADO: string,
+	SALDO_CONTABLE: string,
+	FECHA_APERTURA: string,
+   	SUCURSAL: string,
+	ESTADO: string,
+	IDSALDO: string
+	]
+{ 
+  	properties { 
+	("statement","SELECT s.PRODUCTO AS Producto, o2.DESCRIPCION AS TIPOCUENTA, p.C6251 AS TipoProducto, s.CUENTA AS Nro_Cuenta, m.C6401 AS Moneda, TO_CHAR(s.C1604,'9999G999G999G999G999D99') AS Saldo_Actual, TO_CHAR((s.C1604 + s.C2627),'9999G999G999G999G999D99') AS Saldo_Disponible, TO_CHAR(-1*(s.C2627),'9999G999G999G999G999D99') AS Saldo_bloqueado, TO_CHAR((s.c1604 + s.C2627),'9999G999G999G999G999D99') AS Saldo_Contable, TO_CHAR(s.c1621,'DD/MM/YYYY') AS Fecha_Apertura, s.SUCURSAL || '-' || sc.DESCRIPCION AS sucursal, CASE s.C1728 WHEN 'X' THEN 'Vigente' WHEN ' ' THEN 'Vigente' ELSE 'Inactiva' END AS Estado, s.jts_oid as IDSALDO FROM SALDOS s JOIN MONEDAS m ON m.C6399 = s.MONEDA AND m.TZ_LOCK=0 JOIN OPCIONES o ON o.NUMERODECAMPO = 6252 AND o.OPCIONINTERNA = s.C1785 AND o.IDIOMA = 'E' JOIN PRODUCTOS p ON p.C6250 = s.PRODUCTO AND p.TZ_LOCK=0  JOIN OPCIONES o2 ON o2.NUMERODECAMPO = 39998 AND o2.OPCIONINTERNA = p.TIPO_CUENTA_VISTA AND o2.IDIOMA = 'E' JOIN SUCURSALESSC sc ON s.SUCURSAL = sc.SUCURSAL AND sc.TZ_LOCK=0 WHERE  s.C1785 IN (1,2,3) AND C1803 = ? AND s.Moneda = ? AND s.TZ_LOCK NOT BETWEEN 300000000000000 AND 399999999999999 "), 
+	("0", "IDCLIENTE"),
+	("1", "IDMONEDA")
+	}
+	
+}
+
+

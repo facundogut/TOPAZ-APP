@@ -1,0 +1,38 @@
+service AyudaNroDocJF; 
+description "Ayuda de NroDoc JF"; 
+
+action:	SQLQuery Entity ( 
+ TIENEFILTRO: string,
+ CAMPO: string,
+ OPERADOR: string,
+ VALOR: string,
+ TIPODOC: string
+): [ 
+   	STIENEFILTRO: string,
+	SCAMPO: string,
+	SOPERADOR: string,
+	SVALOR: string
+	]
+{ 
+	properties {
+  	("statement", "select ? as STIENEFILTRO, ? as SCAMPO, ? as SOPERADOR, ? as SVALOR from dual "), 
+	("0", "TIENEFILTRO"), ("1", "CAMPO"), ("2", "OPERADOR"), ("3", "VALOR") };
+	
+		action:	SQLQuery Entity0 ( 
+		): [ TIPODOC: string, NRODOC: string, NOMBRE: string ]
+		{
+			properties { 
+			("statement", "SELECT 'F' AS TIPOPERSONA, relPer.TIPODOCUMENTO AS TIPODOC, relPer.NUMERODOCUMENTO AS NRODOC, TO_CHAR(RTRIM(pF.PRIMERNOMBRE) || ' ' || RTRIM(pF.SEGUNDONOMBRE) || ' ' || RTRIM(pF.APELLIDOPATERNO) || ' ' || RTRIM(pF.APELLIDOMATERNO)) NOMBRE FROM CLI_PERSONASFISICAS pF JOIN CLI_DOCUMENTOSPFPJ relPer ON relPer.NUMEROPERSONAFJ = pF.NUMEROPERSONAFISICA AND relPer.TZ_LOCK = 0 WHERE  FN_FILTRO_CAMPO(?,?,relPer.NUMERODOCUMENTO,TO_CHAR(RTRIM(pF.PRIMERNOMBRE) || ' ' || RTRIM(pF.SEGUNDONOMBRE) || ' ' || RTRIM(pF.APELLIDOPATERNO) || ' ' || RTRIM(pF.APELLIDOMATERNO)),?,?) = 1 AND pF.TZ_LOCK=0 AND relPer.TZ_LOCK=0 AND  relPer.TIPODOCUMENTO = ? UNION SELECT 'J' AS TIPOPERSONA, relPer.TIPODOCUMENTO AS Tipodoc, relPer.NUMERODOCUMENTO AS NroDoc, pJ.NOMBREFANTASIA AS NOMBRE FROM CLI_PERSONASJURIDICAS pJ JOIN CLI_DOCUMENTOSPFPJ relPer ON relPer.NUMEROPERSONAFJ = pJ.NUMEROPERSONAJURIDICA AND relPer.TZ_LOCK = 0 WHERE  FN_FILTRO_CAMPO(?,?,relPer.NUMERODOCUMENTO,pJ.NOMBREFANTASIA,?,?) = 1 AND pJ.TZ_LOCK=0 AND relPer.TZ_LOCK=0 AND  relPer.TIPODOCUMENTO = ? "),
+			("0", "STIENEFILTRO"),	
+			("1", "SCAMPO"),
+			("2", "SVALOR"),
+			("3", "SOPERADOR"),
+			("4", "TIPODOC"),
+			("5", "STIENEFILTRO"),	
+			("6", "SCAMPO"),
+			("7", "SVALOR"),
+			("8", "SOPERADOR"),
+			("9", "TIPODOC")
+			}
+	    }  	
+}

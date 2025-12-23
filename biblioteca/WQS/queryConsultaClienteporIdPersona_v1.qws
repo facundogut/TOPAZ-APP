@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/clientes/clientesxIdPersona/{PAGINA}/{largopagina}/{ID}/{TIPOCLIENTE}/{TITULARIDAD}</uri>
+    <serviceDescription>Consultar Clientes Por Id Persona</serviceDescription>
+    <title>Consultar Clientes Por Id Persona</title>
+    <querys>
+        <query id="1" name="PERSONA" type="MULTIPLE">
+            <sql>DECLARE @numero_persona INT
+DECLARE @tipo_cliente VARCHAR(1)
+DECLARE @titularidad VARCHAR(1)
+----------------------
+DECLARE
+  @pagina  AS INT = ?,
+  @largopagina AS INT = ?,  
+  @TotalRegistros INT = 0,
+  @resto INT = 0,
+  @primerRegistroPag INT = 0,
+  @ultimoRegistroPag INT =0;
+
+SET @numero_persona = ?
+SET @tipo_cliente = ?
+SET @titularidad = ?  
+  
+SET @TotalRegistros = (
+						SELECT	count(1)--R.CODIGOCLIENTE
+						FROM dbo.CLI_CLIENTES  AS R (NOLOCK) 
+						INNER JOIN dbo.CLI_CLIENTEPERSONA  AS T (NOLOCK) ON R.CODIGOCLIENTE = T.CODIGOCLIENTE
+																	AND((R.TZ_LOCK &lt; 300000000000000 OR R.TZ_LOCK &gt;= 400000000000000) 
+																		AND (R.TZ_LOCK &lt; 100000000000000 OR R.TZ_LOCK &gt;= 200000000000000)) 
+																	AND((T.TZ_LOCK &lt; 300000000000000 OR T.TZ_LOCK &gt;= 400000000000000) 
+																		AND (T.TZ_LOCK &lt; 100000000000000 OR T.TZ_LOCK &gt;= 200000000000000)) 
+
+						WHERE T.NUMEROPERSONA = @numero_persona 
+
+						AND TIPO IN (
+									(CASE 
+									WHEN @tipo_cliente = 'H' THEN 'F' 
+									WHEN @tipo_cliente = 'J' THEN 'J' 
+									WHEN @tipo_cliente = 'A' THEN 'F' 
+									ELSE '' END),
+									(CASE 
+									WHEN @tipo_cliente = 'J' THEN 'I'
+									WHEN @tipo_cliente = 'A' THEN 'J' 
+									ELSE '' END),
+									(CASE 
+									WHEN @tipo_cliente = 'A' THEN 'I'
+									ELSE '' END)
+									)
+									
+						AND TITULARIDAD IN (
+									(CASE 
+									WHEN @titularidad = 'T' THEN 'T' 
+									WHEN @titularidad = 'C' THEN 'C'
+									ELSE '' END),
+									(CASE 
+									WHEN @titularidad = 'C' THEN 'T' 
+									ELSE '' END)
+									)
+						)
+  
+  SET @resto = @TotalRegistros - (((@pagina -1) * @largopagina) + @largopagina)
+  SET @primerRegistroPag = ((@pagina -1) * @largopagina) +1
+  SET @ultimoRegistroPag = (((@pagina -1) * @largopagina) + @largopagina)
+  
+  IF (@resto &lt; 0)
+  	BEGIN
+  		SET @resto = 0
+  	END 
+  IF (@ultimoRegistroPag &gt;@TotalRegistros )
+  	BEGIN
+  	    SET @ultimoRegistroPag=@TotalRegistros
+  	END 
+	
+	IF(@pagina > (select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)))
+	BEGIN
+
+	SELECT null AS CODIGOCLIENTE,
+		 @pagina AS paginaActual,
+		 (select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) as cantidadPaginas,
+		 @largopagina AS registroPorPag,
+		 @TotalRegistros AS totalRegistros,
+		 @primerRegistroPag AS primerRegistroPag,
+		 @ultimoRegistroPag AS ultimoRegistroPag,
+		 @resto AS siguientesRegistros
+	END
+	ELSE
+	BEGIN
+
+	SELECT 	ROW_NUMBER() OVER(ORDER BY CODIGOCLIENTE) AS ORDEN,
+		CODIGOCLIENTE,
+		paginaActual,
+		cantidadPaginas,
+		registroPorPag,
+		totalRegistros,
+		primerRegistroPag,
+		ultimoRegistroPag,
+		siguientesRegistros
+		
+	FROM
+
+(
+
+SELECT R.CODIGOCLIENTE as CODIGOCLIENTE,
+	 @pagina AS paginaActual, 
+	 (select dbo.ITFcantPaginas (@TotalRegistros, @largopagina)) as cantidadPaginas,
+	 @largopagina AS registroPorPag,
+	 @TotalRegistros AS totalRegistros,
+	 @primerRegistroPag AS primerRegistroPag,
+	 @ultimoRegistroPag AS ultimoRegistroPag,
+	 @resto AS siguientesRegistros
+FROM dbo.CLI_CLIENTES  AS R (NOLOCK) 
+INNER JOIN dbo.CLI_CLIENTEPERSONA  AS T (NOLOCK) ON R.CODIGOCLIENTE = T.CODIGOCLIENTE
+											AND((R.TZ_LOCK &lt; 300000000000000 OR R.TZ_LOCK &gt;= 400000000000000) 
+												AND (R.TZ_LOCK &lt; 100000000000000 OR R.TZ_LOCK &gt;= 200000000000000)) 
+											AND((T.TZ_LOCK &lt; 300000000000000 OR T.TZ_LOCK &gt;= 400000000000000) 
+												AND (T.TZ_LOCK &lt; 100000000000000 OR T.TZ_LOCK &gt;= 200000000000000)) 
+
+WHERE T.NUMEROPERSONA = @numero_persona 
+
+AND TIPO IN (
+			(CASE 
+			WHEN @tipo_cliente = 'H' THEN 'F' 
+			WHEN @tipo_cliente = 'J' THEN 'J' 
+			WHEN @tipo_cliente = 'A' THEN 'F' 
+			ELSE '' END),
+			(CASE 
+			WHEN @tipo_cliente = 'J' THEN 'I'
+			WHEN @tipo_cliente = 'A' THEN 'J' 
+			ELSE '' END),
+			(CASE 
+			WHEN @tipo_cliente = 'A' THEN 'I'
+			ELSE '' END)
+			) 
+			
+AND TITULARIDAD IN (
+			(CASE 
+			WHEN @titularidad = 'T' THEN 'T' 
+			WHEN @titularidad = 'C' THEN 'C'
+			ELSE '' END),
+			(CASE 
+			WHEN @titularidad = 'C' THEN 'T' 
+			ELSE '' END)
+			)
+
+) DATOS	
+
+ORDER BY ORDEN
+
+OFFSET ((@pagina - 1) * @largopagina) ROWS 
+FETCH NEXT @largopagina ROWS ONLY;
+
+END
+
+----------------------
+
+			</sql>
+            <input>
+				<inParameter description="" type="INTEGER">PAGINA</inParameter>
+                <inParameter description="" type="INTEGER">largopagina</inParameter>
+                <inParameter description="ID Persona" type="STRING">ID</inParameter>
+                <inParameter description="" type="STRING">TIPOCLIENTE</inParameter>
+                <inParameter description="" type="STRING">TITULARIDAD</inParameter>
+            </input>
+            <output>
+				<level groupby="paginaActual" name="paginado">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>paginaActual</queryname>
+                        <servicename>paginado.paginaActual</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>cantidadPaginas</queryname>
+                        <servicename>paginado.cantidadPaginas</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>registroPorPag</queryname>
+                        <servicename>paginado.registroPorPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>totalRegistros</queryname>
+                        <servicename>paginado.totalRegistros</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>primerRegistroPag</queryname>
+                        <servicename>paginado.primerRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>ultimoRegistroPag</queryname>
+                        <servicename>paginado.ultimoRegistroPag</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>siguientesRegistros</queryname>
+                        <servicename>paginado.siguientesRegistros</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="idCliente">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>CODIGOCLIENTE</queryname>
+                        <servicename>idCliente</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

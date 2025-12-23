@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/detalleTranAutomatica/{origen}/{destino}</uri>
+    <serviceDescription>PAST023 - Consulta de Transferencia Automatica</serviceDescription>
+    <title>1.35.21 Formulario SDACa</title>
+    <querys>
+        <query id="1" name="transferencias" type="MULTIPLE">
+            <sql>DECLARE @jts_ord NUMERIC(10,0)=?,@jts_ben NUMERIC(10,0)=?&#13;
+&#13;
+IF @jts_ben &lt;&gt; 0&#13;
+ BEGIN&#13;
+        SELECT &#13;
+		             a.NROSOLICITUD idSolicitud&#13;
+		             , a.DIA_MES_TRANSF diaTransferencia&#13;
+		             , a.IMPORTE_A_TRANSFERIR importe&#13;
+		             , a.FECHA_ALTA fechaAlta&#13;
+		             , a.FECHA_LIMITE fechaLimite&#13;
+		             , a.MIN_REMANENTE_FUENTE minimoRemanente&#13;
+		             , a.PORC_AJUSTE_IMPORTE ajusteImporte&#13;
+		             , a.MAXIMO_A_TRANSFERIR maximoTransferir&#13;
+		             , a.cant_transf_ajuste transferenciaAjuste&#13;
+		             , c.SUCURSAL 'origen.sucursal.numero'&#13;
+		             , c.NOMBRESUCURSAL 'origen.sucursal.descripcion'&#13;
+		             , b.CUENTA 'origen.cuenta.numero'&#13;
+		             , vb.NOMBRE_CUENTA 'origen.cuenta.denominacion'&#13;
+		             , b.PRODUCTO 'origen.producto.codigo'&#13;
+		             , e.C6251 'origen.producto.descripcion'&#13;
+		             , b.MONEDA 'origen.moneda.codigo'&#13;
+		             , d.c6400 'origen.moneda.descripcion'&#13;
+		             , f.SUCURSAL 'destino.sucursal.numero'&#13;
+		             , (SELECT TOP 1 nombresucursal FROM SUCURSALES WHERE SUCURSAL=f.SUCURSAL AND TZ_LOCK=0) 'destino.sucursal.descripcion'&#13;
+		             , f.CUENTA 'destino.cuenta.numero'&#13;
+		            , vf.NOMBRE_CUENTA 'destino.cuenta.denominacion'&#13;
+		            , f.PRODUCTO 'destino.producto.codigo'&#13;
+		            , (SELECT TOP 1 C6251 FROM PRODUCTOS WHERE C6250=f.PRODUCTO AND TZ_LOCK=0) 'destino.producto.descripcion'&#13;
+		            , f.MONEDA 'destino.moneda.codigo'&#13;
+		            , (SELECT TOP 1 C6400 FROM monedas WHERE C6399=f.MONEDA AND TZ_LOCK=0) 'destino.moneda.descripcion'&#13;
+        FROM CV_TRANSFERENCIA a&#13;
+            JOIN SALDOS b ON a.JTS_OID_CTA_FUENTE=b.JTS_OID&#13;
+            JOIN VTA_SALDOS vb ON a.JTS_OID_CTA_FUENTE = vb.JTS_OID_SALDO&#13;
+            JOIN SUCURSALES c ON b.SUCURSAL=c.SUCURSAL&#13;
+            JOIN monedas d ON b.MONEDA=d.c6399&#13;
+            JOIN productos e ON e.c6250 = b.PRODUCTO&#13;
+            JOIN SALDOS f ON a.JTS_OID_CTA_DESTINO=f.JTS_OID&#13;
+           JOIN VTA_SALDOS vf ON a.JTS_OID_CTA_DESTINO = vf.JTS_OID_SALDO&#13;
+        WHERE a.JTS_OID_CTA_DESTINO=@jts_ben&#13;
+           AND a.JTS_OID_CTA_FUENTE=@jts_ord&#13;
+           AND a.TZ_LOCK=0&#13;
+           AND c.TZ_LOCK=0&#13;
+           AND d.TZ_LOCK=0&#13;
+           AND vb.TZ_LOCK = 0&#13;
+           AND vf.TZ_LOCK = 0&#13;
+ END&#13;
+ELSE IF @jts_ben = 0 &#13;
+   BEGIN&#13;
+        SELECT &#13;
+		             a.NROSOLICITUD idSolicitud&#13;
+		             , a.DIA_MES_TRANSF diaTransferencia&#13;
+		             , a.IMPORTE_A_TRANSFERIR importe&#13;
+		             , a.FECHA_ALTA fechaAlta&#13;
+		             , a.FECHA_LIMITE fechaLimite&#13;
+		             , a.MIN_REMANENTE_FUENTE minimoRemanente&#13;
+		             , a.PORC_AJUSTE_IMPORTE ajusteImporte&#13;
+		             , a.MAXIMO_A_TRANSFERIR maximoTransferir&#13;
+		             , a.cant_transf_ajuste transferenciaAjuste&#13;
+		             , c.SUCURSAL 'origen.sucursal.numero'&#13;
+		             , c.NOMBRESUCURSAL 'origen.sucursal.descripcion'&#13;
+		             , b.CUENTA 'origen.cuenta.numero'&#13;
+		             , vb.NOMBRE_CUENTA 'origen.cuenta.denominacion'&#13;
+		             , b.PRODUCTO 'origen.producto.codigo'&#13;
+		             , e.C6251 'origen.producto.descripcion'&#13;
+		             , b.MONEDA 'origen.moneda.codigo'&#13;
+		             , d.c6400 'origen.moneda.descripcion'&#13;
+		             , f.SUCURSAL 'destino.sucursal.numero'&#13;
+		             , (SELECT TOP 1 nombresucursal FROM SUCURSALES WHERE SUCURSAL=f.SUCURSAL AND TZ_LOCK=0) 'destino.sucursal.descripcion'&#13;
+		             , f.CUENTA 'destino.cuenta.numero'&#13;
+		            , vf.NOMBRE_CUENTA 'destino.cuenta.denominacion'&#13;
+		            , f.PRODUCTO 'destino.producto.codigo'&#13;
+		            , (SELECT TOP 1 C6251 FROM PRODUCTOS WHERE C6250=f.PRODUCTO AND TZ_LOCK=0) 'destino.producto.descripcion'&#13;
+		            , f.MONEDA 'destino.moneda.codigo'&#13;
+		            , (SELECT TOP 1 C6400 FROM monedas WHERE C6399=f.MONEDA AND TZ_LOCK=0) 'destino.moneda.descripcion'&#13;
+        FROM CV_TRANSFERENCIA a&#13;
+            JOIN SALDOS b ON a.JTS_OID_CTA_FUENTE=b.JTS_OID&#13;
+            JOIN VTA_SALDOS vb ON a.JTS_OID_CTA_FUENTE = vb.JTS_OID_SALDO&#13;
+            JOIN SUCURSALES c ON b.SUCURSAL=c.SUCURSAL&#13;
+            JOIN monedas d ON b.MONEDA=d.c6399&#13;
+            JOIN productos e ON e.c6250 = b.PRODUCTO&#13;
+            JOIN SALDOS f ON a.JTS_OID_CTA_DESTINO=f.JTS_OID&#13;
+           JOIN VTA_SALDOS vf ON a.JTS_OID_CTA_DESTINO = vf.JTS_OID_SALDO&#13;
+        WHERE a.JTS_OID_CTA_FUENTE=@jts_ord&#13;
+           AND a.TZ_LOCK=0&#13;
+           AND c.TZ_LOCK=0&#13;
+           AND d.TZ_LOCK=0&#13;
+          AND vb.TZ_LOCK=0&#13;
+          AND vf.TZ_LOCK=0&#13;
+ END</sql>
+            <input>
+                <inParameter description="" type="LONG">origen</inParameter>
+                <inParameter description="" type="LONG">destino</inParameter>
+            </input>
+            <output>
+                <level groupby="" name="transferencias">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>idSolicitud</queryname>
+                        <servicename>idSolicitud</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>diaTransferencia</queryname>
+                        <servicename>diaTransferencia</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>importe</queryname>
+                        <servicename>importe</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaAlta</queryname>
+                        <servicename>fechaAlta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaLimite</queryname>
+                        <servicename>fechaLimite</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>minimoRemanente</queryname>
+                        <servicename>minimoRemanente</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>ajusteImporte</queryname>
+                        <servicename>ajusteImporte</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>maximoTransferir</queryname>
+                        <servicename>maximoTransferir</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>transferenciaAjuste</queryname>
+                        <servicename>transferenciaAjuste</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>origen.sucursal.numero</queryname>
+                        <servicename>origen.sucursal.numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>origen.sucursal.descripcion</queryname>
+                        <servicename>origen.sucursal.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>origen.cuenta.numero</queryname>
+                        <servicename>origen.cuenta.numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>origen.cuenta.denominacion</queryname>
+                        <servicename>origen.cuenta.denominacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>origen.producto.codigo</queryname>
+                        <servicename>origen.producto.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>origen.producto.descripcion</queryname>
+                        <servicename>origen.producto.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>origen.moneda.codigo</queryname>
+                        <servicename>origen.moneda.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>origen.moneda.descripcion</queryname>
+                        <servicename>origen.moneda.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>destino.sucursal.numero</queryname>
+                        <servicename>destino.sucursal.numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>destino.sucursal.descripcion</queryname>
+                        <servicename>destino.sucursal.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>destino.cuenta.numero</queryname>
+                        <servicename>destino.cuenta.numero</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>destino.cuenta.denominacion</queryname>
+                        <servicename>destino.cuenta.denominacion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>destino.producto.codigo</queryname>
+                        <servicename>destino.producto.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>destino.producto.descripcion</queryname>
+                        <servicename>destino.producto.descripcion</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>destino.moneda.codigo</queryname>
+                        <servicename>destino.moneda.codigo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>destino.moneda.descripcion</queryname>
+                        <servicename>destino.moneda.descripcion</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+        <query id="2" name="aux" type="SIMPLE">
+            <sql>select  null as aux</sql>
+            <input/>
+            <output>
+                <level groupby="" name="aux">
+                    <outParameter description="" type="STRING">
+                        <queryname>aux</queryname>
+                        <servicename>aux</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

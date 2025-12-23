@@ -1,0 +1,169 @@
+﻿EXECUTE('
+IF OBJECT_ID (''dbo.VW_CHEQUES_OTRO_BCO_SIN_IMG'') IS NOT NULL
+	DROP VIEW dbo.VW_CHEQUES_OTRO_BCO_SIN_IMG
+')
+
+EXECUTE('
+CREATE   VIEW [dbo].[VW_CHEQUES_OTRO_BCO_SIN_IMG] (
+												   TZ_LOCK, 
+												   NRO_ASIENTO, 
+												   NRO_CHEQUE, 
+												   BANCO, 
+												   SUC_BANCO, 
+												   NRO_CUENTA, 
+												   CMC7,
+												   NRO_DEPOSITO)
+AS 
+SELECT DISTINCT
+		s.TZ_LOCK,
+		s.NRO_ASIENTO,
+		s.NUMERO_CHEQUE,
+		s.BANCO_GIRADO,
+		s.SUCURSAL_BANCO_GIRADO,
+		s.NUMERICO_CUENTA_GIRADORA,
+		s.CMC7,
+		s.NUMERO_DEPOSITO
+FROM CLE_CHEQUES_SALIENTE s   with (nolock)
+INNER JOIN PARAMETROSGENERALES P WITH (nolock)ON s.BANCO_GIRADO<>P.NUMERICO 
+											AND P.CODIGO = 2
+											AND NOT EXISTS 
+														(	SELECT * 
+															FROM CLE_IMG_CHEQUES with (nolock)
+															WHERE CMC7=s.CMC7 AND FECHAPROCESO = s.FECHA_ALTA)
+
+')
+
+EXECUTE('
+IF OBJECT_ID (''dbo.VW_DPF_OTRO_BCO_SIN_IMG'') IS NOT NULL
+	DROP VIEW dbo.VW_DPF_OTRO_BCO_SIN_IMG
+')
+
+
+EXECUTE('
+CREATE VIEW [VW_DPF_OTRO_BCO_SIN_IMG] (
+												   TZ_LOCK, 
+												   NRO_ASIENTO, 
+												   NRO_DPF, 
+												   BANCO, 
+												   SUC_BANCO, 
+												   NRO_CUENTA,
+												   COD_POSTAL,
+												   FECHA_VENCIMIENTO, 
+												   NRO_DEPOSITO
+												   )
+													AS 
+		SELECT DISTINCT
+				s.TZ_LOCK,
+				s.NRO_ASIENTO,
+				s.NUMERO_DPF,
+				s.BANCO_GIRADO,
+				s.SUCURSAL_BANCO_GIRADO,
+				s.NUMERICO_CUENTA_GIRADORA,
+				s.COD_POSTAL,
+				s.FECHA_VENCIMIENTO,
+			   	s.NUMERO_DEPOSITO
+	FROM CLE_DPF_SALIENTE s   with (nolock),
+		PARAMETROSGENERALES P WITH (nolock)
+	WHERE P.CODIGO = 2
+		AND s.BANCO_GIRADO<>P.NUMERICO and NOT EXISTS 
+											(	SELECT * 
+												FROM CLE_IMG_CHEQUES with (nolock)
+												WHERE CMC7=s.BANDA AND FECHAPROCESO=s.FECHA_ALTA)
+
+')
+
+EXECUTE('
+IF OBJECT_ID (''dbo.VW_DPF_OTRO_BCO_SIN_IMG_DEPOSITOS'') IS NOT NULL
+	DROP VIEW dbo.VW_DPF_OTRO_BCO_SIN_IMG_DEPOSITOS
+')
+
+EXECUTE('
+CREATE   VIEW [dbo].[VW_DPF_OTRO_BCO_SIN_IMG_DEPOSITOS] (
+														   NRO_DEPOSITO,
+														   SUCURSAL,
+														   FECHA,
+														   HORA,
+														   CANTIDAD_DPF,
+														   ASIENTO,
+														   USUARIO
+														   )
+AS 
+SELECT
+		s.NUMERO_DEPOSITO,
+		s.SUCURSAL_DE_INGRESO,
+		s.FECHA_ALTA,
+		m.HORASISTEMA,
+		COUNT(s.NUMERO_DPF),
+		s.NRO_ASIENTO,
+		s.[CODIGO_USUARIO]
+FROM	dbo.PARAMETROSGENERALES P WITH (nolock),
+		dbo.CLE_DPF_SALIENTE s with (nolock)
+		inner join dbo.MOVIMIENTOS_CONTABLES m with (nolock) on s.NRO_ASIENTO = m.ASIENTO 
+															and s.RUBRO_CONTABLE = m.RUBROCONTABLE
+															AND m.FECHAPROCESO=s.FECHA_ALTA
+															AND m.SUCURSAL=s.SUCURSAL_DE_INGRESO
+															AND s.TZ_LOCK =0 
+WHERE   P.[CODIGO] = 2 AND
+		s.BANCO_GIRADO<>P.NUMERICO 
+		and NOT EXISTS (SELECT * 
+						FROM CLE_IMG_CHEQUES with (nolock)
+						WHERE CMC7=s.BANDA AND FECHAPROCESO=s.FECHA_ALTA)
+		
+
+GROUP BY s.NUMERO_DEPOSITO,  
+	s.NRO_ASIENTO, 
+	s.SUCURSAL_DE_INGRESO, 
+	s.FECHA_ALTA, 
+	s.[CODIGO_USUARIO], 
+	m.HORASISTEMA
+')
+
+EXECUTE('
+IF OBJECT_ID (''dbo.VW_CHEQUES_OTRO_BCO_SIN_IMG_DEPOSITOS'') IS NOT NULL
+	DROP VIEW dbo.VW_CHEQUES_OTRO_BCO_SIN_IMG_DEPOSITOS
+')
+
+EXECUTE('
+CREATE   VIEW [dbo].[VW_CHEQUES_OTRO_BCO_SIN_IMG_DEPOSITOS] (
+																	   NRO_DEPOSITO,
+																	   SUCURSAL,
+																	   FECHA,
+																	   HORA,
+																	   CANTIDAD_CHEQUES,
+																	   ASIENTO,
+																	   USUARIO)
+AS 
+SELECT	s.NUMERO_DEPOSITO,
+		s.SUCURSAL_DE_INGRESO,
+		s.FECHA_ALTA,
+		m.HORASISTEMA,
+		COUNT(s.NUMERO_CHEQUE),
+		s.NRO_ASIENTO,
+		s.[CODIGO_USUARIO]
+FROM	PARAMETROSGENERALES P WITH (nolock)
+INNER JOIN CLE_CHEQUES_SALIENTE s with (nolock)ON s.BANCO_GIRADO<>P.NUMERICO
+												AND s.TZ_LOCK =0 
+												AND P.[CODIGO] = 2
+												and NOT EXISTS (SELECT * 
+																FROM CLE_IMG_CHEQUES WITH(NOLOCK)
+																WHERE CMC7=s.CMC7 AND FECHAPROCESO=s.FECHA_ALTA)
+inner join MOVIMIENTOS_CONTABLES m with (nolock) on s.NRO_ASIENTO = m.ASIENTO 
+												and s.RUBRO_CONTABLE = m.RUBROCONTABLE
+												AND m.FECHAPROCESO=s.FECHA_ALTA
+												AND m.SUCURSAL=s.SUCURSAL_DE_INGRESO
+GROUP BY	s.NUMERO_DEPOSITO,  
+			s.NRO_ASIENTO, 
+			s.SUCURSAL_DE_INGRESO, 
+			s.FECHA_ALTA, 
+			s.[CODIGO_USUARIO], 
+			m.HORASISTEMA
+')
+
+
+EXECUTE('
+UPDATE dbo.DICCIONARIO
+SET DESCRIPCION = ''FECHAPROCESO''
+	, PROMPT = ''FECHAPROCESO'',
+	CAMPO=''FECHAPROCESO''
+WHERE NUMERODECAMPO = 35346
+')

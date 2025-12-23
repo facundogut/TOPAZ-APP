@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.1.1.final using JasperReports Library version 6.1.1  -->
+<!-- 2024-09-11T11:21:39 -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="RecaudacionElectronica" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c30eb6cb-462c-405d-9fa3-94ccfa9e6693">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="NBCH"/>
+	<parameter name="NRO_CONVENIO" class="java.math.BigDecimal">
+		<parameterDescription><![CDATA[Número de Convenio]]></parameterDescription>
+	</parameter>
+	<parameter name="TOPAZ_SUCURSAL_SISTEMA" class="java.lang.Integer" isForPrompting="false"/>
+	<queryString>
+		<![CDATA[SET Language 'Spanish';
+
+SELECT ROUND(conv.Plazo, 0) AS plazo,
+	   day((SELECT fechaproceso FROM PARAMETROS)) AS dia,
+	   DATENAME(month,(SELECT fechaproceso FROM PARAMETROS)) AS mes,
+  	   year((SELECT fechaproceso FROM PARAMETROS))	AS año,
+	   conv.NomConvRec AS nombreconvenio,
+       CUIT AS CUIT,
+       CLI.NOMBRECLIENTE AS nombrecliente,
+       conv.Id_ConvPadre
+FROM CONV_CONVENIOS_REC conv WITH (nolock)
+ 
+INNER JOIN CLI_CLIENTES AS CLI WITH (nolock) ON
+          CLI.CODIGOCLIENTE = conv.Cliente
+WHERE Id_ConvRec = $P{NRO_CONVENIO}]]>
+	</queryString>
+	<field name="plazo" class="java.lang.Integer"/>
+	<field name="dia" class="java.lang.Integer"/>
+	<field name="mes" class="java.lang.String"/>
+	<field name="año" class="java.lang.Integer"/>
+	<field name="nombreconvenio" class="java.lang.String"/>
+	<field name="CUIT" class="java.math.BigDecimal"/>
+	<field name="nombrecliente" class="java.lang.String"/>
+	<field name="Id_ConvPadre" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="81" splitType="Stretch">
+			<image>
+				<reportElement x="50" y="16" width="130" height="50" uuid="1fad0084-bd3c-4124-8420-90621221a2cc"/>
+				<imageExpression><![CDATA[java.lang.System.getProperty("topsystems.images.root")+"logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="358" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="50" y="120" width="460" height="220" isPrintWhenDetailOverflows="true" uuid="27c4cb8c-1837-4177-80c5-43667aad77ce"/>
+				<textElement textAlignment="Justified" markup="html"/>
+				<textFieldExpression><![CDATA["<p>De nuestra mayor consideración,</p>"
++"<br>"+
+"<p>Por medio de la presente, me dirijo a usted a los efectos de solicitar la habilitación del canal "+$F{nombreconvenio}+" relacionado al Convenio N° " +$F{Id_ConvPadre}.toString()+" por el plazo de "+$F{plazo}+" Meses para la empresa CUIT "+$F{CUIT}+", "+$F{nombrecliente}+" </p>"+
+"<br>"+
+"<p>Asimismo, me notifico que en caso de ser aceptada la solicitud la operatoria se regirá por las condiciones generales del convenio de recaudación (Convenio N° "+$F{Id_ConvPadre}.toString()+") y el Anexo I que integra esta solicitud. Aceptando, Como medio de comunicación fehaciente, el envió por parte del Banco de un correo electrónico a la dirección informada oportunamente, obligándome a consultar diariamente la misma.</p>"+
+"<br>"+"<br>"+
+"<p>Atentamente.</p>"+
+"<br>"+"<br>"+"<br>"+"<br>"+
+"<p>Firma y Aclaración</p>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="90" width="460" height="20" uuid="c298c6be-0e84-439d-bf60-d8f7fb7e7396"/>
+				<textElement textAlignment="Center" markup="html"/>
+				<textFieldExpression><![CDATA["<b><u>Solicitud de adhesión a canales de recaudación N° "+$P{NRO_CONVENIO}+"</u></b> "]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="20" width="210" height="60" uuid="f009bef1-99b2-4483-841c-54ea23ae3b36"/>
+				<textElement textAlignment="Left" markup="html"/>
+				<textFieldExpression><![CDATA["<P>Señores</P>"+
+"<P>Nuevo Banco del Chaco S.A:</P>"+
+"<P>Güemes 102 – Resistencia Chaco</P>"+
+"<P>Presente</P>"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="250" y="0" width="260" height="20" uuid="e6cc59e7-0d55-415e-90a9-0adb41304b7c"/>
+				<textElement textAlignment="Right" markup="html"/>
+				<textFieldExpression><![CDATA["<b>Resistencia, Chaco "+$F{dia}+" de "+$F{mes}+" de "+$F{año}+"</b>"]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="39" splitType="Stretch">
+			<textField>
+				<reportElement x="180" y="10" width="100" height="20" uuid="8ceade92-843c-433b-a2e0-f3a73a037a58"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="280" y="10" width="100" height="20" uuid="723b05e3-9291-4664-b0c3-aadd939f8cdb"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[" de " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+</jasperReport>

@@ -1,0 +1,24 @@
+<request name="Oper1519" version="1.0" enable="false">
+	<group>1</group>
+	<data>
+		<datasource>TOP/CLIENTES</datasource>
+		<query>SELECT CLI_PF_RECIBIDA.* FROM CLI_PF_RECIBIDA WHERE TZ_LOCK=0 AND (LOTE IN (SELECT LOTE FROM CLI_LOTES_A_MASIVA WHERE ACTIVACIONTARJETAS IN (1,3) AND (nrotarjetabanred IN (SELECT id_tarjeta FROM TJD_TARJETAS WHERE ESTADO IN ('Z') and NOACTIVAR=0 AND tz_lock=0) OR nrotarjetaaccdir IN (SELECT id_tarjeta FROM TJD_TARJETAS WHERE ESTADO IN ('Z') and NOACTIVAR=0 AND tz_lock=0)) OR LOTE IN (SELECT LOTE FROM CLI_LOTES_A_MASIVA WHERE ACTIVACIONTARJETAS IN (2)) AND (nrotarjetabanred IN (SELECT id_tarjeta FROM TJD_TARJETAS WHERE ESTADO IN ('T') and NOACTIVAR=0 AND tz_lock=0) OR nrotarjetaaccdir IN (SELECT id_tarjeta FROM TJD_TARJETAS WHERE ESTADO IN ('T') and NOACTIVAR=0 AND tz_lock=0))))</query>
+		<table>CLI_PF_RECIBIDA</table>
+		<stateField>ACTIVACIONTARJETAS</stateField>
+		<processingMark>B</processingMark>
+		<key>LOTE,PAISDOCUMENTO,TIPODOCUMENTO,NUMERODOCUMENTO</key>
+	</data>	
+	<operation>
+		<name>Operacion 1519</name>
+		<type>1</type>
+		<number>1519</number>
+	</operation>
+	<scheduler>
+		<startHour>0900</startHour>
+		<endHour>1900</endHour>
+		<pollingInterval>120000</pollingInterval>
+		<weekendDays>1</weekendDays>
+		<holidayDays>1</holidayDays>
+	</scheduler>
+</request>
+

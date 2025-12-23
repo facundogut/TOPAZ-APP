@@ -1,0 +1,334 @@
+VERSION:055_5
+TN  NN 1006TConsulta Generica                       C03910 00
+ NNNNN 08919   NroSolicitud                                      I NSNF000007015200300202021011000000007000700300137000
+/V=F(Request,"NROSOLICITUD")
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08923   Serie                                             INNSN 000007015200300202021011000000007000700300137000
+/?=1=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08926   CantChequeras                                     INNSN 000007015200300202021011000000007000700300137000
+/?=1=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08925   CantCheques                                       INNSN 000007015200300202021011000000007000700300137000
+/?=1=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08929   Estado                                            INNSN 000007015200300202021011000000007000700300137000
+/?=1=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificacion CHE_CHEQUESIMPRENTA        M01701 00
+*N  NN *********************************************
+*N  NN *** Controlo si el Estado de las Chequeras enviadas ***
+*N  NN *** desde la Imprenta es el correcto (R).                  ***
+*N  NN *********************************************
+ NNNNN 02820   Nro Solicitud                                     INNSNA000015015000350245001011000000015002300350142000
+/V=C8919.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02830   Serie                                             INNSNF000040015000600245001011000000040002300600142000
+/V=F(LTRIM,C8923.1)
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02832   Estado                                            INNSNK000040015000600245001011000000040002300600142000
+/V=R
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1009TModificacion Che_CheqSolicitud          M01641 00
+ NNNNN 01065   Nro Solicitud                                     INNSNA000007015200300202021011000000007000700300137000
+/V=C8919.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01869   Comentarios                                       INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 06667   Canal                                             INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02990   Sin Cargo                                         INNSN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=A(C2990#"S")
+/P=I150
+/M=Cobra Comisión
+CNNNNN   00000000000000000000100
+/F=(C9509=1)
+/P=I100
+/M=Encontrado, para ACTUALIZAR!!!
+*N  NN /* ---------------------------------------------------------------------------------- */
+*N  NN /* Como nos salteamos la Oper 3591, también salteamos del                  */
+*N  NN /* Estado R (Solic.Recibida de Imprenta)  al  C (Solicitud Confirmada).    */
+*N  NN /* ---------------------------------------------------------------------------------- */
+*N  NN /* Como nos salteamos la Oper 3601, también salteamos del                  */
+*N  NN /* Modifica Estado = "C" y Carga SERIE y da de ALTA CHE_CHQUERAS */
+*N  NN /* ---------------------------------------------------------------------------------- */
+ NNNNN 01074   Estado                                            INNSNK000007015200300202001011000000007000700300137000
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01083   Serie                                             INNSNF000007015200300202001011000000007000700300137000
+/V=F(LTRIM,C8923.1)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN **********         PTrindade 07/05/2010 - Solicitado por LM                     **********
+*N  NN *******   Si tipo de chequera es contínua, asigno cantidad de chequeras = 1  *****
+*N  NN ********************************************************************
+CNNNNN   00000000000000000000100
+/F=A(C1072="C")
+/P=I210
+ NNNNN 00611   CantChequeras                                     INNSNA000007015200300202021011000000007000700300137000
+/V=C8926.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00611   CantChequeras                                     INNSNK000007015200300202021011000000007000700300137000
+/?=I210
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********************************************************************
+*N  NN ***
+ NNNNN 00048   Desde                                             INNSNA000330015003500330000011000000335000703550126000
+/V=C8924.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00049   Hasta                                             INNSNF000360015003800330000011000000365000703850126000
+/V=C0048+(C8925.1/C611)-1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1001TAlta CHE_CHEQUERAS                      A01051 00
+*N  NN /* ---------------------------------------------------------------------------------- */
+*N  NN /* SI por alguna razón existe el Reg.en la Tabla                                       */
+*N  NN /* CHE_CHEQUERAS el Process Manager CANCELA                                 */
+*N  NN /* ---------------------------------------------------------------------------------- */
+ NNNNN 02941   Sucursal                                          INNSNA000007015000270210000011000000007000700270126000
+/V=C1081.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02942   Cuenta                                            INNSNA000007015000270210000011000000007000700270126000
+/V=C1066.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02943   Moneda                                            INNSNA000007015000270210000011000000007000700270126000
+/V=C1067.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02944   Operacion                                         INNSNK000007015000270270000011000000007000700270126000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02951   Cheque Desde                                      INNSNA000007015000270330000011000000007000700270126000
+/V=C0048
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02952   Cheque Hasta                                      INNSNA000007015000270330000011000000007000700270126000
+/V=C0049
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02958   Ordinal                                           INNSNK000007015000270210000011000000007000700270126000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02963   Producto                                          INNSNA000007015000270210000011000000007000700270126000
+/V=C1079.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02950   Serie                                             INNSNA000007015000270210000011000000007000700270126000
+/V=C1083.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ***
+ NNNNN 02953   Tipo libreta                                      INNSNA000007015000270210000011000000007000700270126000
+/V=C1076.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02955   FechaSolic                                        INNSNA000007015000270270000011000000007000700270126000
+/V=C1073.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02961   Fecha Sol.Impre                                   INNSNA000007015000270270000011000000007000700270126000
+/V=C1073.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN *** Marco la Chequera como Pendiente.-
+ NNNNN 02954   Estado                                            INNSNK000007015000270210000011000000007000700270126000
+/V=P
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02956   Cantidad                                          INNSNF000007015000270210000011000000007000700270126000
+/V=C8925.1/C611.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02957   Num.Chequera                                      INNSNK000007015000270210000011000000007000700270126000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02959   Cliente                                           INNSNA000007015000270330000011000000007000700270126000
+/V=C1068.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ N  NN 02962   Fecha cambio Estado                               INNSNA000007015200300302011011000000007000700300137000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-06-20 12:38:18JBENTANCOU
+ NNNNN 02964   Fecha Rec.Impr.                                   INNSNA000007015000270270000011000000007000700270126000
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 02945   Nro. Solicitud                                    INNSNA000007015000270330000011000000007000700270126000
+/V=C1065.3
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TItero a la 5                            C00000 00
+ NNNNN 00176   Cuota                                             INNSNF000007015200300202021011000000007000700300137000
+/V=C0176+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00048   Desde                                             INNSNF000007015000270330000011000000007000700270126000
+/V=C0049+1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00049   Hasta                                             INNSNF000007015000270330000011000000007000700270126000
+/V=C0048+C2956-1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  I00000000000000000000100
+/F=(C0176<C611)
+/M=itero
+/R=4
+TN  NN 1009TModificacion Generica                   M03911 00
+*N  NN *** Marco el Archivo como Procesado.-
+ NNNNN 08919   NroSolicitud                                      INNSNA000007015200300202021011000000007000700300137000
+/V=C8919.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 08929   Estado                                            INNSNK000007015200300202021011000000007000700300137000
+/V=P
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 0007TCobro Comis                             T00211 00
+/?=I150
+ NSSNS 00001   Sucursal                                          INNNNA000054019900770295021011000000054007300770161000
+/V=C2941.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06020   Nombre                                            INNNN 000054032000770625001011500000097026001170505000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00007   Producto                                          INNNNA000083019901060295021010000000083007301060193000
+/V=C2963.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06251   Descripcion                                       INNNN 000112032001350478001011000000155026001750400000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 06271   Rubro operativo                                   INNNN 000112032001350478001011000000155026001750400000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NNNNN 00004   Rubro Operativo                                   INNSNA000007015200300302021011000000007000700300137000
+/V=C6271
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00005   Cuenta                                            INNNNA000141019901640295021011000000141007301640193000
+/V=C2942.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 00003   Moneda                                            INNNNA000112019901350295021011000000112007301350193000
+/V=C2943.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 06400   Descripción                                       INNNN 000112032001350478001011500000155026001750400000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+ NSSNS 00006   Operación                                         INNNNA000096041701160501020011000000096025201160378000
+/V=C2944.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00008   Ordinal                                           INNNNA000007014700270168020010000000007000700270133000
+/V=C2958.4
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ N  NN 01770   Cod. Paquete                                      INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 01771   Cod. Campaña                                      INNSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00002   Cliente                                           INNSNA000007015200300302021011000000007000700300137000
+/V=C2959.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ N  NN 33360   USF                                               INNNN 000007015200300202001011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-27 17:38:37LURRUTTY
+ NNNNN 00023   Caja/Diario                                       INNNNK000007015700270164000010000000007000700270133000
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 00024   Débito/Crédito                                    INNNNK000007015700270164000010000000007000700270133000
+/V=D
+/F=0012400NNN000000000Arial                                   
+/f=0012400NNN000000000Arial                                   
+ NNNNN 00025   Fecha Valor                                       INNNNA000078014600980246021011000000078001200980085000
+/V=C9500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN CAMPOS NECESARIOS PARA EL MODULO
+ NNNNN 00889   Total de cargos                                   INNSNK000110018001300240000011000000110005501300174000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00890   Total impuestos                                   INNSNK000110018001300240000011000000110005501300174000
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00924   Segmento                                          INNSNF000110018001300240000011000000110005501300174000
+/V=F(RIGHT,"00000"+C6667.3,5)+F(RIGHT,"00000"+C1770.7,5)+F(RIGHT,"00000"+C1771.7,5)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00262   Rango Tarifas                                     INSSNA000140018001600240000011000000140005501600160000
+/V=C8925.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00577   Monto Imponible                                   INNSNK000070018000930330001011000000070005500930160000
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01165   Id Evento                                         INNSNK000130018001500240000011000000130005501500174000
+/V=1500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 00556   Alfa de 1                                         INNSNK000130018001500240000011000000130005501500174000
+/V=C
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN otros datos para el modulo
+*N  NN INVOCACION AL MODULO:
+CNNNNN  M00000000000000000000100
+/R=commissions C1165
+CNNNNN M 00000000000000000000100
+/M=Presione <Enter> para continuar
+ NNNNN 00028   Concepto                                          INNNNF000034013500540492001011000000034002700540147000
+/V="Recepción PRECODATA y comis"
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*#I150#Cobra Comisión

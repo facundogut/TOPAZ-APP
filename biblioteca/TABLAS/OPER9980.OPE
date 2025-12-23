@@ -1,0 +1,196 @@
+VERSION:051
+TN  NN 1006T1.0- Parametros de Entada               C0001 00
+VNNNNN 010002000203830614SSSD000000000000000000000000000000000000000
+/T=Consulta Movimientos entre Fechas
+/C=192192192
+KNSSNS 010017001402910589000101
+/F=0013700NNN000000000Arial                                   
+ NSSNS 0001   Sucursal       I NNN 01004501600068024002001100000005000450073012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6020   Nombre         ICNNN 01004502770068056100001150000004200450065014500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0003   Moneda         I NNN 01009001600113024002001100000009000450113012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6400   Descripcion    ICNNN 01009002770113056100001150000004200450065014500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 8010   Filtro ayuda   INNNNK01013001600153024002001100000013000450153012600
+/V=C6252 in (2,3,4)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0007   Producto       I NNN 01013001600153024002001100000013000450153012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6251   Descripcion    ICNNN 01013002770153056100001150000004200450065014500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C6252<2OC6252>4
+/M=Producto Incorrecto, Solo se permiten productos de Pasivo
+ NSSNS 0754   Cuenta         I NNN 01017001600193026002001100000017000450193012600
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0005   Cuenta         INNNNA01017001600193026002001100000017000450193012600
+/V=C754
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN **********VERIFICO EXISTENCIA DE CUENTA******************************************
+ NSSNS 1591   Sucursal       INNNNA00004301750066027102101100000004300450066015900
+/V=C0001.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1592   Producto       INNNNA00007401750097027102101000000007400450097015900
+/V=C0007.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1593   Cuenta         INNNNF00013701750160027102101100000013700450160015900
+/V=C0005.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1594   Moneda         INNNNA00010601750129027102101100000010600450129015900
+/V=C0003.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1595   Operacion      INNNNK00010601750129027102101100000010600450129015900
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1596   Ordinal        INNNNK00010601750129027102101100000010600450129015900
+/V=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1604   Saldo Actual   INNNN 00010601750129027102101100000010600450129015900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C9509=0
+/M=Saldo Inexistente, Verifique los datos
+*N  NN ************************************************************************************
+ NSSNS 3649   Fecha Proceso  I NNN 01021001600233024202001100000021000450233014500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 2618   Hasta          IENNN 01021002770233035902001100000023202800255036100
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4180   FechaDesde     INNNNA01022501600248024002001100000022500450248014500
+/V=C3649.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4181   FechaHasta     INNNNA01022501600248024002001100000022500450248014500
+/V=C2618.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C4180>C4181
+/M=FechaDesde es Mayor a FechaHasta
+CNNNNN ME00000000000000000000100
+/F=(C4181-C4180)>90
+/M=Rango entre Fechas no puede ser mayor a 90 Días
+*N  NN **********ASUMO CAMPOS PARA REPORTE******************************************
+ NSSNS 3098   Sucursal       INNNNA00004301750066027102101100000004300450066015900
+/V=C1591.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9754   Cuenta         INNNNF00013701750160027102101100000013700450160015900
+/V=C1593.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 9755   Producto       INNNNA00007401750097027102101000000007400450097015900
+/V=C1592.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 9752   Moneda         INNNNA00010601750129027102101100000010600450129015900
+/V=C1594.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4180   FechaDesde     INNNNA01022501600248024002001100000022500450248014500
+/V=C3649.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4181   FechaHasta     INNNNA01022501600248024002001100000022500450248014500
+/V=C2618.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ****EJECUTO STORE SP_REPORTE_INFRACTORES_CHEQUES
+ NSSNS 4853   Dia_1          INNNNF01022501600248024002001100000022500450248014500
+/V=F(MID,C4180,1,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4854   Mes_1          INNNNF01022501600248024002001100000022500450248014500
+/V=F(MID,C4180,4,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4855   Ano_1          INNNNF01022501600248024002001100000022500450248014500
+/V=F(MID,C4180,7,4)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4838   FechaDesde     INNNNF01022501600248024002001100000022500450248014500
+/V=C4855 +C4854+C4853
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4856   Dia_2          INNNNF01022501600248024002001100000022500450248014500
+/V=F(MID,C4181,1,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN * Mantis 639 Nota 20584 - FP *
+*N  NN * Se cambia el C4857 de tipo N(15,2) por el C950 de tipo A(2) para obtener el MES *
+ NSSNS 4857   Mes_2          INNNNF01022501600248024002001100000022500450248014500
+/?=1=2
+/V=F(MID,C4181,4,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0950   Mes_2          INNNNF01022501600248024002001100000022500450248014500
+/V=F(MID,C4181,4,2)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4858   Ano_2          INNNNF01022501600248024002001100000022500450248014500
+/V=F(MID,C4181,7,4)
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN * Mantis 639 Nota 20584 - FP *
+*N  NN * Se arma la fecha con el valor del C950 en los digitos del Mes *
+ NSSNS 4839   FechaHasta     INNNNF01030805080331058802001100000030803930331049300
+/?=1=2
+/V=C4858 +C4857+C4856
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4839   FechaHasta     INNNNF01030805080331058802001100000030803930331049300
+/V=C4858 +C950+C4856
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0462   Proceso        INNNNK00004101600064024002001100000004200450065014500
+/V=1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 9500   Fecha Sistema  INNNNA00004101600064024002001100000004200450065014500
+/V=C9500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN ********EJECUTO REPORTE 7685********************************************
+ NSSNS 9503   Codigo de Oper.INNNN 00004101600064024002001100000004200450065014500
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006Ta                                       C0000 00
+*N  NN ****05082011-BUG 2850: Se utiliza la vista  VW_ULTIMOS_10_MOVS   
+*N  NN ****que hace el join de Asientos con Movimientos_Contables, SOLO maneja informacion de los ultimos 3 meses
+CNNNNN  m00000000000000000000100
+/M=SQL
+/R=Top/Clientes SP_ITF_MOVS_ENTREFECHAS,C6021.1 I,C6399.1 I,C0005.1 I,C6250.1 I,C3649.1 I,C2618.1 I
+ NSSNN 9528   Línea Comando  INNSNF00000701500027123000001100000000700070027012600
+/V="tzpquery.exe /Q7785 /C3098|"+C3098.1+"| /C9754|"+C9754.1+"| /C9755|"+C9755.1+"| /C9752 |"+C9752.1+"| /C9534|"+C4838.1+"| /C9535|"+C4839.1+"|/C487|"+C9503.1+"|   /A"
+CNNNNN  M00000000000000000000100
+DN  NN 0000Ov00

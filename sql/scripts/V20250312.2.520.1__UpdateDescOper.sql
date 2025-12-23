@@ -1,0 +1,7 @@
+﻿EXECUTE('
+UPDATE dbo.OPERACIONES
+SET NOMBRE = ''Reportes de Conciliacion TLF''
+	, DESCRIPCION = ''Reportes de Conciliacion TLF''
+WHERE TITULO = 7590 AND IDENTIFICACION = 7631
+
+')

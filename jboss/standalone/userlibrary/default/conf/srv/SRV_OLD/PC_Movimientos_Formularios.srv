@@ -1,0 +1,25 @@
+service Formularios; 
+description "Servicio Formularios"; 
+
+action:	SQLQuery Entity ( 
+ ASIENTO: string,
+ FECHAPROCESO: string,
+ SUCURSAL: string
+): [ 
+ 	FORM: string,
+	DESCRIPCION: string,
+	JTSOID: string,
+   	TRANSACTIONS: string
+]
+{ 
+  	properties { 
+  	("statement", "SELECT r2.FORM AS FORM, r.DESCRIPCION AS DESCRIPCION,r2.JTS_OID AS JTSOID,r2.TRANSACTIONS AS TRANSACTIONS FROM REPORTES r JOIN REPORTS r2 ON r2.FORM = r.IDENTIFICACION WHERE r2.posting = ? and r2.branch = ? and r2.processdate=to_date( ? ,'DD/MM/YYYY')"),
+	("0", "ASIENTO"),
+	("1", "SUCURSAL"),
+	("2", "FECHAPROCESO")
+	}
+}
+
+
+
+

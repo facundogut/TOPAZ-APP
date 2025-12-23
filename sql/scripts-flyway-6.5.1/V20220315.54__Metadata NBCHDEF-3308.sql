@@ -1,0 +1,9 @@
+﻿EXECUTE('
+------------------------
+--CORRECCIÓN DE MACROR--
+------------------------
+UPDATE dbo.MACROR
+SET CONDICION = ''C1803=C902 Y C1594=C003 Y (C1785=2 O C1785=3)''
+WHERE PROCESO = 230 AND ORDINAL = 1
+----
+')

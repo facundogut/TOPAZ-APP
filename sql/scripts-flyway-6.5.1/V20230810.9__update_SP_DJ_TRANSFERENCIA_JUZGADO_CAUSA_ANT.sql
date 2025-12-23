@@ -1,0 +1,736 @@
+EXECUTE ('
+CREATE OR ALTER  PROCEDURE SP_DJ_TRANSFERENCIA_JUZGADO_CAUSA_ANT
+   (@P_NUM_JUZG  float(12),
+   @P_NUM_SOLIC float(12),
+   @P_NUM_CAUSA float(12),
+   @P_NUM_JUZG_NUEVO  float(12),
+   @P_NUM_CAUSA_ANT float(12),
+   @P_ASIENTO float(10),
+   @P_OPERACION VARCHAR(4),
+   @P_USUARIO VARCHAR(10),
+   @P_HORA VARCHAR(8),
+   
+   @P_RET_PROCESO float(53)  OUTPUT,
+   @P_MSG_PROCESO varchar(max)  OUTPUT,
+   @P_NRO_CAUSA_NUEVO float(12)  OUTPUT)
+      
+AS 
+
+   BEGIN
+
+      SET @P_RET_PROCESO = NULL
+      SET @P_MSG_PROCESO = NULL
+      SET @P_NRO_CAUSA_NUEVO = NULL
+      
+      DECLARE
+
+         @FECHA DATETIME,
+         @FECHA_ANTERIOR DATETIME,
+         @CANT NUMERIC(5),
+         @P_FECHA_VENCIMIENTO DATE,
+         @row_number NUMERIC(6),
+         @v_constante VARCHAR(1),
+         @v_numerador NUMERIC,
+         @NOMBRE_CUENTA VARCHAR(250)
+          
+      --SET @CANT = 0
+      SELECT @FECHA = FECHAPROCESO FROM PARAMETROS
+      SELECT @FECHA_ANTERIOR = FECHAPROCESOANTERIOR FROM PARAMETROS
+      SELECT @P_FECHA_VENCIMIENTO = dateadd(YEAR, 100, @FECHA)
+      SELECT @v_numerador = @P_NUM_CAUSA_ANT
+      
+	  ----------------------------------------------------------------------------------------------------------------------------------------
+	  ----------------------------TABLAS AUXILIARES-------------------------------------------------------------------------------------------
+	  ----------------------------------------------------------------------------------------------------------------------------------------      
+     
+	  --DECLARO TABLA AUXILIAR DJ_JUZGADO--
+	  DECLARE @Tabla_DJ_JUZGADO TABLE(
+	  NRO_CAUSA            NUMERIC (12),
+	  NRO_JUZGADO          NUMERIC (12),
+	  ANO                  NUMERIC (4),
+	  EXPEDIENTE           VARCHAR (12),
+	  TIPO_CAUSA           VARCHAR (2),
+	  CARATULA             VARCHAR (250),
+	  FECHA_CAUSA          DATETIME,
+	  ESTADO               VARCHAR (1),
+	  NOMBRE_CUENTA        VARCHAR (250)
+	  )
+	  --COMPLETO TABLA AUXILIAR DJ_JUZGADO--
+	  INSERT INTO 
+	  	@Tabla_DJ_JUZGADO
+	  SELECT dc.NRO_CAUSA, 
+	  		dj.NRO_JUZGADO, 
+	  		dc.ANO, 
+	  		dc.EXPEDIENTE, 
+	  		dc.TIPO_CAUSA, 
+	  		dc.CARATULA, 
+	  		dc.FECHA_CAUSA, 
+	  		dc.ESTADO,
+	  		concat(@P_NUM_JUZG_NUEVO, ''/'', dc.ANO, ''/'', dc.EXPEDIENTE, '' '', dc.CARATULA) 
+	  FROM DJ_JUZGADOS dj WITH(nolock)
+	  INNER JOIN DJ_CAUSAS dc WITH(nolock) ON dc.JUZGADO = dj.NRO_JUZGADO
+	  AND dc.NRO_CAUSA = @P_NUM_CAUSA
+	  AND (dj.TZ_LOCK < 300000000000000 OR dj.TZ_LOCK >= 400000000000000)
+	  AND (dc.TZ_LOCK < 300000000000000 OR dc.TZ_LOCK >= 400000000000000)
+	  
+	  
+	  --DECLARO TABLA AUXILIAR DJ_JUZGADO ANTERIOR--
+	  DECLARE @Tabla_DJ_JUZGADO_ANTE TABLE(
+	  NRO_CAUSA            NUMERIC (12),
+	  NRO_JUZGADO          NUMERIC (12),
+	  ANO                  NUMERIC (4),
+	  EXPEDIENTE           VARCHAR (12),
+	  TIPO_CAUSA           VARCHAR (2),
+	  CARATULA             VARCHAR (250),
+	  FECHA_CAUSA          DATETIME,
+	  ESTADO               VARCHAR (1)
+	  )
+	  --COMPLETO TABLA AUXILIAR DJ_JUZGADO--
+	  INSERT INTO 
+	  	@Tabla_DJ_JUZGADO_ANTE
+	  SELECT dc.NRO_CAUSA, 
+	  		dj.NRO_JUZGADO, 
+	  		dc.ANO, 
+	  		dc.EXPEDIENTE, 
+	  		dc.TIPO_CAUSA, 
+	  		dc.CARATULA, 
+	  		dc.FECHA_CAUSA, 
+	  		dc.ESTADO 
+	  FROM DJ_JUZGADOS dj WITH(nolock)
+	  INNER JOIN DJ_CAUSAS dc WITH(nolock) ON dc.JUZGADO = dj.NRO_JUZGADO
+	  AND dc.NRO_CAUSA = @P_NUM_CAUSA_ANT
+	  AND (dj.TZ_LOCK < 300000000000000 OR dj.TZ_LOCK >= 400000000000000)
+	  AND (dc.TZ_LOCK < 300000000000000 OR dc.TZ_LOCK >= 400000000000000)
+	  
+	  
+      --DECLARO TABLA AUXILIAR DJ_INTEGRANTES_CAUSAS--
+	  DECLARE @Tabla_DJ_INTEGRANTES_CAUSAS TABLE(
+      NRO_CAUSA         NUMERIC (12),
+	  ACTOR             VARCHAR (3),
+	  ID_PERSONA        NUMERIC (12),
+	  FECHA_INTEGRACION DATETIME,
+	  FECHA_CESE        DATETIME,
+	  ACTIVO            VARCHAR (1)
+	  )
+	  --COMPLETO TABLA AUXILIAR DJ_INTEGRANTES_CAUSAS--
+	  INSERT INTO 
+	  	@Tabla_DJ_INTEGRANTES_CAUSAS
+	  SELECT ic.NRO_CAUSA, 
+	  		ic.ACTOR , 
+	  		ic.ID_PERSONA, 
+	  		ic.FECHA_INTEGRACION, 
+	  		ic.FECHA_CESE, 
+	  		ic.ACTIVO
+	  FROM DJ_INTEGRANTES_CAUSAS ic WITH(nolock)
+	  WHERE ic.NRO_CAUSA = @P_NUM_CAUSA
+	  AND ic.ACTIVO = ''S''
+	  AND ic.TZ_LOCK = 0
+	  
+	  
+	    --DECLARO TABLA AUXILIAR DJ_INTEGRANTES_CAUSA ANTERIOR--
+	  DECLARE @Tabla_DJ_INTEGRANTES_CAUSAS_ANT TABLE(
+      NRO_CAUSA         NUMERIC (12),
+	  ACTOR             VARCHAR (3),
+	  ID_PERSONA        NUMERIC (12),
+	  FECHA_INTEGRACION DATETIME,
+	  FECHA_CESE        DATETIME,
+	  ACTIVO            VARCHAR (1)
+	  )
+	  --COMPLETO TABLA AUXILIAR DJ_INTEGRANTES_CAUSAS ANTERIOR--
+	  INSERT INTO 
+	  	@Tabla_DJ_INTEGRANTES_CAUSAS_ANT
+	  SELECT ic.NRO_CAUSA, 
+	  		ic.ACTOR , 
+	  		ic.ID_PERSONA, 
+	  		ic.FECHA_INTEGRACION, 
+	  		ic.FECHA_CESE, 
+	  		ic.ACTIVO
+	  FROM DJ_INTEGRANTES_CAUSAS ic WITH(nolock)
+	  WHERE ic.NRO_CAUSA = @P_NUM_CAUSA_ANT
+	  AND ic.ACTIVO = ''N''
+	  AND ic.TZ_LOCK = 0
+	  
+	  
+	  --DECLARO TABLA AUXILIAR DJ_INTEGRANTES_JUZGADOS--
+	  DECLARE @Tabla_DJ_INTEGRANTES_JUZGADOS TABLE(
+      NRO_JUZGADO       NUMERIC (12),
+	  ACTOR             VARCHAR (3),
+	  ID_PERSONA        NUMERIC (12),
+	  FECHA_INTEGRACION DATETIME,
+	  FECHA_CESE        DATETIME,
+	  ACTIVO            VARCHAR (1)
+	  )
+	  --COMPLETO TABLA AUXILIAR DJ_INTEGRANTES_JUZGADOS--
+	  INSERT INTO 
+	  	@Tabla_DJ_INTEGRANTES_JUZGADOS
+	  SELECT ic.NRO_JUZGADO, 
+	  		ic.ACTOR , 
+	  		ic.ID_PERSONA, 
+	  		ic.FECHA_INTEGRACION, 
+	  		ic.FECHA_CESE, 
+	  		ic.ACTIVO
+	  FROM DJ_INTEGRANTES_JUZGADOS ic WITH(nolock)
+	  INNER JOIN @Tabla_DJ_JUZGADO tdj
+	  ON ic.NRO_JUZGADO = tdj.NRO_JUZGADO
+	  AND ic.ACTIVO = ''S''
+	  AND ic.TZ_LOCK = 0
+	  
+	  
+	  
+	   --DECLARO TABLA AUXILIAR DJ_INTEGRANTES_JUZGADOS--
+	  DECLARE @Tabla_DJ_INTEGRANTES_JUZGADOS_NUEVO TABLE(
+      NRO_JUZGADO       NUMERIC (12),
+	  ACTOR             VARCHAR (3),
+	  ID_PERSONA        NUMERIC (12),
+	  FECHA_INTEGRACION DATETIME,
+	  FECHA_CESE        DATETIME,
+	  ACTIVO            VARCHAR (1)
+	  )
+	  --COMPLETO TABLA AUXILIAR DJ_INTEGRANTES_JUZGADOS--
+	  INSERT INTO 
+	  	@Tabla_DJ_INTEGRANTES_JUZGADOS_NUEVO
+	  SELECT ic.NRO_JUZGADO, 
+	  		ic.ACTOR , 
+	  		ic.ID_PERSONA, 
+	  		ic.FECHA_INTEGRACION, 
+	  		ic.FECHA_CESE, 
+	  		ic.ACTIVO
+	  FROM DJ_INTEGRANTES_JUZGADOS ic WITH(nolock)
+	  WHERE ic.NRO_JUZGADO=@P_NUM_JUZG_NUEVO
+	  AND ic.ACTIVO = ''S''
+	  AND (ic.TZ_LOCK < 300000000000000 OR ic.TZ_LOCK >= 400000000000000)
+	  
+	  
+	  --DECLARO TABLA AUXILIAR DJ_CAUSA_CUENTA--
+	  DECLARE @Tabla_DJ_CAUSA_CUENTA TABLE(
+      JTS_OID_CUENTA  NUMERIC (10),
+	  NRO_CAUSA       NUMERIC (12),
+	  NRO_OFICIO      NUMERIC (12),
+	  FECHA_OFICIO 	  DATETIME
+	  )
+	  --COMPLETO TABLA AUXILIAR DJ_CAUSA_CUENTA--
+	  INSERT INTO 
+	  	@Tabla_DJ_CAUSA_CUENTA
+	  SELECT cc.JTS_OID_CUENTA,
+	  		cc.NRO_CAUSA,
+	  		cc.NRO_OFICIO,
+	  		cc.FECHA_OFICIO
+	  FROM DJ_CAUSA_CUENTA cc WITH(nolock)
+	  WHERE cc.NRO_CAUSA = @P_NUM_CAUSA
+	  AND cc.TZ_LOCK = 0
+	  
+	  
+	  --DECLARO TABLA AUXILIAR DJ_CAUSA_CUENTA_ANT--
+	  DECLARE @Tabla_DJ_CAUSA_CUENTA_ANT TABLE(
+      JTS_OID_CUENTA  NUMERIC (10),
+	  NRO_CAUSA       NUMERIC (12),
+	  NRO_OFICIO      NUMERIC (12),
+	  FECHA_OFICIO 	  DATETIME
+	  )
+	  --COMPLETO TABLA AUXILIAR DJ_CAUSA_CUENTA_ANTE--
+	  INSERT INTO 
+	  	@Tabla_DJ_CAUSA_CUENTA_ANT
+	  SELECT cc.JTS_OID_CUENTA,
+	  		cc.NRO_CAUSA,
+	  		cc.NRO_OFICIO,
+	  		cc.FECHA_OFICIO
+	  FROM DJ_CAUSA_CUENTA cc WITH(nolock)
+	  WHERE cc.NRO_CAUSA = @P_NUM_CAUSA_ANT
+	  AND cc.TZ_LOCK = 0
+	  
+	  --DECLARO TABLA AUXILIAR PYF_APODERADOS A BAJAR--
+	  DECLARE @Tabla_PYF_APODERADOS_BAJAR TABLE(
+      ID_ENTIDAD  			  VARCHAR (50),
+	  TIPO_PODER       		  NUMERIC (5),
+	  TIPO_ENTIDAD      	  NUMERIC (5),
+	  ID_PERSONA 	  		  NUMERIC (12),
+	  CATEGORIA 	  		  VARCHAR (1),
+	  FECHA_VENCIMIENTO 	  DATETIME
+	  )
+	  --COMPLETO TABLA AUXILIAR PYF_APODERADOS A BAJAR--
+	  INSERT INTO 
+	  	@Tabla_PYF_APODERADOS_BAJAR
+	  SELECT pa.ID_ENTIDAD,
+	  		pa.TIPO_PODER,
+	  		pa.TIPO_ENTIDAD,
+	  		pa.ID_PERSONA,
+	  		pa.CATEGORIA,
+	  		pa.FECHA_VENCIMIENTO
+	  FROM PYF_APODERADOS pa WITH(nolock)
+	  INNER JOIN @Tabla_DJ_CAUSA_CUENTA tcc
+	  ON  pa.ID_ENTIDAD = TRY_CAST(tcc.JTS_OID_CUENTA AS VARCHAR(50))
+	  INNER JOIN @Tabla_DJ_INTEGRANTES_CAUSAS tic
+	  ON  pa.ID_PERSONA = tic.ID_PERSONA
+	  WHERE pa.TZ_LOCK = 0
+	  
+	  
+	  --DECLARO TABLA AUXILIAR PARA ALTA PODERES--
+	  DECLARE @Tabla_ASOCI_INTE_JUZG TABLE(
+		NRO_SOLICITUD NUMERIC (12, 0), 
+      	ID_PERSONA NUMERIC (12, 0), 
+      	NRO_JUZGADO NUMERIC (12, 0), 
+      	JTS_OID_CUENTA NUMERIC (10, 0),
+      	NRO_CAUSA NUMERIC (12, 0),
+      	ACTOR VARCHAR(3),
+      	FECHA_INTEGRACION DATETIME,
+      	FECHA_CESE DATETIME,
+      	ACTIVO VARCHAR(1),
+      	ESTADO VARCHAR(1),
+      	FECHA_ESTADO DATETIME,
+      	SUCURSAL NUMERIC (5, 0),
+      	TIPO_ENTIDAD NUMERIC (5, 0), 
+      	TIPO_PODER NUMERIC (5, 0),
+      	FILAS BIGINT,
+      	ESTADO_DJ_CAUSA VARCHAR(1)
+	  ) 
+      --COMPLETO TABLA AUXILIAR PARA ALTA PODERES--
+	  INSERT INTO 
+		@Tabla_ASOCI_INTE_JUZG
+      SELECT s.NRO_SOLICITUD, 
+      	     dij.ID_PERSONA, 
+      	     s.NRO_JUZGADO, 
+      	     cc.JTS_OID_CUENTA,
+      	     cc.NRO_CAUSA,
+      	     dij.ACTOR,
+      	     dij.FECHA_INTEGRACION,
+      	     dij.FECHA_CESE,
+      	     dij.ACTIVO,
+      	     s.ESTADO,
+      	     s.FECHA_ESTADO,
+      	     s.SUCURSAL,
+      	     tt.TIPO_ENTIDAD,
+      	     tt.TIPO_PODER,
+      	     row_number() OVER(ORDER BY s.NRO_SOLICITUD) AS filas,
+      	     c.ESTADO
+	  FROM DJ_SOL_ACT_INAC_CAUSAS s WITH(NOLOCK)
+	  INNER JOIN DJ_CAUSAS c WITH(NOLOCK) ON c.JUZGADO=s.NRO_JUZGADO 
+	  	AND c.TZ_LOCK = 0
+	  INNER JOIN DJ_CAUSA_CUENTA cc WITH(NOLOCK) ON s.NRO_CAUSA=cc.NRO_CAUSA
+	  	AND (cc.TZ_LOCK < 300000000000000 OR cc.TZ_LOCK >= 400000000000000)
+	  INNER JOIN @Tabla_DJ_INTEGRANTES_JUZGADOS dij ON s.NRO_JUZGADO = dij.NRO_JUZGADO
+	  ,PYF_TIPOPODER_X_TIPOENTIDAD tt WITH (NOLOCK)
+	  INNER JOIN PYF_APODERAMIENTO a WITH (NOLOCK) ON tt.TIPO_PODER = a.CODPODER 
+		AND a.CODAPODERAMIENTO = 21 AND a.TZ_LOCK = 0
+	  WHERE s.NRO_JUZGADO  = @P_NUM_JUZG
+	  	AND s.NRO_SOLICITUD = @P_NUM_SOLIC
+	  	AND s.NRO_CAUSA = @P_NUM_CAUSA
+	  	AND s.TZ_LOCK = 0
+		AND s.ESTADO = ''I'' 
+		AND s.ACCION IN (''T'')
+		AND cc.JTS_OID_CUENTA NOT IN (SELECT b.JTS_OID_CUENTA FROM DJ_BENEFICIARIOS b WHERE (b.TZ_LOCK < 300000000000000 OR b.TZ_LOCK >= 400000000000000))
+		AND tt.TIPO_ENTIDAD = 2
+		AND tt.TZ_LOCK = 0
+		
+ 
+ 	 --DECLARO TABLA AUXILIAR PARA ALTA PODERES NUEVO JUZGADO--
+	  DECLARE @Tabla_ASOCI_INTE_JUZG_NUEVO TABLE(
+		NRO_SOLICITUD NUMERIC (12, 0), 
+      	ID_PERSONA NUMERIC (12, 0), 
+      	NRO_JUZGADO NUMERIC (12, 0), 
+      	JTS_OID_CUENTA NUMERIC (10, 0),
+      	NRO_CAUSA NUMERIC (12, 0),
+      	ACTOR VARCHAR(3),
+      	FECHA_INTEGRACION DATETIME,
+      	FECHA_CESE DATETIME,
+      	ACTIVO VARCHAR(1),
+      	ESTADO VARCHAR(1),
+      	FECHA_ESTADO DATETIME,
+      	SUCURSAL NUMERIC (5, 0),
+      	TIPO_ENTIDAD NUMERIC (5, 0), 
+      	TIPO_PODER NUMERIC (5, 0),
+      	FILAS BIGINT,
+      	ESTADO_DJ_CAUSA VARCHAR(1),
+      	ACCION VARCHAR(1)
+	  ) 
+      --COMPLETO TABLA AUXILIAR PARA ALTA PODERES--
+	  INSERT INTO 
+		@Tabla_ASOCI_INTE_JUZG_NUEVO
+      SELECT s.NRO_SOLICITUD, 
+      	     dij.ID_PERSONA, 
+      	     s.NRO_JUZGADO, 
+      	     cc.JTS_OID_CUENTA,
+      	     cc.NRO_CAUSA,
+      	     dij.ACTOR,
+      	     dij.FECHA_INTEGRACION,
+      	     dij.FECHA_CESE,
+      	     dij.ACTIVO,
+      	     s.ESTADO,
+      	     s.FECHA_ESTADO,
+      	     s.SUCURSAL,
+      	     tt.TIPO_ENTIDAD,
+      	    tt.TIPO_PODER,
+      	     row_number() OVER(ORDER BY s.NRO_SOLICITUD) AS filas,
+      	     c.ESTADO,
+      	     s.ACCION
+	  FROM DJ_SOL_ACT_INAC_CAUSAS s WITH(NOLOCK)
+	  INNER JOIN DJ_CAUSAS c WITH(NOLOCK) ON S.NRO_CAUSA=C.NRO_CAUSA AND c.TZ_LOCK=0 
+	  INNER JOIN DJ_CAUSA_CUENTA cc WITH(NOLOCK) ON s.NRO_CAUSA=cc.NRO_CAUSA
+	  	AND (cc.TZ_LOCK < 300000000000000 OR cc.TZ_LOCK >= 400000000000000)
+	  INNER JOIN @Tabla_DJ_INTEGRANTES_JUZGADOS_NUEVO dij ON s.NRO_JUZGADO_NUEVO = dij.NRO_JUZGADO
+	  ,PYF_TIPOPODER_X_TIPOENTIDAD tt WITH (NOLOCK)
+	  INNER JOIN PYF_APODERAMIENTO a WITH (NOLOCK) ON tt.TIPO_PODER = a.CODPODER 
+		AND a.CODAPODERAMIENTO = 21 AND a.TZ_LOCK = 0
+	  WHERE s.NRO_JUZGADO_NUEVO = @P_NUM_JUZG_NUEVO
+	  	AND s.NRO_SOLICITUD = @P_NUM_SOLIC
+	  	AND tt.TIPO_ENTIDAD = 2
+	  	AND tt.TZ_LOCK = 0
+	  	AND s.TZ_LOCK = 0
+		AND s.ESTADO = ''I''  
+		AND s.ACCION IN (''T'')
+		AND cc.JTS_OID_CUENTA NOT IN (SELECT b.JTS_OID_CUENTA FROM DJ_BENEFICIARIOS b WHERE (b.TZ_LOCK < 300000000000000 OR b.TZ_LOCK >= 400000000000000))
+   
+	  
+	  
+	--DECLARO TABLA AUXILIAR DE REGISTROS EXISTENTES EN PYF_APODERADOS--
+	  DECLARE @Tabla_PYF_APODERADOS TABLE(
+	  	ID_ENTIDAD VARCHAR (50),
+	  	TIPO_ENTIDAD NUMERIC (5, 0),
+	  	TIPO_PODER NUMERIC (5, 0),
+      	ID_PERSONA NUMERIC (12, 0)
+	  )
+	  --COMPLETO TABLA AUXILIAR DE REGISTROS EXISTENTES EN PYF_APODERADOS--
+	 INSERT INTO 
+		@Tabla_PYF_APODERADOS
+	 SELECT pa.ID_ENTIDAD, 
+	 		pa.TIPO_ENTIDAD, 
+	 		pa.TIPO_PODER, 
+	 		pa.ID_PERSONA 
+	 FROM PYF_APODERADOS PA WITH(NOLOCK) 
+	 INNER JOIN @Tabla_ASOCI_INTE_JUZG TA 
+	 	ON TRY_CAST(TA.JTS_OID_CUENTA AS VARCHAR(50)) = PA.ID_ENTIDAD
+		AND TA.TIPO_PODER = PA.TIPO_PODER
+		AND TA.TIPO_ENTIDAD = PA.TIPO_ENTIDAD
+		AND TA.ID_PERSONA = PA.ID_PERSONA
+		
+
+
+   	  
+	--DECLARO TABLA AUXILIAR DE REGISTROS EXISTENTES EN PYF_APODERADOS--
+	  DECLARE @Tabla_PYF_APODERADOS_NUEVO TABLE(
+	  	ID_ENTIDAD VARCHAR (50),
+	  	TIPO_ENTIDAD NUMERIC (5, 0),
+	  	TIPO_PODER NUMERIC (5, 0),
+      	ID_PERSONA NUMERIC (12, 0)
+	  )
+	  --COMPLETO TABLA AUXILIAR DE REGISTROS EXISTENTES EN PYF_APODERADOS--
+	 INSERT INTO 
+		@Tabla_PYF_APODERADOS_NUEVO
+	 SELECT pa.ID_ENTIDAD, 
+	 		pa.TIPO_ENTIDAD, 
+	 		pa.TIPO_PODER, 
+	 		pa.ID_PERSONA 
+	 FROM PYF_APODERADOS PA WITH(NOLOCK) 
+	 INNER JOIN @Tabla_ASOCI_INTE_JUZG_NUEVO TA 
+	 	ON TRY_CAST(TA.JTS_OID_CUENTA AS DECIMAL(50)) = PA.ID_ENTIDAD
+		AND TA.TIPO_PODER = PA.TIPO_PODER
+		AND TA.TIPO_ENTIDAD = PA.TIPO_ENTIDAD
+		AND TA.ID_PERSONA = PA.ID_PERSONA
+		
+   
+		
+	--DECLARO TABLA AUXILIAR DE DJ_DEMANDADOS --
+	DECLARE @Tabla_DJ_DEMANDADOS TABLE(
+	  	NRO_CAUSA NUMERIC (12, 0),
+	  	NRO_PERSONA NUMERIC (12, 0),
+	  	LECTURA VARCHAR(1)
+	)
+	--COMPLETO TABLA AUXILIAR DE DJ_DEMANDADOS--
+	INSERT INTO 
+	  	@Tabla_DJ_DEMANDADOS
+	SELECT dd.NRO_CAUSA, 
+		   dd.NRO_PERSONA,
+		   dd.LECTURA
+	FROM DJ_DEMANDADOS dd WITH(NOLOCK)
+	WHERE dd.NRO_CAUSA = @P_NUM_CAUSA_ANT
+	AND (dd.TZ_LOCK < 300000000000000 OR dd.TZ_LOCK >= 400000000000000)
+	
+	
+	--DECLARO TABLA AUXILIAR DE DJ_BENEFICIARIOS --
+	DECLARE @Tabla_DJ_BENEFICIARIOS TABLE(
+	  	NRO_CAUSA NUMERIC (12, 0),
+	  	JTS_OID_CUENTA NUMERIC (10, 0),
+	  	ID_BENEFICIARIO NUMERIC (12, 0),
+	  	LECTURA VARCHAR(1),
+	  	FECHA_INTEGRACION DATETIME
+	)
+	--COMPLETO TABLA AUXILIAR DE DJ_BENEFICIARIOS--
+	INSERT INTO 
+	  	@Tabla_DJ_BENEFICIARIOS
+	SELECT dd.NRO_CAUSA, 
+		   dd.JTS_OID_CUENTA,
+		   dd.ID_BENEFICIARIO,
+		   dd.LECTURA,
+		   dd.FECHA_INTEGRACION
+	FROM DJ_BENEFICIARIOS dd WITH(NOLOCK)
+	WHERE dd.NRO_CAUSA = @P_NUM_CAUSA_ANT
+	AND (dd.TZ_LOCK < 300000000000000 OR dd.TZ_LOCK >= 400000000000000)
+
+	  
+
+	 /*OBTENGO NUMERADOR PARA INSETR DE DJ_CAUSAS*/		
+	 --EXECUTE dbo.SP_GET_NUMERADOR_TOPAZ 33175, @v_numerador OUTPUT
+	 --DECLARE  @v_numerador = @P_NUM_CAUSA_ANT OUTPUT
+	 
+	      			
+	----------------------------------------------------------------------------------------------------------------------------------------
+	----------------------------FIN TABLAS AUXILIARES---------------------------------------------------------------------------------------
+	---------------------------------------------------------------------------------------------------------------------------------------- 
+ 		      
+      
+      BEGIN TRANSACTION	
+      
+       BEGIN TRY   
+
+       		   /*SE MODIFICA CAUSA DE LA SOLICITUD*/
+				UPDATE P
+				SET 
+					P.ESTADO = ''T'',
+					P.CAUSA_DESTINO = @v_numerador
+				FROM
+					DJ_CAUSAS AS P WITH(NOLOCK)
+				INNER JOIN @Tabla_DJ_JUZGADO AS T ON
+					P.NRO_CAUSA = T.NRO_CAUSA
+									
+									
+				/*SE MODIFICA CAUSA ANTERIOR*/
+				UPDATE P
+				SET 
+					P.ESTADO = ''A'',
+					P.CAUSA_DESTINO = 0
+					--P.CAUSA_DESTINO = @P_NUM_CAUSA_ANT  --@v_numerador
+				FROM
+					DJ_CAUSAS AS P WITH(NOLOCK)
+				INNER JOIN @Tabla_DJ_JUZGADO_ANTE AS T ON
+					P.NRO_CAUSA = T.NRO_CAUSA
+				
+					
+				SET @NOMBRE_CUENTA = (SELECT TOP 1 NOMBRE_CUENTA FROM @Tabla_DJ_JUZGADO)
+		  		 
+		  		 /* SE ACTUALIZA NOMBRE DE CUENTAS*/
+		  		  UPDATE P
+                SET 
+                    P.NOMBRE_CUENTA = @NOMBRE_CUENTA
+                FROM
+                    VTA_SALDOS AS P WITH (NOLOCK)
+                INNER JOIN @Tabla_DJ_CAUSA_CUENTA AS dij
+                    ON P.JTS_OID_SALDO = dij.JTS_OID_CUENTA
+				
+						  		 
+		  		 /*SE MODIFICA INTEGRANTE CAUSA */
+                UPDATE P
+                SET 
+                    P.ACTIVO = ''N'',
+                    P.FECHA_CESE = @FECHA
+                FROM
+                    DJ_INTEGRANTES_CAUSAS AS P WITH (NOLOCK)
+                INNER JOIN @Tabla_DJ_INTEGRANTES_CAUSAS AS T ON
+                    P.NRO_CAUSA = T.NRO_CAUSA
+                    AND P.ID_PERSONA = T.ID_PERSONA 
+		  		 
+                
+				/*SE MODIFICA INTEGRANTE CAUSA ANTERIOR */
+                UPDATE P
+                SET 
+                    P.ACTIVO = ''S'',
+                    P.FECHA_CESE = NULL 
+                FROM
+                    DJ_INTEGRANTES_CAUSAS AS P WITH (NOLOCK)
+                INNER JOIN @Tabla_DJ_INTEGRANTES_CAUSAS_ANT AS T ON
+                    P.NRO_CAUSA = T.NRO_CAUSA
+                    AND P.ID_PERSONA = T.ID_PERSONA 
+				
+				
+	       		       	  	
+	       	  	/*SE QUITAN PODERES*/
+		  		UPDATE P
+				SET 
+					P.ID_CLIENTE_SALDO = T.ID_ENTIDAD,
+					P.FECHA_INI_SUSPENSION = T.FECHA_VENCIMIENTO,
+					P.FECHA_VENCIMIENTO = @FECHA_ANTERIOR
+				FROM
+					PYF_APODERADOS AS P WITH(NOLOCK)
+				INNER JOIN @Tabla_PYF_APODERADOS_BAJAR AS T ON
+					P.ID_ENTIDAD = T.ID_ENTIDAD
+				AND P.TIPO_ENTIDAD = T.TIPO_ENTIDAD
+				AND P.TIPO_PODER = T.TIPO_PODER
+				AND P.ID_PERSONA = T.ID_PERSONA 
+				
+				
+			  		  		
+		  		/*SE MODIFICA CAUSA CUENTA ANTERIOR*/	
+				UPDATE R
+				SET 
+					R.JTS_OID_CUENTA=T.JTS_OID_CUENTA,
+					R.NRO_CAUSA=T.NRO_CAUSA,
+					R.NRO_OFICIO=T.NRO_OFICIO,
+					R.FECHA_OFICIO=T.FECHA_OFICIO,
+					R.TZ_LOCK=0
+				FROM
+					DJ_CAUSA_CUENTA AS R WITH(NOLOCK)
+				INNER JOIN @Tabla_DJ_CAUSA_CUENTA_ANT AS T ON
+					R.JTS_OID_CUENTA = T.JTS_OID_CUENTA
+				AND R.NRO_CAUSA = T.NRO_CAUSA
+				
+				
+				  		
+		  		
+ 
+		
+		  		
+				----------------------------------------------------------------------------------------------------------------------------------------
+				----------------------------PYF_APODERADOS----------------------------------------------------------------------------------------------
+				----------------------------------------------------------------------------------------------------------------------------------------
+		
+				
+				
+				/*SE ACTUALIZAN PODERES EXISTENTES*/
+				UPDATE PA
+				SET 
+					PA.FECHA_VENCIMIENTO = @P_FECHA_VENCIMIENTO,
+					PA.FECHA_INI_SUSPENSION = NULL, --@P_FECHA_VENCIMIENTO,
+					PA.FECHA_INI_VIGENCIA = @FECHA, --@FECHA,
+					PA.ID_CLIENTE_SALDO = ''''
+				FROM
+					PYF_APODERADOS AS PA WITH(NOLOCK)
+				INNER JOIN @Tabla_PYF_APODERADOS_NUEVO AS T ON
+					PA.ID_PERSONA = T.ID_PERSONA
+					AND PA.TIPO_ENTIDAD = T.TIPO_ENTIDAD 
+					AND PA.ID_ENTIDAD = T.ID_ENTIDAD
+					AND PA.TIPO_PODER = T.TIPO_PODER
+
+
+				/*SE DAN DE ALTA LOS PODERES ACTIVOS*/
+	      		INSERT INTO PYF_APODERADOS
+				SELECT 
+					0,
+					TRY_CAST(TA.JTS_OID_CUENTA AS VARCHAR(50)),--@JTS_OID_CUENTATemp,
+					TA.TIPO_PODER,--@TIPO_PODERTemp,
+					TA.TIPO_ENTIDAD,--@TIPO_ENTIDADTemp,
+					TA.ID_PERSONA,--@ID_PERSONATemp,
+					'''',
+					1,
+					0,
+					1,
+					0,
+					@P_FECHA_VENCIMIENTO,
+					@FECHA,
+					NULL,
+					NULL,
+					NULL,
+					''''
+				FROM @Tabla_ASOCI_INTE_JUZG_NUEVO  AS TA
+				WHERE TA.ESTADO_DJ_CAUSA = ''A''
+				AND TRY_CAST(TA.JTS_OID_CUENTA AS VARCHAR(50)) NOT IN (SELECT PA.ID_ENTIDAD FROM @Tabla_PYF_APODERADOS_NUEVO AS PA)
+				AND TA.TIPO_PODER NOT IN (SELECT PA.TIPO_PODER FROM @Tabla_PYF_APODERADOS_NUEVO AS PA)
+				AND TA.TIPO_ENTIDAD NOT IN (SELECT PA.TIPO_ENTIDAD FROM @Tabla_PYF_APODERADOS_NUEVO AS PA)
+				AND TA.ID_PERSONA NOT IN (SELECT PA.ID_PERSONA FROM @Tabla_PYF_APODERADOS_NUEVO AS PA)
+				
+				
+				/*SE DAN DE ALTA LOS PODERES INACTIVOS*/
+	      		INSERT INTO PYF_APODERADOS
+				SELECT 
+					0,
+					TRY_CAST(TA.JTS_OID_CUENTA AS VARCHAR(50)),--@JTS_OID_CUENTATemp,
+					TA.TIPO_PODER,--@TIPO_PODERTemp,
+					TA.TIPO_ENTIDAD,--@TIPO_ENTIDADTemp,
+					TA.ID_PERSONA,--@ID_PERSONATemp,
+					'''',
+					1,
+					0,
+					1,
+					0,
+					@FECHA_ANTERIOR,
+					@FECHA,
+					@P_FECHA_VENCIMIENTO, 
+					NULL,
+					NULL,
+					TA.JTS_OID_CUENTA
+				FROM @Tabla_ASOCI_INTE_JUZG_NUEVO  AS TA
+				WHERE TA.ESTADO_DJ_CAUSA = ''I''
+				AND TRY_CAST(TA.JTS_OID_CUENTA AS VARCHAR(50)) NOT IN (SELECT PA.ID_ENTIDAD FROM @Tabla_PYF_APODERADOS_NUEVO AS PA)
+				AND TA.TIPO_PODER NOT IN (SELECT PA.TIPO_PODER FROM @Tabla_PYF_APODERADOS_NUEVO AS PA)
+				AND TA.TIPO_ENTIDAD NOT IN (SELECT PA.TIPO_ENTIDAD FROM @Tabla_PYF_APODERADOS_NUEVO AS PA)
+				AND TA.ID_PERSONA NOT IN (SELECT PA.ID_PERSONA FROM @Tabla_PYF_APODERADOS_NUEVO AS PA)
+				
+					
+				----------------------------------------------------------------------------------------------------------------------------------------
+				-----------------------------FIN PYF_APODERADOS-----------------------------------------------------------------------------------------
+				----------------------------------------------------------------------------------------------------------------------------------------					
+				
+				/*SE DA DE ALTA LA BITACORA PODERES ACTIVOS*/
+				INSERT INTO BITACORA_APODERADOS 
+				SELECT 
+					@FECHA,
+					TA.SUCURSAL,--@SUCURSALTemp,
+					@P_ASIENTO,
+					TA.FILAS,
+					''A'',
+					@P_OPERACION,
+					@P_USUARIO,
+					@P_HORA,
+					TRY_CAST(TA.JTS_OID_CUENTA AS VARCHAR(50)),--@JTS_OID_CUENTATemp,
+					TA.TIPO_ENTIDAD,--@TIPO_ENTIDADTemp,
+					TA.TIPO_PODER,--@TIPO_PODERTemp,
+					TA.ID_PERSONA,--@ID_PERSONATemp,
+					'''',
+					1,
+					0,
+					1,
+					0,
+					@P_FECHA_VENCIMIENTO,
+					@FECHA,
+					NULL,
+					NULL,
+					0,
+					0
+				FROM @Tabla_ASOCI_INTE_JUZG_NUEVO AS TA
+				WHERE TA.ESTADO = ''I'' AND TA.ACCION=''T''
+				
+				
+				/*SE MODIFICA DEMANDADOS */	
+				UPDATE PD
+				SET 
+	  				   pd.NRO_CAUSA = @v_numerador, 
+				  	   pd.NRO_PERSONA = dd.NRO_PERSONA, 
+				  	   pd.LECTURA = dd.LECTURA,
+				  	   pd.TZ_LOCK = 0
+		  		FROM 
+		  				DJ_DEMANDADOS pd
+		  		INNER JOIN @Tabla_DJ_DEMANDADOS AS dd ON pd.NRO_CAUSA=dd.NRO_CAUSA AND pd.NRO_PERSONA=dd.NRO_PERSONA
+		  		WHERE (pd.TZ_LOCK < 300000000000000 OR pd.TZ_LOCK >= 400000000000000)
+		  		
+		  	 
+		  		
+		  		/*SE MODIFICA CAUSA CUENTA BENEFICIARIO*/	
+		  		UPDATE PB
+				SET 
+	  				   pb.NRO_CAUSA = @v_numerador,
+	  				   pb.JTS_OID_CUENTA = db.JTS_OID_CUENTA,
+	  				   pb.ID_BENEFICIARIO = db.ID_BENEFICIARIO,
+	  				   pb.LECTURA = db.LECTURA,
+	  				   pb.TZ_LOCK= 0,
+	  				   pb.FECHA_INTEGRACION = db.FECHA_INTEGRACION	  				   
+		  		FROM DJ_BENEFICIARIOS pb
+		  		INNER JOIN @Tabla_DJ_BENEFICIARIOS AS db ON pb.NRO_CAUSA=db.NRO_CAUSA AND pb.JTS_OID_CUENTA=db.JTS_OID_CUENTA AND pb.ID_BENEFICIARIO=db.ID_BENEFICIARIO
+		  		WHERE (pb.TZ_LOCK < 300000000000000 OR pb.TZ_LOCK >= 400000000000000)
+	       	  	  
+			COMMIT TRANSACTION;
+		
+			SET @P_RET_PROCESO = 1
+			SET @P_NRO_CAUSA_NUEVO = @v_numerador
+		    SET @P_MSG_PROCESO = CONCAT(''Tranferencia de juzgado realizada con exito con número de causa: '', @v_numerador)
+			 
+		END TRY     
+		
+		BEGIN CATCH
+			ROLLBACK TRANSACTION
+			SET @P_RET_PROCESO = ERROR_NUMBER()
+			SET @P_MSG_PROCESO = ERROR_MESSAGE()
+			SET @P_NRO_CAUSA_NUEVO = 0
+			EXECUTE dbo.pkg_constantes$VarcharConstantes ''C_LOG_TIPO_ERROR'', @v_constante OUTPUT;
+		END CATCH
+		
+		 	      
+ END
+
+')

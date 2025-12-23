@@ -1,0 +1,158 @@
+VERSION:047
+TN   N 1008TBuscas estados.                         S5651 0
+/F=C5848=2
+ SNNNN05808   Descripcion EstINNNN 0000070133002702430000110000000070007002701260
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+CSNNNN0 000000000000000000000100
+/F=C9509=0
+/A=I150
+ SNNNN00451   PrimeraVes     INNSNF0000070150002702100000110000000070007002701260
+/?=I150
+/V=C451+1
+/F=0012700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ SNNNN03813   Filtro         INNSNF0000070150002732100000110000000070007002701260
+/?=I150YC451=1
+/V=C5807
+/F=0012700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+ SNNNN03813   Filtro         INNSNF0000070150002732100000110000000070007002701260
+/?=I150YC451>1
+/V=C5807+","+C3813
+/F=0012700NNN000000000Arial                                   
+/f=0013700NNN255255255Arial                                   
+TN   N 1006TEvaluación y botones                    C0001 0
+*N   N ##################################################
+*N   N Esta operación será la centralizadora de la evaluación. A partir de esta operación son llamadas el resto de las operaciones que se utilizaran
+*N   N en la evaluación.
+*N   N Aparte de servir como llamadora de los diferentes ámbitos de análisis de la evaluación, tendrá la funcion de
+*N   N Ver notas, Cerrar Solicitudes, Rechazar Solicitudes, mandar a Revisar, ver el tarifario o utilizar el simulador
+*N   N ##################################################
+VNNNNN0010001000104170800SSSD000020000000000000000000000000000000000
+/T=Evaluación de solicitudes de crédito
+/C=216208200
+ NNNNN03813   Filtro paraC127INNSNF0000070150002732100000110000000070007002701260
+/V="C5061='"+C9505+"' and C5063 in ("+C3813+")"
+KNNNNN001-001000603450780000101
+/T=Datos de la solicitud
+/F=0013700NNN000000000Arial                                   
+ NNNNN00127   Filtro DinamicoINNSNA0000070150002732100000110000000070007002701260
+/V=C3813
+*N   N ##################################################
+ NNNNN05000   Nro. Solicitud IESSN 0100190013015307710210116001000190017004201140
+/L=0
+/F=0012700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN05033   Nombre Titular INNSN 0100640233008707690110110000000070007002701260
+/F=0013700NNN000000000Arial                                   
+/f=0012700NNN255255255Arial                                   
+ NNNNN05187   Cod. Cliente   IDNSN 0101560120017902120110115001001560018017901150
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+*N   N ##################################################
+*N   N Lectura de la metodologia para determinar las etiquetas obligatorias
+*N   N ##################################################
+*N   N Lectura de la tabla de clientes para obtener el nombre del titular
+*N   N y los datos que se necesitan de esa tabla
+ NNNNN00902   Codigo Cliente INNSNA0101220119014502110110110001001220014014501110
+/V=C5187
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN01000   Nombre         ICNSN 0101560224017905630110115001001760213019903100
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+CNNNNN0ME00000000000000000000110
+/F=C9509=0
+/M="No existe el cliente "+C5187+" de la solicitud en la base"
+ NNNNN01040   Tipo  Cliente  IINSN 0102430120026602870110115001002430018026601150
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN04650   Segmentacion   IINSN 0102430422026605890110115001002430320026604170
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+*N   N ##################################################
+ NNNNN05008   Producto       IDNSN 0101850120020802120110115001001850018020801150
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+*N   N ##################################################
+*N   N Lectura de la tabla producto con el producto de
+*N   N la solicitud para desplegar la descripcion
+ NNNNN06250   Nro. Producto  INNSNA0101150130013801720110110000001160028013901250
+/V=C5008
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN06251   Descripcion    ICNSN 0101850224020807700110115000001160028013901250
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+CNNNNN0ME00000000000000000000110
+/F=C9509=0
+/M="No existe el producto "+C5008+" de la solicitud en la base 
+*N   N ##################################################
+*N   N Se asume la actividad definida en el cliente para leer la tabla de 
+*N   N  Actividades de uso interno
+ NNNNN01265   Actividad      IINSNA0102140120023702120110115001002140018023701150
+/V=C2758
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN01266   Descripcion    ICNSN 0102140224023707700110115001001530291017603880
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+CNNNNN0ME00000000000000000000110
+/F=C9509=0
+/M="No existe la actividad "+C2758
+*N   N ##################################################
+*N   N Lectura de la tabla de monedas con la moneda de la solicitud
+ NNNNN05023   Monto SolicitadIDNSN 0102720120029502550110115001002720018029501150
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN05289   Moneda         IDNSN 0103010120032402120110115001003010018032401150
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN06399   Moneda         INNSNA0101510119017402110110110001001510014017401110
+/V=C5289
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+ NNNNN06400   Descripción    ICNSN 0103010224032404080110115001001510014017401110
+/F=0013700NNN000000000Arial                                   
+/c=128128128
+/f=0012700NNN255255255Arial                                   
+CNNNNN0ME00000000000000000000100
+/F=C9509=0
+/M=No existe la moneda definida en la solicitud.
+*N   N ##################################################
+ NSSSN05807   Codigo Estado  INNSNA0000070150002702100000110000000070007002701260
+/V=C5063
+ NNNNN05808   Descripcion EstINNSN 0000070150002705100000110000000070007002701260
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN05848   Tipo estado    INNSN 0000070150002702100000110000000070007002701260
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN0ME00000000000000000000110
+/F=C5848#1YC5848#2
+/M="SOLICITUD EN ESTADO:"+C5808+".  VERIFIQUE"
+*N   N ##################################################
+CNNNNN0 M01035603100381043811100
+/R=tzpcapt.exe /O 2040
+/T=Aceptar
+TN   N 1006TFin de operación                        C0000 0
+ NNNNN00028   Concepto       INNNNF0000070133002702430000110000000070007002701260
+/V="Evaluación Sol.:"+C5000.2
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+DN   N 2040Ov0

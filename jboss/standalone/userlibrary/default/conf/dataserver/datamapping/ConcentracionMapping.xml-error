@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by DanielC (Top Systems) -->
+<map>
+	<class>
+		<class-name>topsystems.macros.concentracion.objectsdomain.ResultadoConcentracion</class-name>
+		<entity-name>core.vo_ResultadoConcentracion</entity-name>
+		<table-name>CRE_RESULTADOS_CONCENTRACION</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>TZ_LOCK</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>numeroLote</attribute-name>
+			<column-name>NUMERO_LOTE</column-name>
+			<key>primary</key>
+		</attribute>	
+		<attribute>
+			<attribute-name>cliente</attribute-name>
+			<column-name>CLIENTE</column-name>			
+		</attribute>
+		<attribute>
+			<attribute-name>tipoDocumento</attribute-name>
+			<column-name>TIPO</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>nombreLibrador</attribute-name>
+			<column-name>LIBRADOR</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>importe</attribute-name>
+			<column-name>IMPORTE</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>serieFacturaConforme</attribute-name>
+			<column-name>SERIE_FACT_CONF</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>numeroDocReal</attribute-name>
+			<column-name>NUMERO_DOC_REAL</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>serieDelCheque</attribute-name>
+			<column-name>SERIE_DEL_CHEQUE</column-name>
+			<key>primary</key>
+		</attribute>		
+		<attribute>
+			<attribute-name>numeroDelCheque</attribute-name>
+			<column-name>NUMERO_CHEQUE</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>bancoGirado</attribute-name>
+			<column-name>BANCO_GIRADO</column-name>
+			<key>primary</key>
+		</attribute>
+		<attribute>
+			<attribute-name>aceptadoRechazado</attribute-name>
+			<column-name>ACEPTADO_RECHAZADO</column-name>
+		</attribute>
+	</class>
+	<class>
+		<class-name>topsystems.automaticprocess.concentracion.objectsdomain.ConcentracionLibrador</class-name>
+		<entity-name>core.ConcentracionLibrador</entity-name>
+		<table-name>CRE_CONCENTRACION_X_LIBRADOR</table-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<attribute>
+			<attribute-name>idLibrador</attribute-name>
+			<column-name>ID_LIBRADOR</column-name>
+			<key>primary</key>
+		</attribute>	
+		<attribute>
+			<attribute-name>totalDescuentosMN</attribute-name>
+			<column-name>TOTAL_DESCUENTOS_MN</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>totalPorDescontarMN</attribute-name>
+			<column-name>TOTAL_POR_DESCONTAR_MN</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>documentosDescontados</attribute-name>
+			<column-name>DOCUMENTOS_DESCONTADOS</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>documentosPorDescontar</attribute-name>
+			<column-name>DOCUMENTOS_POR_DESCONTAR</column-name>
+		</attribute>
+		<attribute>
+			<attribute-name>concentracion</attribute-name>
+			<column-name>CONCENTRACION</column-name>
+		</attribute>
+	</class>
+	<query>
+		<class-name>limitecredito.objectsdomain.LibradorCheque</class-name>
+		<query-name>query.LibradorCheque</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>		
+			select
+			28 as banco,
+			ch.sucursal as sucursal,
+			ch.cuenta as cuenta
+			from 
+			CHE_CHEQUES ch, saldos s, CLI_CLIENTES cli
+			where
+			ch.tz_lock = 0 and
+			s.tz_lock = 0 and
+			cli.tz_lock = 0 and
+			ch.JTS_ORIGEN = s.jts_oid and
+			s.c1803 = cli.CODIGOCLIENTE and
+			s.c1785=6 AND
+			ch.nro_solicitud = ?
+			union
+			select
+			chs.banco_girado as banco,
+			chs.sucursal_banco_girado as sucursal,
+			chs.numerico_cuenta_giradora as cuenta
+			from
+			CLE_CHEQUES_SALIENTE chs
+			where
+			chs.tz_lock = 0 and
+			chs.nro_solicitud = ?      
+		</sentence>
+		<attribute>
+			<attribute-name>banco</attribute-name>
+			<column-name>banco</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>sucursal</attribute-name>
+			<column-name>sucursal</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>cuenta</attribute-name>
+			<column-name>cuenta</column-name>
+			<column-type>long</column-type>
+		</attribute>		
+	</query>
+	
+</map>

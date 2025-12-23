@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XML Spy v4.3 U (http://www.xmlspy.com) by abc (abc) -->
+<map>
+	<query>
+		<class-name>topsystems.automaticprocess.cancelaciondesaldos.CancelacionSaldos</class-name>
+		<query-name>query.Cancelacion_Saldos</query-name>
+		<database-name>TOP/CLIENTES</database-name>
+		<sentence>
+			SELECT jts_oid, c1651, c1626, c1624, c1604, c1606, c1607, c1608, tz_lock
+			FROM   (SELECT saldos.jts_oid,
+			               saldos.c1651,
+			               saldos.c1626,
+			               saldos.c1624,
+			               saldos.c1604,
+			               saldos.c1606,
+			               saldos.c1607,
+			               saldos.c1608,
+			               saldos.tz_lock,
+			               CASE
+			                 WHEN topesproducto.his_cancela = 2 THEN -- Hereda
+			                  productos.his_periodo_cancelacion
+			                 ELSE
+			                  NVL(topesproducto.his_periodo_cancelacion,
+			                      productos.his_periodo_cancelacion)
+			               END AS his_periodo,
+			               CASE
+			                 WHEN topesproducto.his_cancela = 2 THEN -- Hereda
+			                  productos.his_cancela
+			                 ELSE
+			                  NVL(topesproducto.his_cancela,
+			                      productos.his_cancela)
+			               END AS his_cancela
+			        FROM   productos,
+			               saldos
+			        LEFT   JOIN topesproducto ON topesproducto.codproducto =
+			                                     saldos.producto AND
+			                                     topesproducto.moneda = saldos.moneda AND
+			                                     topesproducto.tz_lock = 0
+			        WHERE  saldos.c1651 &lt;&gt; '1' AND
+			               saldos.c1604 = 0 AND
+			               saldos.c1606 = 0 AND
+			               saldos.c1607 = 0 AND
+			               saldos.c1608 = 0 AND
+			               productos.c6250 = saldos.producto AND
+			               productos.tz_lock = 0)
+			WHERE  his_cancela = 1  AND
+			       c1626 &lt; ADD_MONTHS((SELECT fechaproceso FROM parametros),
+			                          -his_periodo)
+			ORDER  BY jts_oid
+		</sentence>
+		<attribute>
+			<attribute-name>jts_oid</attribute-name>
+			<column-name>jts_oid</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>codCancelacion</attribute-name>
+			<column-name>c1651</column-name>
+			<column-type>String</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>c1626</attribute-name>
+			<column-name>c1626</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>c1624</attribute-name>
+			<column-name>c1624</column-name>
+			<column-type>Timestamp</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>c1604</attribute-name>
+			<column-name>c1604</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>c1606</attribute-name>
+			<column-name>c1606</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>c1607</attribute-name>
+			<column-name>c1607</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>c1608</attribute-name>
+			<column-name>c1608</column-name>
+			<column-type>long</column-type>
+		</attribute>
+		<attribute>
+			<attribute-name>tz_lock</attribute-name>
+			<column-name>tz_lock</column-name>
+			<column-type>long</column-type>
+		</attribute>	
+	</query> 
+</map>

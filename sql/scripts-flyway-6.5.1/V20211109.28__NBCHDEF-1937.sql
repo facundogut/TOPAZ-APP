@@ -1,0 +1,29 @@
+EXECUTE('
+
+CREATE   PROCEDURE [dbo].[SP_TEMP_ACTIVIDAD_ECONOMICA_CONTROL_INCONSISTENCIA]
+	@pUsuario VARCHAR(8),
+	@pCUIL VARCHAR(20),
+	@Resultado INT OUTPUT,
+	@Mensaje VARCHAR(100) OUTPUT
+AS
+BEGIN
+	-- Borro datos en la temporar del usuario a consultar
+	DELETE	FROM TEMP_CLI_ACTIVIDAD_ECONOMICA WHERE CODIGO_USUARIO=@pUsuario;
+	
+	-- Borro datos basura del dia anterior
+	DELETE	FROM TEMP_CLI_ACTIVIDAD_ECONOMICA WHERE ((F_GRUPO_ACT_EC<>(SELECT FECHAPROCESO FROM PARAMETROS) AND F_GRUPO_ACT_EC IS NOT NULL) OR (FECHA_VERIFICADO<>(SELECT FECHAPROCESO FROM PARAMETROS) AND FECHA_VERIFICADO IS NOT NULL))
+
+	-- Verifico y notifico de si algun otro usuario esta conusltando la misma persona
+	IF 0<(SELECT COUNT(*) FROM TEMP_CLI_ACTIVIDAD_ECONOMICA WHERE CUIL=@pCUIL AND CODIGO_USUARIO<>@pUsuario)
+	BEGIN
+		SET @Resultado=1;
+		SET @Mensaje = ''El usuario ''+(SELECT TOP 1 CODIGO_USUARIO FROM TEMP_CLI_ACTIVIDAD_ECONOMICA WHERE CUIL=@pCUIL AND CODIGO_USUARIO<>@pUsuario)+'' se encuentra trabajando con la misma persona, Favor verifique.''
+	END
+	ELSE
+	BEGIN
+		SET @Resultado=0;
+	END 
+END;
+
+
+')

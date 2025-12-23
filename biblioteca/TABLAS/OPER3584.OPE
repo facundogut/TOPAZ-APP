@@ -1,0 +1,167 @@
+VERSION:051
+TN  NN 1006TConsulta Generica                       C0000 00
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /* Operacion 3584                                                                                      
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+*N  NN /*     SE RECEPCIONAN LOS CHEQUES DE UNA SUCURSAL_CORRESPONSAL
+*N  NN /*          RECIBO TODOS LOS CHEQUES Y CAMBIA EL ESTADO DE 5 a 6.
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+VNNNNN 010005000504410671SSSD000000000000000000000000000000000000000
+/T=Ingreso de Sucursal.
+/C=192192192
+KNNNNN 010007000703640650000101
+/F=0012400NNN000000000Arial                                   
+KNNNNN 010028039800480638010100
+/T=SUCURSALES QUE NO
+/F=0013700NNN000000000Arial                                   
+KNNNNN 010045039800650638010100
+/T=ENVIARON A CLEARING
+/F=0013700NNN000000000Arial                                   
+CNNNNN  w00000000000000000000100
+/R=1982
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V="SUCURSAL NOT IN (0,12,14,17,20,31,40,49,55,64,69,78,80,81,82,83,84,85,93,96,98,99) "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010 +" AND SUCURSAL NOT IN ( SELECT SUCURSAL_DE_INGRESO FROM CLE_CHEQUES_SALIENTE WHERE"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" SUCURSAL_CORRESPONSAL="+C9502+ " AND "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" ESTADO IN (5,6)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" AND DESTINO_CHEQUE IN (1,4,5))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 1982   Sucursal       IESSN 01007403940351063802101060000002300330046014300
+/L=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Generica                       C0001 00
+VNNNNN 020005000504410395SSSD000000000000000000000000000000000000001
+/T=Ingreso de Sucursal.
+/C=192192192
+KNNNNN 020007000703640372000101
+/F=0012400NNN000000000Arial                                   
+KNNNNN 020045004000650322000100
+/T=SUCURSALES CON RECEPCIÓN PENDIENTE
+/F=0013700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V="SUCURSAL IN ( SELECT SUCURSAL_DE_INGRESO FROM CLE_CHEQUES_SALIENTE WHERE"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" SUCURSAL_CORRESPONSAL="+C9502+ " AND "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" ESTADO=5"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" AND DESTINO_CHEQUE IN (1,4,5))"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0001   Sucursal       IENSN 02007400240351036002101060000002300330046014300
+/L=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6021   Sucursal       INNSNA00000701520030020202101100000000700070030013700
+/V=C0001
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN /* ---------------------------------------------------------------------------------------------------------------- */
+VNSSNS 030003000304410805SSSD000000000000000000000000000000000000010
+/T="Sucursal "+C6021
+/C=192192192
+KNSSNS 030017016200400640010100
+/T=Recepción Cheques en Central Clearing
+/F=0015700NNN000000000Arial                                   
+KNSSNS 030050002603460773000011
+/T="Cheques a Recibir de Sucursal "+C6020
+/F=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V="TZ_LOCK=0 AND "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" SUCURSAL_DE_INGRESO="+C6021+" AND "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" SUCURSAL_CORRESPONSAL="+C9502+ " AND "
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" ESTADO=5"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 8010   Filtro ayuda   INNSNF00000701520030020200101100000000700070030013700
+/V=C8010+" AND DESTINO_CHEQUE IN (1,4,5)"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 3295   Ayuda cheq sal ICSSN 03008500410342075900101060000000700070027012600
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0013700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C3295=0
+/M=Registro No válido
+ NNNNN 2699   Suc.CorresponsaINNNNA02002602490049061800101100010000700070027012600
+/V=C9502
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7021   Estado         INNNNK02002602490049061800101100010000700070027012600
+/V=5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 7023   Suc. de IngresoINNNNA02002602490049061800101100010000700070027012600
+/V=C6021
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 9528   Linea Comando  INNSNF00000701520030020200101100000000700070030013700
+/V="tzpquery.exe /Q7447/C2699 |"+C2699+"| /C7021 |"+C7021+"| /C7023 |"+C7023+"| /A"
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN  M00000000000000000000100
+ NNNNN 9501   Nro ComprobanteINNSN 00000701520030030202101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNN 0613   Numerico de 7  INNSNA00000701520030030202101100000000700070030013700
+/V=C9501.1
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Generica                       C0001 00
+ NNNNN 0028   Concepto       INNSNF00024501500265033700101100000024500230265014200
+/V="Recepción  Suc." +" "+  C6021.2 
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0704   Importe        INNSNK00000701520030030202101000000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0705   Importe        INNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0288   Total Che DólarINNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 2389   Total Che PesosINNSNK00000701520030030202101100000000700070030013700
+/V=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+DN  NN 3615OV00

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<serviceQuery>
+    <uri>/tarjetaDebito/getSolicitud/{idSolicitud}/{sucursal}/{tipoCuenta}/{nroCuenta}</uri>
+    <serviceDescription>Mediante el consumo de este servicio se espera retornar los datos de las distintas solicitudes de Tarjetas de Débito vinculadas al cliente, con los parámetros que se esperan recibir: idSolicitud, ID Sucursal, tipoCuenta y Número de Cuenta.</serviceDescription>
+    <title>PAST022BusquedaDeSolicitudesTD</title>
+    <querys>
+        <query id="1" name="solicitudTarjeta" type="MULTIPLE">
+            <sql>DECLARE 
+	@idSolicitud NUMERIC(15) = ?,
+	@sucursal NUMERIC(5) = ?,
+	@tipoCuenta VARCHAR(10) = ?,
+	@nroCuenta NUMERIC(25) = ?;
+
+	
+SELECT DISTINCT		
+	@idSolicitud NroSolicitud,
+	sol.TIPO_DOCUMENTO TipoDoc,
+	sol.NRO_DOCUMENTO NroDoc,
+	sol.FECHA_SOLICITUD fechaSolicitud,
+	sol.APELLIDO Apellido,
+	sol.NOMBRE Nombre,	
+	sc.NRO_TARJETA NroTarjeta,
+	CASE WHEN sc.TIPO_CUENTA = 1 THEN 'Cuenta Corriente en Pesos' 
+			WHEN  sc.TIPO_CUENTA = 11 THEN 'Caja de Ahorro en Pesos' 
+		    ELSE 'Caja de Ahorro en Dolares' END  TipoCuenta, 
+	sc.NRO_CUENTA NroCuenta, 
+	sol.ESTADO Estado,
+	CASE WHEN sol.ESTADO NOT IN ('X','9') THEN '' ELSE 'Si' END Baja, 
+	--------	
+	CASE WHEN cp.TITULARIDAD = 'T' THEN 'Titular' ELSE 'Adicional' END tipoCli,  
+	concat(pf.PRIMERNOMBRE, CASE WHEN pf.SEGUNDONOMBRE = ' ' THEN ' ' ELSE ' ' + pf.SEGUNDONOMBRE + ' ' END , pf.APELLIDOPATERNO, CASE WHEN pf.APELLIDOMATERNO = ' ' THEN ' ' ELSE ' ' + pf.APELLIDOMATERNO + ' ' END) ApellidoNombreCli,
+	doc.NUMERODOCUMENTO cuilCli
+
+FROM TJD_SOLICITUD_LINK sol (nolock) 
+	JOIN TJD_SOLICITUD_CUENTAS_LINK sc (nolock) ON sol.ID_SOLICITUD = sc.ID_SOLICITUD
+	JOIN CLI_CLIENTEPERSONA cp (nolock) ON cp.CODIGOCLIENTE = sol.COD_CLIENTE
+	JOIN CLI_PERSONASFISICAS pf (nolock) ON cp.NUMEROPERSONA = pf.NUMEROPERSONAFISICA
+	JOIN CLI_DocumentosPFPJ doc (nolock) ON pf.NUMEROPERSONAFISICA = doc.NUMEROPERSONAFJ
+		WHERE 
+			    	@idSolicitud = sol.ID_SOLICITUD
+			AND @sucursal = sc.SUCURSAL
+			AND (
+				@tipoCuenta = 'AC' AND sc.TIPO_CUENTA IN (11,15) 
+				OR
+				@tipoCuenta = 'CC' AND sc.TIPO_CUENTA = 1
+				)
+			AND @nroCuenta  = sc.NRO_CUENTA
+	</sql>
+            <input>
+                <inParameter description="" type="LONG">idSolicitud</inParameter>
+                <inParameter description="" type="INTEGER">sucursal</inParameter>
+                <inParameter description="" type="STRING">tipoCuenta</inParameter>
+                <inParameter description="" type="LONG">nroCuenta</inParameter>
+            </input>
+            <output>
+                <level groupby="NroSolicitud" name="respuesta">
+                    <outParameter description="" type="INTEGER">
+                        <queryname>NroSolicitud</queryname>
+                        <servicename>NroSolicitud</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TipoDoc</queryname>
+                        <servicename>documento.TipoDoc</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>NroDoc</queryname>
+                        <servicename>documento.NroDoc</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>fechaSolicitud</queryname>
+                        <servicename>fechaSolicitud</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Apellido</queryname>
+                        <servicename>Apellido</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Nombre</queryname>
+                        <servicename>Nombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>NroTarjeta</queryname>
+                        <servicename>RelacionCtaTarjeta.NroTarjeta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>TipoCuenta</queryname>
+                        <servicename>RelacionCtaTarjeta.TipoCuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>NroCuenta</queryname>
+                        <servicename>RelacionCtaTarjeta.NroCuenta</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Estado</queryname>
+                        <servicename>RelacionCtaTarjeta.Estado</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>Baja</queryname>
+                        <servicename>RelacionCtaTarjeta.Baja</servicename>
+                    </outParameter>
+                </level>
+                <level groupby="" name="clientes">
+                    <outParameter description="" type="STRING">
+                        <queryname>tipoCli</queryname>
+                        <servicename>tipo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="STRING">
+                        <queryname>ApellidoNombreCli</queryname>
+                        <servicename>ApellidoNombre</servicename>
+                    </outParameter>
+                    <outParameter description="" type="LONG">
+                        <queryname>cuilCli</queryname>
+                        <servicename>CUIL</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

@@ -1,0 +1,58 @@
+EXECUTE('
+IF OBJECT_ID (''dbo.VW_LIMITE_CLIENTE_PRODUCTO'') IS NOT NULL
+	DROP VIEW dbo.VW_LIMITE_CLIENTE_PRODUCTO
+')
+EXECUTE('
+CREATE     VIEW dbo.VW_LIMITE_CLIENTE_PRODUCTO
+AS 
+SELECT	l.CLIENTE, 
+			''4 - Producto'' AS NIVEL, 
+			p.IDLIMITE AS IDLIMITE, 
+			r.CODIGO_RIESGO AS RIESGO, 
+			t.DESCRIPCION AS NOMBRERIESGO, 
+			f.FAMILIA AS FAMILIA, 
+			p.PRODUCTO AS PRODUCTO, 
+			m.C6399 AS MONEDA, 
+			p.MONTO AS IMPORTE, 
+			p.FECHA_VENCIMIENTO AS VENCIMIENTO,
+			CASE WHEN p.MONTO < (isnull(sum(scl.SALDO_DEUDA),0)+isnull((j.montoSolicitado),0))  THEN p.MONTO 
+			     ELSE (isnull(sum(scl.SALDO_DEUDA),0)+isnull((j.montoSolicitado),0)) END AS UTILIZADO
+	FROM CRE_LIMITECLIENTE l WITH(NOLOCK)
+	INNER JOIN MONEDAS m  WITH(NOLOCK) ON l.MONEDA_LIMITE = m.C6399 
+										AND m.TZ_LOCK = 0
+										AND l.TZ_LOCK = 0 
+										-- AND l.ESTADO = ''A''
+	INNER JOIN CRE_RIESGOLIC r  WITH(NOLOCK) ON l.IDLIMITE = r.IDLIMITE 
+											AND r.TZ_LOCK = 0
+	INNER JOIN CRE_TIPOS_RIESGOS t  WITH(NOLOCK) ON r.CODIGO_RIESGO = t.CODIGO_RIESGO 
+												AND t.TZ_LOCK = 0
+	INNER JOIN CRE_FAMILIALIC f  WITH(NOLOCK) ON r.IDLIMITE = f.IDLIMITE 
+											AND r.CODIGO_RIESGO = f.CODIGO_RIESGO 
+											AND f.TZ_LOCK = 0
+	INNER JOIN CRE_PRODUCTOLIC p  WITH(NOLOCK) ON f.IDLIMITE = p.IDLIMITE 
+											AND f.CODIGO_RIESGO = p.CODIGO_RIESGO 
+											AND f.FAMILIA = p.FAMILIA 
+											AND p.TZ_LOCK = 0											
+	LEFT JOIN VW_SaldosClienteLimite scl WITH(NOLOCK) ON scl.FAMILIAPROD=f.FAMILIA AND scl.PRODUCTO=p.PRODUCTO AND scl.cliente=l.CLIENTE	  
+	LEFT JOIN (SELECT s.CLIENTE, p.c6250 AS PRODUCTO, 
+				ISNULL(SUM(CASE WHEN C6800 = ''L'' THEN isnull(s.MONTO_TOTAL_DESGLOSE,0) ELSE s.montosolicitado END),0) AS montoSolicitado
+				from cre_solicitudcredito  s WITH(NOLOCK),
+				productos             p WITH(NOLOCK)
+				where s.codproductosolicitado = p.C6250
+				and p.EVALUA_DEUDA = ''S''
+				and p.tz_lock = 0
+				and s.tz_lock = 0 
+				and s.estadosolicitud NOT IN (''04'', ''21'', ''22'', ''23'')
+				GROUP BY s.CLIENTE, p.c6250) j ON j.CLIENTE=l.CLIENTE AND j.PRODUCTO=p.PRODUCTO
+	GROUP BY l.CLIENTE, 
+				p.IDLIMITE, 
+				r.CODIGO_RIESGO, 
+				t.DESCRIPCION, 
+				f.FAMILIA, 
+				p.PRODUCTO,
+				m.C6399, 
+				p.MONTO, 
+				j.montoSolicitado,
+				p.FECHA_VENCIMIENTO
+')
+

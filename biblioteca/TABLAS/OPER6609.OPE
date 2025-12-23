@@ -1,0 +1,529 @@
+VERSION:055_5
+TN  NN 1006TConsulta Genérica                       C00001 00
+*N  NN //VENTANACLAVE
+*N  NN //PRINCIPIO
+VNSSNS 010000000003570801SSSD000000000000000000000000000000000000000
+/T=Mantenimiento de Nómina de Tasadores
+/C=192192192
+KNNNNN 010011001202190780000101
+/T=Selección
+/F=0012700NNN000000000Arial                                   
+*N  NN Se selecciona un código de Tasador
+*N  NN ya existente para consultar, modificar 
+*N  NN o dar de baja los datos de la misma
+ NNNNN 07073   Codigo Tasador                                    I SSN 010038003302040764001011600000455002904750185000
+/L=0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:04:15FMK
+ NNNNN 07074   Comentario                                        INNSN 010037003302030764001011000000453002904730185000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 010236001202860780000101
+/T=Opción
+/F=0012700NNN000000000Arial                                   
+ NSNNN 00375   Opción                                            I NSNK010256003702760757001011300000007000700270126000
+/V=A
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:01:49FMK
+*N  NN Opción: 'Alta'
+CNSSNS   00000000000000000000100
+/F=A(C375.1="A")
+/P=I20
+*N  NN Opción: 'Baja'
+CNSSNS   00000000000000000000100
+/F=A(C375.1="B")
+/P=I21
+*N  NN Opción: 'Consulta Genérica'
+CNSSNS   00000000000000000000100
+/F=A(C375.1="C")
+/P=I22
+*N  NN Opción: 'Modificación Genérica'
+CNSSNS   00000000000000000000100
+/F=A(C375.1="M")
+/P=I23
+*N  NN Despliega mensaje notificando que no se ha
+*N  NN seleccionado un registro válido
+CNSSNS ME00000000000000000000100
+/F=(I21OI22OI23)YC9509=0
+/M=OPCIÓN INVALIDA - REGISTRO INEXISTENTE
+TN  NN 1006TConsulta de Personas                    C00341 00
+/?=I20
+*N  NN **************************************************
+*N  NN En esta transacción se solicitan los datos de la 
+*N  NN persona Tasador
+*N  NN **************************************************
+VNSNNS 020001000103100800NNND000000000000000000000000000000000000000
+/T=Alta de Tasador: Seleccione Persona
+/C=192192192
+KNSNNS 020015001002420783000101
+/T=Datos Persona
+/F=0012700NNN000000000Arial                                   
+ NSNNN 06189   Ayuda Doc. PFPJ                                   I NSN 020051015400740280020011000000051004200740139000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+CN  NN ME00000000000000000000100
+/F=!(C6189>0)
+/M=Error - El valor ingresado es inválido
+*$2021-05-21 11:44:06LUISO
+ NSNNN 01854   Nro Persona                                       IDSSNA020081015401040280021011500000081004201040139000
+/V=C6189.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NNNNN 09509   Status Interno                                    INSSN 000007015200300202021011000000007000700300137000
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-05-21 12:19:43LUISO
+CNNNNN ME00000000000000000000110
+/?=C9509=0
+/M=Error - La persona ingresada es inexistente
+*$2021-05-21 12:19:43LUISO
+ NSNNN 01855   Tipo Documento                                    IDSSNA020111015401340280001011500000111004201340139000
+/V=C1855.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01856   Nro. Documento                                    IDSSNA020111052701340748021011500000111041401340511000
+/V=C1856.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01861   Tipo Persona                                      IDSSNA020139015401620280001011500000139004201620139000
+/V=C1861.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+*N  NN Persona tipo 'Jurídica'
+CNSNNS   00000000000000000000100
+/F=C1861.2='J'
+/P=I30
+ NNNNN 01451   No.Pers.Jurídic                                   INSSNA010143044401660570001011000000143033201660429000
+/?=I30
+/V=C1854.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01452   Razon Social                                      IDSSN 020167015401900673001010500000167004201900139000
+/?=I30
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+*N  NN Persona tipo 'Física'
+CNSNNS   00000000000000000000100
+/F=C1861.2='F'
+/P=I31
+ NNNNN 01401   Numero Persona                                    INSSNA010143044401660570001011000000143033201660429000
+/?=I31
+/V=C1854.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01421   Primer Nombre                                     IDSSN 020195015402180375001010500000195004202180139000
+/?=I31
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01422   Segundo Nombre                                    IDSSN 020195052702180748001010500000195041402180513000
+/?=I31
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01418   Apell. Paterno                                    IDSSN 020167015401900375001010500000167004201900141000
+/?=I31
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01420   Apell. Materno                                    IDSSN 020167052701900748001010500000167041401900513000
+/?=I31
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+TN  NN 1001TAlta Genérica                           A01881 00
+/?=I20
+*N  NN //ALTA
+*N  NN //VENTANADATOS
+VNSSNS 030005000501970801SSSD000000000000000000000000000000000000000
+/T=Alta de Tasadores
+/C=192192192
+KNNNNN 030012001401280780000101
+/T=Alta
+/F=0012700NNN000000000Arial                                   
+*N  NN Se ingresa un código de Tasador nuevo
+ NSNNN 07073   Código Tasador                                    IDNSNA030049015500720281021011500000049004300720140000
+/V=C1854.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:02:21FMK
+ NNNNN 07080   Tipo Documento                                    INNSNA030049015500720281021011000000049004300720140000
+/V=C1855.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*N  NN Se ingresan a continuación los datos relacionados 
+*N  NN con el Tasador a dar de alta
+ NSNNN 07074   Nombre tasador                                    I NSN 030079015501020589000011000000079004301020140000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-09-19 17:09:32TOP
+CNNNNN ME00000000000000000000100
+/F=F(LEN,F(LTRIM, C7074))=0
+/M=Ingrese Nombre del Tasador
+*$2022-09-19 17:09:29TOP
+TN  NN 1005TBaja Genérica                           B01881 00
+/?=I21
+*N  NN //BAJA
+*N  NN //VENTANADATOS
+VNSSNS 040005000103060800SSSD000000000000000000000000000000000000000
+/T=Baja de Tasadores
+/C=192192192
+KNNNNN 040011001402390780000101
+/T=Baja
+/F=0012700NNN000000000Arial                                   
+*N  NN Se selecciona un código de Tasador
+*N  NN ya existente a dar de baja 
+ NSNNN 07073   Código Tasador                                    IDNSNA040056015500790281001011500000056004300790140000
+/V=C7073.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:02:37FMK
+*N  NN A continuación se despliegan los datos
+*N  NN relacionados con el código de Tasador
+*N  NN seleccionado a dar de baja
+ NNNNN 07080   Tipo Documento                                    INNSN 040045061800680757001011000000045050200680603000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01854   Nro Persona                                       INNSNA040045061800680757001011000000045050200680603000
+/V=C7073.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-06 12:36:41LUISO
+ NSNNN 01855   Tipo Documento                                    IDNSNA040168015501910294001011500000168004301910144000
+/V=C7080.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01856   Nro. Documento                                    IDNSNA040196015502190294001011500000196004302190144000
+/V=C1856.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NNNNN 01861   Tipo Persona                                      INNSNA040045061800680757001011000000045050200680603000
+/V=C1861.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-06 12:37:01LUISO
+*N  NN Persona tipo 'Jurídica'
+CNSNNS   00000000000000000000100
+/F=C1861.4='J'
+/P=I39
+ NNNNN 01451   No.Pers.Jurídic                                   INSSNA010143044401660570001011000000143033201660429000
+/?=I39
+/V=C1854.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01452   Razón Social                                      IDSSN 040084015501070674001010500000084004301070140000
+/?=I39
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:02:59FMK
+*N  NN Persona tipo 'Física'
+CNNNNN   00000000000000000000100
+/F=C1861.4='F'
+/P=I40
+ NNNNN 01401   Numero Persona                                    INSSNA010143044401660570001011000000143033201660429000
+/?=I40
+/V=C1854.4
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01421   Primer Nombre                                     IDSSN 040112015501350376001010500000112004301350140000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01422   Segundo Nombre                                    IDSSN 040112052801350749001010500000112041501350514000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01418   Apell. Paterno                                    IDSSN 040084015501070376001010500000084004301070140000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01420   Apell. Materno                                    IDSSN 040084052801070749001010500000084041501070514000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 07074   Nombre tasador                                    IDSSN 040140015501630583001011500000140004301630140000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+*N  NN ***** Llamo SP Control Bajas *****
+*$2021-03-24 17:05:02LUISO
+ NNNNN 04939   N° Campo                                          INNNNK000007015200300452001011000000007000700300137000
+/V=7073
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-03-24 17:05:28LUISO
+ NNNNN 03843   Valor                                             INNNNA000007015200300452001011000000007000700300137000
+/V=C7073.4
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2021-03-24 17:05:41LUISO
+DN  NN 0950SS
+*$2021-03-24 17:05:02LUISO
+CNNNNN ME00000000000000000000110
+/F=C99900>0
+/M='Código ' +C7073+ ' existe en ' + C121
+*$2021-03-24 17:05:47LUISO
+*N  NN ***** Fin Llamada SP Control Bajas *****
+*$2021-03-24 17:05:02LUISO
+TN  NN 1009TModificación Genérica                   M01881 00
+/?=I23
+*N  NN //MODIFICACION
+*N  NN //VENTANADATOS
+VNSSNS 050005000503060800SSSD000000000000000000000000000000000000000
+/T=Modificación de Tasadores
+/C=192192192
+KNNNNN 050010001402380780000101
+/T=Modificación
+/F=0012700NNN000000000Arial                                   
+CN  NN  w00000000000000000000100
+/R=F
+*N  NN Se selecciona un código de Tasador
+*N  NN ya existente a modificar
+ NSNNN 07073   Código Tasador                                    IDNSNA050056015500790281021011500000056004300790140000
+/V=C7073.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:03:12FMK
+*N  NN A continuación se despliegan los datos
+*N  NN relacionados con el código de Tasador
+*N  NN seleccionado permitiendo su modificación
+ NNNNN 07080   Tipo Documento                                    INNSN 040045061800680757001011000000045050200680603000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 01854   Nro Persona                                       INNSNA040045061800680757001011000000045050200680603000
+/V=C7073.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-06 12:34:25LUISO
+ NSNNN 01855   Tipo Documento                                    IDNSNA050168015501910294001011500000168004301910144000
+/V=C7080.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01856   Nro. Documento                                    IDNSNA050196015502190294001011500000196004302190144000
+/V=C1856.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NNNNN 01861   Tipo Persona                                      INNSNA040045061800680757001011000000045050200680603000
+/V=C1861.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-06 12:34:11LUISO
+*N  NN Persona tipo 'Jurídica'
+CNSNNS   00000000000000000000100
+/F=C1861.5='J'
+/P=I39
+ NNNNN 01451   No.Pers.Jurídic                                   INSSNA010143044401660570001011000000143033201660429000
+/?=I39
+/V=C1854.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01452   Razón Social                                      IDSSN 050084015501070674001010500000084004301070140000
+/?=I39
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:03:26FMK
+*N  NN Persona tipo 'Física'
+CNNNNN   00000000000000000000100
+/F=C1861.5='F'
+/P=I40
+ NNNNN 01401   Numero Persona                                    INSSNA010143044401660570001011000000143033201660429000
+/?=I40
+/V=C1854.5
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01421   Primer Nombre                                     IDSSN 050112015501350376001010500000112004301350140000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01422   Segundo Nombre                                    IDSSN 050112052801350749001010500000112041501350514000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01418   Apell. Paterno                                    IDSSN 050084015501070376001010500000084004301070140000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01420   Apell. Materno                                    IDSSN 050084052801070749001010500000084041501070514000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 07074   Nombre tasador                                    I NSN 050140015501630583001011000000140004301630140000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-09-19 17:09:50TOP
+CNNNNN ME00000000000000000000100
+/F=F(LEN,F(LTRIM, C7074))=0
+/M=Ingrese Nombre del Tasador
+*$2022-09-19 17:09:39TOP
+TN  NN 1006TConsulta Genérica                       C00001 00
+/?=I22
+*N  NN //CONSULTA
+*N  NN //VENTANADATOS
+VNSSNS 060005000503060800SSSD000000000000000000000000000000000000000
+/T=Consulta de Tasadores
+/C=192192192
+KNNNNN 060010001402300779000101
+/T=Consulta
+/F=0012700NNN000000000Arial                                   
+*N  NN Se selecciona un código de Tasador
+*N  NN ya existente a consultar
+ NSNNN 07073   Código Tasador                                    IDNSNA060056015500790281001011500000056004300790140000
+/V=C7073.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:03:35FMK
+*N  NN A continuación se despliegan los datos
+*N  NN relacionados con el código de Tasador
+*N  NN seleccionado a consultar
+ NNNNN 07080   Tipo Documento                                    INNSN 040045061800680757001011000000045050200680603000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-06 12:24:57LUISO
+ NNNNN 01854   Nro Persona                                       INNSNA040045061800680757001011000000045050200680603000
+/V=C7073.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-06 12:15:44LUISO
+ NSNNN 01855   Tipo Documento                                    IDNSNA060168015501910294001011500000168004301910144000
+/V=C7080.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01856   Nro. Documento                                    IDNSNA060196015502190294001011500000196004302190144000
+/V=C1856.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NNNNN 01861   Tipo Persona                                      INNSNA040045061800680757001011000000045050200680603000
+/V=C1861.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2020-10-06 12:27:43LUISO
+*N  NN Persona tipo 'Jurídica'
+CNSNNS   00000000000000000000100
+/F=C1861.6='J'
+/P=I39
+ NNNNN 01451   No.Pers.Jurídic                                   INSSNA010143044401660570001011000000143033201660429000
+/?=I39
+/V=C1854.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01452   Razón Social                                      IDSSN 060084015501070674001010500000084004301070140000
+/?=I39
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:03:44FMK
+*N  NN Persona tipo 'Física'
+CNNNNN   00000000000000000000100
+/F=C1861.6='F'
+/P=I40
+ NNNNN 01401   Numero Persona                                    INSSNA010143044401660570001011000000143033201660429000
+/?=I40
+/V=C1854.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSNNN 01421   Primer Nombre                                     IDSSN 060112015501350376001010500000112004301350140000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01422   Segundo Nombre                                    IDSSN 060112052801350749001010500000112041501350514000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01418   Apell. Paterno                                    IDSSN 060084015501070376001010500000084004301070140000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 01420   Apell. Materno                                    IDSSN 060084052801070749001010500000084041501070514000
+/?=I40
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+ NSNNN 07074   Nombre tasador                                    IDSSN 060140015501630583001011500000140004301630140000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+*$2022-01-12 16:00:58FMK
+CNNNNN  P00000000000000000000100
+*$2022-01-12 16:04:26FMK
+*N  NN --------------------FIN--------------------

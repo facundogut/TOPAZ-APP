@@ -1,0 +1,28 @@
+<request name="Oper1501" version="1.0" enable="true">
+	<group>1</group>
+	<data>
+		<datasource>TOP/CLIENTES</datasource>
+		<query>
+			SELECT CLI_PF_RECIBIDA.* FROM CLI_PF_RECIBIDA WHERE TZ_LOCK=0 
+			AND ESTADO=0 AND LOTE IN (SELECT LOTE FROM CLI_LOTES_A_MASIVA WHERE ESTADO=1 AND TZ_LOCK=0)
+			and rownum &lt; 200
+		</query>
+		<table>CLI_PF_RECIBIDA</table>
+		<stateField>ESTADO</stateField>
+		<processingMark>1</processingMark>
+		<key>LOTE,PAISDOCUMENTO,TIPODOCUMENTO,NUMERODOCUMENTO</key>
+	</data>	
+	<operation>
+		<name>Operacion 1501</name>
+		<type>1</type>
+		<number>1501</number>
+	</operation>
+	 <scheduler>
+	 	<startHour>0000</startHour>	
+	 	<endHour>2359</endHour>
+	 	<pollingInterval>100000</pollingInterval>
+	 	<weekendDays>1</weekendDays>
+	 	<holidayDays>1</holidayDays>
+	 </scheduler>
+</request>
+

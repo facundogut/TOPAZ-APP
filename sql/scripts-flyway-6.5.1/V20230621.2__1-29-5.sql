@@ -1,0 +1,86 @@
+﻿Execute('DROP TABLE IF EXISTS OrdenDebitoLote_bitacora
+
+CREATE TABLE dbo.OrdenDebitoLote_bitacora
+	(
+	fecha_proceso             DATE NOT NULL,
+	id                        BIGINT NOT NULL,
+	idRegistro                BIGINT NULL,
+	codigoServicio            BIGINT NULL,
+	nombreServicio            VARCHAR (10) NULL,
+	tipoDocumento             VARCHAR (4) NULL,
+	numeroDocumento           BIGINT NULL,
+	cuit                      BIGINT NULL,
+	apellidoNombre            VARCHAR (30) NULL,
+	cbu                       VARCHAR (22) NULL,
+	idCliente                 VARCHAR (22) NULL,
+	referenciaDebito          BIGINT NULL,
+	fechaPrimerVencimiento    DATETIME2 NULL,
+	importePrimerVencimiento  DECIMAL (15, 2) NULL,
+	fechaSegundoVencimiento   DATETIME2 NULL,
+	importeSegundoVencimiento DECIMAL (15, 2) NULL,
+	idLote                    VARCHAR (50) NOT NULL,
+	codigoError               BIGINT NULL,
+	descripcionError          VARCHAR (255) NULL,
+	PRIMARY KEY (id, fecha_proceso, idLote)
+	)
+	
+DROP TABLE IF EXISTS SNP_MSG_CABEZAL	
+CREATE TABLE dbo.SNP_MSG_CABEZAL
+	(
+	TZ_LOCK          NUMERIC (15) DEFAULT ((0)) NOT NULL,
+	LOTE_ID          NUMERIC (7) DEFAULT ((0)) NOT NULL,
+	CUIT_EO          NUMERIC (11) DEFAULT ((0)) NOT NULL,
+	ID_ARCHIVO       VARCHAR (22) DEFAULT ('' '') NOT NULL,
+	NRO_ARCHIVO      NUMERIC (15) DEFAULT ((0)) NOT NULL,
+	FECHA_RECEPCION  DATETIME NULL,
+	HORA_RECEPCION   VARCHAR (6) NULL,
+	ESTADO           VARCHAR (2) DEFAULT ('' '') NULL,
+	USUARIO_INGRESO  VARCHAR (20) DEFAULT ('' '') NULL,
+	ESTACION_INGRESO VARCHAR (20) DEFAULT ('' '') NULL,
+	CONSTRAINT PK_SNP_MSG_CABEZAL_01 PRIMARY KEY (CUIT_EO, ID_ARCHIVO, NRO_ARCHIVO)
+	)
+	
+DROP TABLE IF EXISTS SNP_MSG_ORDENES	
+CREATE TABLE dbo.SNP_MSG_ORDENES
+	(
+	TZ_LOCK                  NUMERIC (15) DEFAULT ((0)) NOT NULL,
+	CUIT_EO                  NUMERIC (11) DEFAULT ((0)) NOT NULL,
+	PRESTACION               VARCHAR (10) DEFAULT ('' '') NULL,
+	ID_ARCHIVO               VARCHAR (30) DEFAULT ('' '') NOT NULL,
+	NRO_ARCHIVO              NUMERIC (15) DEFAULT ((0)) NOT NULL,
+	CORRELATIVO              NUMERIC (9) DEFAULT ((0)) NOT NULL,
+	CODIGO_ORDEN             NUMERIC (2) DEFAULT ((0)) NULL,
+	TIPO_ORDEN               VARCHAR (6) DEFAULT ('' '') NULL,
+	INFO_ADICIONAL           VARCHAR (3) DEFAULT ('' '') NULL,
+	CODIGO_CLIENTE           NUMERIC (12) DEFAULT ((0)) NULL,
+	TIPO_DOCUMENTO           VARCHAR (4) DEFAULT ('' '') NULL,
+	NRO_DOCUMENTO            VARCHAR (20) DEFAULT ('' '') NULL,
+	CBU                      VARCHAR (22) DEFAULT ('' '') NULL,
+	CUENTA                   NUMERIC (15) NULL,
+	MONEDA                   NUMERIC (4) DEFAULT ((0)) NULL,
+	IMPORTE                  NUMERIC (15, 2) DEFAULT ((0)) NULL,
+	SEGUNDO_IMPORTE          NUMERIC (15, 2) DEFAULT ((0)) NULL,
+	PRESENTACION_PRIMER_VTO  DATETIME NULL,
+	PRESENTACION_SEGUNDO_VTO DATETIME NULL,
+	FECHA_VENCIMIENTO        DATETIME NULL,
+	SEGUNDO_VTO              DATETIME NULL,
+	FECHA_COMPENSACION       DATETIME NULL,
+	REFERENCIA               VARCHAR (15) DEFAULT ('' '') NULL,
+	CONCEPTO                 VARCHAR (80) DEFAULT ('' '') NULL,
+	ID_NACHA                 VARCHAR (10) DEFAULT ('' '') NULL,
+	FECHA_NACHA              DATETIME NULL,
+	CORRELATIVO_NACHA        NUMERIC (15) DEFAULT ((0)) NULL,
+	CORRELATIVO_LOTE         NUMERIC (15) DEFAULT ((0)) NULL,
+	REGISTRO_INDIVIDUAL      NUMERIC (15) DEFAULT ((0)) NULL,
+	FECHA_ASIENTO            DATETIME NULL,
+	NUMERO_ASIENTO           NUMERIC (10) DEFAULT ((0)) NULL,
+	SUCURSAL_ASIENTO         NUMERIC (5) DEFAULT ((0)) NULL,
+	ESTADO                   VARCHAR (2) DEFAULT ('' '') NULL,
+	MOTIVO_RECHAZO           VARCHAR (3) DEFAULT ('' '') NULL,
+	CONTABILIZADA            VARCHAR (1) DEFAULT ('' '') NULL,
+	RENDIDA                  VARCHAR (1) DEFAULT ('' '') NULL,
+	ID_ARCHIVO_REVERSADO     NUMERIC (9) NULL,
+	CONSTRAINT PK_SNP_MSG_ORDENES_01 PRIMARY KEY (CUIT_EO, ID_ARCHIVO, NRO_ARCHIVO, CORRELATIVO)
+	)
+
+')

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<serviceQuery>
+    <uri>/sibe/rpcBanco/</uri>
+    <serviceDescription>Consulta el RPC Banco del NBCH</serviceDescription>
+    <title>ConsultaRPCBanco</title>
+    <querys>
+        <query id="1" name="RPCBANCO" type="SIMPLE">
+            <sql>
+				DECLARE @porcIndiceReferencia NUMERIC(15,2) = (SELECT CRE.IMPORTE FROM CRE_PARAMETROS CRE WHERE CRE.CODIGO IN (615)) 
+				DECLARE @indiceReferencia NUMERIC(15,2) 	= (SELECT CRE.IMPORTE FROM CRE_PARAMETROS CRE WHERE CRE.CODIGO IN (501))
+				DECLARE @rpcBanco NUMERIC(15,2) 			= (SELECT CRE.IMPORTE FROM CRE_PARAMETROS CRE WHERE CRE.CODIGO IN (609))
+				DECLARE @periodo NUMERIC(6,0) 				= (SELECT FORMAT(CONVERT(DATETIME, DATEADD(month, -2, fechaproceso) ,103),'yyyyMM')
+															   AS fechaprocesoant FROM PARAMETROS WITH (NOLOCK))
+
+				SET @porcIndiceReferencia = COALESCE(@porcIndiceReferencia, 0)
+				SET @indiceReferencia = COALESCE(@indiceReferencia, 0)
+				SET @rpcBanco = COALESCE(@rpcBanco, 0)
+
+				SELECT 
+					@porcIndiceReferencia AS porcentajeIndiceReferencia,
+					@periodo AS periodo,
+					@indiceReferencia AS indiceReferencia,
+					@rpcBanco AS rpcBanco
+			</sql>
+            <output>
+                <level groupby="" name="CONSULTA">
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>porcentajeIndiceReferencia</queryname>
+                        <servicename>porcentajeIndiceReferencia</servicename>
+                    </outParameter>
+                    <outParameter description="" type="INTEGER">
+                        <queryname>periodo</queryname>
+                        <servicename>periodo</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>indiceReferencia</queryname>
+                        <servicename>indiceReferencia</servicename>
+                    </outParameter>
+                    <outParameter description="" type="BIGDECIMAL">
+                        <queryname>rpcBanco</queryname>
+                        <servicename>rpcBanco</servicename>
+                    </outParameter>
+                </level>
+            </output>
+        </query>
+    </querys>
+</serviceQuery>

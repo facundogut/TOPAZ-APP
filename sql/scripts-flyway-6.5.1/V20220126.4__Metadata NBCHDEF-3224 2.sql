@@ -1,0 +1,10 @@
+﻿EXECUTE('
+----------------
+--UPDATE CAMPO--
+----------------
+UPDATE DICCIONARIO
+SET OPCIONES = 1
+WHERE NUMERODECAMPO = 50434
+----
+')
+

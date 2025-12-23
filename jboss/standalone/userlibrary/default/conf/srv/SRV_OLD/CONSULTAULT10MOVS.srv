@@ -1,0 +1,112 @@
+service CONSULTAULT10MOVS; 
+description "Parámetros de entrada al servicio Ultimos 10 movimientos"; 
+
+
+	action: SQLQuery HAYREGISTROS(
+				
+			SucursalDeb: numeric,
+			ProductoDeb: numeric,     
+			CuentaDeb:   numeric,      
+			MonedaDeb:   numeric,
+			OperacionDeb: numeric
+			
+			):[
+			SCODERROR: numeric,
+	         	CODIGOCLIENTE:	numeric as CodigoCliente,
+			NOMBRECLIENTE:	string as NombreCliente,
+			TIPO: string as Tipo
+			]{ 
+  			
+  	
+	properties {
+			("statement", "select 0 as SCODERROR,  CODIGOCLIENTE as CodigoCliente, fn_itf_translate(NOMBRECLIENTE) as NombreCliente, TIPO as Tipo from cli_clientes where codigocliente in(select C1803 from saldos where sucursal=? and moneda=? and cuenta=? and producto=? and operacion=?)"),
+			("0", "SucursalDeb"), 
+			("1", "MonedaDeb"), 
+			("2", "CuentaDeb"), 
+			("3", "ProductoDeb"),
+			("4", "OperacionDeb")
+	
+	};
+
+	           
+	
+		action: SQLCall ULT10MOVS(): [] 
+		    	   	 {
+			   	     condition{"SCODERROR == 0"};
+					properties 
+					{ 
+					("statement", "{call SP_ITF_ULTIMOS10MOVS (?,?,?,?,?)}"),
+					("0", "SucursalDeb"), 
+					("1", "MonedaDeb"), 
+					("2", "CuentaDeb"), 
+					("3", "ProductoDeb"),
+					("4", "OperacionDeb")
+				};
+
+
+			action: SQLQuery ULTSELECTSALDO(): [ 
+			 	
+				SALDOACTUAL:	numeric as SaldoActual,
+				SALDOPENDIENTES: numeric as SaldoPendientes,
+				SALDODISPONIBLE: numeric as SaldoDisponible,
+				SALDOCONFIRMAR:	numeric as SaldoConfirmar,
+				SALDOSIGUIENTE: numeric as SaldoSiguiente,
+				SALDOGARANTIA: numeric as SaldoGarantia,
+				CAPITAL: numeric as Capital,
+				FECHAAPERTURA: date as FechaApertura,
+				FECHAVTO: date as FechaVto, 
+				PLAZO: numeric as Plazo, 
+				TASA: numeric as Tasa, 
+				INTDEVENGAR: numeric as IntDevengar, 
+				INTDEVENGADO: numeric as IntDevengado
+			       ] 
+		    	   	 {
+			   	     condition{"SCODERROR == 0"};
+					properties 
+					{ 
+
+					("statement", "select SALDOACTUAL, SALDOPENDIENTES, SALDODISPONIBLE, SALDOCONFIRMAR, SALDOSIGUIENTE, SALDOGARANTIA, CAPITAL, FECHAAPERTURA, FECHAVTO, PLAZO, TASA, INTDEVENGAR, INTDEVENGADO from itf_ultimos10saldo where SUCURSAL=? and moneda=? and cuenta=? and producto=? and operacion=?"),
+					("0", "SucursalDeb"), 
+					("1", "MonedaDeb"), 
+					("2", "CuentaDeb"), 
+					("3", "ProductoDeb"),
+					("4", "OperacionDeb")
+	
+
+			
+		       };
+
+
+				action: SQLQuery ULTSELECTMOV(): [ 
+			 	
+				XML_TAG: string,
+				FECHA_PROCESADO: date as Fecha_Procesado,
+				FECHA_VALOR: string as Fecha_Valor, 
+				DEBITO_CREDITO: string as Debito_Credito,
+				MONTO: string as Monto,
+				CONCEPTO: string as Concepto,
+				C0002: numeric,
+				NROCOMPROBANTE: numeric as NroComprobante,
+                            SUCURSAL: numeric as Sucursal
+			                     ] 
+		    	   	 {
+			   	     condition{"SCODERROR == 0"};
+					properties 
+					{ 
+					("statement", "select 'Movimiento' as XML_TAG, FECHA_PROCESADO, TO_CHAR(Fecha_Valor, 'yyyy.mm.dd') as Fecha_Valor, DEBITO_CREDITO, MONTO, CONCEPTO, C0002, NROCOMPROBANTE, SUCURSAL from itf_ultimos10movs  where sucursal_cuenta=? and moneda=? and cuenta=? and producto=? and operacion=? order by  ordinal_movs desc"),
+					("0", "SucursalDeb"), 
+					("1", "MonedaDeb"), 
+					("2", "CuentaDeb"), 
+					("3", "ProductoDeb"),
+					("4", "OperacionDeb")
+	
+
+					}
+			         
+}
+		
+}
+
+
+}
+}

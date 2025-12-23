@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <converter>
+        <converter-name>fechaMovs</converter-name>
+        <class-name>topsystems.persistence.dataserver.converter.MovementDateConverter</class-name>
+    </converter>
+    <converter>
+        <converter-name>horaMovs</converter-name>
+        <parameter>
+            <parameter-name>dateFormat</parameter-name>
+            <parameter-value>11</parameter-value>
+        </parameter>
+        <class-name>topsystems.persistence.dataserver.converter.MovementDateConverter</class-name>
+    </converter>
+    <converter>
+        <converter-name>importeMovs</converter-name>
+        <parameter>
+            <parameter-name>decimals</parameter-name>
+            <parameter-value>2</parameter-value>
+        </parameter>
+        <class-name>topsystems.persistence.dataserver.converter.MovementDoubleConverter</class-name>
+    </converter>
+    <converter>
+        <converter-name>importeMovs4d</converter-name>
+        <parameter>
+            <parameter-name>decimals</parameter-name>
+            <parameter-value>4</parameter-value>
+        </parameter>
+        <class-name>topsystems.persistence.dataserver.converter.MovementDoubleConverter</class-name>
+    </converter>
+    <converter>
+        <converter-name>numeroMovs</converter-name>
+        <parameter>
+            <parameter-name>decimals</parameter-name>
+            <parameter-value>0</parameter-value>
+        </parameter>
+        <class-name>topsystems.persistence.dataserver.converter.MovementDoubleConverter</class-name>
+    </converter>
+    <converter>
+        <converter-name>converterLong</converter-name>
+        <class-name>topsystems.persistence.dataserver.converter.MovementLongConverter</class-name>
+    </converter>
+    <converter>
+        <converter-name>doubleToLong</converter-name>
+        <class-name>topsystems.persistence.dataserver.converter.DoubleToLong</class-name>
+    </converter>
+    <converter>
+        <converter-name>charToString</converter-name>
+        <class-name>topsystems.persistence.dataserver.converter.CharToString</class-name>
+    </converter>
+    <query>
+        <class-name>topsystems.automaticprocess.exposicionsobregiros.ExposicionSobregiros</class-name>
+        <query-name>query.ExposicionSobregiros</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>	select s.jts_oid as JTS_OID, r.c6305 as SIGNORUBRO, s.c1604 as SALDO_ACTUAL,
+                            0 AS TOTAL_ACUERDOS,
+                            0 AS TOTAL_SOBREGIROS,
+                            'F' as TIPO_PFPJ, 0 AS NRO_AUTORIZACION
+                            from saldos s
+                            join planctas r on s.c1730 = r.c6326 and r.EXPSOBREGIRO = 'S' where                              
+                            s.tz_lock = 0 and r.tz_lock = 0 and  
+                            ((s.c1604 &lt; 0 and r.c6305='C') or ((s.c1604 &gt; 0 and r.c6305='D')) )
+						</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>signoRubro</attribute-name>
+            <column-name>SIGNORUBRO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoActual</attribute-name>
+            <column-name>SALDO_ACTUAL</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>totalAcuerdos</attribute-name>
+            <column-name>TOTAL_ACUERDOS</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>totalSobregiros</attribute-name>
+            <column-name>TOTAL_SOBREGIROS</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoPFPJ</attribute-name>
+            <column-name>TIPO_PFPJ</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>autorization</attribute-name>
+            <column-name>NRO_AUTORIZACION</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

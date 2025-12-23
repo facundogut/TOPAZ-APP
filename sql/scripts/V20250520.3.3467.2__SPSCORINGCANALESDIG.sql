@@ -1,0 +1,318 @@
+EXECUTE('
+ALTER PROCEDURE dbo.SP_SCORING_CANALES_DIGITALES
+   @P_CLIENTE numeric(15),
+   @P_DOCUMENTO varchar(20),
+   @P_CANAL varchar(2)
+AS 
+   BEGIN
+
+      DECLARE
+         @V_MONTO_CALCULADO NUMERIC(15,2) = 0,
+         @V_MONTO_SUELDO NUMERIC(15,2) = 0,
+         @V_MONTO_SINEQUIV NUMERIC(15,2) = 0, 
+         @V_ADELANTOS_SINEQUIV NUMERIC(15,2) = 0,
+         @V_MONTO_TARJETA NUMERIC(15,2) = 0, 
+         @V_MONTO_CONEQUIV NUMERIC(15,2) = 0,
+         @V_ADELANTOS_CONEQUIV NUMERIC(15,2) = 0,
+         @V_MONTO_MISMOPROD NUMERIC(15,2) = 0, 
+         @V_ADELANTOS_MISMOPROD NUMERIC(15,2) = 0,
+         @V_SUBTOTAL NUMERIC(15,2) = 0,
+         @V_CAPACIDAD NUMERIC(15,2) = 0,
+         @V_COEFICIENTE NUMERIC(11,7) = 0,
+         @CANT_REGISTROS NUMERIC (15)=0,
+         @PROCESADOS NUMERIC(15)=0;
+         
+         --Tabla AUX_PRODUCTOSCONVENIOS 
+         DECLARE @AUX_PRODUCTOSCONVENIOS TABLE (PRODUCTO NUMERIC(5), CONVENIO NUMERIC(15),
+	     JTS_OID NUMERIC(15), CANTIDAD_SUELDO INT, JURISDICCION VARCHAR(20),
+	     CANAL VARCHAR(2), TIPO_SCORING NUMERIC(1),AFECTACION NUMERIC(5,2),AFECTACION_CANAL NUMERIC (11,7),
+	     ORDINAL NUMERIC IDENTITY(1,1));
+	     --AUX_PRODUCTOSEQUIVALENTES
+	     DECLARE @AUX_PRODUCTOSEQUIVALENTES TABLE (PRODUCTO NUMERIC(5),PRODUCTO_EQUIVALENTE NUMERIC(5),
+	     EQUIV_SCORING VARCHAR(1), EQUIV_CONTR_MARCO VARCHAR (1),EQUIV_CANCELACION VARCHAR (1));
+
+      BEGIN
+      
+      	 DELETE FROM CRE_AUX_SOL_CALCULO_ADELANTO WHERE NUMERO_SOLICITUD = 0 AND CLIENTE = @P_CLIENTE AND CANAL=@P_CANAL
+      
+         DECLARE
+         @LINEA_REG$PRODUCTO NUMERIC(5), 
+         @LINEA_REG$CONVENIO NUMERIC(15),         
+         @LINEA_REG$JTS_SALDO NUMERIC(15),
+         @LINEA_REG$CANT_SUELDO INT,
+         @LINEA_REG$JURISDICCION VARCHAR(20),
+         @LINEA_REG$TIPO_SCORING NUMERIC(1),
+         @LINEA_REG$AFECTACION NUMERIC(5,2),
+         @LINEA_REG$AFECTACIONCANAL NUMERIC(5,2),
+         @LINEA_REG$CANAL VARCHAR(20),
+         @PRODUCTO_EQUIVALENTE NUMERIC(5),
+         @CONTROL INT
+         
+             
+	BEGIN
+		
+		--Controlamos Cuenta de Orden y Mayoría de edad del cliente.
+		SELECT @CONTROL = COUNT(*) 
+		FROM CLI_CLIENTEPERSONA(nolock) p ,CLI_CLIENTES(nolock) c,CLI_PERSONASFISICAS(nolock) f
+		WHERE (c.CODIGOCLIENTE =p.CODIGOCLIENTE
+		AND p.NUMEROPERSONA= f.NUMEROPERSONAFISICA AND p.TITULARIDAD=''T'' )
+		AND (datediff(year,f.FECHANACIMIENTO,(SELECT fechaproceso FROM PARAMETROS(nolock)))<(SELECT NUMERICO FROM PARAMETROSGENERALES(nolock) WHERE CODIGO=13)
+		OR (SELECT COUNT(*) FROM SALDOS(nolock) WHERE c1728=''C'' 
+			AND c1803=c.CODIGOCLIENTE AND c1604<>0  
+			AND TZ_LOCK=0)>0)
+		AND c.codigocliente = @P_CLIENTE
+		
+		--Si la consulta devuelve un COUNT >0 hay excepción
+		IF @CONTROL > 0
+   BEGIN
+      --PRINT ''El cliente no tiene permitido pedir un adelanto.'';
+      RETURN;
+   END
+		--Insert a la Tabla AUX con datos de VW_PRODUCTOS_CONVENIOS_AH para @CLIENTE   
+		INSERT INTO @AUX_PRODUCTOSCONVENIOS (PRODUCTO, CONVENIO,JTS_OID, CANTIDAD_SUELDO, JURISDICCION,
+	                                CANAL, TIPO_SCORING,AFECTACION,AFECTACION_CANAL)
+ 		SELECT DISTINCT PC.Producto,
+	                     PC.Convenio,
+	                     PC.JTS_OID,
+	                     PC.CantidadSueldo,
+	                     PC.Jurisdiccion,
+	                     PC.Canal,
+	                     PC.TipoScoring,
+	                     PC.Afectacion,
+	                     PC.AfectacionCanal
+	                     FROM VW_PRODUCTOS_CONVENIOS_AH PC 
+	                     WHERE PC.Cliente=@P_CLIENTE  
+	                     AND PC.Canal=@P_CANAL 
+	                     AND PC.Situacion IN (''1'','' '')
+	                     AND PC.ListaNegra=''N''
+	END				 
+  	     										
+	   										
+	     										
+	--Seteo Cantidad_Registro para comparar con Procesados
+	SELECT @CANT_REGISTROS = COUNT(*) FROM @AUX_PRODUCTOSCONVENIOS;
+         		
+	WHILE @CANT_REGISTROS != @PROCESADOS
+	 	BEGIN
+	 	
+            	SET @PROCESADOS=@PROCESADOS+1
+            	SET @V_MONTO_SUELDO = 0
+               	SET @V_MONTO_SINEQUIV = 0
+               	SET @V_ADELANTOS_SINEQUIV = 0
+               	SET @V_ADELANTOS_CONEQUIV = 0
+               	SET @V_MONTO_CONEQUIV = 0
+               	SET @V_SUBTOTAL = 0
+               	SET @V_MONTO_CALCULADO = 0
+               	SET @V_MONTO_MISMOPROD = 0
+               	SET @V_ADELANTOS_MISMOPROD = 0
+              --Grabo variales con Registros de Tabla Auxiliar  
+                SELECT 
+					@LINEA_REG$PRODUCTO=TA.PRODUCTO, 
+					@LINEA_REG$CONVENIO=TA.CONVENIO,
+					@LINEA_REG$JTS_SALDO=TA.JTS_OID,
+					@LINEA_REG$CANT_SUELDO=TA.CANTIDAD_SUELDO,
+					@LINEA_REG$JURISDICCION=TA.JURISDICCION,
+					@LINEA_REG$CANAL=TA.CANAL,
+					@LINEA_REG$TIPO_SCORING=TA.TIPO_SCORING,
+					@LINEA_REG$AFECTACION=TA.AFECTACION, 
+					@LINEA_REG$AFECTACIONCANAL=TA.AFECTACION_CANAL 
+				FROM @AUX_PRODUCTOSCONVENIOS TA 				         
+                WHERE TA.ORDINAL=@PROCESADOS 
+                
+                
+                --INSERT a @AUX_PRODUCTOSEQUIVALENTES de la tabla CRE_PRODUCTOSEQUIVALENTES              
+				INSERT INTO @AUX_PRODUCTOSEQUIVALENTES (PRODUCTO,PRODUCTO_EQUIVALENTE ,
+			     										EQUIV_SCORING, EQUIV_CONTR_MARCO,
+			     										EQUIV_CANCELACION)
+			    SELECT 	PE.PRODUCTO,
+						PE.PRODUCTO_EQUIVALENTE,
+						PE.EQUIV_SCORING,
+						PE.EQUIV_CONTR_MARCO,
+						PE.EQUIV_CANCELACION	
+						FROM CRE_PRODUCTOSEQUIVALENTES PE WITH(NOLOCK)
+						WHERE PRODUCTO = @LINEA_REG$PRODUCTO 
+						AND PRODUCTO NOT IN (SELECT PRODUCTO FROM @AUX_PRODUCTOSEQUIVALENTES)
+						AND EQUIV_SCORING = ''S'' AND TZ_LOCK = 0
+			              
+                
+                
+                -- Scoring Lista 
+                IF @LINEA_REG$TIPO_SCORING = 4 
+                	BEGIN
+                		SELECT @V_MONTO_CALCULADO = isnull(MONTO_MAXIMO,0) FROM CRE_SCORINGPORLISTA WITH(NOLOCK) WHERE PRODUCTO = @LINEA_REG$PRODUCTO AND CONVENIO = @LINEA_REG$CONVENIO 
+                		AND JURISDICCION = @LINEA_REG$JURISDICCION AND CUIT = @P_DOCUMENTO AND TZ_LOCK = 0
+                		
+                		SET @V_CAPACIDAD = @V_MONTO_CALCULADO
+                	END 
+                	
+                -- Scoring 1 Cuota / N Cuotas	
+                IF @LINEA_REG$TIPO_SCORING IN (0,1,3) 
+                	BEGIN
+                		-- Importe de las ultimas N acreditaciones para ese convenio-jurisdiccion
+                		SELECT @V_MONTO_SUELDO = isnull(round(avg(t.MONTO),2),0)
+						FROM (SELECT TOP (@LINEA_REG$CANT_SUELDO) *
+								FROM CRE_SOL_ACREDITACIONES_SUELDOS WITH(NOLOCK) WHERE TIPO = ''S'' AND SALDO_JTS_OID = @LINEA_REG$JTS_SALDO AND CONVENIO = @LINEA_REG$CONVENIO
+								AND ID_JURISDICCION = @LINEA_REG$JURISDICCION AND TZ_LOCK = 0
+								ORDER BY FECHA DESC) t
+								
+						-----------------------------------SIN EQUIVALENTES------------------------------------------------------------------------		
+                		-- Importe de cuotas para productos que no son de la linea sin productos equivalentes
+                		-- Asistencias ya desembolsadas
+						SELECT @V_MONTO_SINEQUIV = isnull(sum(s.C1612),0)
+						FROM SALDOS s WITH(NOLOCK)
+						WHERE s.C1785 IN (5,6) AND s.TZ_LOCK = 0 AND s.C1604 < 0 AND s.PRODUCTO <> @LINEA_REG$PRODUCTO
+						AND s.C1803=@P_CLIENTE
+						--IN (SELECT C1803 FROM SALDOS WITH(NOLOCK) WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 
+						AND s.PRODUCTO IN (SELECT C6250 FROM PRODUCTOS WITH(NOLOCK) WHERE TZ_LOCK = 0 AND C6800 <> ''AH'')
+						
+						-- Adelantos pendientes de impacto en canales digitales
+						SELECT @V_ADELANTOS_SINEQUIV = isnull(sum(c.CUOTA_CALCULADA),0)
+						FROM CRE_ADELANTOS_HABERES c WITH(NOLOCK)
+						WHERE c.TZ_LOCK = 0 AND c.ESTADO=''I'' AND c.PRODUCTO <> @LINEA_REG$PRODUCTO
+						AND c.CLIENTE=@P_CLIENTE
+						--IN (SELECT C1803 FROM SALDOS WITH(NOLOCK) WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 
+						AND c.PRODUCTO IN (SELECT C6250 FROM PRODUCTOS WITH(NOLOCK) WHERE TZ_LOCK = 0 AND C6800 <> ''AH'')
+						
+						-- Importe minimo de TC pendiente
+						SELECT @V_MONTO_TARJETA = isnull(sum(MONTO),0)
+						FROM SALDOS t WITH(NOLOCK)
+						INNER JOIN (SELECT s.JTS_OID, CASE WHEN s.C6676 = ''1'' THEN isnull(s.C1685 - (s.C1832 - s.AJUSTEINFLACION),0) ELSE isnull(s.AJUSTEINFLACION,0) END AS MONTO 
+						FROM SALDOS s WITH(NOLOCK)
+						WHERE s.C1785 = 1 AND s.TZ_LOCK = 0
+						AND s.C1803=@P_CLIENTE
+						--IN (SELECT C1803 FROM SALDOS WITH(NOLOCK) WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 
+						AND s.PRODUCTO IN (SELECT C6250 FROM PRODUCTOS WITH(NOLOCK) WHERE TZ_LOCK = 0 AND C6800 = ''T'')  
+						AND ((s.C6676 = ''1'' AND s.C1832 - s.AJUSTEINFLACION < s.C1685) OR s.C6676 = ''2'')) a ON t.JTS_OID = a.JTS_OID
+						
+						-- Se calcula subTotal, restando cuotas de productos sin equivalentes - minimos de TC y aplicando el 
+						-- % de afectacion definido para el convenio y canal
+						SET @V_SUBTOTAL = (@V_MONTO_SUELDO - @V_MONTO_SINEQUIV - @V_ADELANTOS_SINEQUIV - @V_MONTO_TARJETA) * @LINEA_REG$AFECTACION / 100
+						SET @V_SUBTOTAL = @V_SUBTOTAL * @LINEA_REG$AFECTACIONCANAL / 100
+						
+						
+						-----------------------------------CON EQUIVALENTES------------------------------------------------------------------------
+						-- Se obtienen cuotas de productos equivalentes que no sean del producto de la linea
+						-- Asistencias ya desembolsadas
+						SELECT @V_MONTO_CONEQUIV = isnull(sum(s.C1612),0)
+						FROM SALDOS s WITH(NOLOCK)
+						WHERE s.C1785 IN (5,6) AND s.TZ_LOCK = 0 AND s.C1604 < 0 AND s.PRODUCTO <> @LINEA_REG$PRODUCTO
+						AND s.C1803=@P_CLIENTE 
+						--IN (SELECT C1803 FROM SALDOS WITH(NOLOCK) WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 
+						AND s.PRODUCTO IN (SELECT PRODUCTO_EQUIVALENTE FROM @AUX_PRODUCTOSEQUIVALENTES)
+						--IN (SELECT PRODUCTO_EQUIVALENTE FROM CRE_PRODUCTOSEQUIVALENTES WITH(NOLOCK) WHERE PRODUCTO = @LINEA_REG$PRODUCTO AND EQUIV_SCORING = ''S'' AND TZ_LOCK = 0)
+						
+						-- Adelantos pendientes de impacto en canales digitales
+						SELECT @V_ADELANTOS_CONEQUIV = isnull(sum(c.CUOTA_CALCULADA),0)
+						FROM CRE_ADELANTOS_HABERES c WITH(NOLOCK)
+						WHERE c.TZ_LOCK = 0 AND c.ESTADO=''I'' AND c.PRODUCTO <> @LINEA_REG$PRODUCTO
+						AND c.CLIENTE=@P_CLIENTE 
+						--IN (SELECT C1803 FROM SALDOS WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 
+						AND c.PRODUCTO IN (SELECT PRODUCTO_EQUIVALENTE FROM @AUX_PRODUCTOSEQUIVALENTES)
+						--IN (SELECT PRODUCTO_EQUIVALENTE FROM CRE_PRODUCTOSEQUIVALENTES WITH(NOLOCK) WHERE PRODUCTO = @LINEA_REG$PRODUCTO AND EQUIV_SCORING = ''S'' AND TZ_LOCK = 0)
+						
+						-- Cuotas de la misma linea
+						-- Asistencias ya desembolsadas
+						SELECT @V_MONTO_MISMOPROD = isnull(sum(s.C1612),0)
+						FROM SALDOS s WITH(NOLOCK)
+						WHERE s.C1785 IN (5,6) AND s.TZ_LOCK = 0 AND s.C1604 < 0 AND s.PRODUCTO = @LINEA_REG$PRODUCTO
+						AND s.C1803=@P_CLIENTE 
+						--IN (SELECT C1803 FROM SALDOS WITH(NOLOCK) WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 	
+						
+						-- Adelantos pendientes de impacto en canales digitales
+						SELECT @V_ADELANTOS_MISMOPROD = isnull(sum(c.CUOTA_CALCULADA),0)
+						FROM CRE_ADELANTOS_HABERES c WITH(NOLOCK)
+						WHERE c.TZ_LOCK = 0 AND c.ESTADO=''I'' AND  c.PRODUCTO = @LINEA_REG$PRODUCTO
+						AND c.CLIENTE=@P_CLIENTE
+						--IN (SELECT C1803 FROM SALDOS WITH(NOLOCK) WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 	
+										
+						
+						-- Si es Scoring 1 cuota no aplico coeficiente						
+						IF @LINEA_REG$TIPO_SCORING IN (0,3)	 
+							BEGIN			
+								SET @V_MONTO_CALCULADO = @V_SUBTOTAL - @V_MONTO_CONEQUIV - @V_ADELANTOS_CONEQUIV - @V_MONTO_MISMOPROD - @V_ADELANTOS_MISMOPROD
+								SET @V_CAPACIDAD = @V_MONTO_CALCULADO
+							END	
+						-- Si es Scoring n Cuotas, aplico coeficiente sobre el resultado		 
+						ELSE
+							BEGIN		   
+								SELECT TOP (1) @V_COEFICIENTE = isnull(COEFICIENTE,0) FROM CRE_SCORINGPORCUOTAS WITH(NOLOCK) WHERE PRODUCTO = @LINEA_REG$PRODUCTO AND TZ_LOCK = 0 ORDER BY CANTIDAD_CUOTAS DESC	
+								
+								SET @V_MONTO_CALCULADO = (@V_SUBTOTAL - @V_MONTO_CONEQUIV - @V_ADELANTOS_CONEQUIV - @V_MONTO_MISMOPROD - @V_ADELANTOS_MISMOPROD) * @V_COEFICIENTE 
+								SET @V_CAPACIDAD = @V_SUBTOTAL - @V_MONTO_CONEQUIV - @V_MONTO_MISMOPROD - @V_ADELANTOS_MISMOPROD - @V_ADELANTOS_CONEQUIV 
+							END								                		
+                	END    
+                	
+                	
+                -- Scoring SAC (Aguinaldo)	            
+                IF @LINEA_REG$TIPO_SCORING = 2
+                	BEGIN
+                		SELECT @V_MONTO_SUELDO = isnull(round(avg(t.MONTO),2),0)
+						FROM (SELECT TOP (@LINEA_REG$CANT_SUELDO) *
+								FROM CRE_SOL_ACREDITACIONES_SUELDOS WITH(NOLOCK) WHERE TIPO = ''A'' AND SALDO_JTS_OID = @LINEA_REG$JTS_SALDO AND CONVENIO = @LINEA_REG$CONVENIO
+								AND ID_JURISDICCION = @LINEA_REG$JURISDICCION AND TZ_LOCK = 0
+								ORDER BY FECHA DESC) t
+                		
+                		SET @V_SUBTOTAL = @V_MONTO_SUELDO * @LINEA_REG$AFECTACION / 100
+                		SET @V_SUBTOTAL = @V_SUBTOTAL * @LINEA_REG$AFECTACIONCANAL / 100
+                		
+                		-- Se obtienen cuotas de productos equivalentes que no sean del producto de la linea
+						-- Asistencias ya desembolsadas
+						SELECT @V_MONTO_CONEQUIV = isnull(sum(s.C1612),0)
+						FROM SALDOS s WITH(NOLOCK)
+						WHERE s.C1785 IN (5,6) AND s.TZ_LOCK = 0 AND s.C1604 < 0 AND s.PRODUCTO <> @LINEA_REG$PRODUCTO
+						AND s.C1803=@P_CLIENTE
+						--IN (SELECT C1803 FROM SALDOS WITH(NOLOCK) WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 						
+						AND s.PRODUCTO IN (SELECT PRODUCTO_EQUIVALENTE FROM @AUX_PRODUCTOSEQUIVALENTES) 
+						--IN (SELECT PRODUCTO_EQUIVALENTE FROM CRE_PRODUCTOSEQUIVALENTES WITH(NOLOCK) WHERE PRODUCTO = @LINEA_REG$PRODUCTO AND EQUIV_SCORING = ''S'' AND TZ_LOCK = 0)                		
+                		
+                		-- Adelantos pendientes de impacto en canales digitales
+						SELECT @V_ADELANTOS_CONEQUIV = isnull(sum(c.CUOTA_CALCULADA),0)
+						FROM CRE_ADELANTOS_HABERES c WITH(NOLOCK)
+						WHERE c.TZ_LOCK = 0 AND c.ESTADO=''I'' AND c.PRODUCTO <> @LINEA_REG$PRODUCTO
+						AND c.CLIENTE=@P_CLIENTE 
+						--IN (SELECT C1803 FROM SALDOS WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 
+						AND c.PRODUCTO IN (SELECT PRODUCTO_EQUIVALENTE FROM @AUX_PRODUCTOSEQUIVALENTES)
+						--IN (SELECT PRODUCTO_EQUIVALENTE FROM CRE_PRODUCTOSEQUIVALENTES WITH(NOLOCK) WHERE PRODUCTO = @LINEA_REG$PRODUCTO AND EQUIV_SCORING = ''S'' AND TZ_LOCK = 0)
+						
+                		-- Asistencias ya desembolsadas
+						SELECT @V_MONTO_MISMOPROD = isnull(sum(s.C1612),0)
+						FROM SALDOS s WITH(NOLOCK)
+						WHERE s.C1785 IN (5,6) AND s.TZ_LOCK = 0 AND s.C1604 < 0 AND s.PRODUCTO = @LINEA_REG$PRODUCTO
+						AND s.C1803=@P_CLIENTE
+						--IN (SELECT C1803 FROM SALDOS WITH(NOLOCK) WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 	
+						
+						-- Adelantos pendientes de impacto en canales digitales
+						SELECT @V_ADELANTOS_MISMOPROD = isnull(sum(c.CUOTA_CALCULADA),0)
+						FROM CRE_ADELANTOS_HABERES c WITH(NOLOCK)
+						WHERE c.TZ_LOCK = 0 AND c.ESTADO=''I'' AND  c.PRODUCTO = @LINEA_REG$PRODUCTO
+						AND c.CLIENTE=@P_CLIENTE
+						--IN (SELECT C1803 FROM SALDOS WITH(NOLOCK) WHERE JTS_OID = @LINEA_REG$JTS_SALDO AND TZ_LOCK = 0) 	
+														                		
+                		SET @V_MONTO_CALCULADO = @V_SUBTOTAL - @V_MONTO_CONEQUIV - @V_ADELANTOS_CONEQUIV - @V_MONTO_MISMOPROD - @V_ADELANTOS_MISMOPROD
+                		
+                		SET @V_CAPACIDAD = @V_MONTO_CALCULADO
+                	END
+                	/* 
+                IF @LINEA_REG$TIPO_SCORING = 3  
+                	BEGIN  
+                		SET @V_MONTO_CALCULADO = 0 
+                		SET @V_CAPACIDAD = @V_MONTO_CALCULADO    
+                	END                	                      
+				*/
+				IF @V_MONTO_CALCULADO < 0
+					SET @V_MONTO_CALCULADO = 0
+					
+				IF @V_CAPACIDAD < 0
+					SET @V_CAPACIDAD = 0
+										
+                INSERT INTO dbo.CRE_AUX_SOL_CALCULO_ADELANTO (NUMERO_SOLICITUD, CLIENTE, PRODUCTO, CONVENIO, ID_JURIDICCION, CANAL, MONTO_CALCULADO, CAPACIDAD_PAGO, TZ_LOCK)
+				VALUES (0, @P_CLIENTE, @LINEA_REG$PRODUCTO, @LINEA_REG$CONVENIO, @LINEA_REG$JURISDICCION, @LINEA_REG$CANAL, @V_MONTO_CALCULADO, @V_CAPACIDAD, 0)     
+
+            END
+            
+             
+	END
+
+	END
+
+')

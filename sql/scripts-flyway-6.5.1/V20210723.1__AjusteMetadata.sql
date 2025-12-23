@@ -1,0 +1,1 @@
+UPDATE DICCIONARIO SET DESCRIPCION = 'Equiv. Cant. Prest. Act.'	, PROMPT = 'Equiv. Cant. Prest. Act.' WHERE NUMERODECAMPO = 44243

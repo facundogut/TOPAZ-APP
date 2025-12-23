@@ -1,0 +1,31 @@
+service AyudaNroCliente; 
+description "Ayuda de NroDoc JF"; 
+
+action:	SQLQuery Entity ( 
+ TIENEFILTRO: string,
+ CAMPO: string,
+ OPERADOR: string,
+ VALOR: string
+): [ 
+   	STIENEFILTRO: string,
+	SCAMPO: string,
+	SOPERADOR: string,
+	SVALOR: string
+	]
+{ 
+	properties {
+  	("statement", "select ? as STIENEFILTRO, ? as SCAMPO, ? as SOPERADOR, ? as SVALOR from dual "), 
+	("0", "TIENEFILTRO"), ("1", "CAMPO"), ("2", "OPERADOR"), ("3", "VALOR") };
+	
+		action:	SQLQuery Entity0 ( 
+		): [ IDCLIENTE: string, TIPOCLIENTE: string, NOMBRE: string ]
+		{
+			properties { 
+			("statement", "SELECT c.CODIGOCLIENTE AS IDCLIENTE, o.DESCRIPCION AS TIPOCLIENTE, c.NOMBRECLIENTE AS NOMBRE FROM CLI_CLIENTES c JOIN OPCIONES o ON o.NUMERODECAMPO = 1040 AND o.OPCIONINTERNA = c.TIPO AND o.IDIOMA = 'E' WHERE  FN_FILTRO_CAMPO(?,?,c.CODIGOCLIENTE,c.NOMBRECLIENTE,?,?) = 1 AND c.TZ_LOCK=0"),
+			("0", "STIENEFILTRO"),	
+			("1", "SCAMPO"),
+			("2", "SVALOR"),
+			("3", "SOPERADOR")
+			}
+	    }  	
+}

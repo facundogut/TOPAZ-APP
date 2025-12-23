@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <class>
+        <class-name>topsystems.topaz.server.core.services.countablemovemonts.objectsdomain.MovimientosUSF</class-name>
+        <entity-name>core.vo_MovimientosUSF</entity-name>
+        <table-name>MOVIMIENTOS_USF</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHA_PROCESO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>trReal</attribute-name>
+            <column-name>TRREAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>tipo</attribute-name>
+            <column-name>TIPO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>cliente</attribute-name>
+            <column-name>CLIENTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>usoComercial</attribute-name>
+            <column-name>USO_COMERCIAL</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.clientes.serviciosfinancieros.objectsdomain.QueryUsoComercial</class-name>
+        <query-name>query.QueryUsoComercialFisica</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT DISTINCT CLIENTE, USO_COMERCIAL FROM (
+						SELECT s.C1803 AS CLIENTE, p.USO_COMERCIAL  
+						  FROM SALDOS s, PRODUCTOS p, CLI_CLIENTES c
+						 WHERE s.TZ_LOCK = 0 
+						   AND s.C1651 &lt;&gt; '1'
+						   AND s.PRODUCTO = p.C6250
+						   AND p.USO_COMERCIAL IN ('S', 'N')
+						   AND c.CODIGOCLIENTE = s.C1803 
+						   AND c.TIPO = 'F' 
+						   AND c.USF IN ('N', 'S') AND c.USF_EDITABLE='S'
+						   AND c.TZ_LOCK = 0
+						   AND p.TZ_LOCK = 0
+						UNION
+						SELECT m.CLIENTE, m.USO_COMERCIAL 
+						  FROM MOVIMIENTOS_USF m, ASIENTOS a, CLI_CLIENTES c  
+						 WHERE m.FECHA_PROCESO &gt;= ?
+						  AND m.ASIENTO = a.ASIENTO
+						  AND m.FECHA_PROCESO = a.FECHAPROCESO
+						  AND m.SUCURSAL = a.SUCURSAL
+						  AND a.ESTADO = 77
+						  AND m.CLIENTE = c.CODIGOCLIENTE
+						  AND c.TIPO = 'F'
+						  AND c.USF IN ('N', 'S') AND c.USF_EDITABLE='S'
+						  AND c.TZ_LOCK = 0) AS T 
+					ORDER BY CLIENTE
+				</sentence>
+        <attribute>
+            <attribute-name>cliente</attribute-name>
+            <column-name>CLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>usoComercial</attribute-name>
+            <column-name>USO_COMERCIAL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.clientes.serviciosfinancieros.objectsdomain.QueryMailPersona</class-name>
+        <query-name>query.QueryMailPersonaFisica</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT min(ordinal) AS ORDINAL, D.EMAIL
+                      	FROM CLI_EMAILS d
+                      	INNER JOIN CLI_CLIENTEPERSONA cp ON d.ID = cp.NUMEROPERSONA
+                                                     AND cp.CODIGOCLIENTE = ?
+                                                     AND d.FORMATO = 'PF'
+                                                     AND D.TIPO ='PE'
+                                                     AND d.TZ_LOCK=0
+                                                     AND cp.TZ_LOCK=0
+                                                     group by D.EMAIL
+				</sentence>
+        <attribute>
+            <attribute-name>mail</attribute-name>
+            <column-name>EMAIL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.clientes.serviciosfinancieros.objectsdomain.QueryUsoComercial</class-name>
+        <query-name>query.QueryUsoComercialJuridica</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT DISTINCT cp.CODIGOCLIENTE AS CLIENTE , ci.USF AS USO_COMERCIAL
+					  FROM CLI_CLIENTEPERSONA cp, CLI_PERSONASJURIDICAS pj, CLI_TIPO_SOCIEDAD ci, CLI_CLIENTES cl
+					 WHERE pj.NUMEROPERSONAJURIDICA = cp.NUMEROPERSONA
+					   AND ci.CODIGO_SOCIEDAD = pj.TIPOSOCIEDAD
+					   AND cl.CODIGOCLIENTE=cp.CODIGOCLIENTE
+					   AND cl.USF_EDITABLE = 'S'
+					   AND cp.TZ_LOCK = 0
+					   AND ci.TZ_LOCK = 0
+					   AND pj.TZ_LOCK = 0
+					   AND cl.TZ_LOCK = 0
+				</sentence>
+        <attribute>
+            <attribute-name>cliente</attribute-name>
+            <column-name>CLIENTE</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>usoComercial</attribute-name>
+            <column-name>USO_COMERCIAL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.clientes.serviciosfinancieros.objectsdomain.QueryMailPersona</class-name>
+        <query-name>query.QueryMailPersonaJuridica</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+						SELECT min(ordinal) AS ORDINAL, D.EMAIL
+                      	FROM CLI_EMAILS d
+                      	INNER JOIN CLI_CLIENTEPERSONA cp ON d.ID = cp.NUMEROPERSONA
+                                                     AND cp.CODIGOCLIENTE = ?
+                                                     AND d.FORMATO = 'PJ'
+                                                     AND D.TIPO ='LE'
+                                                     AND d.TZ_LOCK=0
+                                                     AND cp.TZ_LOCK=0
+                                                     group by D.EMAIL
+				</sentence>
+        <attribute>
+            <attribute-name>mail</attribute-name>
+            <column-name>EMAIL</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+</map>

@@ -1,0 +1,22 @@
+service DatosCuentaVista; 
+description "Servicio DatosCuentaVista"; 
+
+action:	SQLQuery Entity ( 
+ IDSALDO: string 
+): [ 
+   	SUCURSAL: string,
+	PRODUCTO: string,
+	FECHAAPERTURA: string,
+   	SALDO: string,
+	IDSALDO: string
+]
+{ 
+  	properties { 
+  	("statement", "SELECT s.JTS_OID AS IDSALDO, CONVERT(VARCHAR(35),s.SUCURSAL) + ' - ' + suc.NOMBRESUCURSAL AS SUCURSAL, CONVERT(VARCHAR(5),p.C6250) + ' - ' + p.C6251 AS PRODUCTO, s.C1620 AS FECHAAPERTURA, REPLACE(REPLACE(REPLACE( CONVERT(VARCHAR,CAST(s.C1604 AS MONEY),1) , '.','p') , ',', '.'),'p',',')  AS SALDO  FROM SALDOS s JOIN SUCURSALES suc ON suc.SUCURSAL = s.SUCURSAL AND suc.TZ_LOCK NOT LIKE '3%'   JOIN PRODUCTOS p ON p.C6250 = s.PRODUCTO AND p.TZ_LOCK NOT LIKE '3%'    WHERE s.JTS_OID = convert(NUMERIC(10), ? )" ),
+	("0", "IDSALDO")	
+	}
+}
+
+
+
+

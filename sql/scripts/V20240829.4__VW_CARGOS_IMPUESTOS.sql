@@ -1,0 +1,47 @@
+IF OBJECT_ID ('dbo.VW_CARGOS_IMPUESTOS') IS NOT NULL
+	DROP VIEW dbo.VW_CARGOS_IMPUESTOS
+GO
+
+CREATE VIEW dbo.[VW_CARGOS_IMPUESTOS]
+AS
+SELECT 
+    TIPOCARGO,
+    cct.SEGMENTO,
+    ID_CARGO AS id_Cargo,
+    DESCRIPCION,
+    TASA,
+    MONEDA 
+FROM CI_CARGOS_TARIFAS CCT
+JOIN 
+    (
+        SELECT Id_cargo AS idCargo, DESCRIPCION, TIPO_CARGO_IMPOSITIVO AS TipoCargo
+        FROM CI_CARGOS
+        WHERE TIPO_CARGO_IMPOSITIVO IN (2, 3)
+    ) AS Cargo
+ON CCT.Id_Cargo = Cargo.idCargo
+WHERE (TipoCargo = 2 AND SEGMENTO = 'AC' OR TipoCargo = 3 AND SEGMENTO = '0') 
+    AND id_cliente = 0 
+    AND TZ_LOCK = 0
+
+UNION ALL
+
+SELECT 
+    TIPOCARGO,
+    cct.SEGMENTO,
+    ID_IMPUESTO AS idCargo,
+    DESCRIPCION,
+    TASA,
+    MONEDA 
+FROM CI_impuestos_TARIFAS CCT
+JOIN 
+    (
+        SELECT ID_IMPUESTO AS idCargo, DESCRIPCION, TIPO_IMPUESTO AS TipoCargo
+        FROM CI_IMPUESTOS
+        WHERE TIPO_IMPUESTO IN (2, 3)
+    ) AS Impuesto
+ON CCT.ID_IMPUESTO = Impuesto.idCargo
+WHERE (TipoCargo = 2 AND SEGMENTO = 'AC' OR TipoCargo = 3 AND SEGMENTO = '0') 
+    AND id_cliente = 0 
+    AND TZ_LOCK = 0
+GO
+

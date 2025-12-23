@@ -1,0 +1,1 @@
+execute('IF OBJECT_ID (''dbo.ITF_AM_ACPRIV'') IS NOT NULL	DROP TABLE dbo.ITF_AM_ACPRIV');

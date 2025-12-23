@@ -1,0 +1,655 @@
+VERSION:051
+TN  NN 1006TConsulta Genérica                       C2351 00
+*N  NN Esta operación pemite asignar una fecha de inicio de cobro (fecha de vencimiento) al convenio
+*N  NN Esta fecha sera utilizada en el proceso 0007350: Actualización de fecha de inicio de cobro para recaudaciones por cuenta de terceros 
+*N  NN Proceso que recorrerá la tabla RCT_RECAUDACIONES buscando los registros con el campo FECHA_INICIO_COBRO = NULL que pertenezcan al convenio de la tabla
+*N  NN RCT_VENCIMIENTOS
+*N  NN Por cada registro se actualizará el campo RCT_RECAUDACIONES.FECHA_INICIO_COBRO con el contenido del campo 
+*N  NN RCT_VENCIMIENTOS.FECHA_VENCIMIENTO.
+*N  NN El proceso tiene que permitir asignar una fecha de inicio de cobro (tambien llamado fecha de vencimiento) a las recaudaciones (RCT_RECAUDACIONES) que 
+*N  NN no esten pagas y que no tienen fecha asignada, o cambiar una fecha a una recudacion que no esten pagas y ya tengan una fecha asignada.
+*N  NN El proceso tiene que recibir como parametro el ID de convenio (opcional) y la fecha de inicio de cobro (opcional).
+*N  NN Para cada registro se busca en la tabla RCT_VENCIMIENTO con el numero de convenio de RCT_RECAUDACIONES y se obtiene la fecha de vencimiento
+*N  NN y se actualiza el campo RCT_RECAUDACIONES.FECHA_INICIO_COBRO con el valor obtenido.
+VNSSNS 010001000103150783SSSD000000000000000000000000000000000000000
+/T=Consulta de Convenios
+/C=192192192
+KNNNNN 010010001802450755000101
+/T=Seleccione el Convenio
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6582   ID de Convenio IESSN 01003500330230074100101160000010900640129022000
+/L=0
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta de Convenios                   C0001 00
+VNSSNS 100001000104800783SSSD000000000000000000000000000000000000000
+/T=Consulta de Convenios
+/C=192192192
+KNNNNN 100004001704090759000101
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6840   Nro. Convenio  IINSNA10002501750048026302101150000002500460048014600
+/V=C6840.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6841   Nombre ConvenioIINSN 10005401750077060900101150000005400460077014600
+/m=>
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6842   Nro. Cliente   IINSN 10008301750106029502101150000008300460106014600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0902   Codigo Cliente INNSNA00015202150175033502101100000015200800175018000
+/V=C6842.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1000   Nombre Cliente ICNSN 10008303100106060900101150000015200800175018000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6843   Ente Estatal   IINSN 10011201750135026300101050000011200460135014600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 100111036601340533000000
+/?=C6843='S'
+/T=Tipo Ente
+/F=0012700NNN000000000Arial                                   
+KNNNNN 100111036601340533000000
+/?=C6843='N'
+/T=Tipo de Recaudación
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6080   Tipo Ente Esta.IINSN 10011305100136071900101050000011110240134119100
+/?=C6843='N'
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 4617   Tipo Ente      IINSN 10011205100135071900101050000004510240053103200
+/?=C6843='S'
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 0912   Número Cliente INNSNA00022601780391035800101100000022600430249014300
+/V=C902.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1249   Tipo Dirección INNSNK02022601780391035800101100000022600430249014300
+/V=2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1256   Código  País   INSSN 06014101750164026300101000000014100460164014600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/F=C1256#0
+/P=I88
+ NSSNS 1256   Código  País   IISSNA10014101750164026300101050000014100460164014600
+/?=I88
+/V=C1256.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1935   Codigo de Pais INSSNA00014801810171026900101100000014800460171014600
+/?=I88
+/V=C1256.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1936   Nombre         ICSSN 10014102800164046300101050000014800460171014600
+/?=I88
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1257   Código Postal  IISSN 10017001750193026300101050000017000460193014600
+/?=I88
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1250   Calle          IISSN 10019901750222062900101050000019900460222014600
+/?=I88
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 1251   Nro. de Puerta IISSN 10022801750251026300101050000022800460251014600
+/?=I88
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6869   Acreditación   IINSN 10025701750280035500101150000025700460280014600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6924   Cobra Parcial  IINSN 10028601750309025500101150000028600460309014600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6925   Plazo Cobranza IINSN 10028605850309063002101050000028604450309054500
+/?=C6924='S'
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6926   Email          IINSN 10031501750338040600101150000031500460338014600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6845   Tipo Convenio  IINSN 10034401750367035500101150000034400460367014600
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6846   Rendición      IINSN 10037301750396022000101150000037300470396014700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 100373044503960557000000
+/?=C6846='S'
+/T=Período Rendición
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6847                  IINSN 10037305850396071200101050000032107290329073700
+/?=C6846='S'
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/F=C6845=1
+/P=I25
+CNSSNS   00000000000000000000100
+/F=C6845=2
+/P=I26
+CNSSNS   00000000000000000000100
+/F=C6845=3
+/P=I27
+*N  NN /* ---------------------------------------------------------------------------------- */
+ NNNNN 6582   ID de Convenio INNSNA00005402490077032400101100000006307060071071400
+/V=C6840
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6583   Fecha Vto.     INNSN 00000701520030030200101100000000700070030013700
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN   00000000000000000000100
+/F=C9509=1
+/P=I60
+/M=Ya Existe el Alta de este Convenio.
+CNNNNN M 00000000000000000000100
+/?=!I60
+/M=El Convenio no tiene F.Vencimiento cargada !!!
+ NNNNN 4171   Fecha Vto      IDNSNA10034405850367071200001050000034404450367054500
+/?=I60
+/V=C6583.0
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta de Convenios-Débito Automático C0001 00
+/?=I25
+VNNNNN 110043000104380783SSSD000000000000000000000000000000000000000
+/T=Consulta de Convenios - Débito Automático
+/C=192192192
+KNNNNN 110032001803260757000101
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6840   Nro. Convenio  INNSNA00004801830071027100101100000004800480071014800
+/V=C6840.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6841   Nombre ConvenioINNSNA00012102150144070200101100000012100800144018000
+/V=C6841.2
+/m=>
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6842   Nro. Cliente   INNSNA00015202150175033502101100000015200800175018000
+/V=C6842.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6843   Ente Estatal   INNSNA00015202150175033502101100000015200800175018000
+/V=C6843.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6845   Tipo Convenio  INNSNA00021402150237026000101100000021400800237018000
+/V=C6845.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6869   Acredita       INNSNA00021402150237026000101100000021400800237018000
+/V=C6869.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6924   Cobra          INNSNA00021402150237026000101100000021400800237018000
+/V=C6924.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6925   Plazo Cobranza INNSNA00021402150237026000101100000021400800237018000
+/V=C6925.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6926   Email          INNSNA00021402150237026000101100000021400800237018000
+/V=C6926.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6848   Período Pago   IINSN 11008102210104040800101150000008100600104016000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 110112006001350197000100
+/T=Período Transferencia
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6849                  IINSN 11011202210135040800101150000003707460045075400
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 110143006001660197000100
+/T=Porcentaje Comisión
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6850                  ICNSN 11014302210166029602101150000008900730112017300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 110174006001970197000100
+/T=Valor Mín. Comisión
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6851   Valor Min.Comi.ICNSN 11017402210197037102101150000008900730112017300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 110205006002280197000100
+/T=Valor Max. Comisión
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6852   Valor Max.ComisICNSN 11020502210228037102101150000008900730112017300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS ME00000000000000000000100
+/F=C6852<C6851
+/M=Error - El valor Maximo no puede ser menor al Mínimo
+ NSSNS 6853   Estado Cuenta  IINSN 11023602210259029600101150000023600600259016000
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta de Convenios - Cobro en Cuenta C0001 00
+/?=I26
+VNNNNN 120043000104380783SSSD000000000000000000000000000000000000000
+/T=Consulta de Convenios - Cobro en Cuenta/Cuenta Recaudadora
+/C=192192192
+KNNNNN 120008001603660758000101
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6840   Nro. Convenio  INNSNA00004801830071027100101100000004800480071014800
+/V=C6840.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6841   Nombre ConvenioINNSNA00012102150144070200101100000012100800144018000
+/V=C6841.2
+/m=>
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6842   Nro. Cliente   INNSNA00015202150175033502101100000015200800175018000
+/V=C6842.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6843   Ente Estatal   INNSNA00015202150175033502101100000015200800175018000
+/V=C6843.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6845   Tipo Convenio  INNSNF00021402150237026000101100000021400800237018000
+/V=C6845.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6869   Acredita       INNSNA00017202140339039400101112000019406190217071900
+/V=C6869.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6924   Cobra          INNSNA00020302140318029400101111000020300790226017900
+/V=C6924.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6925   Plazo Cobranza INNSNA00023402140257025902101100000023400790257017900
+/V=C6925.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6926   Email          INNSNA00026502140288044500101100000026500790288017900
+/V=C6926.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 120039005900620169000100
+/T=Pagos de Pago
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6848                  IINSN 12003902260062038000101150000003905050062060500
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6854   Pagos Vencidos IINSN 12007002260093030100101150000007000590093015900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/F=C6854='S'
+/P=I50
+KNNNNN 120101005901240169000000
+/?=I50
+/T=Días Despues Vto.
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6855                  IINSN 12010102260124028202101050000005505270078062700
+/?=I50
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 120132005901550196000000
+/?=I56
+/T=Período Transferencia
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6849                  IINSN 12013202260155038000101050000008105690089057700
+/?=I56
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 120163005901860196000000
+/T=Tipo Información
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6856                  IINSN 12016302260186038000101050000014304670166056700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS   00000000000000000000100
+/F=C6856='D'
+/P=I55
+KNNNNN 120194005902170196000000
+/?=I55
+/T=Tipo de Módulo
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6857                  IINSN 12019402260217038000101050000015005320173063200
+/?=I55
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 120225005902480196000000
+/?=I55
+/T=Porcentaje de Comisión
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6850                  ICNSN 12022502260248030102101050000021100530234015300
+/?=I55
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 120256005902790196000000
+/?=I55
+/T=Valor Mínimo Comisión
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6851   Valor Min.Comi.ICNSN 12025602260279038002101050000021100530234015300
+/?=I55
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 120287005903100196000000
+/?=I55
+/T=Valor Máximo Comisión
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6852   Valor Max.ComisICNSN 12028702260310038002101050000021100530234015300
+/?=I55
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6853   Estado Cuenta  IINSN 12031802260341030100101050000031800590341015900
+/?=I55
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Convenios - Cobro Doc. por CajaC0001 00
+/?=I27
+VNNNNN 130043000104380783SSSD000000000000000000000000000000000000000
+/T=Consulta de Convenios - Cobro de Documentos por Caja
+/C=192192192
+KNNNNN 130020001503510761000101
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6840   Nro. Convenio  INNSNA00004801830071027100101100000004800480071014800
+/V=C6840.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6841   Nombre ConvenioINNSNA00012102150144070200101100000012100800144018000
+/V=C6841.2
+/m=>
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6842   Nro. Cliente   INNSNA00015202150175033502101100000015200800175018000
+/V=C6842.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6843   Ente Estatal   INNSNA00015202150175033502101100000015200800175018000
+/V=C6843.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6845   Tipo Convenio  INNSNF00021402150237026000101100000021400800237018000
+/V=C6845.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6869   Acredita       INNSNA00021402150237026000101100000021400800237018000
+/V=C6869.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6924   Cobra          INNSNA00021402150237026000101100000021400800237018000
+/V=C6924.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6925   Plazo Cobranza INNSNA00021402150237026000101100000021400800237018000
+/V=C6925.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NSSNS 6926   Email          INNSNA00021402150237026000101100000021400800237018000
+/V=C6926.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 130082007101050208000000
+/T=Período Transferencia
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6849                  IINSN 13008202350105044400101050000003707460045075400
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 130116007101390208000100
+/T=Porcentaje Comisión
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6850   Porcentaje Com.ICNSN 13011602350139031002101150000008900730112017300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 130150007101730208000100
+/T=Valor Mín. Comisión
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6851   Valor Min.Comi.ICNSN 13015002350173038502101150000008900730112017300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 130184007102070208000100
+/T=Valor Max. Comisión
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6852   Valor Max.ComisICNSN 13018402350207038502101150000008900730112017300
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNSSNS ME00000000000000000000100
+/F=C6852<C6851
+/M=Error - El valor Maximo no puede ser menor al Mínimo
+KNNNNN 130218007102410169000100
+/T=Estado Cuenta
+/F=0012700NNN000000000Arial                                   
+TN  NN 1006TConsulta Estados de Cuenta              C0000 00
+/?=A(C6853.2="S")
+VNSSNS 550001000104800783SSSD000000000000000000000000000000000000000
+/T=Consulta de Informacion de Estados de Cuenta
+/C=192192192
+CNNNNN  w00000000000000000000100
+/R=311
+KNNNNN 550013002504010747000101
+/T=Informacion de Estados de Cuenta
+/F=0012700NNN000000000Arial                                   
+ NSSNS 6840   Nro. Convenio  INNSNA00004801830071027100101100000004800480071014800
+/V=C6840.1
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 550054007000770225000100
+/T=Retener Correspondencia
+/F=0012700NNN000000000Arial                                   
+ NNNNN 4610                  IINSN 55005402490077032400101150000006307060071071400
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 550087007001100225000100
+/T=Correo Tradicional
+/F=0012700NNN000000000Arial                                   
+ NNNNN 4616                  IINSN 55008702490110034200101150000009606530104066100
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 4611   Periodicidad   IINSN 55012002490143046600101150000012000700143018900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 4612   Idioma         IINSN 55015302490176043300101150000015300700176018900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 4614   Cant. Copias   IDNSN 55018602490209032402101150000018600700209018900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/?=C4614<0
+/M=Error - valor negativo
+ NNNNN 4613   Tipo de EmisiónIINSN 55021902490242043300101150000021900700242018900
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0912   Cliente        INNSNA55009301680116031800001100000009300270113014600
+/V=C902.2
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 0311   Nro. Cliente   INNSNA55020502300228033002101100000020500690228018800
+/V=C902.6
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 550252007002750189000100
+/T=Tipo de Dirección
+/F=0012700NNN000000000Arial                                   
+ NNNNN 1249                  IINSNA55025202490275043300101150000025206700260067800
+/V=C4615
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 550285007003080189000100
+/T=Calle
+/F=0012700NNN000000000Arial                                   
+ NNNNN 1250   Calle          ICNSN 55028502490308050800101150000025100880271020700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 550318007003410189000100
+/T=Nro. de Puerta
+/F=0012700NNN000000000Arial                                   
+ NNNNN 1251   Nro. de Puerta ICNSN 55031802490341032800101150000025100880271020700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 550351007003740189000100
+/T=Ciudad / Localidad
+/F=0012700NNN000000000Arial                                   
+ NNNNN 1254   Cuidad/Localid ICNSN 55035102490374050800101150000025100880271020700
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 4615   Tipo Direccion INNSNA00020202630335044700001100000020200930222021200
+/V=C1249
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+TN  NN 1001TAlta Fecha Vencimiento                  A2351 00
+/?=!I60
+VNSSNS 070323019101580403SSSD000000000000000000000000000000000000000
+/T=Actualización Fecha Vencimiento del Convenio
+/C=192192192
+KNNNNN 070008001300810379000101
+/T=Alta de Fecha de Vencimiento
+/F=0012700NNN000000000Arial                                   
+ NNNNN 6582   ID de Convenio INNSNA55005402490077032400101100000006307060071071400
+/V=C6840.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 070040002800630225000100
+/T=Nueva Fecha de Vencimiento
+/F=0012700NNN000000000Arial                                   
+ NNNNN 6583   Fecha Vto.     IENSNA07004002450063034500001100000004700500070017400
+/V=C6583
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C6583<C9500
+/M=Error - Fecha Vencimiento no puede ser menor a la actual.
+TN  NN 1009TModificacion Generica                   M2351 00
+/?=I60
+VNSSNS 070289019701920397SSSD000000000000000000000000000000000000000
+/T=Actualización Fecha Vencimiento del Convenio
+/C=192192192
+KNNNNN 070010001501200379000101
+/T=Modifique la Fecha Vencimiento
+/F=0012700NNN000000000Arial                                   
+KNNNNN 070041002900640226000100
+/T=Actual Fecha de Vencimiento
+/F=0012700NNN000000000Arial                                   
+ NNNNN 4171                  ICNSNA07004102470064034700001150000004700500070017400
+/V=C4171.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+ NNNNN 6582   ID de Convenio INNSNA55005402490077032400101100000006307060071071400
+/V=C6840.2
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+KNNNNN 070081002801040225000100
+/T=Nueva Fecha de Vencimiento
+/F=0012700NNN000000000Arial                                   
+ NNNNN 6583   Fecha Vto.     IENSNA07008102450104034500001100000004700500070017400
+/V=C6583
+/C=255255255
+/F=0012400NNN000000000Arial                                   
+/f=0012700NNN000000000Arial                                   
+CNNNNN ME00000000000000000000100
+/F=C6583<C9500
+/M=Error - Fecha Vencimiento no puede ser menor a la actual.
+TN  NN 1006TFin Actualiza Fcha Vto Convenio         C0000 00
+ NNNNN 0028   Concepto       INNNNF00000701330027024300001100000000700070027012600
+/V="Actualiza Fcha Vto Conv:"+C6582.7
+/F=0008400NNN000000000Arial                                   
+/f=0008400NNN000000000Arial                                   
+*#I60#Ya Existe el Alta de este Convenio.

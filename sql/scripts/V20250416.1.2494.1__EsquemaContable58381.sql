@@ -1,0 +1,4 @@
+EXECUTE('
+UPDATE ESQUEMACONTABLE 
+SET CONDICION=''(C9503#"17")'' where linea in (25,26) and campo=58381
+')

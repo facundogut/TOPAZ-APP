@@ -1,0 +1,1506 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<map>
+    <query>
+        <class-name>topsystems.automaticprocess.historicocliente.calculodiario.QueryHistoriaVista</class-name>
+        <query-name>query.HistoriaVista</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT SALDO_JTS_OID,DEBITO_CREDITO,FECHA_VALOR,SUM(MONTO) AS MONTO, AJUSTE, SUM(EQUIVALENTEMN) AS MONTOMN FROM HISTORIA_VISTA WHERE FECHA_VALOR &lt; FECHA_PROCESADO AND FECHA_PROCESADO = ? AND SALDO_JTS_OID = ? GROUP BY SALDO_JTS_OID,DEBITO_CREDITO,FECHA_VALOR,AJUSTE
+		</sentence>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>DEBITO_CREDITO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_valor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ajuste</attribute-name>
+            <column-name>AJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoMN</attribute-name>
+            <column-name>MONTOMN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.objectsdomain.JtsOidGenericObject</class-name>
+        <query-name>query.vo_saldosDiariosVales</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>	
+			SELECT T.JTS_OID_SALDO
+			FROM VTA_RES_VALE_SOBREGIRO T
+			WHERE T.CAUSA_VALE &lt;&gt; '' AND 
+			      T.FECHA_PROCESO = ?
+		</sentence>
+        <attribute>
+            <attribute-name>JTS_OID</attribute-name>
+            <column-name>JTS_OID</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.historicocliente.calculodiario.QueryHistoriaPlazo</class-name>
+        <query-name>query.HistoriaPlazo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT SALDOS_JTS_OID,SIGNO,FECHAVALOR,SUM(CAPITALPAGADO) AS MONTO,' ' AS AJUSTE, SUM(EQUIVALENTEMN) AS MONTOMN FROM BS_HISTORIA_PLAZO WHERE TIPOMOV = 'P' AND FECHAPROCESOMOV = ? AND FECHAVALOR &lt; FECHAPROCESOMOV AND SALDOS_JTS_OID = ?  GROUP BY SALDOS_JTS_OID,SIGNO,FECHAVALOR
+		</sentence>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>SIGNO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_valor</attribute-name>
+            <column-name>FECHAVALOR</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ajuste</attribute-name>
+            <column-name>AJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoMN</attribute-name>
+            <column-name>MONTOMN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.historicocliente.calculodiario.QueryPromedioSaldosDiarios</class-name>
+        <query-name>query.PromedioSaldosDiarios</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+			SELECT AVG(SALDO_AL_CORTE) AS PROMEDIO FROM GRL_SALDOS_DIARIOS WHERE FECHA &gt;= ? AND FECHA &lt;= ? AND SALDOS_JTS_OID = ?
+		</sentence>
+        <attribute>
+            <attribute-name>promedio</attribute-name>
+            <column-name>PROMEDIO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.historicocliente.valueobjects.QueryJoinVistaPlazo</class-name>
+        <query-name>query.QueryJoinVistaPlazo</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+SELECT SALDO_JTS_OID, SIGNO, FECHA_VALOR, MONTO, AJUSTE, MONTOMN,
+				       FECHAPROCESO,
+				       ASIENTO,
+				       SUCURSAL,
+				       TRREAL,
+				       ORDINAL,
+				       TRVIRTUAL,
+				       TRTIPO,
+				       RUBRO,
+				       EQRESULTADOME,
+				       MONEDA,
+				       SUCURSAL_SALDO							   
+				FROM (			
+				SELECT M.SALDO_JTS_OID, M.DEBITOCREDITO AS SIGNO,
+				       M.FECHAVALOR AS FECHA_VALOR,
+				       M.CAPITALREALIZADO AS MONTO,
+				       M.MARCAAJUSTE AS AJUSTE,
+				       M.EQUIVALENTEMN AS MONTOMN,
+				       M.FECHAPROCESO,
+				       M.ASIENTO,
+				       M.SUCURSAL,
+				       M.TRREAL,
+				       M.ORDINAL,
+				       M.TRVIRTUAL,
+				       M.TRTIPO,	
+				       M.RUBROCONTABLE AS RUBRO,
+				       M.EQUIVALENTEME AS EQRESULTADOME,
+				       M.MONEDA,
+				       M.SUCURSAL_CUENTA AS SUCURSAL_SALDO							   
+				  FROM MOVIMIENTOS_CONTABLES M,
+				       ASIENTOS A
+				 WHERE M.FECHAPROCESO = A.FECHAPROCESO
+				   AND M.FECHAPROCESO  = ? 
+				   AND M.SUCURSAL = A.SUCURSAL
+				   AND M.ASIENTO = A.ASIENTO
+				   AND A.ESTADO = 77
+				   AND M.DEBITOCREDITO IN ('C','D')
+				   AND M.FECHAVALOR &lt; M.FECHAPROCESO 
+				   AND ESTADOFECHAVALOR = 0		
+			UNION ALL   
+				SELECT M.SALDO_JTS_OID, M.DEBITOCREDITO AS SIGNO,
+				       M.FECHAVALOR AS FECHA_VALOR,
+				       M.CAPITALREALIZADO *-1 AS MONTO ,
+				       M.MARCAAJUSTE AS AJUSTE,
+				       M.EQUIVALENTEMN *-1  AS MONTOMN,
+				       M.FECHAPROCESO,
+				       M.ASIENTO,
+				       M.SUCURSAL,
+				       M.TRREAL,
+				       M.ORDINAL,
+				       M.TRVIRTUAL,
+				       M.TRTIPO,
+				       M.RUBROCONTABLE AS RUBRO,
+				       M.EQUIVALENTEME AS EQRESULTADOME,
+				       M.MONEDA,
+				       M.SUCURSAL_CUENTA AS SUCURSAL_SALDO
+				  FROM MOVIMIENTOS_CONTABLES M,
+				       ASIENTOS A
+				 WHERE M.FECHAPROCESO = A.FECHAPROCESO
+				       AND M.FECHAPROCESO = ?
+				       AND M.SUCURSAL = A.SUCURSAL
+				       AND M.ASIENTO = A.ASIENTO
+				       AND A.ESTADO = 42
+				       AND M.DEBITOCREDITO IN ('C','D')
+				       AND M.FECHAVALOR &lt; M.FECHAPROCESO 
+				       AND M.ESTADOFECHAVALOR = 1 ) T 			         
+		 ORDER BY SALDO_JTS_OID, FECHAPROCESO
+</sentence>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>SIGNO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_valor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ajuste</attribute-name>
+            <column-name>AJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoMN</attribute-name>
+            <column-name>MONTOMN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_procesado</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>trReal</attribute-name>
+            <column-name>TRREAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>trVirtual</attribute-name>
+            <column-name>TRVIRTUAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>trTipo</attribute-name>
+            <column-name>TRTIPO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>RUBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>eqResultadoME</attribute-name>
+            <column-name>EQRESULTADOME</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalSaldo</attribute-name>
+            <column-name>SUCURSAL_SALDO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.historicocliente.valueobjects.QueryRegeneracionSaldosDyM</class-name>
+        <query-name>query.QueryRegeneracionSaldosDyM</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+SELECT SALDOS_JTS_OID,
+													       FECHA,
+													       SALDO_AL_CORTE,
+													       SALDO_AL_CORTE_MN,
+													       SIGNO,
+													       FECHA_VALOR,
+													       MONTO,
+													       AJUSTE,
+													       MONTOMN,
+													       RUBROCONTABLE,
+													       EQRESULTADOME,
+													       ESTADOFECHAVALOR,
+														   SUCURSAL,
+                                                           MONEDA
+													  FROM (SELECT 1 AS TIPO, SALDOS_JTS_OID AS SALDOS_JTS_OID,
+														       FECHA,
+														       SALDO_AL_CORTE,
+														       SALDO_AL_CORTE_MN,
+														       'I' AS SIGNO,
+														       NULL AS FECHA_VALOR,
+														       0 AS MONTO,
+														       ' ' AS AJUSTE,
+														       0 AS MONTOMN,
+														       RUBROCONTABLE,
+														       NULL AS HORAFIN,
+														       NULL AS TRREAL,
+														       0 AS EQRESULTADOME,
+															   0 AS ESTADOFECHAVALOR,
+															   SUCURSAL,
+                                                               MONEDA
+														  FROM GRL_SALDOS_DIARIOS
+														 WHERE FECHA = ?
+														UNION ALL
+														SELECT 2 AS TIPO, S.JTS_OID AS SALDOS_JTS_OID,
+														       M.FECHAPROCESO AS FECHA,
+														       0 AS SALDO_AL_CORTE,
+														       0 AS SALDO_AL_CORTE_MN,
+														       M.DEBITOCREDITO AS SIGNO,
+														       M.FECHAVALOR AS FECHA_VALOR,
+														       ROUND(M.CAPITALREALIZADO, 2) AS MONTO,
+														       -- C7844 Campo con concepto 820
+														       M.MARCAAJUSTE AS AJUSTE,
+														       ROUND(M.EQUIVALENTEMN, 2) AS MONTOMN,
+														       M.RUBROCONTABLE AS RUBROCONTABLE,
+														       HORAFIN,
+														       M.TRREAL,
+														       ROUND(M.EQUIVALENTEME, 2) AS EQRESULTADOME,
+															   M.ESTADOFECHAVALOR,
+															   M.SUCURSAL_CUENTA,
+                                                               S.MONEDA
+														  FROM SALDOS S, MOVIMIENTOS_CONTABLES M, ASIENTOS A
+														 WHERE M.FECHAPROCESO = A.FECHAPROCESO
+														   AND M.FECHAVALOR &lt;= ?
+														   AND M.SUCURSAL = A.SUCURSAL
+														   AND M.ASIENTO = A.ASIENTO
+														   AND A.ESTADO = 77
+														    AND M.DEBITOCREDITO IN ('C', 'D')
+														   AND M.FECHAPROCESO &gt;= ?
+														   AND M.SALDO_JTS_OID = S.JTS_OID
+														UNION ALL
+														   SELECT 3 AS TIPO, JTS_OID AS SALDOS_JTS_OID,
+															  NULL AS FECHA,
+															  C1604 AS SALDO_AL_CORTE,
+															  -- CAMPO CON CONCEPTO 633 SALDOMN
+															  C3958 AS SALDO_AL_CORTE_MN,
+															  'F' AS SIGNO,
+															  NULL AS FECHA_VALOR,
+															  0 AS MONTO,
+															  ' ' AS AJUSTE,
+															  0 AS MONTOMN,
+															  C1730 AS RUBROCONTABLE,
+															  NULL AS HORAFIN,
+															  NULL AS TRREAL,
+															  0 AS EQRESULTADOME,
+															  0 AS ESTADOFECHAVALOR,
+															  SUCURSAL,
+                                                              MONEDA
+														     FROM SALDOS
+														     WHERE TZ_LOCK = 0 AND ? = ?
+														  UNION ALL
+														     SELECT 3 AS TIPO, SALDOS_JTS_OID AS SALDOS_JTS_OID,
+															       FECHA,
+															       SALDO_CON_FECHA_VALOR,
+															       SALDO_FECHA_VALOR_MN,
+															       'F' AS SIGNO,
+															       NULL AS FECHA_VALOR,
+															       0 AS MONTO,
+															       ' ' AS AJUSTE,
+															       0 AS MONTOMN,
+															       RUBROCONTABLE,
+															       NULL AS HORAFIN,
+															       NULL AS TRREAL,
+															       0 AS EQRESULTADOME,
+															       0 AS ESTADOFECHAVALOR,
+																   SUCURSAL,
+                                                                   MONEDA
+															  FROM GRL_SALDOS_DIARIOS
+															WHERE FECHA = ?  AND ? &lt;&gt; ?) T
+													 WHERE ((SALDOS_JTS_OID &gt;= ? AND SALDOS_JTS_OID &lt;= ?) OR - 1 = ?) 
+													 ORDER BY SALDOS_JTS_OID,TIPO, FECHA, HORAFIN, TRREAL
+</sentence>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAlCorte</attribute-name>
+            <column-name>SALDO_AL_CORTE</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAlCorteMN</attribute-name>
+            <column-name>SALDO_AL_CORTE_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>SIGNO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_valor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ajuste</attribute-name>
+            <column-name>AJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoMN</attribute-name>
+            <column-name>MONTOMN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroContable</attribute-name>
+            <column-name>RUBROCONTABLE</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>eqResultadoME</attribute-name>
+            <column-name>EQRESULTADOME</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estadoFechaValor</attribute-name>
+            <column-name>ESTADOFECHAVALOR</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.historico.saldosdiarios.SDContabilidadImpl</class-name>
+        <entity-name>historico.vo_SDContabilidad</entity-name>
+        <table-name>CON_SALDOS_DIARIOS</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>RUBRO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>centroCosto</attribute-name>
+            <column-name>CENTROCOSTO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>empresa</attribute-name>
+            <column-name>EMPRESA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoLibro</attribute-name>
+            <column-name>TIPOLIBRO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoCorte</attribute-name>
+            <column-name>SALDO_AL_CORTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAjustado</attribute-name>
+            <column-name>SALDO_AJUSTADO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAjustadoMN</attribute-name>
+            <column-name>SALDO_AJUSTADO_MN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoCorteMN</attribute-name>
+            <column-name>SALDO_AL_CORTE_MN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosMN</attribute-name>
+            <column-name>CREDITOS_MN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosMN</attribute-name>
+            <column-name>DEBITOS_MN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>creditos</attribute-name>
+            <column-name>CREDITOS</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>debitos</attribute-name>
+            <column-name>DEBITOS</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoFechaValorMN</attribute-name>
+            <column-name>SALDO_FECHA_VALOR_MN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoFechaValor</attribute-name>
+            <column-name>SALDO_FECHA_VALOR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosFechaValor</attribute-name>
+            <column-name>DEBITOS_FECHAVALOR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosFechaValorMN</attribute-name>
+            <column-name>DEBITOS_FECHAVALOR_MN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosAjuste</attribute-name>
+            <column-name>DEBITOS_AJUSTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosAjusteMN</attribute-name>
+            <column-name>DEBITOS_AJUSTE_MN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosFechaValor</attribute-name>
+            <column-name>CREDITOS_FECHAVALOR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosFechaValorMN</attribute-name>
+            <column-name>CREDITOS_FECHAVALOR_MN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosAjuste</attribute-name>
+            <column-name>CREDITOS_AJUSTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosAjusteMN</attribute-name>
+            <column-name>CREDITOS_AJUSTE_MN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresa</attribute-name>
+            <column-name>SUCURSAL_EMPRESA</column-name>
+        </attribute>
+    </class>
+    <class>
+        <class-name>topsystems.automaticprocess.historico.saldosdiarios.SDContabilidadActualizarImpl</class-name>
+        <entity-name>historico.vo_SDContabilidadActualizar</entity-name>
+        <table-name>CON_SALDOS_DIARIOS_ACTUALIZAR</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>trReal</attribute-name>
+            <column-name>TRREAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>trVirtual</attribute-name>
+            <column-name>TRVIRTUAL</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>trTipo</attribute-name>
+            <column-name>TRTIPO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalMov</attribute-name>
+            <column-name>SUCURSAL_MOV</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>RUBRO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>centroCosto</attribute-name>
+            <column-name>CENTROCOSTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>empresa</attribute-name>
+            <column-name>EMPRESA</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoLibro</attribute-name>
+            <column-name>TIPOLIBRO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>SIGNO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>montoMN</attribute-name>
+            <column-name>MONTOMN</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>marcaAjuste</attribute-name>
+            <column-name>MARCAAJUSTE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresa</attribute-name>
+            <column-name>SUCURSAL_EMPRESA</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.historico.saldosdiarios.SDContabilidadActualizarQuery</class-name>
+        <query-name>query.QuerySDContabilidadActualizar</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+											SELECT	FECHA_VALOR, 
+												RUBRO, 
+												SUCURSAL, 
+												MONEDA, 
+												CENTROCOSTO, 
+												EMPRESA, 
+												TIPOLIBRO, 
+												SIGNO, 
+												SUM(MONTO) AS MONTO, 
+												SUM(MONTOMN) AS MONTOMN,
+												MARCAAJUSTE,
+												SUCURSAL_EMPRESA
+											FROM 	(
+												SELECT	FECHA_VALOR,
+													RUBRO,
+													SUCURSAL,
+													MONEDA,
+													CENTROCOSTO,
+													EMPRESA,
+													TIPOLIBRO,
+													SIGNO,
+													MONTO,
+													MONTOMN,
+													MARCAAJUSTE,
+													SUCURSAL_EMPRESA
+												FROM CON_SALDOS_DIARIOS_ACTUALIZAR
+												) T
+											GROUP BY FECHA_VALOR, 
+												RUBRO, 
+												SUCURSAL, 
+												MONEDA, 
+												CENTROCOSTO, 
+												EMPRESA, 
+												SUCURSAL_EMPRESA,
+												TIPOLIBRO, 
+												SIGNO,
+												MARCAAJUSTE
+											ORDER BY RUBRO, SUCURSAL, MONEDA, CENTROCOSTO, EMPRESA,SUCURSAL_EMPRESA, TIPOLIBRO, FECHA_VALOR ASC
+										</sentence>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>RUBRO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>centroCosto</attribute-name>
+            <column-name>CENTROCOSTO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresa</attribute-name>
+            <column-name>EMPRESA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoLibro</attribute-name>
+            <column-name>TIPOLIBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>SIGNO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoMN</attribute-name>
+            <column-name>MONTOMN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>marcaAjuste</attribute-name>
+            <column-name>MARCAAJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresa</attribute-name>
+            <column-name>SUCURSAL_EMPRESA</column-name>
+            <column-type>String</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.historicocliente.valueobjects.QueryRegeneracionSaldosDyM</class-name>
+        <query-name>query.QueryRegeneracionSaldosDyMConFiltro</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+SELECT SALDOS_JTS_OID,
+										       FECHA,
+										       SALDO_AL_CORTE,
+										       SALDO_AL_CORTE_MN,
+										       SIGNO,
+										       FECHA_VALOR,
+										       MONTO,
+										       AJUSTE,
+										       MONTOMN,
+										       RUBROCONTABLE,
+										       EQRESULTADOME,
+										       ESTADOFECHAVALOR,
+											   SUCURSAL,
+                                               MONEDA
+										  FROM (SELECT 1 AS TIPO, SALDOS_JTS_OID AS SALDOS_JTS_OID,
+											       FECHA,
+											       SALDO_AL_CORTE,
+											       SALDO_AL_CORTE_MN,
+											       'I' AS SIGNO,
+											       NULL AS FECHA_VALOR,
+											       0 AS MONTO,
+											       ' ' AS AJUSTE,
+											       0 AS MONTOMN,
+											       RUBROCONTABLE,
+											       NULL AS HORAFIN,
+											       NULL AS TRREAL,
+											       0 AS EQRESULTADOME,
+												   0 AS ESTADOFECHAVALOR,
+												   SUCURSAL, 
+                                                   MONEDA
+											  FROM GRL_SALDOS_DIARIOS S INNER JOIN JTSSALDOS_DIARIOS J ON 
+											      S.SALDOS_JTS_OID = J.JTS_OID
+											 WHERE FECHA = ?
+											UNION ALL
+											SELECT 2 AS TIPO, S.JTS_OID AS SALDOS_JTS_OID,
+											       M.FECHAPROCESO AS FECHA,
+											       0 AS SALDO_AL_CORTE,
+											       0 AS SALDO_AL_CORTE_MN,
+											       M.DEBITOCREDITO AS SIGNO,
+											       M.FECHAVALOR AS FECHA_VALOR,
+											       ROUND(M.CAPITALREALIZADO, 2) AS MONTO,
+											       -- C7844 Campo con concepto 820
+											       M.MARCAAJUSTE AS AJUSTE,
+											       ROUND(M.EQUIVALENTEMN, 2) AS MONTOMN,
+											       M.RUBROCONTABLE AS RUBROCONTABLE,
+											       HORAFIN,
+											       M.TRREAL,
+											       ROUND(M.EQUIVALENTEME, 2) AS EQRESULTADOME,
+												   M.ESTADOFECHAVALOR,
+												   M.SUCURSAL_CUENTA,
+                                                   S.MONEDA 
+											  FROM SALDOS S, MOVIMIENTOS_CONTABLES M, ASIENTOS A, JTSSALDOS_DIARIOS J  
+											 WHERE M.FECHAPROCESO = A.FECHAPROCESO
+											   AND M.FECHAVALOR &lt;= ?
+											   AND M.SUCURSAL = A.SUCURSAL
+											   AND M.ASIENTO = A.ASIENTO
+											   AND A.ESTADO = 77
+											    AND M.DEBITOCREDITO IN ('C', 'D')
+											   AND M.FECHAPROCESO &gt;= ?
+											   AND M.SALDO_JTS_OID = S.JTS_OID
+											   AND S.JTS_OID = J.JTS_OID
+											UNION ALL
+											   SELECT 3 AS TIPO, S.JTS_OID AS SALDOS_JTS_OID,
+												  NULL AS FECHA,
+												  C1604 AS SALDO_AL_CORTE,
+												  -- CAMPO CON CONCEPTO 633 SALDOMN
+												  C3958 AS SALDO_AL_CORTE_MN,
+												  'F' AS SIGNO,
+												  NULL AS FECHA_VALOR,
+												  0 AS MONTO,
+												  ' ' AS AJUSTE,
+												  0 AS MONTOMN,
+												  C1730 AS RUBROCONTABLE,
+												  NULL AS HORAFIN,
+												  NULL AS TRREAL,
+												  0 AS EQRESULTADOME,
+												  0 AS ESTADOFECHAVALOR,
+												  SUCURSAL,
+                                                  MONEDA
+											     FROM SALDOS S INNER JOIN JTSSALDOS_DIARIOS J ON 
+											      S.JTS_OID = J.JTS_OID
+											     WHERE TZ_LOCK = 0 AND ? = ?
+											  UNION ALL
+											     SELECT 3 AS TIPO, SALDOS_JTS_OID AS SALDOS_JTS_OID,
+												       FECHA,
+												       SALDO_CON_FECHA_VALOR,
+												       SALDO_FECHA_VALOR_MN,
+												       'F' AS SIGNO,
+												       NULL AS FECHA_VALOR,
+												       0 AS MONTO,
+												       ' ' AS AJUSTE,
+												       0 AS MONTOMN,
+												       RUBROCONTABLE,
+												       NULL AS HORAFIN,
+												       NULL AS TRREAL,
+												       0 AS EQRESULTADOME,
+													   0 AS ESTADOFECHAVALOR,
+													   SUCURSAL,
+                                                       S.MONEDA
+												  FROM GRL_SALDOS_DIARIOS S INNER JOIN JTSSALDOS_DIARIOS J ON 
+											      S.SALDOS_JTS_OID = J.JTS_OID
+												WHERE FECHA = ?  AND ? &lt;&gt; ?) t
+										 ORDER BY SALDOS_JTS_OID,TIPO, FECHA, HORAFIN, TRREAL
+</sentence>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>SALDOS_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAlCorte</attribute-name>
+            <column-name>SALDO_AL_CORTE</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAlCorteMN</attribute-name>
+            <column-name>SALDO_AL_CORTE_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>SIGNO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_valor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ajuste</attribute-name>
+            <column-name>AJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoMN</attribute-name>
+            <column-name>MONTOMN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroContable</attribute-name>
+            <column-name>RUBROCONTABLE</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>eqResultadoME</attribute-name>
+            <column-name>EQRESULTADOME</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estadoFechaValor</attribute-name>
+            <column-name>ESTADOFECHAVALOR</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <class>
+        <class-name>topsystems.automaticprocess.historico.saldosdiarios.SDContabilidadBalance</class-name>
+        <entity-name>core.vo_SDContabilidadBalance</entity-name>
+        <table-name>CON_BALANCE</table-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <attribute>
+            <attribute-name>fechaBalance</attribute-name>
+            <column-name>FECHA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>monedaBalance</attribute-name>
+            <column-name>MONEDA</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroBalance</attribute-name>
+            <column-name>RUBRO</column-name>
+            <key>primary</key>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroBalanceNombre</attribute-name>
+            <column-name>RUBRO_NOMBRE</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoBalance</attribute-name>
+            <column-name>SALDO</column-name>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoBalanceMN</attribute-name>
+            <column-name>SALDOMN</column-name>
+        </attribute>
+    </class>
+    <query>
+        <class-name>topsystems.automaticprocess.historico.saldosdiarios.SDContabilidadBalanceQuery</class-name>
+        <query-name>query.vo_SDContabilidadBalance</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+					SELECT S.FECHA, S.MONEDA, S.RUBRO, P.C6300 AS RUBRO_NOMBRE, SUM(S.SALDO_AJUSTADO) SALDO, SUM(S.SALDO_AJUSTADO_MN) AS SALDOMN
+					FROM CON_SALDOS_DIARIOS S, PLANCTAS P
+					WHERE FECHA = ? AND S.TZ_LOCK = 0 AND S.RUBRO = P.C6326
+					GROUP BY FECHA, RUBRO, MONEDA, C6300
+				</sentence>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>RUBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubroNombre</attribute-name>
+            <column-name>RUBRO_NOMBRE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldo</attribute-name>
+            <column-name>SALDO</column-name>
+            <column-type>double</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoMN</attribute-name>
+            <column-name>SALDOMN</column-name>
+            <column-type>double</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.clientes.historicocliente.calculodiario.QueryPromedioMensualSaldosDiarios</class-name>
+        <query-name>query.QueryPromedioSaldosDiarios</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+								SELECT FECHA, SALDO_AJUSTADO, SUMA_PROMEDIO_DIARIO, PROMEDIO_DIARIO 
+								FROM GRL_SALDOS_DIARIOS
+								WHERE SALDOS_JTS_OID = ?
+								AND FECHA = (SELECT MAX(FECHA) 
+											 FROM GRL_SALDOS_DIARIOS
+   											 WHERE SALDOS_JTS_OID = ? 
+											 AND FECHA &lt; ?)
+					</sentence>
+        <attribute>
+            <attribute-name>fecha</attribute-name>
+            <column-name>FECHA</column-name>
+            <column-type>Date</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sumaPromedioDiario</attribute-name>
+            <column-name>SUMA_PROMEDIO_DIARIO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>promedioDiario</attribute-name>
+            <column-name>PROMEDIO_DIARIO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAjustado</attribute-name>
+            <column-name>SALDO_AJUSTADO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.historicocliente.calculodiario.QueryRehacerConSaldosDiarios</class-name>
+        <query-name>query.QueryRehacerConSaldosDiarios</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+            SELECT SIGNO,
+                TIPO,
+                FECHAPROCESO, 
+                RUBRO, 
+                SUCURSAL, 
+                MONEDA, 
+                CENTROCOSTO, 
+                EMPRESA, 
+                TIPOLIBRO,
+                SUCURSAL_EMPRESA, 
+                ISNULL(SALDO_AL_CORTE, 0) AS SALDO_AL_CORTE,
+                ISNULL(SALDO_AL_CORTE_MN, 0) AS SALDO_AL_CORTE_MN,                 
+                ISNULL(SALDO_AJUSTADO, 0) AS SALDO_AJUSTADO, 
+                ISNULL(SALDO_AJUSTADO_MN, 0) AS SALDO_AJUSTADO_MN, 
+                ISNULL( SALDO_FECHA_VALOR, 0) AS SALDO_FECHA_VALOR, 
+                ISNULL(SALDO_FECHA_VALOR_MN, 0) AS SALDO_FECHA_VALOR_MN, 
+               	ISNULL(DEBITOS, 0) AS DEBITOS, 
+                ISNULL(CREDITOS, 0) AS CREDITOS, 
+                ISNULL(DEBITOS_MN, 0) AS DEBITOS_MN, 
+                ISNULL(CREDITOS_MN, 0) AS CREDITOS_MN, 
+                ISNULL(DEBITOS_FECHAVALOR, 0) AS DEBITOS_FECHAVALOR, 
+                ISNULL(DEBITOS_FECHAVALOR_MN, 0) AS DEBITOS_FECHAVALOR_MN, 
+                ISNULL(DEBITOS_AJUSTE, 0) AS DEBITOS_AJUSTE, 
+                ISNULL(DEBITOS_AJUSTE_MN, 0) AS DEBITOS_AJUSTE_MN, 
+                ISNULL(CREDITOS_FECHAVALOR, 0) AS CREDITOS_FECHAVALOR, 
+                ISNULL(CREDITOS_FECHAVALOR_MN, 0) AS CREDITOS_FECHAVALOR_MN, 
+                ISNULL(CREDITOS_AJUSTE, 0) AS CREDITOS_AJUSTE, 
+                ISNULL(CREDITOS_AJUSTE_MN, 0) AS CREDITOS_AJUSTE_MN,
+                MARCAAJUSTE,
+                FECHA_VALOR,
+                ESTADOFECHAVALOR 
+            FROM (
+                SELECT  1 AS TIPO,
+                'I' AS SIGNO,
+                FECHA AS FECHAPROCESO, 
+                RUBRO, 
+                SUCURSAL, 
+                MONEDA, 
+                CENTROCOSTO, 
+				0 AS EMPRESA,
+                TIPOLIBRO,
+				' ' AS SUCURSAL_EMPRESA, 
+                SALDO_AL_CORTE, 
+                SALDO_AJUSTADO, 
+                SALDO_AJUSTADO_MN, 
+                SALDO_FECHA_VALOR, 
+                SALDO_FECHA_VALOR_MN, 
+                DEBITOS, 
+                CREDITOS, 
+                DEBITOS_MN, 
+                CREDITOS_MN, 
+                SALDO_AL_CORTE_MN, 
+                DEBITOS_FECHAVALOR, 
+                DEBITOS_FECHAVALOR_MN, 
+                DEBITOS_AJUSTE, 
+                DEBITOS_AJUSTE_MN, 
+                CREDITOS_FECHAVALOR, 
+                CREDITOS_FECHAVALOR_MN, 
+                CREDITOS_AJUSTE, 
+                CREDITOS_AJUSTE_MN,
+                NULL AS MARCAAJUSTE,
+                NULL AS FECHA_VALOR,
+                NULL AS ESTADOFECHAVALOR
+                FROM CON_SALDOS_DIARIOS 
+                WHERE FECHA = ?  
+            UNION ALL
+                SELECT 2 AS TIPO,
+                M.DEBITOCREDITO AS SIGNO,
+                M.FECHAPROCESO,
+                M.RUBROCONTABLE AS RUBRO,
+                M.SUCURSAL,
+                M.MONEDA,  
+				'0' AS CENTROCOSTO,
+                0 AS EMPRESA,
+                1 AS TIPOLIBRO,
+                ' ' AS SUCURSAL_EMPRESA,
+                0 AS SALDO_AL_CORTE,
+                0 AS SALDO_AJUSTADO,
+                0 AS SALDO_AJUSTADO_MN,
+                0 as SALDO_FECHA_VALOR,
+                0 as SALDO_FECHA_VALOR_MN,
+                CASE WHEN (M.DEBITOCREDITO = 'D') THEN ROUND(M.CAPITALREALIZADO, 2) ELSE 0 END as DEBITOS,
+                CASE WHEN (M.DEBITOCREDITO = 'C') THEN ROUND(M.CAPITALREALIZADO, 2) ELSE 0 END as CREDITOS, 
+                CASE WHEN (M.DEBITOCREDITO = 'D') THEN ROUND(M.EQUIVALENTEMN, 2) ELSE 0 END as DEBITOS_MN, 
+                CASE WHEN (M.DEBITOCREDITO = 'C') THEN ROUND(M.EQUIVALENTEMN, 2) ELSE 0 END as CREDITOS_MN, 
+                0 AS SALDO_AL_CORTE_MN,
+                0 AS DEBITOS_FECHAVALOR,
+                0 AS DEBITOS_FECHAVALOR_MN,
+                0 AS DEBITOS_AJUSTE,
+                0 as DEBITOS_AJUSTE_MN,
+                0 AS CREDITOS_FECHAVALOR,
+                0 AS CREDITOS_FECHAVALOR_MN,
+                0 AS CREDITOS_AJUSTE,
+                0 AS CREDITOS_AJUSTE_MN,
+                M.MARCAAJUSTE AS MARCAAJUSTE,
+                M.FECHAVALOR AS FECHA_VALOR,
+                M.ESTADOFECHAVALOR
+                FROM MOVIMIENTOS_CONTABLES M
+                INNER JOIN ASIENTOS A
+                ON M.FECHAPROCESO = A.FECHAPROCESO
+                AND M.SUCURSAL = A.SUCURSAL
+                AND M.ASIENTO = A.ASIENTO
+                WHERE (M.FECHAPROCESO BETWEEN ? AND ? )
+                AND A.ESTADO = 77
+                AND M.DEBITOCREDITO IN ('C','D')
+            UNION ALL
+                SELECT  3 AS TIPO,
+                'F' AS SIGNO,
+                FECHA AS FECHAPROCESO, 
+                RUBRO, 
+                SUCURSAL, 
+                MONEDA, 
+                CENTROCOSTO, 
+				0 AS EMPRESA,
+                TIPOLIBRO,
+				' ' AS SUCURSAL_EMPRESA, 
+                SALDO_AL_CORTE, 
+                SALDO_AJUSTADO, 
+                SALDO_AJUSTADO_MN, 
+                SALDO_FECHA_VALOR, 
+                SALDO_FECHA_VALOR_MN, 
+                DEBITOS, 
+                CREDITOS, 
+                DEBITOS_MN, 
+                CREDITOS_MN, 
+                SALDO_AL_CORTE_MN, 
+                DEBITOS_FECHAVALOR, 
+                DEBITOS_FECHAVALOR_MN, 
+                DEBITOS_AJUSTE, 
+                DEBITOS_AJUSTE_MN, 
+                CREDITOS_FECHAVALOR, 
+                CREDITOS_FECHAVALOR_MN, 
+                CREDITOS_AJUSTE, 
+                CREDITOS_AJUSTE_MN,
+                NULL AS MARCAAJUSTE,
+                NULL AS FECHA_VALOR,
+                NULL AS ESTADOFECHAVALOR
+                FROM CON_SALDOS_DIARIOS 
+                WHERE FECHA = ? 
+            ) T
+            ORDER BY RUBRO, 
+                SUCURSAL, 
+                MONEDA, 
+                CENTROCOSTO, 
+                EMPRESA, 
+                SUCURSAL_EMPRESA,
+                TIPOLIBRO
+        </sentence>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>SIGNO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaProceso</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>RUBRO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>centroCosto</attribute-name>
+            <column-name>CENTROCOSTO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>empresa</attribute-name>
+            <column-name>EMPRESA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>tipoLibro</attribute-name>
+            <column-name>TIPOLIBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalEmpresa</attribute-name>
+            <column-name>SUCURSAL_EMPRESA</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAlCorte</attribute-name>
+            <column-name>SALDO_AL_CORTE</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAlCorteMN</attribute-name>
+            <column-name>SALDO_AL_CORTE_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAjustado</attribute-name>
+            <column-name>SALDO_AJUSTADO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoAjustadoMN</attribute-name>
+            <column-name>SALDO_AJUSTADO_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoFechaValor</attribute-name>
+            <column-name>SALDO_FECHA_VALOR</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>saldoFechaValorMN</attribute-name>
+            <column-name>SALDO_FECHA_VALOR_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>debitos</attribute-name>
+            <column-name>DEBITOS</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>creditos</attribute-name>
+            <column-name>CREDITOS</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosMN</attribute-name>
+            <column-name>DEBITOS_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosMN</attribute-name>
+            <column-name>CREDITOS_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosFechaValor</attribute-name>
+            <column-name>DEBITOS_FECHAVALOR</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosFechaValorMN</attribute-name>
+            <column-name>DEBITOS_FECHAVALOR_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosAjuste</attribute-name>
+            <column-name>DEBITOS_AJUSTE</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>debitosAjusteMN</attribute-name>
+            <column-name>DEBITOS_AJUSTE_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosFechaValor</attribute-name>
+            <column-name>CREDITOS_FECHAVALOR</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosFechaValorMN</attribute-name>
+            <column-name>CREDITOS_FECHAVALOR_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosAjuste</attribute-name>
+            <column-name>CREDITOS_AJUSTE</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>creditosAjusteMN</attribute-name>
+            <column-name>CREDITOS_AJUSTE_MN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>marcaAjuste</attribute-name>
+            <column-name>MARCAAJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fechaValor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>estadoFechaValor</attribute-name>
+            <column-name>ESTADOFECHAVALOR</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+    <query>
+        <class-name>topsystems.automaticprocess.historicocliente.valueobjects.QueryJoinVistaPlazo</class-name>
+        <query-name>query.QueryJoinVistaPlazoTodos</query-name>
+        <database-name>TOP/CLIENTES</database-name>
+        <sentence>
+		SELECT SALDO_JTS_OID, SIGNO, FECHA_VALOR, MONTO, AJUSTE, MONTOMN,
+				       FECHAPROCESO,
+				       ASIENTO,
+				       SUCURSAL,
+				       TRREAL,
+				       ORDINAL,
+				       TRVIRTUAL,
+				       TRTIPO,
+				       RUBRO,
+				       EQRESULTADOME,
+				       MONEDA,
+				       SUCURSAL_SALDO							   
+				FROM (			
+				SELECT M.SALDO_JTS_OID, M.DEBITOCREDITO AS SIGNO,
+				       M.FECHAVALOR AS FECHA_VALOR,
+				       M.CAPITALREALIZADO AS MONTO,
+				       M.MARCAAJUSTE AS AJUSTE,
+				       M.EQUIVALENTEMN AS MONTOMN,
+				       M.FECHAPROCESO,
+				       M.ASIENTO,
+				       M.SUCURSAL,
+				       M.TRREAL,
+				       M.ORDINAL,
+				       M.TRVIRTUAL,
+				       M.TRTIPO,	
+				       M.RUBROCONTABLE AS RUBRO,
+				       M.EQUIVALENTEME AS EQRESULTADOME,
+				       M.MONEDA,
+				       M.SUCURSAL_CUENTA AS SUCURSAL_SALDO							   
+				  FROM MOVIMIENTOS_CONTABLES M,
+				       ASIENTOS A
+				 WHERE M.FECHAPROCESO = A.FECHAPROCESO
+				   AND M.FECHAPROCESO &lt; = ? 
+				   AND M.SUCURSAL = A.SUCURSAL
+				   AND M.ASIENTO = A.ASIENTO
+				   AND A.ESTADO = 77
+				   AND M.DEBITOCREDITO IN ('C','D')
+				   AND M.FECHAVALOR &lt; M.FECHAPROCESO 
+				   AND ESTADOFECHAVALOR = 0		
+			UNION ALL   
+				SELECT M.SALDO_JTS_OID, M.DEBITOCREDITO AS SIGNO,
+				       M.FECHAVALOR AS FECHA_VALOR,
+				       M.CAPITALREALIZADO *-1 AS MONTO ,
+				       M.MARCAAJUSTE AS AJUSTE,
+				       M.EQUIVALENTEMN *-1  AS MONTOMN,
+				       M.FECHAPROCESO,
+				       M.ASIENTO,
+				       M.SUCURSAL,
+				       M.TRREAL,
+				       M.ORDINAL,
+				       M.TRVIRTUAL,
+				       M.TRTIPO,
+				       M.RUBROCONTABLE AS RUBRO,
+				       M.EQUIVALENTEME AS EQRESULTADOME,
+				       M.MONEDA,
+				       M.SUCURSAL_CUENTA AS SUCURSAL_SALDO
+				  FROM MOVIMIENTOS_CONTABLES M,
+				       ASIENTOS A
+				 WHERE M.FECHAPROCESO = A.FECHAPROCESO
+				       AND M.FECHAPROCESO &lt;= ?
+				       AND M.SUCURSAL = A.SUCURSAL
+				       AND M.ASIENTO = A.ASIENTO
+				       AND A.ESTADO = 42
+				       AND M.DEBITOCREDITO IN ('C','D')
+				       AND M.FECHAVALOR &lt; M.FECHAPROCESO 
+				       AND M.ESTADOFECHAVALOR = 1 ) T 			         
+		 ORDER BY SALDO_JTS_OID, FECHAPROCESO
+		</sentence>
+        <attribute>
+            <attribute-name>saldo_jts_oid</attribute-name>
+            <column-name>SALDO_JTS_OID</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>signo</attribute-name>
+            <column-name>SIGNO</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_valor</attribute-name>
+            <column-name>FECHA_VALOR</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>monto</attribute-name>
+            <column-name>MONTO</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ajuste</attribute-name>
+            <column-name>AJUSTE</column-name>
+            <column-type>String</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>montoMN</attribute-name>
+            <column-name>MONTOMN</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>fecha_procesado</attribute-name>
+            <column-name>FECHAPROCESO</column-name>
+            <column-type>Timestamp</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>asiento</attribute-name>
+            <column-name>ASIENTO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursal</attribute-name>
+            <column-name>SUCURSAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>trReal</attribute-name>
+            <column-name>TRREAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>ordinal</attribute-name>
+            <column-name>ORDINAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>trVirtual</attribute-name>
+            <column-name>TRVIRTUAL</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>trTipo</attribute-name>
+            <column-name>TRTIPO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>rubro</attribute-name>
+            <column-name>RUBRO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>eqResultadoME</attribute-name>
+            <column-name>EQRESULTADOME</column-name>
+            <column-type>BigDecimal</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>moneda</attribute-name>
+            <column-name>MONEDA</column-name>
+            <column-type>long</column-type>
+        </attribute>
+        <attribute>
+            <attribute-name>sucursalSaldo</attribute-name>
+            <column-name>SUCURSAL_SALDO</column-name>
+            <column-type>long</column-type>
+        </attribute>
+    </query>
+</map>

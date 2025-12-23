@@ -1,0 +1,34 @@
+service CONSULTAARBITRAJES; 
+description "Consulta los Arbitrajes de todas las Monedas"; 
+
+action:	SQLQuery CONSULTACOTIZACIONES ( 
+	NodoCliente: string,
+	TicketSesion: numeric,
+	InfoOrigen: string,
+	ModoAutentica: string,
+	CodCanal: string,
+	Origen: string,
+	NroDepOrigen: numeric,
+	NroTransaccion: numeric,
+	IdAutentica: string,
+	IdInvocaTopaz: string
+	
+): [ 
+ 	XML_TAG: string,
+ 	CODERROR: string as CodError, 
+	MONEDA: numeric as Moneda,
+	MONEDADESCRIPCION: string as MonedaDescripcion,
+	ARBITRAJECOMPRA: numeric as ArbitrajeCompra,
+	ARBITRAJEVENTA: numeric as ArbitrajeVenta
+	
+	
+]
+{ 
+  	properties { 
+  	("statement", "SELECT 'Arbitraje' as XML_TAG, 0 AS CODERROR,C6399 AS MONEDA,C6400 AS MONEDADESCRIPCION,C6429 AS ARBITRAJECOMPRA,C6431 AS ARBITRAJEVENTA FROM MONEDAS WHERE (Tz_lock < 310000000000000  OR Tz_lock > 339999999999999)")
+	
+	
+	}
+}
+
+

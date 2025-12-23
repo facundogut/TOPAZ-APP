@@ -1,0 +1,120 @@
+EXECUTE('
+IF OBJECT_ID (''VW_TARJETAS_CRED'') IS NOT NULL
+	DROP VIEW VW_TARJETAS_CRED
+')
+EXECUTE('
+CREATE OR ALTER VIEW [dbo].[VW_TARJETAS_CRED] 
+AS 
+
+SELECT TOP 9223372036854775807 WITH TIES
+	u.USUARIO AS [Num Usuario],
+	a.COD_ADMINISTRADORA AS [Cod Administradora],
+	a.DESCRIPCION AS [Administradora],
+    CASE WHEN ts.PERIODO_DEUDA>0 THEN 
+    CONCAT(RIGHT(CAST(ts.PERIODO_DEUDA AS varchar(8)),2) ,''/'', LEFT(CAST(ts.PERIODO_DEUDA AS varchar(8)),4)) 
+    ELSE '' '' END AS [Periodo Deuda],
+	u.CODIGO_CIERRE AS [Num Cartera],
+	u.DESCRIPCION_CIERRE AS [Cartera],
+	u.TIPO_COBRO AS [Tipo Cobro],
+	u.TIPO_PAGO AS [Tipo Pago],
+	u.CUENTA_COBRO AS [Cuenta Debito],
+	u.CLIENTE AS [Cliente],
+	ts.SALDO_MN_CIERRE AS [Saldo Pesos Cierre],
+	ts.PAGO_MN AS [Pago Pesos],
+	ts.SALDO_MN AS [Saldo Pesos],
+	ts.SALDO_ME_CIERRE AS [Saldo Dolares Cierre],
+	ts.PAGO_ME AS [Pago Dolares],
+	ts.SALDO_ME AS [Saldo Dolares],
+	ts.FECHA_VTO AS [Fecha Vencimiento],
+	ts.FECHA_CIERRE AS [Fecha Cierre]
+FROM TJC_MAESTRO_USUARIO u WITH(NOLOCK)
+INNER JOIN TJC_MAESTRO_ADMINISTRADORAS a WITH(NOLOCK) ON a.COD_ADMINISTRADORA=u.ADMINISTRADORA
+LEFT JOIN TJC_SALDOS ts WITH(NOLOCK) ON ts.ADMINISTRADORA=a.COD_ADMINISTRADORA AND ts.USUARIO=u.USUARIO AND ts.TZ_LOCK=0
+WHERE u.TZ_LOCK=0 AND 
+	  a.TZ_LOCK=0 
+ORDER BY  [Periodo Deuda] DESC   
+
+')
+EXECUTE('
+IF OBJECT_ID (''VW_TJC_HISTORICO_PAGOS'') IS NOT NULL
+	DROP VIEW VW_TJC_HISTORICO_PAGOS
+
+')
+
+EXECUTE('
+CREATE    VIEW [dbo].[VW_TJC_HISTORICO_PAGOS] 
+AS
+
+SELECT TOP 9223372036854775807 WITH TIES
+	h.ASIENTO AS [Asiento],
+	h.FECHA AS [Fecha],
+	h.HORA AS [Hora],
+	h.USUARIO AS [Num Usuario],
+	h.IMPORTE_DEBITO AS [Importe Debito],
+	h.PAGO_MN AS [Pago Pesos],
+	h.SALDO_MN AS [Saldo Pesos],
+	h.SALDO_ME_CIERRE AS [Saldo Dolares Cierre],
+	h.PAGO_ME AS [Pago Dolares],
+	h.SALDO_ME AS [Saldo Dolares],
+	h.SALDO_MN_CIERRE AS [Saldo Pesos Cierre],
+	h.ADMINISTRADORA AS [Cod Administradora],
+	a.DESCRIPCION AS [Administradora],
+    CASE WHEN ts.PERIODO_DEUDA>0 THEN 
+    CONCAT(RIGHT(CAST(ts.PERIODO_DEUDA AS varchar(8)),2) ,''/'', LEFT(CAST(ts.PERIODO_DEUDA AS varchar(8)),4)) 
+    ELSE '' '' END AS [Periodo Deuda],
+   	h.CLIENTE AS [Cliente],
+	h.FECHA_VTO AS [Fecha Vencimiento],
+	h.FECHA_CIERRE AS [Fecha Cierre],
+   	h.USUARIO_MOD AS [Usuario Modificacion]
+FROM TJC_MAESTRO_USUARIO u WITH(NOLOCK)
+INNER JOIN TJC_MAESTRO_ADMINISTRADORAS a WITH(NOLOCK) ON a.COD_ADMINISTRADORA=u.ADMINISTRADORA
+														AND u.TZ_LOCK=0
+														AND a.TZ_LOCK=0
+INNER JOIN TJC_SALDOS ts WITH(NOLOCK) ON ts.ADMINISTRADORA=a.COD_ADMINISTRADORA 
+										AND ts.USUARIO=u.USUARIO 
+										AND ts.TZ_LOCK=0
+INNER JOIN TJC_HISTORICO_PAGOS H WITH(NOLOCK) ON H.ADMINISTRADORA=U.ADMINISTRADORA 
+										AND H.USUARIO=U.USUARIO 
+										AND H.PERIODO_DEUDA=ts.PERIODO_DEUDA
+										AND H.TZ_LOCK=0
+ORDER BY	[Fecha], 
+			[Hora] DESC
+
+')
+EXECUTE('
+IF OBJECT_ID (''VW_TJC_MAESTRO_USUARIOS'') IS NOT NULL
+	DROP VIEW VW_TJC_MAESTRO_USUARIOS
+')
+EXECUTE('
+CREATE   VIEW [dbo].[VW_TJC_MAESTRO_USUARIOS] 
+AS 
+
+SELECT 
+	u.USUARIO AS [Num Usuario],
+	a.COD_ADMINISTRADORA AS [Cod Administradora],
+	a.DESCRIPCION AS [Administradora],
+	U.NUM_TJC AS [Num Tarjeta],
+   	u.CODIGO_CIERRE AS [Num Cartera],
+	u.DESCRIPCION_CIERRE AS [Cartera],
+	u.TIPO_COBRO AS [Num Tipo Cobro],
+	CASE WHEN u.TIPO_COBRO = 1 THEN ''Caja'' 
+	     WHEN u.TIPO_COBRO = 2 THEN ''Caja de Ahorro'' ELSE ''Cuenta Corriente'' END AS [Tipo Cobro],
+	u.TIPO_PAGO AS [Num Tipo Pago],
+	CASE WHEN u.TIPO_PAGO=''2'' THEN ''Pago Mínimo'' ELSE ''Pago Total'' END AS [Tipo Pago],
+	u.CUENTA_COBRO AS [Cuenta Debito],
+	u.CLIENTE AS [Cliente],
+    u.LIMITE_COMPRA AS [Limite Compra],
+    u.LIMITE_CUOTAS AS [Limite Cuotas],
+    u.TIPO_TJC AS [Tipo Tarjeta],
+    CASE WHEN u.TIPO_TJC = ''E'' THEN ''Empresa''
+         WHEN u.TIPO_TJC = ''R'' THEN ''Recargable'' ELSE ''Tradicional'' END AS [Desc Tipo Tarjeta],
+    u.SUC_USUARIO AS [Sucursal Usuario],
+    u.TIPO_USU AS [Tipo Usuario],
+    CASE WHEN u.TIPO_USU = 1 THEN ''Individuo'' ELSE ''Empresa'' END AS [Desc Tipo Usuario]
+            
+FROM TJC_MAESTRO_USUARIO u WITH(NOLOCK)
+INNER JOIN TJC_MAESTRO_ADMINISTRADORAS a WITH(NOLOCK) ON a.COD_ADMINISTRADORA=u.ADMINISTRADORA
+WHERE 
+	u.TZ_LOCK=0 
+	AND a.TZ_LOCK=0
+')

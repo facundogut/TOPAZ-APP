@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ObligacionesDirectas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="74"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#FFBFBF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#FFFFFF"/>
+		</box>
+	</style>
+	<subDataset name="PromedioYMax">
+		<parameter name="JTS_OID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT SUB.jts, max(sub.dias) as Max, avg(SUB.dias) as Prom FROM
+(SELECT saldo_jts_oid AS jts,datediff(dd,C2302,(CASE C2309+2310 WHEN 0 THEN FechaCancelacion
+    ELSE (SELECT FECHAPROCESO FROM parametros ) end))AS dias FROM BS_PLANPAGOS WHERE SALDO_JTS_OID=$P{JTS_OID} AND C2302<(SELECT fechaproceso FROM parametros)) AS sub
+    GROUP BY sub.jts]]>
+		</queryString>
+		<field name="jts" class="java.math.BigDecimal"/>
+		<field name="Max" class="java.lang.Integer"/>
+		<field name="Prom" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="Plazo">
+		<parameter name="JTS_OID" class="java.math.BigDecimal"/>
+		<queryString>
+			<![CDATA[SELECT count(*) as Plazo FROM BS_PLANPAGOS WHERE SALDO_JTS_OID=$P{JTS_OID}]]>
+		</queryString>
+		<field name="Plazo" class="java.lang.Integer"/>
+	</subDataset>
+	<parameter name="NumCli" class="java.math.BigDecimal"/>
+	<queryString>
+		<![CDATA[SELECT s.jts_oid,
+       s.CUENTA AS NoCredito,
+       s.PRODUCTO AS Producto,
+       p.C6251 AS nomProd,
+       s.MONEDA AS Moneda,
+       s.C1728 AS estado,
+       s.CALIF_OBJ_PREST AS CalSIBOIF,
+       s.C1621 AS FechaDesc,
+       s.C1624 AS FechaTerm,
+       S.C1601 AS MONTO,
+       s.C1612 AS Cuota,
+       s.C1604 AS saldo,
+       S.USUTOPAZ AS nomFunc,
+       (CASE C1642 WHEN 1 THEN 'Diaria'
+	        		 WHEN 7 THEN 'Semanal'
+	        		 WHEN 15 THEN 'Quincenal'
+	        		 WHEN 30 THEN 'Mensual'
+	        		 WHEN 60 THEN 'Bimensual'
+	        		 WHEN 120 THEN 'Cuatrimensual'
+	        		 WHEN 180	THEN 'Semestral'
+	        		 WHEN 270 THEN 'En 9 meses'
+	        		 ELSE C1640
+	        END)
+	        AS Periodicidad,
+       m.C6401 as SimbMoneda
+FROM SALDOS s , Co_monedas m,CO_PRODUCTOS p
+WHERE s.C1803=$P{NumCli} AND s.PRODUCTO<>0 AND s.C9314=5 AND m.C6399=S.Moneda
+AND p.C6250=s.PRODUCTO
+AND (s.tz_lock < 300000000000000 OR s.tz_lock >= 400000000000000)
+AND (s.tz_lock < 100000000000000 OR s.tz_lock >= 200000000000000)]]>
+	</queryString>
+	<field name="jts_oid" class="java.math.BigDecimal"/>
+	<field name="NoCredito" class="java.math.BigDecimal"/>
+	<field name="Producto" class="java.math.BigDecimal"/>
+	<field name="nomProd" class="java.lang.String"/>
+	<field name="Moneda" class="java.math.BigDecimal"/>
+	<field name="estado" class="java.lang.String"/>
+	<field name="CalSIBOIF" class="java.lang.String"/>
+	<field name="FechaDesc" class="java.sql.Timestamp"/>
+	<field name="FechaTerm" class="java.sql.Timestamp"/>
+	<field name="MONTO" class="java.math.BigDecimal"/>
+	<field name="Cuota" class="java.math.BigDecimal"/>
+	<field name="saldo" class="java.math.BigDecimal"/>
+	<field name="nomFunc" class="java.lang.String"/>
+	<field name="Periodicidad" class="java.lang.String"/>
+	<field name="SimbMoneda" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="68" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="802" height="68" backcolor="#CCCCCC"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="43" width="79" height="20"/>
+				<textElement textAlignment="Justified">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Num Credito]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="723" y="43" width="53" height="23"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Forma De Pago]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="683" y="43" width="35" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Plazo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="291" y="43" width="57" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Desc]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="162" y="43" width="41" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prom]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="203" y="43" width="46" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Calif SIBOIF]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="513" y="43" width="59" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Saldo]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="79" y="43" width="78" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="255" y="43" width="39" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Atra Max]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="351" y="43" width="52" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha Term]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="406" y="43" width="53" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Monto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="633" y="43" width="43" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Producto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="582" y="43" width="46" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Moneda]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="776" y="43" width="24" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Resp]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="462" y="43" width="46" height="20"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cuota]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="1" y="10" width="801" height="20"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Obligaciones Directas]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="35" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="6" width="79" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{NoCredito}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="79" y="6" width="78" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{saldo}==0?
+"CANCELADO":
+$F{estado}=='N'?
+"VIGENTE":
+$F{estado}=='V'?
+"VENCIDO":
+$F{estado}=='C'?
+"CASTIGADO":
+"JUDICIAL"]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table" style="table" x="162" y="6" width="41" height="20"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="PromedioYMax">
+						<datasetParameter name="JTS_OID">
+							<datasetParameterExpression><![CDATA[$F{jts_oid}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90">
+						<jr:detailCell style="table_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.Integer"><![CDATA[$F{Prom}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField>
+				<reportElement x="204" y="6" width="45" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{CalSIBOIF}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="255" y="6" width="35" height="20"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="PromedioYMax">
+						<datasetParameter name="JTS_OID">
+							<datasetParameterExpression><![CDATA[$F{jts_oid}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90">
+						<jr:detailCell style="table 1_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.Integer"><![CDATA[$F{Max}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="294" y="6" width="54" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{FechaDesc}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="351" y="6" width="52" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.sql.Timestamp"><![CDATA[$F{FechaTerm}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="406" y="6" width="53" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{MONTO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="462" y="6" width="46" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Cuota}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="513" y="6" width="59" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[-$F{saldo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="583" y="6" width="45" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{SimbMoneda}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="633" y="6" width="43" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.math.BigDecimal"><![CDATA[$F{Producto}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement key="table 2" style="table 2" x="681" y="6" width="42" height="20"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="Plazo">
+						<datasetParameter name="JTS_OID">
+							<datasetParameterExpression><![CDATA[$F{jts_oid}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="90">
+						<jr:detailCell style="table 2_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20"/>
+								<textElement>
+									<font size="8"/>
+								</textElement>
+								<textFieldExpression class="java.lang.Integer"><![CDATA[$F{Plazo}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<textField>
+				<reportElement x="779" y="6" width="24" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{nomFunc}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="725" y="6" width="51" height="20"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{Periodicidad}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
