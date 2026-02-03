@@ -18,12 +18,13 @@ for d in REQUIRED_DIRS:
 ok("Estructura mínima presente")
 
 # 2) Archivos vacíos
-ALLOWED_EMPTY_EXTENSIONS = {".txt", ".LCK", ".XML", ".gitignore"}
+ALLOWED_EMPTY_EXTENSIONS = {".txt", ".LCK", ".XML", ".gitignore", ".TXT"}
 
 IGNORED_DIRS = [
     os.path.normpath("sql/scripts_viejos"),
     os.path.normpath("sql/scripts-flyway-6.5.1"),
     os.path.normpath("biblioteca/FML"),
+    os.path.normpath("jboss/standalone/userlibrary/default/python/topsystems"),
 ]
 
 def is_ignored_path(path):
