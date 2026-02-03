@@ -1,0 +1,33 @@
+name: CI Topaz (Smoke)
+
+on:
+  pull_request:
+    branches: [ beta, implementation, QA ]
+  push:
+    branches: [ beta, implementation ]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run Smoke
+        run: python ci/smoke.py
+
+      - name: Package evidence
+        run: |
+          mkdir -p out
+          tar -czf out/topaz-repo.tgz biblioteca jboss shared_sync sql docs scripts 2>/dev/null || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: evidence
+          path: out/
