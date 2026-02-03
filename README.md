@@ -1,4 +1,4 @@
-# Repositorio app central
+# Repositorio app central 
 ## Forma de uso 
 
  1. Primero clonar el repositorio 
