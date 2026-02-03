@@ -49,7 +49,7 @@ for root, _, files in os.walk("."):
                 name, ext = os.path.splitext(f)
 
                 # Permitir extensiones vacías específicas
-                if ext not in ALLOWED_EMPTY_EXTENSIONS or name not in ALLOWED_EMPTY_NAMES:
+                if ext not in ALLOWED_EMPTY_EXTENSIONS and name not in ALLOWED_EMPTY_NAMES:
                     empty.append(rel_path)
 
         except OSError:
