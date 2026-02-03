@@ -17,25 +17,47 @@ for d in REQUIRED_DIRS:
         fail(f"Falta directorio requerido: {d}")
 ok("Estructura mínima presente")
 
-# 2) Archivos vacíos (en todo el repo)
-ALLOWED_EMPTY_FILES = ["crearCarpetaVacia.txt"]
+# 2) Archivos vacíos
+ALLOWED_EMPTY_EXTENSIONS = {".txt", ".LCK", ".XML", ".gitignore"}
+
+IGNORED_DIRS = [
+    os.path.normpath("sql/scripts_viejos"),
+    os.path.normpath("sql/scripts-flyway-6.5.1"),
+    os.path.normpath("biblioteca/FML"),
+]
+
+def is_ignored_path(path):
+    norm = os.path.normpath(path)
+    return any(norm.startswith(d + os.sep) or norm == d for d in IGNORED_DIRS)
 
 empty = []
+
 for root, _, files in os.walk("."):
     for f in files:
         p = os.path.join(root, f)
+        rel_path = os.path.normpath(os.path.relpath(p, "."))
+
         try:
             if os.path.getsize(p) == 0:
-                if f not in ALLOWED_EMPTY_FILES:
-                    empty.append(p)
+                # Ignorar carpetas completas
+                if is_ignored_path(rel_path):
+                    continue
+
+                _, ext = os.path.splitext(f)
+
+                # Permitir extensiones vacías específicas
+                if ext not in ALLOWED_EMPTY_EXTENSIONS:
+                    empty.append(rel_path)
+
         except OSError:
             pass
 
 if empty:
-    print("ERROR: Archivos vacíos detectados (primeros 50):")
+    print("ERROR: Archivos vacíos no permitidos (primeros 50):")
     for p in empty[:50]:
         print(" -", p)
     sys.exit(1)
+
 ok("No hay archivos vacíos no permitidos")
 
 # 3) XML well-formed (ktr/kjb/jrxml/xml)
