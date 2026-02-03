@@ -1,7 +1,7 @@
 # Repositorio app central 
 ## Forma de uso 
 
- 1. Primero clonar el repositorio 
+ 1. Primero clonar el repositorio
 
 	    git clone https://git.nbch.com.ar/scm/top/topaz-app.git
  2. Posicionarse en la rama de trabajo
