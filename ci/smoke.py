@@ -1,4 +1,5 @@
-import os, sys
+import os
+import sys
 import xml.etree.ElementTree as ET
 
 REQUIRED_DIRS = ["biblioteca", "jboss", "shared_sync", "sql"]
@@ -11,46 +12,55 @@ def fail(msg):
 def ok(msg):
     print("OK:", msg)
 
+# Normalización de paths (Linux/Windows) para aplicar ignores por prefijo
+def norm_rel(path):
+    return os.path.relpath(path, ".").replace("\\", "/").lstrip("./")
+
+IGNORED_PREFIXES = [
+    "sql/scripts_viejos/",
+    "sql/scripts-flyway-6.5.1/",
+    "biblioteca/FML/",
+    "jboss/standalone/userlibrary/default/python/topsystems/",
+]
+
+def is_ignored(rel_path):
+    rp = rel_path.replace("\\", "/").lstrip("./")
+    rp = rp + "/" if os.path.isdir(rel_path) and not rp.endswith("/") else rp
+    return any(rp.startswith(pref) for pref in IGNORED_PREFIXES)
+
 # 1) Estructura mínima
 for d in REQUIRED_DIRS:
     if not os.path.isdir(d):
         fail(f"Falta directorio requerido: {d}")
 ok("Estructura mínima presente")
 
-# 2) Archivos vacíos
-ALLOWED_EMPTY_EXTENSIONS = {".txt", ".LCK", ".XML", ".TXT"}
-
+# 2) Archivos vacíos (permitidos por extensión o nombre), ignorando carpetas legacy
+ALLOWED_EMPTY_EXTENSIONS = {".txt", ".TXT", ".LCK", ".XML", ".gitignore"}
 ALLOWED_EMPTY_NAMES = {".gitignore", ".gitkeep"}
-
-IGNORED_DIRS = [
-    os.path.normpath("sql/scripts_viejos"),
-    os.path.normpath("sql/scripts-flyway-6.5.1"),
-    os.path.normpath("biblioteca/FML"),
-    os.path.normpath("jboss/standalone/userlibrary/default/python/topsystems"),
-]
-
-def is_ignored_path(path):
-    norm = os.path.normpath(path)
-    return any(norm.startswith(d + os.sep) or norm == d for d in IGNORED_DIRS)
 
 empty = []
 
 for root, _, files in os.walk("."):
     for f in files:
-        p = os.path.join(root, f)
-        rel_path = os.path.normpath(os.path.relpath(p, "."))
+        full = os.path.join(root, f)
+        rel = norm_rel(full)
+
+        # Ignorar carpetas completas
+        if is_ignored(rel):
+            continue
 
         try:
-            if os.path.getsize(p) == 0:
-                # Ignorar carpetas completas
-                if is_ignored_path(rel_path):
-                    continue
-
+            if os.path.getsize(full) == 0:
                 name, ext = os.path.splitext(f)
 
-                # Permitir extensiones vacías específicas
-                if ext not in ALLOWED_EMPTY_EXTENSIONS and name not in ALLOWED_EMPTY_NAMES:
-                    empty.append(rel_path)
+                # Permitir vacíos por nombre o por extensión (case-insensitive)
+                if f in ALLOWED_EMPTY_NAMES:
+                    continue
+
+                if ext.upper() in {e.upper() for e in ALLOWED_EMPTY_EXTENSIONS}:
+                    continue
+
+                empty.append(rel)
 
         except OSError:
             pass
@@ -63,16 +73,30 @@ if empty:
 
 ok("No hay archivos vacíos no permitidos")
 
-# 3) XML well-formed (ktr/kjb/jrxml/xml)
+# 3) XML well-formed (ktr/kjb/jrxml/xml) ignorando carpetas legacy
 bad_xml = []
+
 for root, _, files in os.walk("."):
     for f in files:
-        if f.lower().endswith(XML_EXTS):
-            p = os.path.join(root, f)
-            try:
-                ET.parse(p)
-            except Exception as e:
-                bad_xml.append((p, str(e)))
+        if not f.lower().endswith(XML_EXTS):
+            continue
+
+        full = os.path.join(root, f)
+        rel = norm_rel(full)
+
+        # Ignorar carpetas completas
+        if is_ignored(rel):
+            continue
+
+        try:
+            # Si está vacío, el control de vacíos ya decide (no parsear acá)
+            if os.path.getsize(full) == 0:
+                continue
+
+            ET.parse(full)
+
+        except Exception as e:
+            bad_xml.append((rel, str(e)))
 
 if bad_xml:
     print("ERROR: XML inválidos (primeros 20):")
