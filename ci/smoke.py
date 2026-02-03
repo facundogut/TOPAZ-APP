@@ -21,6 +21,7 @@ IGNORED_PREFIXES = [
     "sql/scripts-flyway-6.5.1/",
     "biblioteca/FML/",
     "jboss/standalone/userlibrary/default/python/topsystems/",
+    "jboss/standalone/userlibrary/default/conf/"
 ]
 
 def is_ignored(rel_path):
