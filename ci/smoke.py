@@ -18,13 +18,16 @@ for d in REQUIRED_DIRS:
 ok("Estructura mínima presente")
 
 # 2) Archivos vacíos (en todo el repo)
+ALLOWED_EMPTY_FILES = ["crearCarpetaVacia.txt"]
+
 empty = []
 for root, _, files in os.walk("."):
     for f in files:
         p = os.path.join(root, f)
         try:
             if os.path.getsize(p) == 0:
-                empty.append(p)
+                if f not in ALLOWED_EMPTY_FILES:
+                    empty.append(p)
         except OSError:
             pass
 
@@ -33,7 +36,7 @@ if empty:
     for p in empty[:50]:
         print(" -", p)
     sys.exit(1)
-ok("No hay archivos vacíos")
+ok("No hay archivos vacíos no permitidos")
 
 # 3) XML well-formed (ktr/kjb/jrxml/xml)
 bad_xml = []
