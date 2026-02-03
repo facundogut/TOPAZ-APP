@@ -18,7 +18,9 @@ for d in REQUIRED_DIRS:
 ok("Estructura mínima presente")
 
 # 2) Archivos vacíos
-ALLOWED_EMPTY_EXTENSIONS = {".txt", ".LCK", ".XML", ".gitignore", ".TXT"}
+ALLOWED_EMPTY_EXTENSIONS = {".txt", ".LCK", ".XML", ".TXT"}
+
+ALLOWED_EMPTY_NAMES = {".gitignore", ".gitkeep"}
 
 IGNORED_DIRS = [
     os.path.normpath("sql/scripts_viejos"),
@@ -44,10 +46,10 @@ for root, _, files in os.walk("."):
                 if is_ignored_path(rel_path):
                     continue
 
-                _, ext = os.path.splitext(f)
+                name, ext = os.path.splitext(f)
 
                 # Permitir extensiones vacías específicas
-                if ext not in ALLOWED_EMPTY_EXTENSIONS:
+                if ext not in ALLOWED_EMPTY_EXTENSIONS or name not in ALLOWED_EMPTY_NAMES:
                     empty.append(rel_path)
 
         except OSError:
